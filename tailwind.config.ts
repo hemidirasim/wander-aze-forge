@@ -110,11 +110,29 @@ export default {
             transform: "translateX(-50%)",
           },
         },
+        "hero-slide": {
+          "0%": {
+            transform: "translateX(0)",
+          },
+          "25%": {
+            transform: "translateX(-25%)",
+          },
+          "50%": {
+            transform: "translateX(-50%)",
+          },
+          "75%": {
+            transform: "translateX(-75%)",
+          },
+          "100%": {
+            transform: "translateX(0)",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "slide": "slide 20s linear infinite",
+        "hero-slide": "hero-slide 16s ease-in-out infinite",
       },
     },
   },
