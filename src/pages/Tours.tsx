@@ -22,7 +22,7 @@ const Tours = () => {
       <Navigation />
       
       {/* Hero Section */}
-      <section className="relative h-[70vh] flex items-center justify-center">
+      <section className="relative h-[60vh] flex items-center justify-center">
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: `url(${toursHero})` }}
@@ -33,7 +33,25 @@ const Tours = () => {
           <p className="text-xl md:text-2xl mb-8 text-white/90">
             Explore Azerbaijan's pristine wilderness with expert local guides
           </p>
-          <TourCategoryDropdown />
+          
+          {/* Compact Category Selection */}
+          <div className="flex flex-wrap justify-center gap-3 mb-6">
+            <Link
+              to="/tours"
+              className="px-4 py-2 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full text-sm font-medium hover:bg-white/30 transition-smooth"
+            >
+              All Tours
+            </Link>
+            {tourCategories.map((category) => (
+              <Link
+                key={category.id}
+                to={`/tours/${category.id}`}
+                className="px-4 py-2 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full text-sm font-medium hover:bg-white/30 transition-smooth"
+              >
+                {category.name}
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
 

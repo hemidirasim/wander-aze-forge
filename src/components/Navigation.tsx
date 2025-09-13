@@ -37,14 +37,16 @@ const Navigation = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {/* Tours Dropdown */}
-            <div className="relative">
+            <div 
+              className="relative"
+              onMouseEnter={() => setIsToursOpen(true)}
+              onMouseLeave={() => setIsToursOpen(false)}
+            >
               <button
                 className={`flex items-center space-x-1 text-foreground hover:text-primary transition-smooth font-medium ${
                   location.pathname.startsWith('/tours') ? 'text-primary' : ''
                 }`}
                 onClick={() => setIsToursOpen(!isToursOpen)}
-                onMouseEnter={() => setIsToursOpen(true)}
-                onMouseLeave={() => setIsToursOpen(false)}
               >
                 <span>Tours</span>
                 <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isToursOpen ? 'rotate-180' : ''}`} />
@@ -59,11 +61,7 @@ const Navigation = () => {
                   />
                   
                   {/* Dropdown Menu */}
-                  <div 
-                    className="absolute top-full left-0 mt-2 w-64 bg-background border border-border rounded-lg shadow-elevated z-40 overflow-hidden"
-                    onMouseEnter={() => setIsToursOpen(true)}
-                    onMouseLeave={() => setIsToursOpen(false)}
-                  >
+                  <div className="absolute top-full left-0 mt-2 w-64 bg-background border border-border rounded-lg shadow-elevated z-40 overflow-hidden">
                     <div className="py-2">
                       {/* All Tours Link */}
                       <Link
