@@ -122,12 +122,18 @@ const Index = () => {
             </p>
           </div>
 
-          <div className="relative">
-            <Carousel className="w-full max-w-5xl mx-auto">
-              <CarouselContent>
+          <div className="relative px-12">
+            <Carousel 
+              opts={{
+                align: "start",
+                loop: true,
+              }}
+              className="w-full max-w-5xl mx-auto"
+            >
+              <CarouselContent className="-ml-2 md:-ml-4">
                 {featuredTours.map((tour) => (
-                  <CarouselItem key={tour.id} className="md:basis-1/2 lg:basis-1/3">
-                    <Card className="group hover:shadow-elevated transition-all duration-500 overflow-hidden border-0 bg-card/80 backdrop-blur-sm mx-2">
+                  <CarouselItem key={tour.id} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
+                    <Card className="group hover:shadow-elevated transition-all duration-500 overflow-hidden border-0 bg-card/80 backdrop-blur-sm h-full">
                       <div className="relative h-64 overflow-hidden">
                         <img 
                           src={tour.image} 
@@ -150,7 +156,7 @@ const Index = () => {
                         <CardTitle className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
                           {tour.title}
                         </CardTitle>
-                        <p className="text-muted-foreground text-sm leading-relaxed">
+                        <p className="text-muted-foreground text-sm leading-relaxed line-clamp-2">
                           {tour.description}
                         </p>
                       </CardHeader>
@@ -166,8 +172,8 @@ const Index = () => {
                           </div>
                         </div>
                         
-                        <Button variant="adventure" asChild>
-                          <Link to={`/tours/${tour.category}/${tour.id}`} className="flex items-center w-fit">
+                        <Button variant="adventure" asChild className="w-full">
+                          <Link to={`/tours/${tour.category}/${tour.id}`} className="flex items-center justify-center">
                             View Details
                             <ArrowRight className="w-4 h-4 ml-2" />
                           </Link>
@@ -177,8 +183,8 @@ const Index = () => {
                   </CarouselItem>
                 ))}
               </CarouselContent>
-              <CarouselPrevious className="left-4" />
-              <CarouselNext className="right-4" />
+              <CarouselPrevious className="left-0 bg-background/80 backdrop-blur-sm border shadow-md hover:bg-background" />
+              <CarouselNext className="right-0 bg-background/80 backdrop-blur-sm border shadow-md hover:bg-background" />
             </Carousel>
           </div>
 
