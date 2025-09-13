@@ -14,13 +14,6 @@ const Index = () => {
     allTours.find(tour => tour.id === 301), // Wildlife Safari
   ].filter(Boolean);
 
-  const heroImages = [
-    heroImage,
-    'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&h=800&fit=crop',
-    'https://images.unsplash.com/photo-1464822759844-d150356c4f2e?w=1200&h=800&fit=crop',
-    'https://images.unsplash.com/photo-1551632811-561732d1e306?w=1200&h=800&fit=crop'
-  ];
-
   const highlights = [
     {
       icon: Award,
@@ -43,21 +36,12 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <Navigation />
       
-      {/* Hero Section with Background Slider */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
-        {/* Background Images Slider */}
-        <div className="absolute inset-0">
-          <div className="flex w-[400%] h-full animate-hero-slide">
-            {heroImages.map((image, index) => (
-              <div 
-                key={index}
-                className="w-1/4 h-full bg-cover bg-center bg-no-repeat flex-shrink-0"
-                style={{ backgroundImage: `url(${image})` }}
-              />
-            ))}
-          </div>
-        </div>
-        
+      {/* Hero Section */}
+      <section className="relative h-screen flex items-center justify-center">
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url(${heroImage})` }}
+        />
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent" />
         
         {/* Hero Content */}
