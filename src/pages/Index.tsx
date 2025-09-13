@@ -4,41 +4,15 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Link } from 'react-router-dom';
 import { Star, Users, Clock, MapPin, Award, Leaf, Heart, ArrowRight } from 'lucide-react';
+import { allTours } from '@/data/tourCategories';
 import heroImage from '@/assets/hero-mountain.jpg';
 
 const Index = () => {
   const featuredTours = [
-    {
-      id: 1,
-      title: "Khinalig-Laza Homestay Hike",
-      description: "3-day authentic village experience in the highest inhabited village of Azerbaijan",
-      price: "$299",
-      duration: "3 days",
-      difficulty: "Moderate",
-      rating: 4.9,
-      image: "https://images.unsplash.com/photo-1464822759844-d150356c4f2e?w=400&h=300&fit=crop"
-    },
-    {
-      id: 2,
-      title: "Gizilgaya Plateau Adventure",
-      description: "Conquer three peaks in Azerbaijan's most stunning mountain plateau",
-      price: "$249", 
-      duration: "2 days",
-      difficulty: "Challenging",
-      rating: 4.8,
-      image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop"
-    },
-    {
-      id: 3,
-      title: "Caucasus Wildlife Safari",
-      description: "Discover incredible biodiversity with expert naturalist guides",
-      price: "$399",
-      duration: "4 days", 
-      difficulty: "Easy",
-      rating: 4.9,
-      image: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&h=300&fit=crop"
-    }
-  ];
+    allTours.find(tour => tour.id === 1), // Khinalig-Laza Trek
+    allTours.find(tour => tour.id === 203), // Bazarduzu Summit 
+    allTours.find(tour => tour.id === 301), // Wildlife Safari
+  ].filter(Boolean);
 
   const highlights = [
     {
@@ -188,8 +162,8 @@ const Index = () => {
                     </div>
                   </div>
                   
-                  <Button variant="adventure" asChild className="w-full">
-                    <Link to={`/tours/${tour.id}`} className="flex items-center justify-center">
+                  <Button variant="adventure" asChild>
+                    <Link to={`/tours/${tour.category}/${tour.id}`} className="flex items-center w-fit">
                       View Details
                       <ArrowRight className="w-4 h-4 ml-2" />
                     </Link>
