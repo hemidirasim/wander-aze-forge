@@ -2,7 +2,6 @@ import Navigation from '@/components/Navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { Link } from 'react-router-dom';
 import { Star, Users, Clock, MapPin, Award, Leaf, Heart, ArrowRight } from 'lucide-react';
 import { allTours } from '@/data/tourCategories';
@@ -122,70 +121,110 @@ const Index = () => {
             </p>
           </div>
 
-          <div className="relative px-12">
-            <Carousel 
-              opts={{
-                align: "start",
-                loop: true,
-              }}
-              className="w-full max-w-5xl mx-auto"
-            >
-              <CarouselContent className="-ml-2 md:-ml-4">
-                {featuredTours.map((tour) => (
-                  <CarouselItem key={tour.id} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
-                    <Card className="group hover:shadow-elevated transition-all duration-500 overflow-hidden border-0 bg-card/80 backdrop-blur-sm h-full">
-                      <div className="relative h-64 overflow-hidden">
-                        <img 
-                          src={tour.image} 
-                          alt={tour.title}
-                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                        <div className="absolute top-4 right-4">
-                          <Badge variant="secondary" className="bg-background/90">
-                            {tour.difficulty}
-                          </Badge>
-                        </div>
-                        <div className="absolute bottom-4 left-4 flex items-center space-x-1 text-white">
-                          <Star className="w-4 h-4 fill-current text-autumn" />
-                          <span className="text-sm font-medium">{tour.rating}</span>
-                        </div>
+          {/* Simple Image Slider */}
+          <div className="overflow-hidden">
+            <div className="flex gap-6 animate-slide">
+              {featuredTours.map((tour) => (
+                <Card key={tour.id} className="group hover:shadow-elevated transition-all duration-500 overflow-hidden border-0 bg-card/80 backdrop-blur-sm flex-shrink-0 w-80">
+                  <div className="relative h-64 overflow-hidden">
+                    <img 
+                      src={tour.image} 
+                      alt={tour.title}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                    <div className="absolute top-4 right-4">
+                      <Badge variant="secondary" className="bg-background/90">
+                        {tour.difficulty}
+                      </Badge>
+                    </div>
+                    <div className="absolute bottom-4 left-4 flex items-center space-x-1 text-white">
+                      <Star className="w-4 h-4 fill-current text-autumn" />
+                      <span className="text-sm font-medium">{tour.rating}</span>
+                    </div>
+                  </div>
+                  
+                  <CardHeader>
+                    <CardTitle className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
+                      {tour.title}
+                    </CardTitle>
+                    <p className="text-muted-foreground text-sm leading-relaxed line-clamp-2">
+                      {tour.description}
+                    </p>
+                  </CardHeader>
+                  
+                  <CardContent className="space-y-3">
+                    <div className="flex items-center justify-between text-sm text-muted-foreground">
+                      <div className="flex items-center space-x-1">
+                        <Clock className="w-4 h-4" />
+                        <span>{tour.duration}</span>
                       </div>
-                      
-                      <CardHeader>
-                        <CardTitle className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
-                          {tour.title}
-                        </CardTitle>
-                        <p className="text-muted-foreground text-sm leading-relaxed line-clamp-2">
-                          {tour.description}
-                        </p>
-                      </CardHeader>
-                      
-                      <CardContent className="space-y-3">
-                        <div className="flex items-center justify-between text-sm text-muted-foreground">
-                          <div className="flex items-center space-x-1">
-                            <Clock className="w-4 h-4" />
-                            <span>{tour.duration}</span>
-                          </div>
-                          <div className="text-2xl font-bold text-primary">
-                            {tour.price}
-                          </div>
-                        </div>
-                        
-                        <Button variant="adventure" asChild className="w-full">
-                          <Link to={`/tours/${tour.category}/${tour.id}`} className="flex items-center justify-center">
-                            View Details
-                            <ArrowRight className="w-4 h-4 ml-2" />
-                          </Link>
-                        </Button>
-                      </CardContent>
-                    </Card>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <CarouselPrevious className="left-0 bg-background/80 backdrop-blur-sm border shadow-md hover:bg-background" />
-              <CarouselNext className="right-0 bg-background/80 backdrop-blur-sm border shadow-md hover:bg-background" />
-            </Carousel>
+                      <div className="text-2xl font-bold text-primary">
+                        {tour.price}
+                      </div>
+                    </div>
+                    
+                    <Button variant="adventure" asChild className="w-full">
+                      <Link to={`/tours/${tour.category}/${tour.id}`} className="flex items-center justify-center">
+                        View Details
+                        <ArrowRight className="w-4 h-4 ml-2" />
+                      </Link>
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))}
+              
+              {/* Duplicate for continuous sliding */}
+              {featuredTours.map((tour) => (
+                <Card key={`duplicate-${tour.id}`} className="group hover:shadow-elevated transition-all duration-500 overflow-hidden border-0 bg-card/80 backdrop-blur-sm flex-shrink-0 w-80">
+                  <div className="relative h-64 overflow-hidden">
+                    <img 
+                      src={tour.image} 
+                      alt={tour.title}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                    <div className="absolute top-4 right-4">
+                      <Badge variant="secondary" className="bg-background/90">
+                        {tour.difficulty}
+                      </Badge>
+                    </div>
+                    <div className="absolute bottom-4 left-4 flex items-center space-x-1 text-white">
+                      <Star className="w-4 h-4 fill-current text-autumn" />
+                      <span className="text-sm font-medium">{tour.rating}</span>
+                    </div>
+                  </div>
+                  
+                  <CardHeader>
+                    <CardTitle className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
+                      {tour.title}
+                    </CardTitle>
+                    <p className="text-muted-foreground text-sm leading-relaxed line-clamp-2">
+                      {tour.description}
+                    </p>
+                  </CardHeader>
+                  
+                  <CardContent className="space-y-3">
+                    <div className="flex items-center justify-between text-sm text-muted-foreground">
+                      <div className="flex items-center space-x-1">
+                        <Clock className="w-4 h-4" />
+                        <span>{tour.duration}</span>
+                      </div>
+                      <div className="text-2xl font-bold text-primary">
+                        {tour.price}
+                      </div>
+                    </div>
+                    
+                    <Button variant="adventure" asChild className="w-full">
+                      <Link to={`/tours/${tour.category}/${tour.id}`} className="flex items-center justify-center">
+                        View Details
+                        <ArrowRight className="w-4 h-4 ml-2" />
+                      </Link>
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
 
           <div className="text-center mt-16">
