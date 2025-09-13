@@ -1,14 +1,28 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Mountain, Menu, X } from 'lucide-react';
+import { Mountain, Menu, X, Binoculars, Users, Wrench } from 'lucide-react';
 import { useState } from 'react';
+import { tourCategories } from '@/data/tourCategories';
 
 const Navigation = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  const categoryIcons = {
+    hiking: Mountain,
+    trekking: Mountain,
+    wildlife: Binoculars,
+    'group-tours': Users,
+    'tailor-made': Wrench
+  };
+
   const navItems = [
-    { path: '/tours', label: 'Tours' },
+    { path: '/tours', label: 'All Tours' },
+    ...tourCategories.map(category => ({
+      path: `/tours/${category.id}`,
+      label: category.name,
+      icon: categoryIcons[category.id as keyof typeof categoryIcons]
+    })),
     { path: '/projects', label: 'Projects' },
     { path: '/blog', label: 'Blog' },
     { path: '/about', label: 'About' },
