@@ -72,7 +72,7 @@ const BlogDetail = () => {
       
       {/* Back Button */}
       <section className="pt-20 px-4">
-        <div className="container mx-auto max-w-4xl">
+        <div className="container mx-auto">
           <Button variant="ghost" asChild className="mb-6">
             <Link to="/blog" className="flex items-center">
               <ArrowLeft className="w-4 h-4 mr-2" />
@@ -84,7 +84,7 @@ const BlogDetail = () => {
 
       {/* Article Header */}
       <section className="px-4">
-        <div className="container mx-auto max-w-4xl">
+        <div className="container mx-auto">
           <div className="text-center mb-8">
             <Badge className="mb-4 bg-primary">{post.category}</Badge>
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight">
@@ -131,7 +131,7 @@ const BlogDetail = () => {
 
       {/* Article Content */}
       <section className="py-8 px-4">
-        <div className="container mx-auto max-w-4xl">
+        <div className="container mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
             
             {/* Main Content */}
@@ -229,7 +229,7 @@ const BlogDetail = () => {
 
       {/* CTA Section */}
       <section className="py-20 px-4 bg-gradient-forest">
-        <div className="container mx-auto text-center max-w-2xl">
+        <div className="container mx-auto text-center">
           <h2 className="text-3xl font-bold text-white mb-6">
             Ready for Your Own Adventure?
           </h2>
