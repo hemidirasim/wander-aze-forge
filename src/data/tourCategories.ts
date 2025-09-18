@@ -46,7 +46,7 @@ export const tourCategories: TourCategory[] = [
         price: '$89',
         rating: 4.7,
         reviews: 89,
-        image: 'https://images.unsplash.com/photo-1464822759844-d150356c4f2e?w=600&h=400&fit=crop',
+        image: 'https://images.unsplash.com/photo-1551632811-561732d1e306?w=600&h=400&fit=crop',
         category: 'hiking'
       },
       {
@@ -60,7 +60,7 @@ export const tourCategories: TourCategory[] = [
         price: '$75',
         rating: 4.6,
         reviews: 124,
-        image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=400&fit=crop',
+        image: 'https://images.unsplash.com/photo-1464207687429-7505649dae38?w=600&h=400&fit=crop',
         category: 'hiking'
       },
       {
@@ -74,7 +74,7 @@ export const tourCategories: TourCategory[] = [
         price: '$199',
         rating: 4.9,
         reviews: 67,
-        image: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600&h=400&fit=crop',
+        image: 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=600&h=400&fit=crop',
         category: 'hiking'
       }
     ]
@@ -96,7 +96,7 @@ export const tourCategories: TourCategory[] = [
         price: '$399',
         rating: 4.9,
         reviews: 42,
-        image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=400&fit=crop',
+        image: 'https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=600&h=400&fit=crop',
         category: 'trekking'
       },
       {
@@ -110,7 +110,7 @@ export const tourCategories: TourCategory[] = [
         price: '$299',
         rating: 4.8,
         reviews: 28,
-        image: 'https://images.unsplash.com/photo-1445308394109-4ec2920981b1?w=600&h=400&fit=crop',
+        image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=400&fit=crop',
         category: 'trekking'
       },
       {
@@ -124,7 +124,7 @@ export const tourCategories: TourCategory[] = [
         price: '$599',
         rating: 4.9,
         reviews: 18,
-        image: 'https://images.unsplash.com/photo-1464822759844-d150356c4f2e?w=600&h=400&fit=crop',
+        image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=400&fit=crop',
         category: 'trekking'
       },
       {
@@ -138,7 +138,7 @@ export const tourCategories: TourCategory[] = [
         price: '$299',
         rating: 4.9,
         reviews: 127,
-        image: 'https://images.unsplash.com/photo-1464822759844-d150356c4f2e?w=600&h=400&fit=crop',
+        image: 'https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=600&h=400&fit=crop',
         category: 'trekking'
       }
     ]
@@ -160,7 +160,7 @@ export const tourCategories: TourCategory[] = [
         price: '$399',
         rating: 4.9,
         reviews: 89,
-        image: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600&h=400&fit=crop',
+        image: 'https://images.unsplash.com/photo-1518562180175-34a163b1a9a6?w=600&h=400&fit=crop',
         category: 'wildlife'
       },
       {
@@ -174,7 +174,7 @@ export const tourCategories: TourCategory[] = [
         price: '$249',
         rating: 4.7,
         reviews: 54,
-        image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=400&fit=crop',
+        image: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600&h=400&fit=crop',
         category: 'wildlife'
       },
       {
@@ -188,7 +188,7 @@ export const tourCategories: TourCategory[] = [
         price: '$149',
         rating: 4.8,
         reviews: 36,
-        image: 'https://images.unsplash.com/photo-1445308394109-4ec2920981b1?w=600&h=400&fit=crop',
+        image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600&h=400&fit=crop',
         category: 'wildlife'
       }
     ]
@@ -210,7 +210,7 @@ export const tourCategories: TourCategory[] = [
         price: '$599',
         rating: 4.8,
         reviews: 156,
-        image: 'https://images.unsplash.com/photo-1464822759844-d150356c4f2e?w=600&h=400&fit=crop',
+        image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=400&fit=crop',
         category: 'group-tours'
       },
       {
@@ -224,7 +224,7 @@ export const tourCategories: TourCategory[] = [
         price: '$199',
         rating: 4.7,
         reviews: 89,
-        image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=400&fit=crop',
+        image: 'https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=600&h=400&fit=crop',
         category: 'group-tours'
       }
     ]
@@ -246,7 +246,7 @@ export const tourCategories: TourCategory[] = [
         price: 'From $150/day',
         rating: 4.9,
         reviews: 73,
-        image: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600&h=400&fit=crop',
+        image: 'https://images.unsplash.com/photo-1464822759844-d150356c4f2e?w=600&h=400&fit=crop',
         category: 'tailor-made'
       },
       {
@@ -260,7 +260,7 @@ export const tourCategories: TourCategory[] = [
         price: 'From $120/day',
         rating: 4.8,
         reviews: 45,
-        image: 'https://images.unsplash.com/photo-1445308394109-4ec2920981b1?w=600&h=400&fit=crop',
+        image: 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=600&h=400&fit=crop',
         category: 'tailor-made'
       },
       {
@@ -274,7 +274,7 @@ export const tourCategories: TourCategory[] = [
         price: 'From $200/day',
         rating: 4.9,
         reviews: 29,
-        image: 'https://images.unsplash.com/photo-1464822759844-d150356c4f2e?w=600&h=400&fit=crop',
+        image: 'https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=600&h=400&fit=crop',
         category: 'tailor-made'
       }
     ]

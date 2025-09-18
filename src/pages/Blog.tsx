@@ -15,7 +15,7 @@ const Blog = () => {
       date: "2024-01-15",
       readTime: "8 min read",
       category: "Travel Guide",
-      image: "https://images.unsplash.com/photo-1464822759844-d150356c4f2e?w=600&h=400&fit=crop",
+      image: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=600&h=400&fit=crop",
       featured: true,
     },
     {
