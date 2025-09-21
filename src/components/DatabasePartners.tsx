@@ -23,40 +23,65 @@ const DatabasePartners: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {[...Array(6)].map((_, i) => (
-          <Card key={i}>
-            <CardHeader>
-              <Skeleton className="h-6 w-3/4" />
-              <Skeleton className="h-4 w-1/2" />
-            </CardHeader>
-            <CardContent>
-              <Skeleton className="h-4 w-full mb-2" />
-              <Skeleton className="h-4 w-full mb-2" />
-              <Skeleton className="h-4 w-2/3" />
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      <section className="py-24 px-4 bg-background">
+        <div className="container mx-auto">
+          <div className="text-center mb-20">
+            <Skeleton className="h-16 w-96 mx-auto mb-6" />
+            <Skeleton className="h-6 w-2/3 mx-auto" />
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="flex flex-col items-center space-y-4">
+                <Skeleton className="h-24 w-24 rounded-full" />
+                <Skeleton className="h-4 w-20" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
     );
   }
 
   if (error) {
     return (
-      <div className="text-center py-8">
-        <p className="text-red-500">Error loading partners: {error}</p>
-        <p className="text-sm text-gray-500 mt-2">
-          Make sure the API server is running on port 3001
-        </p>
-      </div>
+      <section className="py-24 px-4 bg-background">
+        <div className="container mx-auto">
+          <div className="text-center mb-20">
+            <h2 className="text-5xl md:text-6xl font-bold text-foreground mb-6">
+              Our Business Partners
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              We collaborate with trusted organizations to ensure exceptional experiences and sustainable tourism practices
+            </p>
+          </div>
+          <div className="text-center py-8">
+            <p className="text-red-500">Error loading partners: {error}</p>
+            <p className="text-sm text-gray-500 mt-2">
+              Make sure the API server is running
+            </p>
+          </div>
+        </div>
+      </section>
     );
   }
 
   if (!partners || partners.length === 0) {
     return (
-      <div className="text-center py-8">
-        <p className="text-gray-500">No partners available</p>
-      </div>
+      <section className="py-24 px-4 bg-background">
+        <div className="container mx-auto">
+          <div className="text-center mb-20">
+            <h2 className="text-5xl md:text-6xl font-bold text-foreground mb-6">
+              Our Business Partners
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              We collaborate with trusted organizations to ensure exceptional experiences and sustainable tourism practices
+            </p>
+          </div>
+          <div className="text-center py-8">
+            <p className="text-gray-500">No partners available</p>
+          </div>
+        </div>
+      </section>
     );
   }
 
