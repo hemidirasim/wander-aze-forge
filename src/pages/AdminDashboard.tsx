@@ -13,7 +13,13 @@ import {
   Mountain,
   Camera,
   Heart,
-  MapPin
+  MapPin,
+  FolderOpen,
+  Users,
+  Handshake,
+  FileText,
+  Calendar,
+  MessageSquare
 } from 'lucide-react';
 
 interface DashboardStats {
