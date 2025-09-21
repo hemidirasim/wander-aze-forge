@@ -16,43 +16,66 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    // Handle multipart/form-data
-    if (!req.body || typeof req.body === 'string') {
-      return res.status(400).json({ error: 'No file data received' });
+    // Log the request for debugging
+    console.log('Upload request received:', {
+      method: req.method,
+      contentType: req.headers['content-type'],
+      bodyType: typeof req.body,
+      hasFileData: !!(req.body && req.body.fileData),
+      hasFilename: !!(req.body && req.body.filename)
+    });
+
+    // Handle JSON request with base64 file data
+    if (!req.body || typeof req.body !== 'object') {
+      return res.status(400).json({ error: 'Invalid request body' });
     }
 
-    // Get file data from the request
-    const { file, category } = req.body;
+    const { fileData, filename, fileType, fileSize, category = 'gallery' } = req.body;
 
-    if (!file) {
-      return res.status(400).json({ error: 'No file provided' });
+    if (!fileData) {
+      return res.status(400).json({ error: 'No file data provided' });
+    }
+
+    if (!filename) {
+      return res.status(400).json({ error: 'No filename provided' });
     }
 
     // Validate file type
     const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
-    if (!allowedTypes.includes(file.type)) {
+    if (fileType && !allowedTypes.includes(fileType)) {
       return res.status(400).json({ 
-        error: `File type ${file.type} not allowed. Allowed types: ${allowedTypes.join(', ')}` 
+        error: `File type ${fileType} not allowed. Allowed types: ${allowedTypes.join(', ')}` 
       });
     }
 
     // Validate file size (5MB limit)
     const maxSize = 5 * 1024 * 1024; // 5MB
-    if (file.size > maxSize) {
+    if (fileSize && fileSize > maxSize) {
       return res.status(400).json({ 
-        error: `File size ${file.size} bytes exceeds maximum size of ${maxSize} bytes` 
+        error: `File size ${fileSize} bytes exceeds maximum size of ${maxSize} bytes` 
+      });
+    }
+
+    // Convert base64 to Buffer
+    let fileBuffer;
+    try {
+      fileBuffer = Buffer.from(fileData, 'base64');
+    } catch (error) {
+      return res.status(400).json({ 
+        error: 'Invalid base64 file data',
+        details: error instanceof Error ? error.message : 'Unknown error'
       });
     }
 
     // Create a unique filename with timestamp and category
     const timestamp = Date.now();
     const randomString = Math.random().toString(36).substring(2, 8);
-    const fileExtension = file.name.split('.').pop();
+    const fileExtension = filename.split('.').pop() || 'jpg';
     const categoryPrefix = category ? `${category}/` : '';
     const uniqueFilename = `${categoryPrefix}${timestamp}-${randomString}.${fileExtension}`;
 
     // Upload to Vercel Blob
-    const blob = await put(uniqueFilename, file, {
+    const blob = await put(uniqueFilename, fileBuffer, {
       access: 'public',
       token: process.env.BLOB_READ_WRITE_TOKEN,
     });
@@ -63,9 +86,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       id: `${timestamp}-${randomString}`,
       url: blob.url,
       filename: uniqueFilename,
-      originalName: file.name,
-      size: file.size,
-      type: file.type,
+      originalName: filename,
+      size: fileBuffer.length,
+      type: fileType || 'image/jpeg',
       uploadedAt: new Date().toISOString(),
     });
 
@@ -73,7 +96,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     console.error('Upload error:', error);
     res.status(500).json({ 
       error: 'Upload failed',
-      message: error instanceof Error ? error.message : 'Unknown error'
+      message: error instanceof Error ? error.message : 'Unknown error',
+      details: error instanceof Error ? error.stack : undefined
     });
   }
 }

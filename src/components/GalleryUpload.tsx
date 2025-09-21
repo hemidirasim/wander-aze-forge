@@ -67,17 +67,37 @@ const GalleryUpload: React.FC<GalleryUploadProps> = ({
   };
 
   const uploadFile = async (file: File): Promise<UploadedImage> => {
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('category', 'gallery');
+    // Convert file to base64 string
+    const base64 = await new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        const result = reader.result as string;
+        // Remove data:image/jpeg;base64, prefix
+        const base64Data = result.split(',')[1];
+        resolve(base64Data);
+      };
+      reader.onerror = error => reject(error);
+    });
 
+    // Send base64 data to API
     const response = await fetch('/api/upload', {
       method: 'POST',
-      body: formData,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        fileData: base64,
+        filename: file.name,
+        fileType: file.type,
+        fileSize: file.size,
+        category: 'gallery'
+      }),
     });
 
     if (!response.ok) {
-      throw new Error(`Upload failed: ${response.statusText}`);
+      const errorData = await response.json();
+      throw new Error(`Upload failed: ${errorData.error || response.statusText}`);
     }
 
     const result = await response.json();
