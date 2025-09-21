@@ -40,12 +40,22 @@ app.get('/api/health', async (req, res) => {
     res.json({ 
       status: 'OK', 
       timestamp: new Date().toISOString(),
-      database: dbStatus 
+      database: dbStatus,
+      env: {
+        hasDatabaseUrl: !!process.env.DATABASE_URL,
+        hasAdminUsername: !!process.env.ADMIN_USERNAME,
+        hasAdminPassword: !!process.env.ADMIN_PASSWORD
+      }
     });
   } catch (error) {
     res.status(500).json({ 
       status: 'ERROR', 
-      message: error instanceof Error ? error.message : 'Unknown error' 
+      message: error instanceof Error ? error.message : 'Unknown error',
+      env: {
+        hasDatabaseUrl: !!process.env.DATABASE_URL,
+        hasAdminUsername: !!process.env.ADMIN_USERNAME,
+        hasAdminPassword: !!process.env.ADMIN_PASSWORD
+      }
     });
   }
 });
