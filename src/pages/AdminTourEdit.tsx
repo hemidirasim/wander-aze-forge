@@ -254,6 +254,14 @@ const AdminTourEdit: React.FC = () => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
+  // Update main image when gallery changes
+  React.useEffect(() => {
+    if (formData.galleryImages.length > 0) {
+      const firstImageUrl = formData.galleryImages[0].url;
+      setFormData(prev => ({ ...prev, imageUrl: firstImageUrl }));
+    }
+  }, [formData.galleryImages]);
+
   const handleArrayFieldChange = (field: 'highlights' | 'includes' | 'excludes' | 'providedEquipment' | 'whatToBring' | 'priceIncludes', index: number, value: string) => {
     setFormData(prev => ({
       ...prev,
@@ -318,7 +326,7 @@ const AdminTourEdit: React.FC = () => {
         priceIncludes: formData.priceIncludes,
         galleryImages: formData.galleryImages.map(img => img.url),
         specialFields: {},
-        imageUrl: '',
+        imageUrl: formData.galleryImages.length > 0 ? formData.galleryImages[0].url : '',
         isActive: formData.isActive,
         featured: formData.featured
       };

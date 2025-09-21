@@ -156,6 +156,14 @@ const AdminTourFormExtended: React.FC = () => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
+  // Update main image when gallery changes
+  React.useEffect(() => {
+    if (formData.galleryImages.length > 0) {
+      const firstImageUrl = formData.galleryImages[0].url;
+      setFormData(prev => ({ ...prev, imageUrl: firstImageUrl }));
+    }
+  }, [formData.galleryImages]);
+
   const handleArrayFieldChange = (field: 'highlights' | 'includes' | 'excludes' | 'providedEquipment' | 'whatToBring' | 'priceIncludes', index: number, value: string) => {
     setFormData(prev => ({
       ...prev,

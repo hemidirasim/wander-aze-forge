@@ -96,6 +96,9 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
       });
     }
 
+    // Set first gallery image as main image if no imageUrl provided
+    const mainImageUrl = imageUrl || (galleryImages && galleryImages.length > 0 ? galleryImages[0] : '');
+
     // Create tour in database with extended fields
     const result = await pool.query(
       `INSERT INTO tours (
@@ -117,7 +120,7 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
         difficulty.trim(),
         parseFloat(price),
         parseInt(maxParticipants),
-        imageUrl?.trim() || null,
+        mainImageUrl?.trim() || null,
         highlights ? JSON.stringify(highlights) : '[]',
         includes ? JSON.stringify(includes) : '[]',
         excludes ? JSON.stringify(excludes) : '[]',
