@@ -16,7 +16,16 @@ import {
   Search,
   ArrowLeft,
   Save,
-  X
+  X,
+  Upload,
+  Image,
+  Clock,
+  Users,
+  Star,
+  Utensils,
+  Car,
+  Camera,
+  DollarSign
 } from 'lucide-react';
 
 interface Tour {
@@ -455,338 +464,462 @@ const AdminTours: React.FC = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6 max-h-[80vh] overflow-y-auto">
-                  {/* Basic Information */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="title">Title *</Label>
-                      <Input
-                        id="title"
-                        value={formData.title}
-                        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                        placeholder="Tour title"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="category">Category *</Label>
-                      <Select value={formData.category} onValueChange={(value) => setFormData({ ...formData, category: value })}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select category" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="hiking">Hiking</SelectItem>
-                          <SelectItem value="trekking">Trekking</SelectItem>
-                          <SelectItem value="wildlife">Wildlife</SelectItem>
-                          <SelectItem value="group-tours">Group Tours</SelectItem>
-                          <SelectItem value="tailor-made">Tailor-made</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="description">Description *</Label>
-                    <Textarea
-                      id="description"
-                      value={formData.description}
-                      onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                      placeholder="Tour description"
-                      rows={3}
-                      required
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                      <Label htmlFor="duration">Duration *</Label>
-                      <Input
-                        id="duration"
-                        value={formData.duration}
-                        onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
-                        placeholder="e.g., 3 days"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="difficulty">Difficulty *</Label>
-                      <Select value={formData.difficulty} onValueChange={(value) => setFormData({ ...formData, difficulty: value })}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select difficulty" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Easy">Easy</SelectItem>
-                          <SelectItem value="Moderate">Moderate</SelectItem>
-                          <SelectItem value="Challenging">Challenging</SelectItem>
-                          <SelectItem value="Expert">Expert</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <Label htmlFor="maxParticipants">Max Participants *</Label>
-                      <Input
-                        id="maxParticipants"
-                        type="number"
-                        value={formData.maxParticipants}
-                        onChange={(e) => setFormData({ ...formData, maxParticipants: e.target.value })}
-                        placeholder="e.g., 12"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="price">Price *</Label>
-                      <Input
-                        id="price"
-                        type="number"
-                        step="0.01"
-                        value={formData.price}
-                        onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                        placeholder="Tour price"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="rating">Rating</Label>
-                      <Input
-                        id="rating"
-                        type="number"
-                        step="0.1"
-                        min="0"
-                        max="5"
-                        value={formData.rating}
-                        onChange={(e) => setFormData({ ...formData, rating: e.target.value })}
-                        placeholder="4.5"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Location & Overview */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="location">Location</Label>
-                      <Input
-                        id="location"
-                        value={formData.location}
-                        onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                        placeholder="Tour location"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="groupSize">Group Size</Label>
-                      <Input
-                        id="groupSize"
-                        value={formData.groupSize}
-                        onChange={(e) => setFormData({ ...formData, groupSize: e.target.value })}
-                        placeholder="e.g., 2-8 people"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="overview">Overview</Label>
-                    <Textarea
-                      id="overview"
-                      value={formData.overview}
-                      onChange={(e) => setFormData({ ...formData, overview: e.target.value })}
-                      placeholder="Tour overview"
-                      rows={3}
-                    />
-                  </div>
-
-                  {/* Highlights */}
-                  <div>
-                    <Label>Highlights</Label>
-                    <div className="space-y-2">
-                      {formData.highlights.map((highlight, index) => (
-                        <div key={index} className="flex gap-2">
+                  {/* 1. Basic Information */}
+                  <Card className="shadow-lg">
+                    <CardHeader>
+                      <CardTitle className="flex items-center space-x-2">
+                        <Users className="w-5 h-5 text-blue-500" />
+                        <span>Basic Information</span>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="title">Title *</Label>
                           <Input
-                            value={highlight}
-                            onChange={(e) => updateArrayField('highlights', index, e.target.value)}
-                            placeholder="Tour highlight"
+                            id="title"
+                            value={formData.title}
+                            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                            placeholder="Tour title"
+                            required
                           />
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            onClick={() => removeArrayField('highlights', index)}
-                          >
-                            <X className="w-4 h-4" />
-                          </Button>
                         </div>
-                      ))}
-                      <div className="flex gap-2">
-                        <Input
-                          placeholder="Add highlight"
-                          onKeyPress={(e) => {
-                            if (e.key === 'Enter') {
-                              addArrayField('highlights', e.currentTarget.value);
-                              e.currentTarget.value = '';
-                            }
-                          }}
+                        <div>
+                          <Label htmlFor="category">Category *</Label>
+                          <Select value={formData.category} onValueChange={(value) => setFormData({ ...formData, category: value })}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select category" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="hiking">Hiking</SelectItem>
+                              <SelectItem value="trekking">Trekking</SelectItem>
+                              <SelectItem value="wildlife">Wildlife</SelectItem>
+                              <SelectItem value="group-tours">Group Tours</SelectItem>
+                              <SelectItem value="tailor-made">Tailor-made</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+
+                      <div>
+                        <Label htmlFor="description">Description *</Label>
+                        <Textarea
+                          id="description"
+                          value={formData.description}
+                          onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                          placeholder="Tour description"
+                          rows={3}
+                          required
                         />
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          onClick={(e) => {
-                            const input = e.currentTarget.previousElementSibling as HTMLInputElement;
-                            addArrayField('highlights', input.value);
-                            input.value = '';
-                          }}
-                        >
-                          <Plus className="w-4 h-4" />
-                        </Button>
                       </div>
-                    </div>
-                  </div>
 
-                  {/* Includes & Excludes */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label>Includes</Label>
-                      <div className="space-y-2">
-                        {formData.includes.map((include, index) => (
-                          <div key={index} className="flex gap-2">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                          <Label htmlFor="duration">Duration *</Label>
+                          <Input
+                            id="duration"
+                            value={formData.duration}
+                            onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
+                            placeholder="e.g., 3 days"
+                            required
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="difficulty">Difficulty *</Label>
+                          <Select value={formData.difficulty} onValueChange={(value) => setFormData({ ...formData, difficulty: value })}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select difficulty" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="Easy">Easy</SelectItem>
+                              <SelectItem value="Moderate">Moderate</SelectItem>
+                              <SelectItem value="Challenging">Challenging</SelectItem>
+                              <SelectItem value="Expert">Expert</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <Label htmlFor="maxParticipants">Max Participants *</Label>
+                          <Input
+                            id="maxParticipants"
+                            type="number"
+                            value={formData.maxParticipants}
+                            onChange={(e) => setFormData({ ...formData, maxParticipants: e.target.value })}
+                            placeholder="e.g., 12"
+                            required
+                          />
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* 2. Pricing & Rating */}
+                  <Card className="shadow-lg">
+                    <CardHeader>
+                      <CardTitle className="flex items-center space-x-2">
+                        <DollarSign className="w-5 h-5 text-green-500" />
+                        <span>Pricing & Rating</span>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                          <Label htmlFor="price">Price *</Label>
+                          <Input
+                            id="price"
+                            type="number"
+                            step="0.01"
+                            value={formData.price}
+                            onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                            placeholder="Tour price"
+                            required
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="rating">Rating</Label>
+                          <Input
+                            id="rating"
+                            type="number"
+                            step="0.1"
+                            min="0"
+                            max="5"
+                            value={formData.rating}
+                            onChange={(e) => setFormData({ ...formData, rating: e.target.value })}
+                            placeholder="4.5"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="reviewsCount">Reviews Count</Label>
+                          <Input
+                            id="reviewsCount"
+                            type="number"
+                            value={formData.reviewsCount}
+                            onChange={(e) => setFormData({ ...formData, reviewsCount: e.target.value })}
+                            placeholder="Number of reviews"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="groupDiscounts">Group Discounts</Label>
+                          <Input
+                            id="groupDiscounts"
+                            value={formData.groupDiscounts}
+                            onChange={(e) => setFormData({ ...formData, groupDiscounts: e.target.value })}
+                            placeholder="e.g., 10% off for groups of 6+"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="earlyBirdDiscount">Early Bird Discount</Label>
+                          <Input
+                            id="earlyBirdDiscount"
+                            value={formData.earlyBirdDiscount}
+                            onChange={(e) => setFormData({ ...formData, earlyBirdDiscount: e.target.value })}
+                            placeholder="e.g., 15% off for early booking"
+                          />
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* 3. Location & Overview */}
+                  <Card className="shadow-lg">
+                    <CardHeader>
+                      <CardTitle className="flex items-center space-x-2">
+                        <MapPin className="w-5 h-5 text-red-500" />
+                        <span>Location & Overview</span>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="location">Location</Label>
+                          <Input
+                            id="location"
+                            value={formData.location}
+                            onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                            placeholder="Tour location"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="groupSize">Group Size</Label>
+                          <Input
+                            id="groupSize"
+                            value={formData.groupSize}
+                            onChange={(e) => setFormData({ ...formData, groupSize: e.target.value })}
+                            placeholder="e.g., 2-8 people"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <Label htmlFor="overview">Overview</Label>
+                        <Textarea
+                          id="overview"
+                          value={formData.overview}
+                          onChange={(e) => setFormData({ ...formData, overview: e.target.value })}
+                          placeholder="Tour overview"
+                          rows={3}
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="bestSeason">Best Season</Label>
+                          <Input
+                            id="bestSeason"
+                            value={formData.bestSeason}
+                            onChange={(e) => setFormData({ ...formData, bestSeason: e.target.value })}
+                            placeholder="e.g., May to October"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="meetingPoint">Meeting Point</Label>
+                          <Input
+                            id="meetingPoint"
+                            value={formData.meetingPoint}
+                            onChange={(e) => setFormData({ ...formData, meetingPoint: e.target.value })}
+                            placeholder="Where to meet"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <Label htmlFor="languages">Languages</Label>
+                        <Input
+                          id="languages"
+                          value={formData.languages}
+                          onChange={(e) => setFormData({ ...formData, languages: e.target.value })}
+                          placeholder="e.g., English, Azerbaijani, Russian"
+                        />
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* 4. Highlights, Includes & Excludes */}
+                  <Card className="shadow-lg">
+                    <CardHeader>
+                      <CardTitle className="flex items-center space-x-2">
+                        <Star className="w-5 h-5 text-yellow-500" />
+                        <span>Highlights, Includes & Excludes</span>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
+                      {/* Highlights */}
+                      <div>
+                        <Label>Highlights</Label>
+                        <div className="space-y-2">
+                          {formData.highlights.map((highlight, index) => (
+                            <div key={index} className="flex gap-2">
+                              <Input
+                                value={highlight}
+                                onChange={(e) => updateArrayField('highlights', index, e.target.value)}
+                                placeholder="Tour highlight"
+                              />
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={() => removeArrayField('highlights', index)}
+                              >
+                                <X className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          ))}
+                          <div className="flex gap-2">
                             <Input
-                              value={include}
-                              onChange={(e) => updateArrayField('includes', index, e.target.value)}
-                              placeholder="What's included"
+                              placeholder="Add highlight"
+                              onKeyPress={(e) => {
+                                if (e.key === 'Enter') {
+                                  addArrayField('highlights', e.currentTarget.value);
+                                  e.currentTarget.value = '';
+                                }
+                              }}
                             />
                             <Button
                               type="button"
                               variant="outline"
                               size="sm"
-                              onClick={() => removeArrayField('includes', index)}
+                              onClick={(e) => {
+                                const input = e.currentTarget.previousElementSibling as HTMLInputElement;
+                                addArrayField('highlights', input.value);
+                                input.value = '';
+                              }}
                             >
-                              <X className="w-4 h-4" />
+                              <Plus className="w-4 h-4" />
                             </Button>
                           </div>
-                        ))}
-                        <div className="flex gap-2">
-                          <Input
-                            placeholder="Add inclusion"
-                            onKeyPress={(e) => {
-                              if (e.key === 'Enter') {
-                                addArrayField('includes', e.currentTarget.value);
-                                e.currentTarget.value = '';
-                              }
-                            }}
-                          />
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            onClick={(e) => {
-                              const input = e.currentTarget.previousElementSibling as HTMLInputElement;
-                              addArrayField('includes', input.value);
-                              input.value = '';
-                            }}
-                          >
-                            <Plus className="w-4 h-4" />
-                          </Button>
                         </div>
                       </div>
-                    </div>
 
-                    <div>
-                      <Label>Excludes</Label>
-                      <div className="space-y-2">
-                        {formData.excludes.map((exclude, index) => (
-                          <div key={index} className="flex gap-2">
-                            <Input
-                              value={exclude}
-                              onChange={(e) => updateArrayField('excludes', index, e.target.value)}
-                              placeholder="What's not included"
-                            />
-                            <Button
-                              type="button"
-                              variant="outline"
-                              size="sm"
-                              onClick={() => removeArrayField('excludes', index)}
-                            >
-                              <X className="w-4 h-4" />
-                            </Button>
+                      {/* Includes & Excludes */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                          <Label>Includes</Label>
+                          <div className="space-y-2">
+                            {formData.includes.map((include, index) => (
+                              <div key={index} className="flex gap-2">
+                                <Input
+                                  value={include}
+                                  onChange={(e) => updateArrayField('includes', index, e.target.value)}
+                                  placeholder="What's included"
+                                />
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => removeArrayField('includes', index)}
+                                >
+                                  <X className="w-4 h-4" />
+                                </Button>
+                              </div>
+                            ))}
+                            <div className="flex gap-2">
+                              <Input
+                                placeholder="Add inclusion"
+                                onKeyPress={(e) => {
+                                  if (e.key === 'Enter') {
+                                    addArrayField('includes', e.currentTarget.value);
+                                    e.currentTarget.value = '';
+                                  }
+                                }}
+                              />
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={(e) => {
+                                  const input = e.currentTarget.previousElementSibling as HTMLInputElement;
+                                  addArrayField('includes', input.value);
+                                  input.value = '';
+                                }}
+                              >
+                                <Plus className="w-4 h-4" />
+                              </Button>
+                            </div>
                           </div>
-                        ))}
-                        <div className="flex gap-2">
-                          <Input
-                            placeholder="Add exclusion"
-                            onKeyPress={(e) => {
-                              if (e.key === 'Enter') {
-                                addArrayField('excludes', e.currentTarget.value);
-                                e.currentTarget.value = '';
-                              }
-                            }}
-                          />
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            onClick={(e) => {
-                              const input = e.currentTarget.previousElementSibling as HTMLInputElement;
-                              addArrayField('excludes', input.value);
-                              input.value = '';
-                            }}
-                          >
-                            <Plus className="w-4 h-4" />
-                          </Button>
+                        </div>
+
+                        <div>
+                          <Label>Excludes</Label>
+                          <div className="space-y-2">
+                            {formData.excludes.map((exclude, index) => (
+                              <div key={index} className="flex gap-2">
+                                <Input
+                                  value={exclude}
+                                  onChange={(e) => updateArrayField('excludes', index, e.target.value)}
+                                  placeholder="What's not included"
+                                />
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => removeArrayField('excludes', index)}
+                                >
+                                  <X className="w-4 h-4" />
+                                </Button>
+                              </div>
+                            ))}
+                            <div className="flex gap-2">
+                              <Input
+                                placeholder="Add exclusion"
+                                onKeyPress={(e) => {
+                                  if (e.key === 'Enter') {
+                                    addArrayField('excludes', e.currentTarget.value);
+                                    e.currentTarget.value = '';
+                                  }
+                                }}
+                              />
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={(e) => {
+                                  const input = e.currentTarget.previousElementSibling as HTMLInputElement;
+                                  addArrayField('excludes', input.value);
+                                  input.value = '';
+                                }}
+                              >
+                                <Plus className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
+                    </CardContent>
+                  </Card>
 
-                  {/* Itinerary & Requirements */}
-                  <div>
-                    <Label htmlFor="itinerary">Itinerary</Label>
-                    <Textarea
-                      id="itinerary"
-                      value={formData.itinerary}
-                      onChange={(e) => setFormData({ ...formData, itinerary: e.target.value })}
-                      placeholder="Detailed itinerary"
-                      rows={4}
-                    />
-                  </div>
+                  {/* 5. Itinerary & Requirements */}
+                  <Card className="shadow-lg">
+                    <CardHeader>
+                      <CardTitle className="flex items-center space-x-2">
+                        <Clock className="w-5 h-5 text-purple-500" />
+                        <span>Itinerary & Requirements</span>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div>
+                        <Label htmlFor="itinerary">Itinerary</Label>
+                        <Textarea
+                          id="itinerary"
+                          value={formData.itinerary}
+                          onChange={(e) => setFormData({ ...formData, itinerary: e.target.value })}
+                          placeholder="Detailed itinerary"
+                          rows={4}
+                        />
+                      </div>
 
-                  <div>
-                    <Label htmlFor="requirements">Requirements</Label>
-                    <Textarea
-                      id="requirements"
-                      value={formData.requirements}
-                      onChange={(e) => setFormData({ ...formData, requirements: e.target.value })}
-                      placeholder="What participants need to bring/know"
-                      rows={3}
-                    />
-                  </div>
+                      <div>
+                        <Label htmlFor="requirements">Requirements</Label>
+                        <Textarea
+                          id="requirements"
+                          value={formData.requirements}
+                          onChange={(e) => setFormData({ ...formData, requirements: e.target.value })}
+                          placeholder="What participants need to bring/know"
+                          rows={3}
+                        />
+                      </div>
+                    </CardContent>
+                  </Card>
 
-                  {/* Status */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="isActive">Active Status</Label>
-                      <Select value={formData.isActive ? 'active' : 'inactive'} onValueChange={(value) => setFormData({ ...formData, isActive: value === 'active' })}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select status" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="active">Active</SelectItem>
-                          <SelectItem value="inactive">Inactive</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <Label htmlFor="featured">Featured</Label>
-                      <Select value={formData.featured ? 'yes' : 'no'} onValueChange={(value) => setFormData({ ...formData, featured: value === 'yes' })}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Featured?" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="yes">Yes</SelectItem>
-                          <SelectItem value="no">No</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
+                  {/* 6. Status */}
+                  <Card className="shadow-lg">
+                    <CardHeader>
+                      <CardTitle className="flex items-center space-x-2">
+                        <Users className="w-5 h-5 text-gray-500" />
+                        <span>Status</span>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="isActive">Active Status</Label>
+                          <Select value={formData.isActive ? 'active' : 'inactive'} onValueChange={(value) => setFormData({ ...formData, isActive: value === 'active' })}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select status" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="active">Active</SelectItem>
+                              <SelectItem value="inactive">Inactive</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <Label htmlFor="featured">Featured</Label>
+                          <Select value={formData.featured ? 'yes' : 'no'} onValueChange={(value) => setFormData({ ...formData, featured: value === 'yes' })}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Featured?" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="yes">Yes</SelectItem>
+                              <SelectItem value="no">No</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
 
                   <Button onClick={handleSave} className="w-full flex items-center space-x-2">
                     <Save className="w-4 h-4" />
