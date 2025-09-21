@@ -7,6 +7,9 @@ import { testConnection } from '../src/config/database';
 import { DatabaseService } from '../src/services/databaseService';
 import { AdminService } from '../src/services/adminService';
 
+// Initialize admin service
+AdminService.initializeAdmin();
+
 // Create Express app
 const app = express();
 
@@ -174,11 +177,17 @@ app.get('/api/tour-programs/program/:id', async (req, res) => {
 app.post('/api/admin/login', async (req, res) => {
   try {
     const { username, password } = req.body;
+    
+    console.log('Login attempt:', { username, password: password ? '***' : 'empty' });
+    console.log('Expected username:', process.env.ADMIN_USERNAME || 'admin');
+    console.log('Expected password:', process.env.ADMIN_PASSWORD ? '***' : 'admin123');
+    
     if (!username || !password) {
       return res.status(400).json({ success: false, message: 'Username and password are required' });
     }
 
     const result = AdminService.authenticate(username, password);
+    console.log('Authentication result:', { success: result.success });
 
     if (result.success) {
       res.json({ success: true, token: result.token, user: result.user });
@@ -186,6 +195,7 @@ app.post('/api/admin/login', async (req, res) => {
       res.status(401).json({ success: false, message: 'Invalid credentials' });
     }
   } catch (error) {
+    console.error('Login error:', error);
     res.status(500).json({ success: false, message: 'Login failed', error: error instanceof Error ? error.message : 'Unknown error' });
   }
 });
