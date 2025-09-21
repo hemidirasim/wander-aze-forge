@@ -16,6 +16,7 @@
     "create-user": "tsx src/scripts/createNewUser.ts",
     "list-users": "tsx src/scripts/listAdminUsers.ts",
     "update-tours": "tsx src/scripts/updateToursTable.ts",
+    "update-tours-extended": "tsx src/scripts/updateToursTableExtended.ts",
     "server": "tsx src/server/index.ts"
   },
   "dependencies": {

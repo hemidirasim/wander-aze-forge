@@ -19,7 +19,8 @@ const SimpleAdminLayout: React.FC = () => {
       title: 'Tours',
       icon: '🏔️',
       children: [
-        { title: 'New Tour', path: '/admin/tour-categories' },
+        { title: 'New Tour (Simple)', path: '/admin/tour-categories' },
+        { title: 'New Tour (Complete)', path: '/admin/tour-form-extended' },
         { title: 'All Tours', path: '/admin/tours' }
       ]
     },

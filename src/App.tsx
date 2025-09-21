@@ -21,6 +21,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminTours from "./pages/AdminTours";
 import AdminTest from "./pages/AdminTest";
 import AdminTourCategories from "./pages/AdminTourCategories";
+import AdminTourFormExtended from "./pages/AdminTourFormExtended";
 import SimpleAdminLayout from "./components/SimpleAdminLayout";
 import NotFound from "./pages/NotFound";
 
@@ -49,6 +50,7 @@ const App = () => (
           <Route path="/admin" element={<SimpleAdminLayout />}>
             <Route path="tours" element={<AdminTours />} />
             <Route path="tour-categories" element={<AdminTourCategories />} />
+            <Route path="tour-form-extended" element={<AdminTourFormExtended />} />
             <Route path="test" element={<AdminTest />} />
           </Route>
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
