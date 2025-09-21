@@ -49,6 +49,11 @@ export interface BlogPost {
   content: string;
   excerpt?: string;
   author?: string;
+  category?: string;
+  tags?: string[];
+  featured_image?: string;
+  status: string;
+  featured: boolean;
   image_url?: string;
   published: boolean;
   created_at: string;
@@ -226,10 +231,22 @@ export class DatabaseService {
 
   static async createBlogPost(post: Omit<BlogPost, 'id' | 'created_at' | 'updated_at'>): Promise<BlogPost> {
     const result = await pool.query(
-      `INSERT INTO blog_posts (title, content, excerpt, author, image_url, published)
-       VALUES ($1, $2, $3, $4, $5, $6)
+      `INSERT INTO blog_posts (title, content, excerpt, author, category, tags, featured_image, status, featured, image_url, published)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
        RETURNING *`,
-      [post.title, post.content, post.excerpt, post.author, post.image_url, post.published]
+      [
+        post.title, 
+        post.content, 
+        post.excerpt, 
+        post.author, 
+        post.category, 
+        post.tags, 
+        post.featured_image, 
+        post.status || 'published', 
+        post.featured || false,
+        post.image_url, 
+        post.published
+      ]
     );
     return result.rows[0];
   }
