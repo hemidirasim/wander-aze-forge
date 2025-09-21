@@ -65,7 +65,7 @@ const AdminDashboard: React.FC = () => {
     try {
       // For now, use mock data since API endpoints are not fully implemented
       setStats({
-        tours: 12,
+        tours: 25,
         projects: 8,
         programs: 6,
         partners: 15,
@@ -139,7 +139,13 @@ const AdminDashboard: React.FC = () => {
   ];
 
   const quickActions = [
-    { title: 'Add New Tour', icon: Plus, action: () => navigate('/admin/tours'), color: 'bg-blue-500' },
+    { title: 'Yeni Tur Ekle', icon: Plus, action: () => navigate('/admin/tours/new'), color: 'bg-blue-500' },
+    { title: 'Tüm Turları Görüntüle', icon: Eye, action: () => navigate('/admin/tours'), color: 'bg-cyan-500' },
+    { title: 'Hiking Turları', icon: MapPin, action: () => navigate('/admin/tours?category=hiking'), color: 'bg-green-600' },
+    { title: 'Trekking Turları', icon: MapPin, action: () => navigate('/admin/tours?category=trekking'), color: 'bg-orange-600' },
+    { title: 'Wildlife Turları', icon: MapPin, action: () => navigate('/admin/tours?category=wildlife'), color: 'bg-purple-600' },
+    { title: 'Group Turları', icon: Users, action: () => navigate('/admin/tours?category=group-tours'), color: 'bg-indigo-600' },
+    { title: 'Tailor Made Turlar', icon: Settings, action: () => navigate('/admin/tours?category=tailor-made'), color: 'bg-pink-600' },
     { title: 'Manage Projects', icon: FolderOpen, action: () => navigate('/admin/projects'), color: 'bg-green-500' },
     { title: 'Manage Programs', icon: Users, action: () => navigate('/admin/programs'), color: 'bg-purple-500' },
     { title: 'Manage Partners', icon: Handshake, action: () => navigate('/admin/partners'), color: 'bg-orange-500' },
@@ -212,22 +218,218 @@ const AdminDashboard: React.FC = () => {
           ))}
         </div>
 
-        {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {quickActions.map((action, index) => (
-            <Card key={index} className="hover:shadow-lg transition-shadow cursor-pointer" onClick={action.action}>
+        {/* Tour Management Section */}
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">🎯 Tur Yönetimi</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/tours/new')}>
               <CardContent className="p-6">
                 <div className="flex items-center space-x-4">
-                  <div className={`w-10 h-10 ${action.color} rounded-lg flex items-center justify-center`}>
-                    <action.icon className="w-5 h-5 text-white" />
+                  <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
+                    <Plus className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="font-medium text-gray-900">{action.title}</h3>
+                    <h3 className="font-semibold text-gray-900 text-lg">Yeni Tur Ekle</h3>
+                    <p className="text-sm text-gray-500">Yeni tur paketi oluştur</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
-          ))}
+            
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/tours')}>
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-4">
+                  <div className="w-12 h-12 bg-cyan-500 rounded-lg flex items-center justify-center">
+                    <Eye className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900 text-lg">Tüm Turlar</h3>
+                    <p className="text-sm text-gray-500">Tüm tur paketlerini görüntüle</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/tours?category=hiking')}>
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-4">
+                  <div className="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center">
+                    <MapPin className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900 text-lg">Hiking Turları</h3>
+                    <p className="text-sm text-gray-500">Doğa yürüyüşü turları</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
+        {/* Tour Categories */}
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">🗺️ Tur Kategorileri</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/tours?category=trekking')}>
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-4">
+                  <div className="w-10 h-10 bg-orange-600 rounded-lg flex items-center justify-center">
+                    <MapPin className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-gray-900">Trekking</h3>
+                    <p className="text-xs text-gray-500">Dağ yürüyüşleri</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/tours?category=wildlife')}>
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-4">
+                  <div className="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center">
+                    <MapPin className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-gray-900">Wildlife</h3>
+                    <p className="text-xs text-gray-500">Vahşi yaşam turları</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/tours?category=group-tours')}>
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-4">
+                  <div className="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center">
+                    <Users className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-gray-900">Group Tours</h3>
+                    <p className="text-xs text-gray-500">Grup turları</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/tours?category=tailor-made')}>
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-4">
+                  <div className="w-10 h-10 bg-pink-600 rounded-lg flex items-center justify-center">
+                    <Settings className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-gray-900">Tailor Made</h3>
+                    <p className="text-xs text-gray-500">Özel turlar</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
+        {/* Other Management Tools */}
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">⚙️ Yönetim Araçları</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/projects')}>
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-4">
+                  <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
+                    <FolderOpen className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-gray-900">Projects</h3>
+                    <p className="text-xs text-gray-500">Proje yönetimi</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/programs')}>
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-4">
+                  <div className="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center">
+                    <Users className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-gray-900">Programs</h3>
+                    <p className="text-xs text-gray-500">Program yönetimi</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/partners')}>
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-4">
+                  <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
+                    <Handshake className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-gray-900">Partners</h3>
+                    <p className="text-xs text-gray-500">Partner yönetimi</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/blog')}>
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-4">
+                  <div className="w-10 h-10 bg-pink-500 rounded-lg flex items-center justify-center">
+                    <FileText className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-gray-900">Blog</h3>
+                    <p className="text-xs text-gray-500">Blog yönetimi</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/bookings')}>
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-4">
+                  <div className="w-10 h-10 bg-indigo-500 rounded-lg flex items-center justify-center">
+                    <Calendar className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-gray-900">Bookings</h3>
+                    <p className="text-xs text-gray-500">Rezervasyonlar</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/contact')}>
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-4">
+                  <div className="w-10 h-10 bg-teal-500 rounded-lg flex items-center justify-center">
+                    <MessageSquare className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-gray-900">Messages</h3>
+                    <p className="text-xs text-gray-500">İletişim mesajları</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/files')}>
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-4">
+                  <div className="w-10 h-10 bg-gray-500 rounded-lg flex items-center justify-center">
+                    <Upload className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-gray-900">Files</h3>
+                    <p className="text-xs text-gray-500">Dosya yönetimi</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
 
         {/* Recent Activity */}
