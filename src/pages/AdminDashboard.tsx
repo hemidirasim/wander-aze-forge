@@ -12,7 +12,8 @@ import {
   Globe,
   Mountain,
   Camera,
-  Heart
+  Heart,
+  MapPin
 } from 'lucide-react';
 
 interface DashboardStats {
