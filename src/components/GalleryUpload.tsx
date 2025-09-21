@@ -72,139 +72,125 @@ const GalleryUpload: React.FC<GalleryUploadProps> = ({
     return null;
   };
 
-  const uploadFile = async (file: File): Promise<UploadedImage> => {
-    // Convert file to base64 string
-    const base64 = await new Promise<string>((resolve, reject) => {
+  const convertToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
-      reader.onload = () => {
-        const result = reader.result as string;
-        // Remove data:image/jpeg;base64, prefix
-        const base64Data = result.split(',')[1];
-        resolve(base64Data);
-      };
+      reader.onload = () => resolve(reader.result as string);
       reader.onerror = error => reject(error);
     });
-
-    // Send base64 data to API
-    const response = await fetch('/api/upload', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        fileData: base64,
-        filename: file.name,
-        fileType: file.type,
-        fileSize: file.size,
-        category: 'gallery'
-      }),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(`Upload failed: ${errorData.error || response.statusText}`);
-    }
-
-    const result = await response.json();
-    return {
-      id: result.id || Date.now().toString(),
-      url: result.url,
-      filename: file.name,
-      size: file.size,
-      uploadedAt: new Date().toISOString(),
-    };
   };
 
-  const handleFiles = async (files: FileList) => {
+  const uploadImage = async (file: File): Promise<UploadedImage | null> => {
+    try {
+      const validationError = validateFile(file);
+      if (validationError) {
+        throw new Error(validationError);
+      }
+
+      const base64Data = await convertToBase64(file);
+      
+      // Remove data URL prefix
+      const base64String = base64Data.split(',')[1];
+      
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          fileData: base64String,
+          filename: file.name,
+          fileType: file.type,
+          fileSize: file.size,
+          category: 'gallery'
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Upload failed');
+      }
+
+      const result = await response.json();
+      
+      return {
+        id: result.blob.url,
+        url: result.blob.url,
+        filename: result.blob.pathname.split('/').pop() || file.name,
+        size: file.size,
+        uploadedAt: new Date().toISOString(),
+        isMain: false
+      };
+    } catch (error) {
+      console.error('Upload error:', error);
+      throw error;
+    }
+  };
+
+  const handleFiles = async (files: FileList | null) => {
+    if (!files) return;
+
     const fileArray = Array.from(files);
     
-    // Validate files
-    const validationErrors: string[] = [];
-    const validFiles: File[] = [];
+    // Check if adding these files would exceed maxImages limit
+    if (images.length + fileArray.length > maxImages) {
+      setErrors([`Cannot upload ${fileArray.length} files. Maximum ${maxImages} images allowed. Current: ${images.length}`]);
+      return;
+    }
 
-    fileArray.forEach((file) => {
-      const error = validateFile(file);
-      if (error) {
-        validationErrors.push(`${file.name}: ${error}`);
-      } else {
-        validFiles.push(file);
+    setUploading(true);
+    setErrors([]);
+
+    const uploadPromises = fileArray.map(async (file, index) => {
+      const imageId = `${Date.now()}-${index}`;
+      
+      try {
+        setUploadProgress(prev => ({ ...prev, [imageId]: 0 }));
+        
+        // Simulate progress
+        for (let i = 0; i <= 100; i += 10) {
+          await new Promise(resolve => setTimeout(resolve, 50));
+          setUploadProgress(prev => ({ ...prev, [imageId]: i }));
+        }
+
+        const uploadedImage = await uploadImage(file);
+        
+        if (uploadedImage) {
+          setImages(prev => [...prev, uploadedImage]);
+          onImagesChange?.([...images, uploadedImage]);
+        }
+        
+        // Remove progress tracking
+        setUploadProgress(prev => {
+          const newProgress = { ...prev };
+          delete newProgress[imageId];
+          return newProgress;
+        });
+        
+      } catch (error) {
+        console.error(`Failed to upload ${file.name}:`, error);
+        setErrors(prev => [...prev, `${file.name}: ${error instanceof Error ? error.message : 'Upload failed'}`]);
+        
+        // Remove progress tracking on error
+        setUploadProgress(prev => {
+          const newProgress = { ...prev };
+          delete newProgress[imageId];
+          return newProgress;
+        });
       }
     });
 
-    if (validationErrors.length > 0) {
-      setErrors(validationErrors);
-      return;
-    }
-
-    // Check max images limit
-    if (images.length + validFiles.length > maxImages) {
-      setErrors([`Maximum ${maxImages} images allowed. You're trying to upload ${validFiles.length} more images.`]);
-      return;
-    }
-
-    setErrors([]);
-    setUploading(true);
-
-    try {
-      const uploadPromises = validFiles.map(async (file) => {
-        const imageId = Date.now().toString() + Math.random().toString(36).substr(2, 9);
-        
-        // Simulate progress
-        setUploadProgress(prev => ({ ...prev, [imageId]: 0 }));
-        
-        const interval = setInterval(() => {
-          setUploadProgress(prev => {
-            const current = prev[imageId] || 0;
-            if (current < 90) {
-              return { ...prev, [imageId]: current + 10 };
-            }
-            return prev;
-          });
-        }, 100);
-
-        try {
-          const uploadedImage = await uploadFile(file);
-          
-          clearInterval(interval);
-          setUploadProgress(prev => ({ ...prev, [imageId]: 100 }));
-          
-          // Add description field
-          uploadedImage.description = '';
-          uploadedImage.alt = file.name.replace(/\.[^/.]+$/, ""); // Remove extension for alt text
-          
-          return uploadedImage;
-        } catch (error) {
-          clearInterval(interval);
-          throw error;
-        }
-      });
-
-      const uploadedImages = await Promise.all(uploadPromises);
-      const newImages = [...images, ...uploadedImages];
-      
-      setImages(newImages);
-      onImagesChange?.(newImages);
-      
-      // Clear progress after a delay
-      setTimeout(() => {
-        setUploadProgress({});
-      }, 1000);
-
-    } catch (error) {
-      console.error('Upload error:', error);
-      setErrors([`Upload failed: ${error instanceof Error ? error.message : 'Unknown error'}`]);
-    } finally {
-      setUploading(false);
-    }
+    await Promise.all(uploadPromises);
+    setUploading(false);
   };
 
   const handleDrag = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (e.type === 'dragenter' || e.type === 'dragover') {
+    if (e.type === "dragenter" || e.type === "dragover") {
       setDragActive(true);
-    } else if (e.type === 'dragleave') {
+    } else if (e.type === "dragleave") {
       setDragActive(false);
     }
   }, []);
@@ -220,13 +206,11 @@ const GalleryUpload: React.FC<GalleryUploadProps> = ({
   }, []);
 
   const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      handleFiles(e.target.files);
-    }
+    handleFiles(e.target.files);
   };
 
-  const removeImage = (imageId: string) => {
-    const newImages = images.filter(img => img.id !== imageId);
+  const removeImage = (id: string) => {
+    const newImages = images.filter(img => img.id !== id);
     setImages(newImages);
     onImagesChange?.(newImages);
   };
@@ -262,18 +246,18 @@ const GalleryUpload: React.FC<GalleryUploadProps> = ({
     onImagesChange?.(newImages);
   };
 
-  // Drag and drop handlers
+  // Drag and drop handlers for reordering
   const handleDragStart = (e: React.DragEvent, index: number) => {
     setDraggedIndex(index);
     e.dataTransfer.effectAllowed = 'move';
   };
 
-  const handleDragOver = (e: React.DragEvent) => {
+  const handleDragOverReorder = (e: React.DragEvent) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
   };
 
-  const handleDrop = (e: React.DragEvent, dropIndex: number) => {
+  const handleDropReorder = (e: React.DragEvent, dropIndex: number) => {
     e.preventDefault();
     
     if (draggedIndex === null || draggedIndex === dropIndex) {
@@ -295,7 +279,7 @@ const GalleryUpload: React.FC<GalleryUploadProps> = ({
     setDraggedIndex(null);
   };
 
-  const handleDragEnd = () => {
+  const handleDragEndReorder = () => {
     setDraggedIndex(null);
   };
 
@@ -305,46 +289,50 @@ const GalleryUpload: React.FC<GalleryUploadProps> = ({
       <Card className="shadow-lg">
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
-            <ImageIcon className="w-5 h-5 text-blue-500" />
-            <span>Gallery Upload</span>
-            <Badge variant="secondary">
-              {images.length}/{maxImages} images
-            </Badge>
+            <Upload className="w-5 h-5 text-blue-500" />
+            <span>Upload Images</span>
           </CardTitle>
         </CardHeader>
         <CardContent>
-          {/* Drag & Drop Area */}
           <div
-            className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
-              dragActive
-                ? 'border-blue-500 bg-blue-50'
+            className={`relative border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
+              dragActive 
+                ? 'border-blue-500 bg-blue-50' 
                 : 'border-gray-300 hover:border-gray-400'
-            } ${uploading ? 'pointer-events-none opacity-50' : ''}`}
+            }`}
             onDragEnter={handleDrag}
             onDragLeave={handleDrag}
             onDragOver={handleDrag}
             onDrop={handleDrop}
           >
-            <Upload className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-            <h3 className="text-lg font-semibold mb-2">
-              {dragActive ? 'Drop images here' : 'Upload Images'}
-            </h3>
-            <p className="text-gray-500 mb-4">
-              Drag and drop images here, or click to select files
-            </p>
-            <p className="text-sm text-gray-400 mb-4">
-              Supported formats: JPEG, PNG, WebP • Max size: {maxSize}MB per file
-            </p>
-            
-            <Input
+            <input
+              id="gallery-upload"
               type="file"
               multiple
               accept={allowedTypes.join(',')}
               onChange={handleFileInput}
-              className="hidden"
-              id="gallery-upload"
-              disabled={uploading}
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              disabled={uploading || images.length >= maxImages}
             />
+            
+            <div className="space-y-4">
+              <div className="mx-auto w-12 h-12 text-gray-400">
+                <Upload className="w-full h-full" />
+              </div>
+              
+              <div>
+                <p className="text-lg font-medium text-gray-900">
+                  Drop images here or click to upload
+                </p>
+                <p className="text-sm text-gray-500">
+                  Supports {allowedTypes.join(', ')} up to {maxSize}MB each
+                </p>
+                <p className="text-xs text-gray-400 mt-1">
+                  {images.length} / {maxImages} images uploaded
+                </p>
+              </div>
+            </div>
+            
             <Button
               type="button"
               variant="outline"
@@ -417,9 +405,9 @@ const GalleryUpload: React.FC<GalleryUploadProps> = ({
                     } ${draggedIndex === index ? 'opacity-50 scale-95' : ''}`}
                     draggable
                     onDragStart={(e) => handleDragStart(e, index)}
-                    onDragOver={handleDragOver}
-                    onDrop={(e) => handleDrop(e, index)}
-                    onDragEnd={handleDragEnd}
+                    onDragOver={handleDragOverReorder}
+                    onDrop={(e) => handleDropReorder(e, index)}
+                    onDragEnd={handleDragEndReorder}
                   >
                     {/* Main Image Badge */}
                     {image.isMain && (
@@ -490,46 +478,47 @@ const GalleryUpload: React.FC<GalleryUploadProps> = ({
                       </Button>
                     </div>
 
-                  {/* Image Info */}
-                  <div className="space-y-2">
-                    <div className="text-sm text-gray-500">
-                      <div className="flex justify-between">
-                        <span>Size:</span>
-                        <span>{formatFileSize(image.size)}</span>
+                    {/* Image Info */}
+                    <div className="space-y-2">
+                      <div className="text-sm text-gray-500">
+                        <div className="flex justify-between">
+                          <span>Size:</span>
+                          <span>{formatFileSize(image.size)}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Uploaded:</span>
+                          <span>{new Date(image.uploadedAt).toLocaleDateString()}</span>
+                        </div>
                       </div>
-                      <div className="flex justify-between">
-                        <span>Uploaded:</span>
-                        <span>{new Date(image.uploadedAt).toLocaleDateString()}</span>
+
+                      {/* Alt Text */}
+                      <div className="space-y-1">
+                        <Label htmlFor={`alt-${image.id}`} className="text-xs">Alt Text</Label>
+                        <Input
+                          id={`alt-${image.id}`}
+                          value={image.alt || ''}
+                          onChange={(e) => updateImageAlt(image.id, e.target.value)}
+                          placeholder="Describe the image for accessibility"
+                          className="text-xs"
+                        />
                       </div>
-                    </div>
 
-                    {/* Alt Text */}
-                    <div className="space-y-1">
-                      <Label htmlFor={`alt-${image.id}`} className="text-xs">Alt Text</Label>
-                      <Input
-                        id={`alt-${image.id}`}
-                        value={image.alt || ''}
-                        onChange={(e) => updateImageAlt(image.id, e.target.value)}
-                        placeholder="Describe the image for accessibility"
-                        className="text-xs"
-                      />
-                    </div>
-
-                    {/* Description */}
-                    <div className="space-y-1">
-                      <Label htmlFor={`desc-${image.id}`} className="text-xs">Description</Label>
-                      <Textarea
-                        id={`desc-${image.id}`}
-                        value={image.description || ''}
-                        onChange={(e) => updateImageDescription(image.id, e.target.value)}
-                        placeholder="Optional description"
-                        rows={2}
-                        className="text-xs"
-                      />
+                      {/* Description */}
+                      <div className="space-y-1">
+                        <Label htmlFor={`desc-${image.id}`} className="text-xs">Description</Label>
+                        <Textarea
+                          id={`desc-${image.id}`}
+                          value={image.description || ''}
+                          onChange={(e) => updateImageDescription(image.id, e.target.value)}
+                          placeholder="Optional description"
+                          rows={2}
+                          className="text-xs"
+                        />
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </CardContent>
         </Card>
