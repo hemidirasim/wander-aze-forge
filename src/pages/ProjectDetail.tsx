@@ -119,10 +119,10 @@ const ProjectDetail = () => {
       {/* Project Details */}
       <section className="py-16 px-4">
         <div className="container mx-auto max-w-6xl">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+          <div className="grid grid-cols-1 gap-12">
             
             {/* Main Content */}
-            <div className="lg:col-span-2 space-y-8">
+            <div className="space-y-8">
               
               {/* Overview */}
               <Card>
@@ -250,48 +250,6 @@ const ProjectDetail = () => {
               </Card>
             </div>
 
-            {/* Sidebar */}
-            <div className="lg:col-span-1">
-              <div className="space-y-6">
-                
-                {/* Project Stats */}
-                <Card className="sticky top-24">
-                  <CardHeader>
-                    <CardTitle>Project Impact</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="text-center p-4 bg-primary/10 rounded-lg">
-                      <div className="text-3xl font-bold text-primary">500+</div>
-                      <div className="text-sm text-muted-foreground">Monthly Visitors</div>
-                    </div>
-                    <div className="text-center p-4 bg-primary/10 rounded-lg">
-                      <div className="text-3xl font-bold text-primary">35</div>
-                      <div className="text-sm text-muted-foreground">Jobs Created</div>
-                    </div>
-                    <div className="text-center p-4 bg-primary/10 rounded-lg">
-                      <div className="text-3xl font-bold text-primary">0</div>
-                      <div className="text-sm text-muted-foreground">Environmental Violations</div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Partners */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Partners</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-2">
-                      {project.partners.map((partner, index) => (
-                        <div key={index} className="p-3 bg-muted/50 rounded-lg text-sm">
-                          {partner}
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
           </div>
         </div>
       </section>
