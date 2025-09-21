@@ -131,99 +131,28 @@ const BlogDetail = () => {
 
       {/* Article Content */}
       <section className="py-8 px-4">
-        <div className="container mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
-            
-            {/* Main Content */}
-            <div className="lg:col-span-3">
-              <Card className="border-0 shadow-none">
-                <CardContent className="pt-0">
-                  <div 
-                    className="prose prose-lg max-w-none prose-headings:text-foreground prose-p:text-muted-foreground prose-strong:text-foreground prose-li:text-muted-foreground"
-                    dangerouslySetInnerHTML={{ __html: post.content }}
-                  />
-                  
-                  {/* Tags */}
-                  <div className="mt-12 pt-8 border-t border-border">
-                    <h3 className="text-lg font-semibold text-foreground mb-4">Tags</h3>
-                    <div className="flex flex-wrap gap-2">
-                      {post.tags.map((tag, index) => (
-                        <Badge key={index} variant="outline" className="hover:bg-primary hover:text-primary-foreground cursor-pointer">
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Sidebar */}
-            <div className="lg:col-span-1">
-              <div className="space-y-6 sticky top-24">
-                
-                {/* Author Info */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-lg">About the Author</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Our expert team at Camping Azerbaijan has been exploring and documenting the country's wilderness for over 10 years.
-                    </p>
-                    <Button variant="outline" size="sm" className="w-full">
-                      View All Posts
-                    </Button>
-                  </CardContent>
-                </Card>
-
-                {/* Related Posts */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-lg">Related Stories</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    {relatedPosts.map((relatedPost) => (
-                      <Link 
-                        key={relatedPost.id}
-                        to={`/blog/${relatedPost.id}`}
-                        className="block group"
-                      >
-                        <div className="flex space-x-3">
-                          <img 
-                            src={relatedPost.image}
-                            alt={relatedPost.title}
-                            className="w-16 h-12 object-cover rounded flex-shrink-0"
-                          />
-                          <div className="flex-1 min-w-0">
-                            <div className="text-xs text-primary mb-1">{relatedPost.category}</div>
-                            <h4 className="text-sm font-medium text-foreground group-hover:text-primary transition-colors line-clamp-2">
-                              {relatedPost.title}
-                            </h4>
-                          </div>
-                        </div>
-                      </Link>
-                    ))}
-                  </CardContent>
-                </Card>
-
-                {/* Newsletter Signup */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-lg">Stay Updated</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Get the latest adventure stories and trail updates.
-                    </p>
-                    <Button variant="adventure" size="sm" className="w-full">
-                      Subscribe
-                    </Button>
-                  </CardContent>
-                </Card>
+        <div className="container mx-auto max-w-4xl">
+          {/* Main Content */}
+          <Card className="border-0 shadow-none">
+            <CardContent className="pt-0">
+              <div 
+                className="prose prose-lg max-w-none prose-headings:text-foreground prose-p:text-muted-foreground prose-strong:text-foreground prose-li:text-muted-foreground"
+                dangerouslySetInnerHTML={{ __html: post.content }}
+              />
+              
+              {/* Tags */}
+              <div className="mt-12 pt-8 border-t border-border">
+                <h3 className="text-lg font-semibold text-foreground mb-4">Tags</h3>
+                <div className="flex flex-wrap gap-2">
+                  {post.tags.map((tag, index) => (
+                    <Badge key={index} variant="outline" className="hover:bg-primary hover:text-primary-foreground cursor-pointer">
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
               </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         </div>
       </section>
 
