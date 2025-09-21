@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { 
@@ -33,7 +33,6 @@ const AdminLayout: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [expandedMenus, setExpandedMenus] = useState<string[]>(['tours', 'projects']);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
@@ -42,12 +41,12 @@ const AdminLayout: React.FC = () => {
     const user = localStorage.getItem('adminUser');
     
     if (!token || !user) {
-      navigate('/admin/login');
+      window.location.href = '/admin/login';
       return;
     }
 
     setLoading(false);
-  }, [navigate]);
+  }, []);
 
   const menuItems: MenuItem[] = [
     {
@@ -188,7 +187,7 @@ const AdminLayout: React.FC = () => {
   const handleLogout = () => {
     localStorage.removeItem('adminToken');
     localStorage.removeItem('adminUser');
-    navigate('/admin/login');
+    window.location.href = '/admin/login';
   };
 
   if (loading) {
@@ -266,7 +265,7 @@ const AdminLayout: React.FC = () => {
                           className={`w-full justify-start text-gray-600 hover:bg-gray-100 ${
                             isActive(child.path || '') ? 'bg-blue-50 text-blue-700' : ''
                           }`}
-                          onClick={() => navigate(child.path || '')}
+                          onClick={() => window.location.href = child.path || ''}
                         >
                           <child.icon className="w-3 h-3 mr-2" />
                           {child.title}
@@ -281,7 +280,7 @@ const AdminLayout: React.FC = () => {
                   className={`w-full justify-start ${sidebarOpen ? 'justify-start' : 'justify-center'} ${
                     isActive(item.path || '') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'
                   }`}
-                  onClick={() => navigate(item.path || '')}
+                  onClick={() => window.location.href = item.path || ''}
                 >
                   <item.icon className="w-4 h-4" />
                   {sidebarOpen && <span className="ml-3">{item.title}</span>}
