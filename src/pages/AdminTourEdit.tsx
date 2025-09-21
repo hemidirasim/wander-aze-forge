@@ -168,16 +168,23 @@ const AdminTourEdit: React.FC = () => {
 
     if (id) {
       fetchTourData();
+    } else {
+      setLoading(false);
     }
   }, [id, navigate]);
 
   const fetchTourData = async () => {
     try {
+      console.log('Fetching tour data for ID:', id);
       const response = await fetch('/api/tours');
       const result = await response.json();
       
+      console.log('API Response:', result);
+      
       if (result.success && result.data) {
         const tour = result.data.find((t: any) => t.id === parseInt(id!));
+        console.log('Found tour:', tour);
+        
         if (tour) {
           setFormData({
             // Basic Info
@@ -242,10 +249,20 @@ const AdminTourEdit: React.FC = () => {
             isActive: tour.is_active !== false,
             featured: tour.featured === true
           });
+        } else {
+          console.error('Tour not found with ID:', id);
+          alert('Tour not found!');
+          navigate('/admin/tours');
         }
+      } else {
+        console.error('API response error:', result);
+        alert('Failed to load tour data!');
+        navigate('/admin/tours');
       }
     } catch (error) {
       console.error('Failed to fetch tour data:', error);
+      alert('Error loading tour data. Please try again.');
+      navigate('/admin/tours');
     } finally {
       setLoading(false);
     }
