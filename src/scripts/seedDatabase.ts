@@ -55,28 +55,70 @@ const sampleTours = [
 
 const sampleBlogPosts = [
   {
-    title: "Top 10 Hiking Trails in Azerbaijan",
-    content: "Azerbaijan offers some of the most spectacular hiking trails in the Caucasus region. From the rugged mountains of the Greater Caucasus to the lush forests of the Talysh Mountains, there's something for every level of hiker...",
-    excerpt: "Discover the best hiking trails in Azerbaijan, from beginner-friendly paths to challenging mountain treks.",
-    author: "Azerbaijan Eco Tours Team",
-    image_url: "/images/hiking-trails.jpg",
-    published: true
+    title: "Best Hiking Trails in Azerbaijan: A Complete Guide",
+    content: "Azerbaijan offers some of the most spectacular hiking trails in the Caucasus region. From the ancient villages of Khinalig to the pristine wilderness of Shahdag National Park, our comprehensive guide covers everything you need to know about hiking in Azerbaijan. Whether you're a beginner looking for day hikes or an experienced trekker seeking multi-day adventures, this guide will help you discover the perfect trail for your next adventure.",
+    excerpt: "Discover the most breathtaking hiking trails across Azerbaijan, from beginner-friendly walks to challenging mountain expeditions.",
+    author: "Camping Azerbaijan Team",
+    category: "Travel Guide",
+    tags: ["hiking", "trails", "azerbaijan", "mountains"],
+    featured_image: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&h=600&fit=crop",
+    status: "published",
+    featured: true
   },
   {
-    title: "Sustainable Tourism in Azerbaijan",
-    content: "As Azerbaijan's first eco-tourism company, we're committed to promoting sustainable travel practices that protect our natural environment and support local communities...",
-    excerpt: "Learn about our commitment to sustainable tourism and how we protect Azerbaijan's natural beauty.",
-    author: "Dr. Leyla Aliyeva",
-    image_url: "/images/sustainable-tourism.jpg",
-    published: true
+    title: "Sustainable Tourism: Our Commitment to Nature",
+    content: "At Camping Azerbaijan, we believe that tourism should benefit both visitors and local communities while protecting the natural environment. Our commitment to sustainable tourism practices includes supporting local homestays, using eco-friendly equipment, and educating travelers about conservation. Learn about our initiatives to reduce environmental impact and support local communities across Azerbaijan.",
+    excerpt: "Learn about our eco-friendly practices and how we're working to protect Azerbaijan's pristine wilderness for future generations.",
+    author: "Environmental Team",
+    category: "Conservation",
+    tags: ["sustainability", "ecotourism", "conservation", "environment"],
+    featured_image: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=600&fit=crop",
+    status: "published",
+    featured: false
   },
   {
-    title: "Traditional Cuisine of Azerbaijan",
-    content: "Azerbaijani cuisine is a rich tapestry of flavors influenced by Persian, Turkish, and Russian culinary traditions. From aromatic pilaf to succulent kebabs...",
-    excerpt: "Explore the rich culinary traditions of Azerbaijan and discover the stories behind our favorite dishes.",
-    author: "Chef Farid Mammadov",
-    image_url: "/images/azerbaijani-cuisine.jpg",
-    published: true
+    title: "Village Life in Khinalig: Ancient Traditions",
+    content: "Khinalig, one of the highest villages in the Caucasus Mountains, offers a unique glimpse into traditional Azerbaijani mountain life. With a history spanning over 5,000 years, this ancient village preserves customs and traditions that have remained largely unchanged for centuries. Join us as we explore the daily life, cultural practices, and architectural marvels of this remarkable mountain community.",
+    excerpt: "Experience the unique culture and traditions of one of the world's highest villages in the Caucasus Mountains.",
+    author: "Cultural Guide",
+    category: "Culture",
+    tags: ["culture", "khinalig", "traditions", "mountain-village"],
+    featured_image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop",
+    status: "published",
+    featured: false
+  },
+  {
+    title: "Wildlife Watching in Azerbaijan: A Photographer's Guide",
+    content: "Azerbaijan's diverse ecosystems provide excellent opportunities for wildlife photography and observation. From the majestic golden eagles of the Greater Caucasus to the elusive Caucasian leopards, our guide covers the best locations, seasons, and techniques for wildlife watching in Azerbaijan. Whether you're a professional photographer or a nature enthusiast, discover the incredible biodiversity that calls Azerbaijan home.",
+    excerpt: "Discover the best locations and techniques for wildlife photography in Azerbaijan's diverse ecosystems.",
+    author: "Wildlife Team",
+    category: "Photography",
+    tags: ["wildlife", "photography", "biodiversity", "nature"],
+    featured_image: "https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?w=800&h=600&fit=crop",
+    status: "published",
+    featured: false
+  },
+  {
+    title: "Winter Adventures in Shahdag: Skiing and Beyond",
+    content: "Shahdag Mountain Resort offers world-class skiing and snowboarding, but the winter adventures don't stop there. From snowshoeing through pristine forests to ice climbing on frozen waterfalls, discover the full range of winter activities available in Azerbaijan's premier mountain destination. Our comprehensive guide covers equipment, safety tips, and the best times to visit for optimal conditions.",
+    excerpt: "Explore the full range of winter activities available in Azerbaijan's premier mountain destination.",
+    author: "Adventure Team",
+    category: "Adventure",
+    tags: ["winter", "skiing", "shahdag", "adventure"],
+    featured_image: "https://images.unsplash.com/photo-1551524164-6cf2ac531d04?w=800&h=600&fit=crop",
+    status: "published",
+    featured: false
+  },
+  {
+    title: "Traditional Azerbaijani Cuisine: Mountain to Table",
+    content: "Discover the rich culinary traditions of Azerbaijan's mountain regions, where ancient recipes have been preserved for generations. From hearty stews that warm the soul on cold mountain nights to delicate pastries that celebrate special occasions, our guide explores the stories behind Azerbaijan's most beloved dishes. Learn about the ingredients, cooking methods, and cultural significance of these traditional foods.",
+    excerpt: "Explore the rich culinary traditions of Azerbaijan's mountain communities and their unique dishes.",
+    author: "Culinary Expert",
+    category: "Food & Culture",
+    tags: ["cuisine", "traditional", "mountains", "culture"],
+    featured_image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop",
+    status: "published",
+    featured: false
   }
 ];
 
