@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const API_BASE_URL = 'http://localhost:3001/api';
+const API_BASE_URL = process.env.NODE_ENV === 'production' ? '/api' : 'http://localhost:3001/api';
 
 export interface ApiResponse<T> {
   data: T | null;
@@ -25,7 +25,16 @@ export function useApi<T>(endpoint: string): ApiResponse<T> {
         }
         
         const result = await response.json();
-        setData(result);
+        
+        // Handle API response format: {success: true, data: ...}
+        if (result.success && result.data !== undefined) {
+          setData(result.data);
+        } else if (result.success === undefined) {
+          // Handle direct data response (for backward compatibility)
+          setData(result);
+        } else {
+          throw new Error(result.error || 'API response error');
+        }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'An error occurred');
       } finally {

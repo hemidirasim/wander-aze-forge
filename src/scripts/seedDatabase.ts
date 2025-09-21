@@ -56,7 +56,37 @@ const sampleTours = [
 const sampleBlogPosts = [
   {
     title: "Best Hiking Trails in Azerbaijan: A Complete Guide",
-    content: "Azerbaijan offers some of the most spectacular hiking trails in the Caucasus region. From the ancient villages of Khinalig to the pristine wilderness of Shahdag National Park, our comprehensive guide covers everything you need to know about hiking in Azerbaijan. Whether you're a beginner looking for day hikes or an experienced trekker seeking multi-day adventures, this guide will help you discover the perfect trail for your next adventure.",
+    content: `
+      <p>Azerbaijan offers some of the most spectacular hiking trails in the Caucasus region. From the ancient villages of Khinalig to the pristine wilderness of Shahdag National Park, our comprehensive guide covers everything you need to know about hiking in Azerbaijan.</p>
+
+      <h2>1. Khinalig to Laza Trail</h2>
+      <p>This iconic 3-day trek takes you through two of Azerbaijan's most remote mountain villages. The trail winds through dramatic mountain landscapes, crossing crystal-clear streams and offering breathtaking panoramic views of the Greater Caucasus range.</p>
+
+      <p><strong>Difficulty:</strong> Moderate to Challenging<br>
+      <strong>Distance:</strong> 25 kilometers<br>
+      <strong>Duration:</strong> 3 days, 2 nights</p>
+
+      <h2>2. Shahdag National Park Trails</h2>
+      <p>Located in the heart of the Greater Caucasus, Shahdag National Park offers multiple trail options suitable for all skill levels. The park is home to diverse wildlife and stunning alpine scenery.</p>
+
+      <h2>3. Tufandag Mountain</h2>
+      <p>Perfect for day hikes, Tufandag offers well-marked trails with excellent infrastructure. The mountain provides stunning views of the Caucasus peaks and is accessible year-round.</p>
+
+      <h2>Essential Preparation Tips</h2>
+      <ul>
+        <li>Pack layers - mountain weather can change rapidly</li>
+        <li>Carry sufficient water - natural sources may not always be available</li>
+        <li>Inform someone of your hiking plans</li>
+        <li>Hire local guides for remote trails</li>
+        <li>Respect local customs in village areas</li>
+      </ul>
+
+      <h2>Best Time to Visit</h2>
+      <p>The ideal hiking season in Azerbaijan runs from May to October. Summer months (June-August) offer the warmest weather but can be crowded. Spring and autumn provide perfect conditions with fewer tourists and spectacular scenery.</p>
+
+      <h2>Conservation and Respect</h2>
+      <p>As you explore these magnificent trails, remember that we are visitors in these pristine environments. Follow Leave No Trace principles, support local communities, and help preserve these natural treasures for future generations.</p>
+    `,
     excerpt: "Discover the most breathtaking hiking trails across Azerbaijan, from beginner-friendly walks to challenging mountain expeditions.",
     author: "Camping Azerbaijan Team",
     category: "Travel Guide",
@@ -67,7 +97,31 @@ const sampleBlogPosts = [
   },
   {
     title: "Sustainable Tourism: Our Commitment to Nature",
-    content: "At Camping Azerbaijan, we believe that tourism should benefit both visitors and local communities while protecting the natural environment. Our commitment to sustainable tourism practices includes supporting local homestays, using eco-friendly equipment, and educating travelers about conservation. Learn about our initiatives to reduce environmental impact and support local communities across Azerbaijan.",
+    content: `
+      <p>At Camping Azerbaijan, we believe that tourism should benefit both visitors and local communities while protecting the natural environment. Our commitment to sustainable tourism practices includes supporting local homestays, using eco-friendly equipment, and educating travelers about conservation.</p>
+
+      <h2>Our Environmental Initiatives</h2>
+      <p>We've implemented several key initiatives to minimize our environmental impact:</p>
+      
+      <ul>
+        <li><strong>Waste Reduction:</strong> All tours follow strict Leave No Trace principles</li>
+        <li><strong>Local Sourcing:</strong> We prioritize local suppliers and homestays</li>
+        <li><strong>Energy Conservation:</strong> Use of solar-powered equipment where possible</li>
+        <li><strong>Water Protection:</strong> Education about water conservation in mountain areas</li>
+      </ul>
+
+      <h2>Community Support</h2>
+      <p>Our tours directly benefit local communities through:</p>
+      <ul>
+        <li>Employment of local guides and porters</li>
+        <li>Support for family-run homestays</li>
+        <li>Purchase of local products and services</li>
+        <li>Cultural exchange programs</li>
+      </ul>
+
+      <h2>Future Goals</h2>
+      <p>We're committed to continuous improvement in our sustainability practices and look forward to implementing even more eco-friendly initiatives in the coming years.</p>
+    `,
     excerpt: "Learn about our eco-friendly practices and how we're working to protect Azerbaijan's pristine wilderness for future generations.",
     author: "Environmental Team",
     category: "Conservation",
