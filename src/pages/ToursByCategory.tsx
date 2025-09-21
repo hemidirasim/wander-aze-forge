@@ -1,6 +1,7 @@
 import { useParams, Link } from 'react-router-dom';
 import Navigation from '@/components/Navigation';
 import TourCategoryDropdown from '@/components/TourCategoryDropdown';
+import TailorMadeForm from '@/components/TailorMadeForm';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -19,6 +20,59 @@ const ToursByCategory = () => {
 
   if (!category) {
     return <div>Category not found</div>;
+  }
+
+  // Special handling for tailor-made category
+  if (categoryId === 'tailor-made') {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navigation />
+        
+        {/* Hero Section */}
+        <section className="relative h-[60vh] flex items-center justify-center">
+          <div 
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            style={{ backgroundImage: `url(${category.image})` }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-transparent" />
+          <div className="relative z-10 text-center text-white max-w-4xl px-4">
+            <div className="mb-6">
+              <Badge variant="secondary" className="bg-primary text-primary-foreground mb-4">
+                {category.name}
+              </Badge>
+            </div>
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 capitalize">{category.name} Tours</h1>
+            <p className="text-xl md:text-2xl mb-8 text-white/90">
+              {category.description}
+            </p>
+          </div>
+        </section>
+
+        {/* Navigation */}
+        <section className="py-8 px-4 border-b border-border bg-background/95 backdrop-blur-sm sticky top-16 z-20">
+          <div className="container mx-auto">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="flex items-center space-x-4">
+                <Button variant="ghost" asChild>
+                  <Link to="/tours" className="flex items-center">
+                    <ArrowLeft className="w-4 h-4 mr-2" />
+                    All Tours
+                  </Link>
+                </Button>
+                <TourCategoryDropdown />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Tailor-Made Form */}
+        <section className="py-16 px-4">
+          <div className="container mx-auto">
+            <TailorMadeForm />
+          </div>
+        </section>
+      </div>
+    );
   }
 
   return (
