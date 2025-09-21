@@ -45,6 +45,12 @@ export const initializeDatabase = async () => {
         price DECIMAL(10,2),
         max_participants INTEGER,
         image_url VARCHAR(500),
+        highlights JSONB,
+        includes JSONB,
+        excludes JSONB,
+        itinerary TEXT,
+        requirements TEXT,
+        special_fields JSONB,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )

@@ -10,6 +10,12 @@ export interface Tour {
   price: number;
   max_participants: number;
   image_url?: string;
+  highlights?: string[];
+  includes?: string[];
+  excludes?: string[];
+  itinerary?: string;
+  requirements?: string;
+  special_fields?: any;
   created_at: string;
   updated_at: string;
 }
@@ -152,10 +158,25 @@ export class DatabaseService {
 
   static async createTour(tour: Omit<Tour, 'id' | 'created_at' | 'updated_at'>): Promise<Tour> {
     const result = await pool.query(
-      `INSERT INTO tours (title, description, category, duration, difficulty, price, max_participants, image_url)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+      `INSERT INTO tours (title, description, category, duration, difficulty, price, max_participants, image_url, highlights, includes, excludes, itinerary, requirements, special_fields)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
        RETURNING *`,
-      [tour.title, tour.description, tour.category, tour.duration, tour.difficulty, tour.price, tour.max_participants, tour.image_url]
+      [
+        tour.title, 
+        tour.description, 
+        tour.category, 
+        tour.duration, 
+        tour.difficulty, 
+        tour.price, 
+        tour.max_participants, 
+        tour.image_url,
+        tour.highlights ? JSON.stringify(tour.highlights) : null,
+        tour.includes ? JSON.stringify(tour.includes) : null,
+        tour.excludes ? JSON.stringify(tour.excludes) : null,
+        tour.itinerary,
+        tour.requirements,
+        tour.special_fields ? JSON.stringify(tour.special_fields) : null
+      ]
     );
     return result.rows[0];
   }

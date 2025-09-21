@@ -160,26 +160,67 @@ const AdminTourCategories: React.FC = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Tour data:', formData);
-    // Here you would typically send the data to your API
-    alert('Tour added successfully!');
-    setShowAddForm(false);
-    setFormData({
-      title: '',
-      description: '',
-      duration: '',
-      difficulty: '',
-      price: '',
-      maxParticipants: '',
-      highlights: [''],
-      includes: [''],
-      excludes: [''],
-      itinerary: '',
-      requirements: '',
-      category: ''
-    });
+    setIsSubmitting(true);
+
+    try {
+      // Prepare form data
+      const tourData = {
+        title: formData.title.trim(),
+        description: formData.description.trim(),
+        category: formData.category,
+        duration: formData.duration,
+        difficulty: formData.difficulty,
+        price: parseFloat(formData.price),
+        maxParticipants: parseInt(formData.maxParticipants),
+        highlights: formData.highlights.filter(h => h.trim() !== ''),
+        includes: formData.includes.filter(i => i.trim() !== ''),
+        excludes: formData.excludes.filter(e => e.trim() !== ''),
+        itinerary: formData.itinerary.trim(),
+        requirements: formData.requirements.trim(),
+        specialFields: selectedCategoryData?.specialFields || {}
+      };
+
+      // Send to API
+      const response = await fetch('/api/tours', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(tourData),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        alert('Tour added successfully!');
+        setShowAddForm(false);
+        setFormData({
+          title: '',
+          description: '',
+          duration: '',
+          difficulty: '',
+          price: '',
+          maxParticipants: '',
+          highlights: [''],
+          includes: [''],
+          excludes: [''],
+          itinerary: '',
+          requirements: '',
+          category: ''
+        });
+      } else {
+        throw new Error(result.error || 'Failed to create tour');
+      }
+    } catch (error) {
+      console.error('Error creating tour:', error);
+      alert(`Error creating tour: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const selectedCategoryData = tourCategories.find(cat => cat.id === selectedCategory);
@@ -437,10 +478,11 @@ const AdminTourCategories: React.FC = () => {
                   </Button>
                   <Button
                     type="submit"
-                    className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700"
+                    disabled={isSubmitting}
+                    className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 disabled:opacity-50"
                   >
                     <Save className="w-4 h-4 mr-2" />
-                    Save Tour
+                    {isSubmitting ? 'Saving...' : 'Save Tour'}
                   </Button>
                 </div>
               </form>

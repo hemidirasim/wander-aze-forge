@@ -15,6 +15,7 @@
     "seed-admin": "tsx src/scripts/seedAdminUsers.ts",
     "create-user": "tsx src/scripts/createNewUser.ts",
     "list-users": "tsx src/scripts/listAdminUsers.ts",
+    "update-tours": "tsx src/scripts/updateToursTable.ts",
     "server": "tsx src/server/index.ts"
   },
   "dependencies": {
