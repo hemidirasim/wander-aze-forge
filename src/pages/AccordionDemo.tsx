@@ -4,7 +4,7 @@ import TourProgramAccordion from '@/components/TourProgramAccordion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Mountain, Binoculars, Hiking, ArrowLeft } from 'lucide-react';
+import { Mountain, Binoculars, Footprints, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { hikingPrograms, trekkingPrograms, wildlifePrograms } from '@/data/tourPrograms';
 
@@ -14,7 +14,7 @@ const AccordionDemo: React.FC = () => {
       id: 'hiking',
       title: 'Hiking Tours',
       description: 'Day hikes and multi-day walking adventures',
-      icon: Hiking,
+      icon: Footprints,
       color: 'bg-green-100 text-green-800',
       programs: hikingPrograms
     },

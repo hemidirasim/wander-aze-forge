@@ -2,7 +2,7 @@ import React from 'react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Clock, MapPin, Mountain, Camera, Utensils, Moon, Sunrise, Coffee, Hiking } from 'lucide-react';
+import { Clock, MapPin, Mountain, Camera, Utensils, Moon, Sunrise, Coffee, Footprints } from 'lucide-react';
 import { DatabaseTourProgram } from '@/hooks/useTourPrograms';
 
 interface DatabaseTourProgramAccordionProps {
@@ -23,7 +23,7 @@ const getActivityIcon = (iconType?: string) => {
     case 'sleep':
       return <Moon {...iconProps} />;
     case 'hiking':
-      return <Hiking {...iconProps} />;
+      return <Footprints {...iconProps} />;
     case 'sunrise':
       return <Sunrise {...iconProps} />;
     case 'coffee':
