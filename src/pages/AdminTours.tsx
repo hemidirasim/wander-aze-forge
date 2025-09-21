@@ -24,14 +24,15 @@ interface Tour {
   title: string;
   description: string;
   duration: string;
-  group_size: string;
+  group_size?: string;
   difficulty: string;
-  location: string;
+  location?: string;
   price: number;
   rating: number;
-  image_url: string;
+  image_url?: string;
   category: string;
-  status: string;
+  is_active?: boolean;
+  featured?: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -54,7 +55,8 @@ const AdminTours: React.FC = () => {
     rating: '',
     image_url: '',
     category: '',
-    status: 'active'
+    is_active: true,
+    featured: false
   });
   const navigate = useNavigate();
 
@@ -72,10 +74,16 @@ const AdminTours: React.FC = () => {
   const fetchTours = async () => {
     try {
       const response = await fetch('/api/tours');
-      const data = await response.json();
-      setTours(data);
+      const result = await response.json();
+      if (result.success && result.data) {
+        setTours(result.data);
+      } else {
+        console.error('Failed to fetch tours:', result.error);
+        setTours([]);
+      }
     } catch (error) {
       console.error('Failed to fetch tours:', error);
+      setTours([]);
     } finally {
       setLoading(false);
     }
@@ -96,7 +104,8 @@ const AdminTours: React.FC = () => {
       rating: '',
       image_url: '',
       category: '',
-      status: 'active'
+      is_active: true,
+      featured: false
     });
   };
 
@@ -108,14 +117,15 @@ const AdminTours: React.FC = () => {
       title: tour.title,
       description: tour.description,
       duration: tour.duration,
-      group_size: tour.group_size,
+      group_size: tour.group_size || '',
       difficulty: tour.difficulty,
-      location: tour.location,
+      location: tour.location || '',
       price: tour.price.toString(),
       rating: tour.rating.toString(),
-      image_url: tour.image_url,
+      image_url: tour.image_url || '',
       category: tour.category,
-      status: tour.status
+      is_active: tour.is_active || true,
+      featured: tour.featured || false
     });
   };
 
@@ -239,8 +249,8 @@ const AdminTours: React.FC = () => {
                           <p className="text-sm text-gray-500">{tour.location}</p>
                           <div className="flex items-center space-x-2 mt-1">
                             <Badge variant="outline">{tour.category}</Badge>
-                            <Badge variant={tour.status === 'active' ? 'default' : 'secondary'}>
-                              {tour.status}
+                            <Badge variant={tour.is_active ? 'default' : 'secondary'}>
+                              {tour.is_active ? 'Active' : 'Inactive'}
                             </Badge>
                           </div>
                         </div>
@@ -396,18 +406,31 @@ const AdminTours: React.FC = () => {
                     />
                   </div>
 
-                  <div>
-                    <Label htmlFor="status">Status</Label>
-                    <Select value={formData.status} onValueChange={(value) => setFormData({ ...formData, status: value })}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select status" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="active">Active</SelectItem>
-                        <SelectItem value="inactive">Inactive</SelectItem>
-                        <SelectItem value="draft">Draft</SelectItem>
-                      </SelectContent>
-                    </Select>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="is_active">Active Status</Label>
+                      <Select value={formData.is_active ? 'active' : 'inactive'} onValueChange={(value) => setFormData({ ...formData, is_active: value === 'active' })}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="active">Active</SelectItem>
+                          <SelectItem value="inactive">Inactive</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label htmlFor="featured">Featured</Label>
+                      <Select value={formData.featured ? 'yes' : 'no'} onValueChange={(value) => setFormData({ ...formData, featured: value === 'yes' })}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Featured?" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="yes">Yes</SelectItem>
+                          <SelectItem value="no">No</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </div>
 
                   <Button onClick={handleSave} className="w-full flex items-center space-x-2">
