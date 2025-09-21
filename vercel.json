@@ -1,13 +1,32 @@
 {
-  "functions": {
-    "src/server/index.ts": {
-      "maxDuration": 30
-    }
-  },
   "rewrites": [
     {
       "source": "/api/(.*)",
       "destination": "/api/index"
+    },
+    {
+      "source": "/admin/login",
+      "destination": "/admin/login"
+    },
+    {
+      "source": "/admin/dashboard", 
+      "destination": "/admin/dashboard"
+    },
+    {
+      "source": "/admin/tours",
+      "destination": "/admin/tours"
+    },
+    {
+      "source": "/admin/tours/new",
+      "destination": "/admin/tours/new"
+    },
+    {
+      "source": "/admin/test",
+      "destination": "/admin/test"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ],
   "env": {
