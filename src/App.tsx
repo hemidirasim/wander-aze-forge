@@ -21,6 +21,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminTours from "./pages/AdminTours";
 import AdminTest from "./pages/AdminTest";
 import AdminTourCategories from "./pages/AdminTourCategories";
+import AdminLayout from "./components/AdminLayout";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -45,11 +46,12 @@ const App = () => (
           <Route path="/upload-demo" element={<UploadDemo />} />
           <Route path="/accordion-demo" element={<AccordionDemo />} />
           <Route path="/admin/login" element={<AdminLogin />} />
-          <Route path="/admin/dashboard" element={<AdminDashboard />} />
-          <Route path="/admin/tours" element={<AdminTours />} />
-          <Route path="/admin/tours/new" element={<AdminTours />} />
-          <Route path="/admin/tour-categories" element={<AdminTourCategories />} />
-          <Route path="/admin/test" element={<AdminTest />} />
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route path="dashboard" element={<AdminDashboard />} />
+            <Route path="tours" element={<AdminTours />} />
+            <Route path="tour-categories" element={<AdminTourCategories />} />
+            <Route path="test" element={<AdminTest />} />
+          </Route>
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

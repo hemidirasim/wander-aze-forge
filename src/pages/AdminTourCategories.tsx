@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -55,7 +54,6 @@ const AdminTourCategories: React.FC = () => {
     category: ''
   });
 
-  const navigate = useNavigate();
 
   const tourCategories = [
     {
@@ -502,14 +500,6 @@ const AdminTourCategories: React.FC = () => {
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Tour Categories</h1>
             <p className="text-gray-600">Select a category to add new tours</p>
           </div>
-          <Button
-            variant="outline"
-            onClick={() => navigate('/admin/dashboard')}
-            className="flex items-center space-x-2"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Back to Dashboard</span>
-          </Button>
         </div>
 
         {/* Categories Grid */}

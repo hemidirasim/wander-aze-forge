@@ -1,24 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { 
-  Users, 
-  MapPin, 
-  FolderOpen, 
-  Handshake, 
-  FileText, 
-  Calendar,
-  MessageSquare,
-  Upload,
   BarChart3,
-  Settings,
-  LogOut,
-  Plus,
-  Eye,
-  Edit,
-  Trash2,
   Database,
   Shield,
   TrendingUp,
@@ -52,7 +37,6 @@ const AdminDashboard: React.FC = () => {
   });
   const [loading, setLoading] = useState(true);
   const [adminUser, setAdminUser] = useState<any>(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     // Check authentication
@@ -190,50 +174,6 @@ const AdminDashboard: React.FC = () => {
     }
   ];
 
-  const quickActions = [
-    {
-      title: 'Manage Projects',
-      description: 'Development projects',
-      icon: FolderOpen,
-      color: 'bg-gradient-to-r from-green-500 to-green-600',
-      action: () => navigate('/admin/projects')
-    },
-    {
-      title: 'Manage Partners',
-      description: 'Business partnerships',
-      icon: Handshake,
-      color: 'bg-gradient-to-r from-orange-500 to-orange-600',
-      action: () => navigate('/admin/partners')
-    },
-    {
-      title: 'Blog Management',
-      description: 'Content and articles',
-      icon: FileText,
-      color: 'bg-gradient-to-r from-pink-500 to-pink-600',
-      action: () => navigate('/admin/blog')
-    },
-    {
-      title: 'View Bookings',
-      description: 'Tour reservations',
-      icon: Calendar,
-      color: 'bg-gradient-to-r from-indigo-500 to-indigo-600',
-      action: () => navigate('/admin/bookings')
-    },
-    {
-      title: 'Contact Messages',
-      description: 'Customer inquiries',
-      icon: MessageSquare,
-      color: 'bg-gradient-to-r from-teal-500 to-teal-600',
-      action: () => navigate('/admin/contact')
-    },
-    {
-      title: 'File Manager',
-      description: 'Upload and manage files',
-      icon: Upload,
-      color: 'bg-gradient-to-r from-gray-500 to-gray-600',
-      action: () => navigate('/admin/files')
-    }
-  ];
 
   if (loading) {
     return (
@@ -331,22 +271,12 @@ const AdminDashboard: React.FC = () => {
 
         {/* Tour Categories */}
         <div className="mb-8">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-900">🗺️ Tour Categories</h2>
-            <Button 
-              onClick={() => navigate('/admin/tour-categories')}
-              className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-lg"
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              Manage Categories
-            </Button>
-          </div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">🗺️ Tour Categories Overview</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
             {tourCategories.map((category, index) => (
               <Card 
                 key={index} 
-                className="hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border-0 shadow-lg"
-                onClick={() => navigate('/admin/tour-categories')}
+                className="border-0 shadow-lg"
               >
                 <CardContent className="p-6 text-center">
                   <div className={`w-16 h-16 ${category.color} rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg`}>
@@ -363,31 +293,6 @@ const AdminDashboard: React.FC = () => {
           </div>
         </div>
 
-        {/* Quick Actions */}
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">⚡ Quick Actions</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {quickActions.map((action, index) => (
-              <Card 
-                key={index} 
-                className="hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border-0 shadow-lg"
-                onClick={action.action}
-              >
-                <CardContent className="p-6">
-                  <div className="flex items-center space-x-4">
-                    <div className={`w-12 h-12 ${action.color} rounded-xl flex items-center justify-center shadow-lg`}>
-                      <action.icon className="w-6 h-6 text-white" />
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-gray-900 mb-1">{action.title}</h3>
-                      <p className="text-sm text-gray-600">{action.description}</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
 
         {/* System Overview */}
         <Card className="shadow-lg border-0">
