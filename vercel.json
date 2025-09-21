@@ -1,38 +1,17 @@
 {
+  "functions": {
+    "api/index.ts": {
+      "maxDuration": 30
+    }
+  },
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "/api/index"
-    },
-    {
-      "source": "/admin/login",
-      "destination": "/admin/login"
-    },
-    {
-      "source": "/admin/dashboard", 
-      "destination": "/admin/dashboard"
-    },
-    {
-      "source": "/admin/tours",
-      "destination": "/admin/tours"
-    },
-    {
-      "source": "/admin/tours/new",
-      "destination": "/admin/tours/new"
-    },
-    {
-      "source": "/admin/test",
-      "destination": "/admin/test"
+      "destination": "/api"
     },
     {
       "source": "/(.*)",
       "destination": "/index.html"
     }
-  ],
-  "env": {
-    "ADMIN_USERNAME": "admin",
-    "ADMIN_PASSWORD": "admin123",
-    "SESSION_SECRET": "your-secret-key-here",
-    "DATABASE_URL": "postgresql://neondb_owner:npg_cuU7z3plExsy@ep-winter-shadow-ad30554v-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require"
-  }
+  ]
 }
