@@ -192,20 +192,6 @@ const AdminDashboard: React.FC = () => {
 
   const quickActions = [
     {
-      title: 'Add New Tour',
-      description: 'Create a new tour package',
-      icon: Plus,
-      color: 'bg-gradient-to-r from-blue-500 to-blue-600',
-      action: () => navigate('/admin/tours/new')
-    },
-    {
-      title: 'View All Tours',
-      description: 'Manage existing tours',
-      icon: Eye,
-      color: 'bg-gradient-to-r from-cyan-500 to-cyan-600',
-      action: () => navigate('/admin/tours')
-    },
-    {
       title: 'Manage Projects',
       description: 'Development projects',
       icon: FolderOpen,
@@ -232,6 +218,20 @@ const AdminDashboard: React.FC = () => {
       icon: Calendar,
       color: 'bg-gradient-to-r from-indigo-500 to-indigo-600',
       action: () => navigate('/admin/bookings')
+    },
+    {
+      title: 'Contact Messages',
+      description: 'Customer inquiries',
+      icon: MessageSquare,
+      color: 'bg-gradient-to-r from-teal-500 to-teal-600',
+      action: () => navigate('/admin/contact')
+    },
+    {
+      title: 'File Manager',
+      description: 'Upload and manage files',
+      icon: Upload,
+      color: 'bg-gradient-to-r from-gray-500 to-gray-600',
+      action: () => navigate('/admin/files')
     }
   ];
 
@@ -334,11 +334,11 @@ const AdminDashboard: React.FC = () => {
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold text-gray-900">🗺️ Tour Categories</h2>
             <Button 
-              onClick={() => navigate('/admin/tours/new')}
+              onClick={() => navigate('/admin/tour-categories')}
               className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-lg"
             >
               <Plus className="w-4 h-4 mr-2" />
-              Add New Tour
+              Manage Categories
             </Button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
@@ -346,7 +346,7 @@ const AdminDashboard: React.FC = () => {
               <Card 
                 key={index} 
                 className="hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border-0 shadow-lg"
-                onClick={() => navigate(`/admin/tours?category=${category.title.toLowerCase().replace(' ', '-')}`)}
+                onClick={() => navigate('/admin/tour-categories')}
               >
                 <CardContent className="p-6 text-center">
                   <div className={`w-16 h-16 ${category.color} rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg`}>
