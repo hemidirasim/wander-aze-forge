@@ -13,6 +13,8 @@
     "seed-db": "tsx src/scripts/seedDatabase.ts",
     "seed-programs": "tsx src/scripts/seedTourPrograms.ts",
     "seed-admin": "tsx src/scripts/seedAdminUsers.ts",
+    "create-user": "tsx src/scripts/createNewUser.ts",
+    "list-users": "tsx src/scripts/listAdminUsers.ts",
     "server": "tsx src/server/index.ts"
   },
   "dependencies": {
