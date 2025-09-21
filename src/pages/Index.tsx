@@ -1,9 +1,13 @@
 import Navigation from '@/components/Navigation';
+import TourCategoryGallery from '@/components/TourCategoryGallery';
+import RecommendationsSection from '@/components/RecommendationsSection';
+import JourneyContactForm from '@/components/JourneyContactForm';
+import BusinessPartners from '@/components/BusinessPartners';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Link } from 'react-router-dom';
-import { Star, Users, Clock, MapPin, Award, Leaf, Heart, ArrowRight } from 'lucide-react';
+import { Star, Award, Leaf, Heart, ArrowRight, Clock } from 'lucide-react';
 import { allTours } from '@/data/tourCategories';
 import heroImage from '@/assets/hero-mountain.jpg';
 
@@ -109,7 +113,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Featured Tours */}
+      {/* Most Popular Tours */}
       <section className="py-24 px-4 bg-muted/20">
         <div className="container mx-auto">
           <div className="text-center mb-20">
@@ -181,95 +185,17 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="py-20 px-4 bg-gradient-mountain">
-        <div className="container mx-auto">
-          <div className="text-center text-white mb-16">
-            <h2 className="text-4xl font-bold mb-4">Our Journey in Numbers</h2>
-            <p className="text-xl text-white/90">A decade of meaningful adventures and lasting impact</p>
-          </div>
-          
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center text-white">
-            {[
-              { number: "10+", label: "Years Experience" },
-              { number: "700+", label: "Tours Completed" },
-              { number: "2,500+", label: "Happy Travelers" },
-              { number: "30+", label: "Unique Trails" }
-            ].map((stat, index) => (
-              <div key={index}>
-                <div className="text-5xl font-bold mb-2 text-autumn">{stat.number}</div>
-                <div className="text-white/90">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* Tour Category Gallery - 5 Photos Layout */}
+      <TourCategoryGallery />
 
-      {/* About Preview */}
-      <section className="py-24 px-4">
-        <div className="container mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <div className="space-y-8">
-              <div>
-                <h2 className="text-5xl font-bold text-foreground mb-6">
-                  Small Groups, Big Impact
-                </h2>
-                <p className="text-xl text-muted-foreground leading-relaxed mb-8">
-                  We believe in responsible tourism that creates positive change. Our small group adventures 
-                  support local communities while protecting Azerbaijan's pristine wilderness for future generations.
-                </p>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-6">
-                <div className="text-center p-6 bg-primary/5 rounded-xl">
-                  <Users className="w-8 h-8 text-primary mx-auto mb-3" />
-                  <div className="text-2xl font-bold text-foreground">2-8</div>
-                  <div className="text-sm text-muted-foreground">People per group</div>
-                </div>
-                <div className="text-center p-6 bg-primary/5 rounded-xl">
-                  <Leaf className="w-8 h-8 text-primary mx-auto mb-3" />
-                  <div className="text-2xl font-bold text-foreground">100%</div>
-                  <div className="text-sm text-muted-foreground">Eco-friendly tours</div>
-                </div>
-              </div>
-              
-              <Button variant="adventure" size="lg" asChild>
-                <Link to="/about">Learn About Us</Link>
-              </Button>
-            </div>
-            
-            <div className="relative h-96 lg:h-full min-h-[400px] rounded-2xl overflow-hidden">
-              <img 
-                src="https://images.unsplash.com/photo-1445308394109-4ec2920981b1?w=600&h=600&fit=crop"
-                alt="Mountain landscape"
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Recommendations */}
+      <RecommendationsSection />
 
-      {/* Call to Action */}
-      <section className="py-24 px-4 bg-gradient-hero">
-        <div className="container mx-auto text-center">
-          <h2 className="text-5xl font-bold text-white mb-8">
-            Ready for Your Adventure?
-          </h2>
-          <p className="text-xl text-white/90 mb-12 max-w-3xl mx-auto leading-relaxed">
-            Join us for an unforgettable journey through Azerbaijan's most spectacular landscapes. 
-            Every tour supports conservation and local communities.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-6 justify-center">
-            <Button size="lg" variant="outline" className="bg-white text-primary hover:bg-white/90 text-lg px-8 py-4" asChild>
-              <Link to="/contact">Plan Your Trip</Link>
-            </Button>
-            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-primary text-lg px-8 py-4" asChild>
-              <Link to="/blog">Read Our Stories</Link>
-            </Button>
-          </div>
-        </div>
-      </section>
+      {/* Plan Your Journey Contact Form */}
+      <JourneyContactForm />
+
+      {/* Business Partners */}
+      <BusinessPartners />
     </div>
   );
 };
