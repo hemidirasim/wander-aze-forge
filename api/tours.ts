@@ -1,5 +1,18 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { DatabaseService } from '../src/services/databaseService';
+import { Pool } from 'pg';
+
+// Database configuration
+const dbConfig = {
+  connectionString: process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_cuU7z3plExsy@ep-winter-shadow-ad30554v-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require',
+  ssl: {
+    rejectUnauthorized: false
+  },
+  max: 20,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 2000,
+};
+
+const pool = new Pool(dbConfig);
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Enable CORS
@@ -33,16 +46,19 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
   const { category } = req.query;
 
   try {
-    let tours;
+    let query = 'SELECT * FROM tours ORDER BY created_at DESC';
+    let params: any[] = [];
+
     if (category && typeof category === 'string') {
-      tours = await DatabaseService.getToursByCategory(category);
-    } else {
-      tours = await DatabaseService.getAllTours();
+      query = 'SELECT * FROM tours WHERE category = $1 ORDER BY created_at DESC';
+      params = [category];
     }
 
+    const result = await pool.query(query, params);
+    
     return res.status(200).json({
       success: true,
-      data: tours
+      data: result.rows
     });
   } catch (error) {
     console.error('Error fetching tours:', error);
@@ -80,30 +96,32 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
       });
     }
 
-    // Create tour data
-    const tourData = {
-      title: title.trim(),
-      description: description.trim(),
-      category: category.trim(),
-      duration: duration.trim(),
-      difficulty: difficulty.trim(),
-      price: parseFloat(price),
-      max_participants: parseInt(maxParticipants),
-      highlights: highlights || [],
-      includes: includes || [],
-      excludes: excludes || [],
-      itinerary: itinerary?.trim() || '',
-      requirements: requirements?.trim() || '',
-      special_fields: specialFields || {},
-      image_url: imageUrl?.trim() || null
-    };
-
     // Create tour in database
-    const newTour = await DatabaseService.createTour(tourData);
+    const result = await pool.query(
+      `INSERT INTO tours (title, description, category, duration, difficulty, price, max_participants, image_url, highlights, includes, excludes, itinerary, requirements, special_fields)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+       RETURNING *`,
+      [
+        title.trim(),
+        description.trim(),
+        category.trim(),
+        duration.trim(),
+        difficulty.trim(),
+        parseFloat(price),
+        parseInt(maxParticipants),
+        imageUrl?.trim() || null,
+        highlights ? JSON.stringify(highlights) : null,
+        includes ? JSON.stringify(includes) : null,
+        excludes ? JSON.stringify(excludes) : null,
+        itinerary?.trim() || '',
+        requirements?.trim() || '',
+        specialFields ? JSON.stringify(specialFields) : null
+      ]
+    );
 
     return res.status(201).json({
       success: true,
-      data: newTour,
+      data: result.rows[0],
       message: 'Tour created successfully'
     });
 
