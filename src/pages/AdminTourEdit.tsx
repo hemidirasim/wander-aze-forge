@@ -22,7 +22,8 @@ import {
   Car,
   Camera,
   DollarSign,
-  ArrowLeft
+  ArrowLeft,
+  Check
 } from 'lucide-react';
 
 interface GalleryImage {
