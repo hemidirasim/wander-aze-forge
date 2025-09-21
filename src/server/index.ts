@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import { testConnection } from '../config/database';
 import { DatabaseService } from '../services/databaseService';
+import { AdminService } from '../services/adminService';
 import uploadRouter from './upload';
 
 const app = express();
@@ -14,6 +15,23 @@ app.use(helmet());
 app.use(cors());
 app.use(morgan('combined'));
 app.use(express.json());
+
+// Admin authentication middleware
+const adminAuth = (req: any, res: any, next: any) => {
+  const token = req.headers.authorization?.replace('Bearer ', '') || req.body.token;
+  
+  if (!token) {
+    return res.status(401).json({ error: 'No token provided' });
+  }
+  
+  const user = AdminService.verifyToken(token);
+  if (!user) {
+    return res.status(401).json({ error: 'Invalid token' });
+  }
+  
+  req.adminUser = user;
+  next();
+};
 app.use(express.urlencoded({ extended: true }));
 
 // Health check endpoint
@@ -32,6 +50,64 @@ app.get('/api/health', async (req, res) => {
       error: error instanceof Error ? error.message : 'Unknown error'
     });
   }
+});
+
+// Admin authentication endpoints
+app.post('/api/admin/login', (req, res) => {
+  try {
+    const { username, password } = req.body;
+    
+    if (!username || !password) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Username and password are required' 
+      });
+    }
+    
+    const result = AdminService.authenticate(username, password);
+    
+    if (result.success) {
+      res.json({
+        success: true,
+        token: result.token,
+        user: result.user
+      });
+    } else {
+      res.status(401).json({
+        success: false,
+        message: 'Invalid credentials'
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Login failed'
+    });
+  }
+});
+
+app.post('/api/admin/logout', (req, res) => {
+  try {
+    const { token } = req.body;
+    
+    if (token) {
+      AdminService.logout(token);
+    }
+    
+    res.json({ success: true, message: 'Logged out successfully' });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Logout failed'
+    });
+  }
+});
+
+app.get('/api/admin/verify', adminAuth, (req: any, res) => {
+  res.json({
+    success: true,
+    user: req.adminUser
+  });
 });
 
 // Tours endpoints

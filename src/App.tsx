@@ -16,6 +16,9 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import UploadDemo from "./pages/UploadDemo";
 import AccordionDemo from "./pages/AccordionDemo";
+import AdminLogin from "./pages/AdminLogin";
+import AdminDashboard from "./pages/AdminDashboard";
+import AdminTours from "./pages/AdminTours";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -39,6 +42,10 @@ const App = () => (
           <Route path="/contact" element={<Contact />} />
           <Route path="/upload-demo" element={<UploadDemo />} />
           <Route path="/accordion-demo" element={<AccordionDemo />} />
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/tours" element={<AdminTours />} />
+          <Route path="/admin/tours/new" element={<AdminTours />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
