@@ -5,10 +5,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import { testConnection } from '../src/config/database';
 import { DatabaseService } from '../src/services/databaseService';
-import { AdminService } from '../src/services/adminService';
-
-// Initialize admin service
-AdminService.initializeAdmin();
+import { DatabaseAdminService } from '../src/services/databaseAdminService';
 
 // Create Express app
 const app = express();
@@ -20,19 +17,19 @@ app.use(morgan('combined'));
 app.use(express.json());
 
 // Admin authentication middleware
-const adminAuth = (req: any, res: any, next: any) => {
+const adminAuth = async (req: any, res: any, next: any) => {
   const token = req.headers.authorization?.replace('Bearer ', '');
   
   if (!token) {
     return res.status(401).json({ success: false, message: 'No token provided' });
   }
 
-  const isValid = AdminService.verifyToken(token);
-  if (!isValid) {
+  const user = await DatabaseAdminService.verifyToken(token);
+  if (!user) {
     return res.status(401).json({ success: false, message: 'Invalid token' });
   }
 
-  req.user = { username: 'admin' };
+  req.user = user;
   next();
 };
 
@@ -179,14 +176,12 @@ app.post('/api/admin/login', async (req, res) => {
     const { username, password } = req.body;
     
     console.log('Login attempt:', { username, password: password ? '***' : 'empty' });
-    console.log('Expected username:', process.env.ADMIN_USERNAME || 'admin');
-    console.log('Expected password:', process.env.ADMIN_PASSWORD ? '***' : 'admin123');
     
     if (!username || !password) {
       return res.status(400).json({ success: false, message: 'Username and password are required' });
     }
 
-    const result = AdminService.authenticate(username, password);
+    const result = await DatabaseAdminService.authenticate(username, password);
     console.log('Authentication result:', { success: result.success });
 
     if (result.success) {
@@ -204,7 +199,7 @@ app.post('/api/admin/logout', async (req, res) => {
   try {
     const { token } = req.body;
     if (token) {
-      AdminService.logout(token);
+      await DatabaseAdminService.logout(token);
     }
     res.json({ success: true, message: 'Logged out successfully' });
   } catch (error) {

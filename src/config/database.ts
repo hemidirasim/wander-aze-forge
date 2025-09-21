@@ -149,25 +149,52 @@ export const initializeDatabase = async () => {
       )
     `);
 
-    // Create tour_programs table
-    await client.query(`
-      CREATE TABLE IF NOT EXISTS tour_programs (
-        id SERIAL PRIMARY KEY,
-        tour_id INTEGER NOT NULL,
-        day_number INTEGER NOT NULL,
-        day_title VARCHAR(255) NOT NULL,
-        day_overview TEXT,
-        difficulty VARCHAR(50),
-        elevation VARCHAR(100),
-        distance VARCHAR(100),
-        activities JSONB,
-        highlights TEXT[],
-        meals TEXT[],
-        accommodation TEXT,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
+  // Create tour_programs table
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS tour_programs (
+      id SERIAL PRIMARY KEY,
+      tour_id INTEGER NOT NULL,
+      day_number INTEGER NOT NULL,
+      day_title VARCHAR(255) NOT NULL,
+      day_overview TEXT,
+      difficulty VARCHAR(50),
+      elevation VARCHAR(100),
+      distance VARCHAR(100),
+      activities JSONB,
+      highlights TEXT[],
+      meals TEXT[],
+      accommodation TEXT,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  // Create admin_users table
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS admin_users (
+      id SERIAL PRIMARY KEY,
+      username VARCHAR(50) UNIQUE NOT NULL,
+      password_hash VARCHAR(255) NOT NULL,
+      email VARCHAR(100),
+      full_name VARCHAR(100),
+      permissions TEXT[],
+      is_active BOOLEAN DEFAULT true,
+      last_login TIMESTAMP,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  // Create admin_sessions table
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS admin_sessions (
+      id SERIAL PRIMARY KEY,
+      user_id INTEGER REFERENCES admin_users(id) ON DELETE CASCADE,
+      token VARCHAR(255) UNIQUE NOT NULL,
+      expires_at TIMESTAMP NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
 
     client.release();
     console.log('Database tables initialized successfully');

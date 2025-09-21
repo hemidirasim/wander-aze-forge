@@ -112,6 +112,27 @@ export interface TourProgram {
   updated_at: string;
 }
 
+export interface AdminUser {
+  id: number;
+  username: string;
+  password_hash: string;
+  email?: string;
+  full_name?: string;
+  permissions: string[];
+  is_active: boolean;
+  last_login?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface AdminSession {
+  id: number;
+  user_id: number;
+  token: string;
+  expires_at: string;
+  created_at: string;
+}
+
 export class DatabaseService {
   // Tours
   static async getAllTours(): Promise<Tour[]> {
@@ -323,5 +344,93 @@ export class DatabaseService {
   static async deleteTourProgram(id: number): Promise<boolean> {
     const result = await pool.query('DELETE FROM tour_programs WHERE id = $1', [id]);
     return result.rowCount > 0;
+  }
+
+  // Admin Users
+  static async getAdminUserByUsername(username: string): Promise<AdminUser | null> {
+    const result = await pool.query('SELECT * FROM admin_users WHERE username = $1 AND is_active = true', [username]);
+    return result.rows[0] || null;
+  }
+
+  static async getAdminUserById(id: number): Promise<AdminUser | null> {
+    const result = await pool.query('SELECT * FROM admin_users WHERE id = $1 AND is_active = true', [id]);
+    return result.rows[0] || null;
+  }
+
+  static async createAdminUser(user: Omit<AdminUser, 'id' | 'created_at' | 'updated_at'>): Promise<AdminUser> {
+    const result = await pool.query(
+      'INSERT INTO admin_users (username, password_hash, email, full_name, permissions, is_active) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+      [user.username, user.password_hash, user.email, user.full_name, user.permissions, user.is_active]
+    );
+    return result.rows[0];
+  }
+
+  static async updateAdminUserLastLogin(id: number): Promise<void> {
+    await pool.query('UPDATE admin_users SET last_login = CURRENT_TIMESTAMP WHERE id = $1', [id]);
+  }
+
+  static async getAllAdminUsers(): Promise<AdminUser[]> {
+    const result = await pool.query('SELECT * FROM admin_users ORDER BY created_at DESC');
+    return result.rows;
+  }
+
+  static async updateAdminUser(id: number, updates: Partial<AdminUser>): Promise<AdminUser> {
+    const fields = [];
+    const values = [];
+    let paramCount = 1;
+
+    Object.entries(updates).forEach(([key, value]) => {
+      if (value !== undefined && key !== 'id' && key !== 'created_at') {
+        if (key === 'permissions') {
+          fields.push(`${key} = $${paramCount}`);
+          values.push(value);
+        } else {
+          fields.push(`${key} = $${paramCount}`);
+          values.push(value);
+        }
+        paramCount++;
+      }
+    });
+
+    values.push(id);
+    const result = await pool.query(
+      `UPDATE admin_users SET ${fields.join(', ')}, updated_at = CURRENT_TIMESTAMP WHERE id = $${paramCount} RETURNING *`,
+      values
+    );
+    return result.rows[0];
+  }
+
+  static async deleteAdminUser(id: number): Promise<boolean> {
+    const result = await pool.query('DELETE FROM admin_users WHERE id = $1', [id]);
+    return result.rowCount > 0;
+  }
+
+  // Admin Sessions
+  static async createAdminSession(session: Omit<AdminSession, 'id' | 'created_at'>): Promise<AdminSession> {
+    const result = await pool.query(
+      'INSERT INTO admin_sessions (user_id, token, expires_at) VALUES ($1, $2, $3) RETURNING *',
+      [session.user_id, session.token, session.expires_at]
+    );
+    return result.rows[0];
+  }
+
+  static async getAdminSessionByToken(token: string): Promise<AdminSession | null> {
+    const result = await pool.query('SELECT * FROM admin_sessions WHERE token = $1 AND expires_at > NOW()', [token]);
+    return result.rows[0] || null;
+  }
+
+  static async deleteAdminSession(token: string): Promise<boolean> {
+    const result = await pool.query('DELETE FROM admin_sessions WHERE token = $1', [token]);
+    return result.rowCount > 0;
+  }
+
+  static async deleteExpiredAdminSessions(): Promise<number> {
+    const result = await pool.query('DELETE FROM admin_sessions WHERE expires_at <= NOW()');
+    return result.rowCount || 0;
+  }
+
+  static async deleteAllAdminSessionsForUser(userId: number): Promise<number> {
+    const result = await pool.query('DELETE FROM admin_sessions WHERE user_id = $1', [userId]);
+    return result.rowCount || 0;
   }
 }
