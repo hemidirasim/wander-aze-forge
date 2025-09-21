@@ -20,8 +20,6 @@ const Navigation = () => {
   const navItems = [
     { path: '/projects', label: 'Projects' },
     { path: '/blog', label: 'Blog' },
-    { path: '/upload-demo', label: 'Upload Demo' },
-    { path: '/accordion-demo', label: 'Tour Programs' },
     { path: '/about', label: 'About' },
     { path: '/contact', label: 'Contact' },
   ];
