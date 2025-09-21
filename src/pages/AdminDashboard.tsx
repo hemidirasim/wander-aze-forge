@@ -39,18 +39,13 @@ const AdminDashboard: React.FC = () => {
   const [adminUser, setAdminUser] = useState<any>(null);
 
   useEffect(() => {
-    // Check authentication
-    const token = localStorage.getItem('adminToken');
+    // Get admin user from localStorage
     const user = localStorage.getItem('adminUser');
-    
-    if (!token || !user) {
-      navigate('/admin/login');
-      return;
+    if (user) {
+      setAdminUser(JSON.parse(user));
     }
-
-    setAdminUser(JSON.parse(user));
     fetchDashboardStats();
-  }, [navigate]);
+  }, []);
 
   const fetchDashboardStats = async () => {
     try {
@@ -74,7 +69,7 @@ const AdminDashboard: React.FC = () => {
   const handleLogout = () => {
     localStorage.removeItem('adminToken');
     localStorage.removeItem('adminUser');
-    navigate('/admin/login');
+    window.location.href = '/admin/login';
   };
 
   const statCards = [
