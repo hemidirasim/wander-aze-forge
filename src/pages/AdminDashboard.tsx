@@ -20,7 +20,14 @@ import {
   Edit,
   Trash2,
   Database,
-  Shield
+  Shield,
+  TrendingUp,
+  Clock,
+  Star,
+  Globe,
+  Mountain,
+  Camera,
+  Heart
 } from 'lucide-react';
 
 interface DashboardStats {
@@ -63,15 +70,15 @@ const AdminDashboard: React.FC = () => {
 
   const fetchDashboardStats = async () => {
     try {
-      // For now, use mock data since API endpoints are not fully implemented
+      // Mock data for demonstration
       setStats({
-        tours: 25,
-        projects: 8,
-        programs: 6,
-        partners: 15,
-        blogPosts: 25,
-        bookings: 45,
-        contactMessages: 18
+        tours: 32,
+        projects: 12,
+        programs: 8,
+        partners: 24,
+        blogPosts: 45,
+        bookings: 128,
+        contactMessages: 67
       });
     } catch (error) {
       console.error('Failed to fetch dashboard stats:', error);
@@ -88,106 +95,186 @@ const AdminDashboard: React.FC = () => {
 
   const statCards = [
     {
-      title: 'Tours',
+      title: 'Active Tours',
       value: stats.tours,
       icon: MapPin,
-      color: 'bg-blue-500',
-      description: 'Active tour packages'
+      color: 'bg-gradient-to-r from-blue-500 to-blue-600',
+      change: '+12%',
+      description: 'Tour packages available'
     },
     {
       title: 'Projects',
       value: stats.projects,
       icon: FolderOpen,
-      color: 'bg-green-500',
+      color: 'bg-gradient-to-r from-green-500 to-green-600',
+      change: '+8%',
       description: 'Development projects'
     },
     {
       title: 'Programs',
       value: stats.programs,
       icon: Users,
-      color: 'bg-purple-500',
+      color: 'bg-gradient-to-r from-purple-500 to-purple-600',
+      change: '+15%',
       description: 'Educational programs'
     },
     {
       title: 'Partners',
       value: stats.partners,
       icon: Handshake,
-      color: 'bg-orange-500',
+      color: 'bg-gradient-to-r from-orange-500 to-orange-600',
+      change: '+5%',
       description: 'Business partners'
     },
     {
       title: 'Blog Posts',
       value: stats.blogPosts,
       icon: FileText,
-      color: 'bg-pink-500',
+      color: 'bg-gradient-to-r from-pink-500 to-pink-600',
+      change: '+22%',
       description: 'Published articles'
     },
     {
       title: 'Bookings',
       value: stats.bookings,
       icon: Calendar,
-      color: 'bg-indigo-500',
+      color: 'bg-gradient-to-r from-indigo-500 to-indigo-600',
+      change: '+18%',
       description: 'Tour bookings'
     },
     {
       title: 'Messages',
       value: stats.contactMessages,
       icon: MessageSquare,
-      color: 'bg-teal-500',
+      color: 'bg-gradient-to-r from-teal-500 to-teal-600',
+      change: '+3%',
       description: 'Contact messages'
     }
   ];
 
+  const tourCategories = [
+    {
+      title: 'Hiking Tours',
+      icon: Mountain,
+      color: 'bg-gradient-to-r from-green-500 to-green-600',
+      count: 8,
+      description: 'Nature hiking adventures'
+    },
+    {
+      title: 'Trekking Tours',
+      icon: Mountain,
+      color: 'bg-gradient-to-r from-orange-500 to-orange-600',
+      count: 6,
+      description: 'Mountain trekking experiences'
+    },
+    {
+      title: 'Wildlife Tours',
+      icon: Camera,
+      color: 'bg-gradient-to-r from-purple-500 to-purple-600',
+      count: 5,
+      description: 'Wildlife photography tours'
+    },
+    {
+      title: 'Group Tours',
+      icon: Users,
+      color: 'bg-gradient-to-r from-indigo-500 to-indigo-600',
+      count: 7,
+      description: 'Group adventure packages'
+    },
+    {
+      title: 'Tailor Made',
+      icon: Heart,
+      color: 'bg-gradient-to-r from-pink-500 to-pink-600',
+      count: 6,
+      description: 'Custom tour packages'
+    }
+  ];
+
   const quickActions = [
-    { title: 'Yeni Tur Ekle', icon: Plus, action: () => navigate('/admin/tours/new'), color: 'bg-blue-500' },
-    { title: 'Tüm Turları Görüntüle', icon: Eye, action: () => navigate('/admin/tours'), color: 'bg-cyan-500' },
-    { title: 'Hiking Turları', icon: MapPin, action: () => navigate('/admin/tours?category=hiking'), color: 'bg-green-600' },
-    { title: 'Trekking Turları', icon: MapPin, action: () => navigate('/admin/tours?category=trekking'), color: 'bg-orange-600' },
-    { title: 'Wildlife Turları', icon: MapPin, action: () => navigate('/admin/tours?category=wildlife'), color: 'bg-purple-600' },
-    { title: 'Group Turları', icon: Users, action: () => navigate('/admin/tours?category=group-tours'), color: 'bg-indigo-600' },
-    { title: 'Tailor Made Turlar', icon: Settings, action: () => navigate('/admin/tours?category=tailor-made'), color: 'bg-pink-600' },
-    { title: 'Manage Projects', icon: FolderOpen, action: () => navigate('/admin/projects'), color: 'bg-green-500' },
-    { title: 'Manage Programs', icon: Users, action: () => navigate('/admin/programs'), color: 'bg-purple-500' },
-    { title: 'Manage Partners', icon: Handshake, action: () => navigate('/admin/partners'), color: 'bg-orange-500' },
-    { title: 'Manage Blog', icon: FileText, action: () => navigate('/admin/blog'), color: 'bg-pink-500' },
-    { title: 'View Bookings', icon: Calendar, action: () => navigate('/admin/bookings'), color: 'bg-indigo-500' },
-    { title: 'Contact Messages', icon: MessageSquare, action: () => navigate('/admin/contact'), color: 'bg-teal-500' },
-    { title: 'File Manager', icon: Upload, action: () => navigate('/admin/files'), color: 'bg-gray-500' }
+    {
+      title: 'Add New Tour',
+      description: 'Create a new tour package',
+      icon: Plus,
+      color: 'bg-gradient-to-r from-blue-500 to-blue-600',
+      action: () => navigate('/admin/tours/new')
+    },
+    {
+      title: 'View All Tours',
+      description: 'Manage existing tours',
+      icon: Eye,
+      color: 'bg-gradient-to-r from-cyan-500 to-cyan-600',
+      action: () => navigate('/admin/tours')
+    },
+    {
+      title: 'Manage Projects',
+      description: 'Development projects',
+      icon: FolderOpen,
+      color: 'bg-gradient-to-r from-green-500 to-green-600',
+      action: () => navigate('/admin/projects')
+    },
+    {
+      title: 'Manage Partners',
+      description: 'Business partnerships',
+      icon: Handshake,
+      color: 'bg-gradient-to-r from-orange-500 to-orange-600',
+      action: () => navigate('/admin/partners')
+    },
+    {
+      title: 'Blog Management',
+      description: 'Content and articles',
+      icon: FileText,
+      color: 'bg-gradient-to-r from-pink-500 to-pink-600',
+      action: () => navigate('/admin/blog')
+    },
+    {
+      title: 'View Bookings',
+      description: 'Tour reservations',
+      icon: Calendar,
+      color: 'bg-gradient-to-r from-indigo-500 to-indigo-600',
+      action: () => navigate('/admin/bookings')
+    }
   ];
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading dashboard...</p>
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-500 border-t-transparent mx-auto"></div>
+          <p className="mt-6 text-lg font-medium text-gray-600">Loading Dashboard...</p>
+          <p className="mt-2 text-sm text-gray-500">Please wait while we prepare your data</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      {/* Modern Header */}
+      <header className="bg-white/80 backdrop-blur-md shadow-lg border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
+          <div className="flex justify-between items-center py-6">
             <div className="flex items-center space-x-4">
-              <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
-                <Database className="w-5 h-5 text-white" />
+              <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                <Globe className="w-7 h-7 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-gray-900">Admin Dashboard</h1>
-                <p className="text-sm text-gray-500">Manage your tourism website</p>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+                  Admin Dashboard
+                </h1>
+                <p className="text-sm text-gray-500 font-medium">Tourism Management System</p>
               </div>
             </div>
             
             <div className="flex items-center space-x-4">
-              <Badge variant="outline" className="flex items-center space-x-1">
-                <Shield className="w-4 h-4" />
-                <span>{adminUser?.username}</span>
+              <Badge variant="outline" className="flex items-center space-x-2 px-4 py-2 bg-white/50 backdrop-blur-sm">
+                <Shield className="w-4 h-4 text-blue-500" />
+                <span className="font-medium">{adminUser?.username}</span>
               </Badge>
-              <Button variant="outline" onClick={handleLogout} className="flex items-center space-x-2">
+              <Button 
+                variant="outline" 
+                onClick={handleLogout} 
+                className="flex items-center space-x-2 hover:bg-red-50 hover:border-red-200 hover:text-red-600 transition-all"
+              >
                 <LogOut className="w-4 h-4" />
                 <span>Logout</span>
               </Button>
@@ -198,290 +285,159 @@ const AdminDashboard: React.FC = () => {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Welcome Section */}
+        <div className="mb-8">
+          <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-3xl font-bold text-gray-900 mb-2">
+                  Welcome back, {adminUser?.username}! 👋
+                </h2>
+                <p className="text-lg text-gray-600">
+                  Here's what's happening with your tourism business today.
+                </p>
+              </div>
+              <div className="hidden md:block">
+                <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                  <TrendingUp className="w-10 h-10 text-white" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {statCards.map((stat, index) => (
-            <Card key={index} className="hover:shadow-lg transition-shadow">
+            <Card key={index} className="hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border-0 shadow-lg">
               <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">{stat.title}</p>
-                    <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
-                    <p className="text-xs text-gray-500">{stat.description}</p>
-                  </div>
-                  <div className={`w-12 h-12 ${stat.color} rounded-lg flex items-center justify-center`}>
+                <div className="flex items-center justify-between mb-4">
+                  <div className={`w-12 h-12 ${stat.color} rounded-xl flex items-center justify-center shadow-lg`}>
                     <stat.icon className="w-6 h-6 text-white" />
                   </div>
+                  <Badge className="bg-green-100 text-green-800 border-green-200">
+                    {stat.change}
+                  </Badge>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-600 mb-1">{stat.title}</p>
+                  <p className="text-3xl font-bold text-gray-900 mb-1">{stat.value}</p>
+                  <p className="text-xs text-gray-500">{stat.description}</p>
                 </div>
               </CardContent>
             </Card>
           ))}
         </div>
 
-        {/* Tour Management Section */}
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">🎯 Tur Yönetimi</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/tours/new')}>
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
-                    <Plus className="w-6 h-6 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900 text-lg">Yeni Tur Ekle</h3>
-                    <p className="text-sm text-gray-500">Yeni tur paketi oluştur</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/tours')}>
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-cyan-500 rounded-lg flex items-center justify-center">
-                    <Eye className="w-6 h-6 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900 text-lg">Tüm Turlar</h3>
-                    <p className="text-sm text-gray-500">Tüm tur paketlerini görüntüle</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/tours?category=hiking')}>
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center">
-                    <MapPin className="w-6 h-6 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900 text-lg">Hiking Turları</h3>
-                    <p className="text-sm text-gray-500">Doğa yürüyüşü turları</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-
         {/* Tour Categories */}
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">🗺️ Tur Kategorileri</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/tours?category=trekking')}>
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-4">
-                  <div className="w-10 h-10 bg-orange-600 rounded-lg flex items-center justify-center">
-                    <MapPin className="w-5 h-5 text-white" />
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-gray-900">🗺️ Tour Categories</h2>
+            <Button 
+              onClick={() => navigate('/admin/tours/new')}
+              className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-lg"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Add New Tour
+            </Button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+            {tourCategories.map((category, index) => (
+              <Card 
+                key={index} 
+                className="hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border-0 shadow-lg"
+                onClick={() => navigate(`/admin/tours?category=${category.title.toLowerCase().replace(' ', '-')}`)}
+              >
+                <CardContent className="p-6 text-center">
+                  <div className={`w-16 h-16 ${category.color} rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg`}>
+                    <category.icon className="w-8 h-8 text-white" />
                   </div>
-                  <div>
-                    <h3 className="font-medium text-gray-900">Trekking</h3>
-                    <p className="text-xs text-gray-500">Dağ yürüyüşleri</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/tours?category=wildlife')}>
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-4">
-                  <div className="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center">
-                    <MapPin className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="font-medium text-gray-900">Wildlife</h3>
-                    <p className="text-xs text-gray-500">Vahşi yaşam turları</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/tours?category=group-tours')}>
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-4">
-                  <div className="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center">
-                    <Users className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="font-medium text-gray-900">Group Tours</h3>
-                    <p className="text-xs text-gray-500">Grup turları</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/tours?category=tailor-made')}>
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-4">
-                  <div className="w-10 h-10 bg-pink-600 rounded-lg flex items-center justify-center">
-                    <Settings className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="font-medium text-gray-900">Tailor Made</h3>
-                    <p className="text-xs text-gray-500">Özel turlar</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                  <h3 className="font-bold text-gray-900 mb-2">{category.title}</h3>
+                  <p className="text-sm text-gray-600 mb-3">{category.description}</p>
+                  <Badge variant="outline" className="bg-gray-50">
+                    {category.count} tours
+                  </Badge>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
 
-        {/* Other Management Tools */}
+        {/* Quick Actions */}
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">⚙️ Yönetim Araçları</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/projects')}>
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-4">
-                  <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
-                    <FolderOpen className="w-5 h-5 text-white" />
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">⚡ Quick Actions</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {quickActions.map((action, index) => (
+              <Card 
+                key={index} 
+                className="hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border-0 shadow-lg"
+                onClick={action.action}
+              >
+                <CardContent className="p-6">
+                  <div className="flex items-center space-x-4">
+                    <div className={`w-12 h-12 ${action.color} rounded-xl flex items-center justify-center shadow-lg`}>
+                      <action.icon className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-gray-900 mb-1">{action.title}</h3>
+                      <p className="text-sm text-gray-600">{action.description}</p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="font-medium text-gray-900">Projects</h3>
-                    <p className="text-xs text-gray-500">Proje yönetimi</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/programs')}>
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-4">
-                  <div className="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center">
-                    <Users className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="font-medium text-gray-900">Programs</h3>
-                    <p className="text-xs text-gray-500">Program yönetimi</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/partners')}>
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-4">
-                  <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
-                    <Handshake className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="font-medium text-gray-900">Partners</h3>
-                    <p className="text-xs text-gray-500">Partner yönetimi</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/blog')}>
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-4">
-                  <div className="w-10 h-10 bg-pink-500 rounded-lg flex items-center justify-center">
-                    <FileText className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="font-medium text-gray-900">Blog</h3>
-                    <p className="text-xs text-gray-500">Blog yönetimi</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/bookings')}>
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-4">
-                  <div className="w-10 h-10 bg-indigo-500 rounded-lg flex items-center justify-center">
-                    <Calendar className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="font-medium text-gray-900">Bookings</h3>
-                    <p className="text-xs text-gray-500">Rezervasyonlar</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/contact')}>
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-4">
-                  <div className="w-10 h-10 bg-teal-500 rounded-lg flex items-center justify-center">
-                    <MessageSquare className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="font-medium text-gray-900">Messages</h3>
-                    <p className="text-xs text-gray-500">İletişim mesajları</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/files')}>
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-4">
-                  <div className="w-10 h-10 bg-gray-500 rounded-lg flex items-center justify-center">
-                    <Upload className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="font-medium text-gray-900">Files</h3>
-                    <p className="text-xs text-gray-500">Dosya yönetimi</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
 
-        {/* Recent Activity */}
-        <Card>
+        {/* System Overview */}
+        <Card className="shadow-lg border-0">
           <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <BarChart3 className="w-5 h-5" />
+            <CardTitle className="flex items-center space-x-2 text-xl">
+              <BarChart3 className="w-6 h-6 text-blue-500" />
               <span>System Overview</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div>
-                <h4 className="font-medium text-gray-900 mb-3">Database Status</h4>
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Tours Table</span>
-                    <Badge variant="outline" className="text-green-600">Connected</Badge>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Projects Table</span>
-                    <Badge variant="outline" className="text-green-600">Connected</Badge>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Programs Table</span>
-                    <Badge variant="outline" className="text-green-600">Connected</Badge>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Partners Table</span>
-                    <Badge variant="outline" className="text-green-600">Connected</Badge>
-                  </div>
+                <h4 className="font-bold text-gray-900 mb-4 flex items-center">
+                  <Database className="w-5 h-5 mr-2 text-green-500" />
+                  Database Status
+                </h4>
+                <div className="space-y-3">
+                  {['Tours Table', 'Projects Table', 'Programs Table', 'Partners Table', 'Blog Table', 'Bookings Table'].map((table, index) => (
+                    <div key={index} className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
+                      <span className="font-medium text-gray-700">{table}</span>
+                      <Badge className="bg-green-100 text-green-800 border-green-200">
+                        <Clock className="w-3 h-3 mr-1" />
+                        Connected
+                      </Badge>
+                    </div>
+                  ))}
                 </div>
               </div>
               
               <div>
-                <h4 className="font-medium text-gray-900 mb-3">Quick Stats</h4>
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Total Records</span>
-                    <span className="font-medium">{Object.values(stats).reduce((a, b) => a + b, 0)}</span>
+                <h4 className="font-bold text-gray-900 mb-4 flex items-center">
+                  <TrendingUp className="w-5 h-5 mr-2 text-blue-500" />
+                  Performance Metrics
+                </h4>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center p-3 bg-blue-50 rounded-lg">
+                    <span className="font-medium text-gray-700">Total Records</span>
+                    <span className="font-bold text-blue-600">{Object.values(stats).reduce((a, b) => a + b, 0)}</span>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Active Tours</span>
-                    <span className="font-medium">{stats.tours}</span>
+                  <div className="flex justify-between items-center p-3 bg-blue-50 rounded-lg">
+                    <span className="font-medium text-gray-700">Active Tours</span>
+                    <span className="font-bold text-blue-600">{stats.tours}</span>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Pending Messages</span>
-                    <span className="font-medium">{stats.contactMessages}</span>
+                  <div className="flex justify-between items-center p-3 bg-blue-50 rounded-lg">
+                    <span className="font-medium text-gray-700">Pending Messages</span>
+                    <span className="font-bold text-blue-600">{stats.contactMessages}</span>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Recent Bookings</span>
-                    <span className="font-medium">{stats.bookings}</span>
+                  <div className="flex justify-between items-center p-3 bg-blue-50 rounded-lg">
+                    <span className="font-medium text-gray-700">Recent Bookings</span>
+                    <span className="font-bold text-blue-600">{stats.bookings}</span>
                   </div>
                 </div>
               </div>
