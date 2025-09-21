@@ -3,10 +3,6 @@ import TourCategoryGallery from '@/components/TourCategoryGallery';
 import RecommendationsSection from '@/components/RecommendationsSection';
 import JourneyContactForm from '@/components/JourneyContactForm';
 import BusinessPartners from '@/components/BusinessPartners';
-import DatabaseTours from '@/components/DatabaseTours';
-import DatabaseProjects from '@/components/DatabaseProjects';
-import DatabasePrograms from '@/components/DatabasePrograms';
-import DatabasePartners from '@/components/DatabasePartners';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -212,33 +208,6 @@ const Index = () => {
       {/* Plan Your Journey Contact Form */}
       <JourneyContactForm />
 
-      {/* Database Tours Section */}
-      <section className="py-16 px-4">
-        <div className="max-w-7xl mx-auto">
-          <DatabaseTours />
-        </div>
-      </section>
-
-      {/* Database Projects Section */}
-      <section className="py-16 px-4 bg-gray-50">
-        <div className="max-w-7xl mx-auto">
-          <DatabaseProjects />
-        </div>
-      </section>
-
-      {/* Database Programs Section */}
-      <section className="py-16 px-4">
-        <div className="max-w-7xl mx-auto">
-          <DatabasePrograms />
-        </div>
-      </section>
-
-      {/* Database Partners Section */}
-      <section className="py-16 px-4 bg-gray-50">
-        <div className="max-w-7xl mx-auto">
-          <DatabasePartners />
-        </div>
-      </section>
 
       {/* Business Partners */}
       <BusinessPartners />
