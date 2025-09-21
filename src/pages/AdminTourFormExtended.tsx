@@ -152,25 +152,25 @@ const AdminTourFormExtended: React.FC = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleInputChange = (field: keyof ExtendedTourForm, value: string | boolean) => {
+  const handleInputChange = (field: keyof ExtendedTourForm, value: string | boolean | GalleryImage[]) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleArrayFieldChange = (field: 'highlights' | 'includes' | 'excludes' | 'providedEquipment' | 'whatToBring' | 'priceIncludes' | 'galleryImages', index: number, value: string) => {
+  const handleArrayFieldChange = (field: 'highlights' | 'includes' | 'excludes' | 'providedEquipment' | 'whatToBring' | 'priceIncludes', index: number, value: string) => {
     setFormData(prev => ({
       ...prev,
       [field]: prev[field].map((item, i) => i === index ? value : item)
     }));
   };
 
-  const addArrayField = (field: 'highlights' | 'includes' | 'excludes' | 'providedEquipment' | 'whatToBring' | 'priceIncludes' | 'galleryImages') => {
+  const addArrayField = (field: 'highlights' | 'includes' | 'excludes' | 'providedEquipment' | 'whatToBring' | 'priceIncludes') => {
     setFormData(prev => ({
       ...prev,
       [field]: [...prev[field], '']
     }));
   };
 
-  const removeArrayField = (field: 'highlights' | 'includes' | 'excludes' | 'providedEquipment' | 'whatToBring' | 'priceIncludes' | 'galleryImages', index: number) => {
+  const removeArrayField = (field: 'highlights' | 'includes' | 'excludes' | 'providedEquipment' | 'whatToBring' | 'priceIncludes', index: number) => {
     setFormData(prev => ({
       ...prev,
       [field]: prev[field].filter((_, i) => i !== index)
@@ -213,7 +213,7 @@ const AdminTourFormExtended: React.FC = () => {
         transportDetails: formData.transportDetails.trim(),
         pickupService: formData.pickupService.trim(),
         
-        galleryImages: formData.galleryImages.filter(item => item.trim() !== ''),
+        galleryImages: formData.galleryImages.map(img => img.url),
         photographyService: formData.photographyService.trim(),
         
         priceIncludes: formData.priceIncludes.filter(item => item.trim() !== ''),
