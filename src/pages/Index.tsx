@@ -3,6 +3,10 @@ import TourCategoryGallery from '@/components/TourCategoryGallery';
 import RecommendationsSection from '@/components/RecommendationsSection';
 import JourneyContactForm from '@/components/JourneyContactForm';
 import BusinessPartners from '@/components/BusinessPartners';
+import DatabaseTours from '@/components/DatabaseTours';
+import DatabaseProjects from '@/components/DatabaseProjects';
+import DatabasePrograms from '@/components/DatabasePrograms';
+import DatabasePartners from '@/components/DatabasePartners';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -177,10 +181,24 @@ const Index = () => {
             ))}
           </div>
 
-          <div className="text-center mt-16">
+          <div className="text-center mt-16 space-y-4">
             <Button size="lg" variant="outline" asChild className="hover:bg-primary hover:text-primary-foreground">
               <Link to="/tours">View All Tours</Link>
             </Button>
+            <div className="text-sm text-muted-foreground">
+              <p>Experience detailed tour programs with interactive accordions:</p>
+              <div className="flex justify-center gap-4 mt-2">
+                <Link to="/tours/hiking/101" className="text-primary hover:underline">
+                  Shahdag Day Hike
+                </Link>
+                <Link to="/tours/trekking/203" className="text-primary hover:underline">
+                  Bazarduzu Summit
+                </Link>
+                <Link to="/tours/wildlife/301" className="text-primary hover:underline">
+                  Wildlife Safari
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -193,6 +211,34 @@ const Index = () => {
 
       {/* Plan Your Journey Contact Form */}
       <JourneyContactForm />
+
+      {/* Database Tours Section */}
+      <section className="py-16 px-4">
+        <div className="max-w-7xl mx-auto">
+          <DatabaseTours />
+        </div>
+      </section>
+
+      {/* Database Projects Section */}
+      <section className="py-16 px-4 bg-gray-50">
+        <div className="max-w-7xl mx-auto">
+          <DatabaseProjects />
+        </div>
+      </section>
+
+      {/* Database Programs Section */}
+      <section className="py-16 px-4">
+        <div className="max-w-7xl mx-auto">
+          <DatabasePrograms />
+        </div>
+      </section>
+
+      {/* Database Partners Section */}
+      <section className="py-16 px-4 bg-gray-50">
+        <div className="max-w-7xl mx-auto">
+          <DatabasePartners />
+        </div>
+      </section>
 
       {/* Business Partners */}
       <BusinessPartners />

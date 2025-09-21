@@ -1,16 +1,21 @@
 import { useParams } from 'react-router-dom';
 import Navigation from '@/components/Navigation';
+import TourProgramAccordion from '@/components/TourProgramAccordion';
+import DatabaseTourProgramAccordion from '@/components/DatabaseTourProgramAccordion';
+import { useTourPrograms } from '@/hooks/useTourPrograms';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Clock, Users, MapPin, Star, CheckCircle, Calendar, Phone, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { getTourById } from '@/data/tourCategories';
+import { allTourPrograms } from '@/data/tourPrograms';
 
 const TourDetail = () => {
   const { id, category } = useParams();
   const tourId = parseInt(id || '0');
   const tour = getTourById(tourId);
+  const { programs: dbPrograms, loading: programsLoading, error: programsError } = useTourPrograms(tourId);
 
   if (!tour) {
     return (
@@ -154,23 +159,64 @@ const TourDetail = () => {
                 </CardContent>
               </Card>
 
-              {/* 2. Tour Program */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-2xl">Tour Program</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  {tourDetail.itinerary.map((day, index) => (
-                    <div key={index} className="border-l-2 border-primary pl-6 relative">
-                      <div className="absolute w-4 h-4 bg-primary rounded-full -left-2 top-0" />
-                      <h3 className="text-lg font-semibold text-foreground mb-2">
-                        {day.day}: {day.title}
-                      </h3>
-                      <p className="text-muted-foreground">{day.description}</p>
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
+              {/* 2. Detailed Tour Program */}
+              <div className="space-y-4">
+                <div className="text-center mb-6">
+                  <h2 className="text-3xl font-bold text-foreground mb-2">Detailed Tour Program</h2>
+                  <p className="text-muted-foreground">
+                    Comprehensive daily schedule with activities, timings, and highlights
+                    {dbPrograms.length > 0 && (
+                      <span className="block mt-2 text-sm text-green-600">
+                        📊 Live data from database
+                      </span>
+                    )}
+                  </p>
+                </div>
+
+                {programsLoading ? (
+                  <Card>
+                    <CardContent className="p-6 text-center">
+                      <p className="text-muted-foreground">Loading tour program...</p>
+                    </CardContent>
+                  </Card>
+                ) : programsError ? (
+                  <Card>
+                    <CardContent className="p-6 text-center">
+                      <p className="text-red-500">Error loading tour program: {programsError}</p>
+                      <p className="text-sm text-muted-foreground mt-2">
+                        Falling back to static program data
+                      </p>
+                    </CardContent>
+                  </Card>
+                ) : dbPrograms.length > 0 ? (
+                  <DatabaseTourProgramAccordion 
+                    programs={dbPrograms} 
+                    category={tour.category}
+                  />
+                ) : allTourPrograms[tourId] ? (
+                  <TourProgramAccordion 
+                    program={allTourPrograms[tourId]} 
+                    category={tour.category}
+                  />
+                ) : (
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="text-2xl">Tour Program</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
+                      {tourDetail.itinerary.map((day, index) => (
+                        <div key={index} className="border-l-2 border-primary pl-6 relative">
+                          <div className="absolute w-4 h-4 bg-primary rounded-full -left-2 top-0" />
+                          <h3 className="text-lg font-semibold text-foreground mb-2">
+                            {day.day}: {day.title}
+                          </h3>
+                          <p className="text-muted-foreground">{day.description}</p>
+                        </div>
+                      ))}
+                    </CardContent>
+                  </Card>
+                )}
+              </div>
 
               {/* 3. Details */}
               <Card>
