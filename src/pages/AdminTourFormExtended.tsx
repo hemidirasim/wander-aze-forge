@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import GalleryUpload from '@/components/GalleryUpload';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -21,6 +22,16 @@ import {
   Camera,
   DollarSign
 } from 'lucide-react';
+
+interface GalleryImage {
+  id: string;
+  url: string;
+  filename: string;
+  size: number;
+  uploadedAt: string;
+  description?: string;
+  alt?: string;
+}
 
 interface ExtendedTourForm {
   // Basic Info
@@ -56,7 +67,7 @@ interface ExtendedTourForm {
   pickupService: string;
   
   // Media
-  galleryImages: string[];
+  galleryImages: GalleryImage[];
   photographyService: string;
   
   // Price
@@ -115,7 +126,7 @@ const AdminTourFormExtended: React.FC = () => {
     pickupService: '',
     
     // Media
-    galleryImages: [''],
+    galleryImages: [],
     photographyService: '',
     
     // Price
@@ -602,34 +613,18 @@ const AdminTourFormExtended: React.FC = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="space-y-2">
-                <Label>Gallery Images (URLs)</Label>
-                {formData.galleryImages.map((item, index) => (
-                  <div key={index} className="flex space-x-2">
-                    <Input
-                      value={item}
-                      onChange={(e) => handleArrayFieldChange('galleryImages', index, e.target.value)}
-                      placeholder="Enter image URL"
-                    />
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => removeArrayField('galleryImages', index)}
-                    >
-                      <X className="w-4 h-4" />
-                    </Button>
-                  </div>
-                ))}
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => addArrayField('galleryImages')}
-                  className="w-full"
-                >
-                  <Plus className="w-4 h-4 mr-2" />
-                  Add Image URL
-                </Button>
+              <div className="space-y-4">
+                <Label>Gallery Images</Label>
+                <p className="text-sm text-gray-500">
+                  Upload images directly to Vercel Blob storage or use existing URLs
+                </p>
+                
+                {/* Gallery Upload Component */}
+                <GalleryUpload
+                  onImagesChange={(images) => handleInputChange('galleryImages', images)}
+                  initialImages={formData.galleryImages}
+                  maxImages={10}
+                />
               </div>
               
               <div className="space-y-2">

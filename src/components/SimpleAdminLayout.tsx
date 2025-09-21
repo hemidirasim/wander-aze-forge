@@ -73,6 +73,12 @@ const SimpleAdminLayout: React.FC = () => {
       path: '/admin/contact'
     },
     {
+      id: 'gallery',
+      title: 'Gallery',
+      icon: '🖼️',
+      path: '/admin/gallery'
+    },
+    {
       id: 'files',
       title: 'File Manager',
       icon: '📤',
