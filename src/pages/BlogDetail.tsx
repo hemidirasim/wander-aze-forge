@@ -3,171 +3,277 @@ import Navigation from '@/components/Navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Calendar, User, Clock, ArrowLeft, Share2, BookOpen } from 'lucide-react';
+import { useApi } from '@/hooks/useApi';
+
+interface BlogPost {
+  id: number;
+  title: string;
+  content: string;
+  excerpt?: string;
+  author: string;
+  category?: string;
+  tags?: string[];
+  featured_image?: string;
+  status: string;
+  featured: boolean;
+  created_at: string;
+  updated_at: string;
+}
 
 const BlogDetail = () => {
   const { id } = useParams();
+  const { data: post, loading, error } = useApi<BlogPost>(`/blog?id=${id}`);
 
-  // Mock blog post data - in real app, fetch based on ID
-  const post = {
-    id: 1,
-    title: "Best Hiking Trails in Azerbaijan: A Complete Guide",
-    content: `
-      <p>Azerbaijan's diverse landscape offers some of the most spectacular hiking opportunities in the Caucasus region. From the ancient villages perched high in the mountains to the pristine wilderness areas, each trail tells a unique story of natural beauty and cultural heritage.</p>
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navigation />
+        
+        {/* Hero Section Skeleton */}
+        <section className="pt-24 pb-16 px-4 bg-gradient-mountain">
+          <div className="container mx-auto">
+            <div className="mb-8">
+              <Skeleton className="h-10 w-32" />
+            </div>
+            <div className="max-w-4xl">
+              <Skeleton className="h-16 w-full mb-6" />
+              <div className="flex items-center space-x-4">
+                <Skeleton className="h-6 w-32" />
+                <Skeleton className="h-6 w-24" />
+                <Skeleton className="h-6 w-20" />
+              </div>
+            </div>
+          </div>
+        </section>
 
-      <h2>1. Khinalig to Laza Trail</h2>
-      <p>This iconic 3-day trek takes you through two of Azerbaijan's most remote mountain villages. The trail winds through dramatic mountain landscapes, crossing crystal-clear streams and offering breathtaking panoramic views of the Greater Caucasus range.</p>
+        {/* Content Skeleton */}
+        <section className="py-16 px-4">
+          <div className="container mx-auto max-w-4xl">
+            <div className="mb-8">
+              <Skeleton className="h-96 w-full rounded-lg" />
+            </div>
+            <div className="space-y-4">
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-3/4" />
+              <Skeleton className="h-8 w-1/2" />
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-2/3" />
+            </div>
+          </div>
+        </section>
+      </div>
+    );
+  }
 
-      <p><strong>Difficulty:</strong> Moderate to Challenging<br>
-      <strong>Distance:</strong> 25 kilometers<br>
-      <strong>Duration:</strong> 3 days, 2 nights</p>
+  if (error) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navigation />
+        
+        <section className="pt-24 pb-16 px-4 bg-gradient-mountain">
+          <div className="container mx-auto">
+            <div className="mb-8">
+              <Button variant="ghost" asChild className="text-white hover:text-white/80">
+                <Link to="/blog" className="flex items-center">
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  Back to Blog
+                </Link>
+              </Button>
+            </div>
+            <div className="max-w-4xl">
+              <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">Error Loading Post</h1>
+              <p className="text-xl text-white/90">Something went wrong while loading this blog post.</p>
+            </div>
+          </div>
+        </section>
 
-      <h2>2. Shahdag National Park Trails</h2>
-      <p>Located in the heart of the Greater Caucasus, Shahdag National Park offers multiple trail options suitable for all skill levels. The park is home to diverse wildlife and stunning alpine scenery.</p>
+        <section className="py-16 px-4">
+          <div className="container mx-auto text-center">
+            <p className="text-red-500 text-xl">Error: {error}</p>
+            <Button asChild className="mt-4">
+              <Link to="/blog">Back to Blog</Link>
+            </Button>
+          </div>
+        </section>
+      </div>
+    );
+  }
 
-      <h2>3. Tufandag Mountain</h2>
-      <p>Perfect for day hikes, Tufandag offers well-marked trails with excellent infrastructure. The mountain provides stunning views of the Caucasus peaks and is accessible year-round.</p>
+  if (!post) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navigation />
+        
+        <section className="pt-24 pb-16 px-4 bg-gradient-mountain">
+          <div className="container mx-auto">
+            <div className="mb-8">
+              <Button variant="ghost" asChild className="text-white hover:text-white/80">
+                <Link to="/blog" className="flex items-center">
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  Back to Blog
+                </Link>
+              </Button>
+            </div>
+            <div className="max-w-4xl">
+              <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">Post Not Found</h1>
+              <p className="text-xl text-white/90">The blog post you're looking for doesn't exist.</p>
+            </div>
+          </div>
+        </section>
 
-      <h2>Essential Preparation Tips</h2>
-      <ul>
-        <li>Pack layers - mountain weather can change rapidly</li>
-        <li>Carry sufficient water - natural sources may not always be available</li>
-        <li>Inform someone of your hiking plans</li>
-        <li>Hire local guides for remote trails</li>
-        <li>Respect local customs in village areas</li>
-      </ul>
-
-      <h2>Best Time to Visit</h2>
-      <p>The ideal hiking season in Azerbaijan runs from May to October. Summer months (June-August) offer the warmest weather but can be crowded. Spring and autumn provide perfect conditions with fewer tourists and spectacular scenery.</p>
-
-      <h2>Conservation and Respect</h2>
-      <p>As you explore these magnificent trails, remember that we are visitors in these pristine environments. Follow Leave No Trace principles, support local communities, and help preserve these natural treasures for future generations.</p>
-    `,
-    author: "Camping Azerbaijan Team",
-    date: "2024-01-15",
-    readTime: "8 min read",
-    category: "Travel Guide",
-    image: "https://images.unsplash.com/photo-1464822759844-d150356c4f2e?w=800&h=600&fit=crop",
-    tags: ["Hiking", "Azerbaijan", "Mountains", "Travel Guide", "Caucasus"],
-  };
-
-  const relatedPosts = [
-    {
-      id: 2,
-      title: "Village Life in Khinalig: Ancient Traditions",
-      image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=200&fit=crop",
-      category: "Culture"
-    },
-    {
-      id: 3,
-      title: "Essential Gear for Mountain Hiking",
-      image: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=300&h=200&fit=crop",
-      category: "Gear Guide"
-    }
-  ];
+        <section className="py-16 px-4">
+          <div className="container mx-auto text-center">
+            <p className="text-gray-500 text-xl">Blog post not found</p>
+            <Button asChild className="mt-4">
+              <Link to="/blog">Back to Blog</Link>
+            </Button>
+          </div>
+        </section>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
       
-      {/* Back Button */}
-      <section className="pt-20 px-4">
+      {/* Hero Section */}
+      <section className="pt-24 pb-16 px-4 bg-gradient-mountain">
         <div className="container mx-auto">
-          <Button variant="ghost" asChild className="mb-6">
-            <Link to="/blog" className="flex items-center">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Blog
-            </Link>
-          </Button>
-        </div>
-      </section>
-
-      {/* Article Header */}
-      <section className="px-4">
-        <div className="container mx-auto">
-          <div className="text-center mb-8">
-            <Badge className="mb-4 bg-primary">{post.category}</Badge>
-            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight">
+          <div className="mb-8">
+            <Button variant="ghost" asChild className="text-white hover:text-white/80">
+              <Link to="/blog" className="flex items-center">
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back to Blog
+              </Link>
+            </Button>
+          </div>
+          
+          <div className="max-w-4xl">
+            <div className="mb-6">
+              {post.category && (
+                <Badge variant="secondary" className="bg-white/20 text-white border-white/30 mb-4">
+                  {post.category}
+                </Badge>
+              )}
+            </div>
+            
+            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
               {post.title}
             </h1>
             
-            <div className="flex flex-wrap items-center justify-center space-x-6 text-muted-foreground mb-8">
+            <div className="flex flex-wrap items-center gap-6 text-white/90 mb-8">
               <div className="flex items-center space-x-2">
-                <User className="w-4 h-4" />
-                <span>{post.author}</span>
+                <User className="w-5 h-5" />
+                <span className="font-medium">{post.author}</span>
               </div>
               <div className="flex items-center space-x-2">
-                <Calendar className="w-4 h-4" />
-                <span>{new Date(post.date).toLocaleDateString()}</span>
+                <Calendar className="w-5 h-5" />
+                <span>{new Date(post.created_at).toLocaleDateString('en-US', { 
+                  year: 'numeric', 
+                  month: 'long', 
+                  day: 'numeric' 
+                })}</span>
               </div>
               <div className="flex items-center space-x-2">
-                <Clock className="w-4 h-4" />
-                <span>{post.readTime}</span>
+                <Clock className="w-5 h-5" />
+                <span>5 min read</span>
               </div>
               <div className="flex items-center space-x-2">
-                <BookOpen className="w-4 h-4" />
-                <span>Travel Guide</span>
+                <BookOpen className="w-5 h-5" />
+                <span>Blog Post</span>
               </div>
-            </div>
-
-            <div className="flex justify-center space-x-4 mb-8">
-              <Button variant="outline" size="sm">
-                <Share2 className="w-4 h-4 mr-2" />
-                Share Article
-              </Button>
             </div>
           </div>
+        </div>
+      </section>
 
-          {/* Featured Image */}
-          <div className="relative h-[50vh] rounded-2xl overflow-hidden mb-12">
+      {/* Featured Image */}
+      {post.featured_image && (
+        <section className="py-8 px-4">
+          <div className="container mx-auto max-w-4xl">
             <img 
-              src={post.image} 
+              src={post.featured_image} 
               alt={post.title}
-              className="w-full h-full object-cover"
+              className="w-full h-96 object-cover rounded-lg shadow-lg"
+            />
+          </div>
+        </section>
+      )}
+
+      {/* Article Content */}
+      <section className="py-16 px-4">
+        <div className="container mx-auto max-w-4xl">
+          <div className="prose prose-lg max-w-none">
+            <div 
+              className="text-muted-foreground leading-relaxed"
+              dangerouslySetInnerHTML={{ __html: post.content }}
             />
           </div>
         </div>
       </section>
 
-      {/* Article Content */}
-      <section className="py-8 px-4">
+      {/* Tags */}
+      {post.tags && post.tags.length > 0 && (
+        <section className="py-8 px-4 bg-muted/20">
+          <div className="container mx-auto max-w-4xl">
+            <h3 className="text-xl font-semibold mb-4">Tags</h3>
+            <div className="flex flex-wrap gap-2">
+              {post.tags.map((tag, index) => (
+                <Badge key={index} variant="outline" className="text-sm">
+                  {tag}
+                </Badge>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Author Card */}
+      <section className="py-16 px-4">
         <div className="container mx-auto max-w-4xl">
-          {/* Main Content */}
-          <Card className="border-0 shadow-none">
-            <CardContent className="pt-0">
-              <div 
-                className="prose prose-lg max-w-none prose-headings:text-foreground prose-p:text-muted-foreground prose-strong:text-foreground prose-li:text-muted-foreground"
-                dangerouslySetInnerHTML={{ __html: post.content }}
-              />
-              
-              {/* Tags */}
-              <div className="mt-12 pt-8 border-t border-border">
-                <h3 className="text-lg font-semibold text-foreground mb-4">Tags</h3>
-                <div className="flex flex-wrap gap-2">
-                  {post.tags.map((tag, index) => (
-                    <Badge key={index} variant="outline" className="hover:bg-primary hover:text-primary-foreground cursor-pointer">
-                      {tag}
-                    </Badge>
-                  ))}
+          <Card className="bg-card/80 backdrop-blur-sm border-0">
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-3">
+                <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center">
+                  <User className="w-6 h-6 text-primary" />
                 </div>
-              </div>
+                <div>
+                  <h3 className="text-xl font-bold">{post.author}</h3>
+                  <p className="text-sm text-muted-foreground">Blog Author</p>
+                </div>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">
+                Experienced travel writer and adventure enthusiast sharing insights from the trails of Azerbaijan.
+              </p>
             </CardContent>
           </Card>
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* Related Posts / Newsletter */}
       <section className="py-20 px-4 bg-gradient-forest">
         <div className="container mx-auto text-center">
-          <h2 className="text-3xl font-bold text-white mb-6">
-            Ready for Your Own Adventure?
+          <h2 className="text-4xl font-bold text-white mb-6">
+            Stay Updated
           </h2>
-          <p className="text-lg text-white/90 mb-8">
-            Join us on one of our guided tours to experience the trails mentioned in this guide
+          <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
+            Get the latest adventure stories, trail updates, and conservation news delivered to your inbox
           </p>
-          <Button size="lg" variant="outline" className="bg-white text-forest hover:bg-white/90" asChild>
-            <Link to="/tours">View Our Tours</Link>
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button size="lg" variant="outline" className="bg-white text-forest hover:bg-white/90">
+              Subscribe to Newsletter
+            </Button>
+            <Button size="lg" variant="ghost" asChild className="text-white hover:text-white/80">
+              <Link to="/blog">Read More Stories</Link>
+            </Button>
+          </div>
         </div>
       </section>
     </div>
