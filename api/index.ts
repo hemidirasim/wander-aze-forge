@@ -211,6 +211,30 @@ app.get('/api/admin/verify', adminAuth, async (req, res) => {
   res.json({ success: true, user: req.user });
 });
 
+// Test endpoint to check admin users in database
+app.get('/api/admin/test-users', async (req, res) => {
+  try {
+    const users = await DatabaseAdminService.getAllAdminUsers();
+    res.json({ 
+      success: true, 
+      count: users.length,
+      users: users.map(user => ({
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        full_name: user.full_name,
+        is_active: user.is_active,
+        permissions: user.permissions
+      }))
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Unknown error' 
+    });
+  }
+});
+
 // Bookings endpoints
 app.post('/api/bookings', async (req, res) => {
   try {
