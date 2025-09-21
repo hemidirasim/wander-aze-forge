@@ -358,7 +358,9 @@ const TourDetail = () => {
                 <CardContent className="space-y-4">
                   <div className="text-center">
                     <div className="text-4xl font-bold text-primary mb-2">{tour.price}</div>
-                    <div className="text-muted-foreground">per person</div>
+                    <div className="text-muted-foreground">
+                      {category === 'group-tours' ? 'per group' : 'per person'}
+                    </div>
                   </div>
                   <div className="border-t pt-4">
                     <h4 className="font-semibold mb-2">Price Includes:</h4>
@@ -423,7 +425,9 @@ const TourDetail = () => {
                 <CardHeader>
                   <CardTitle className="text-3xl text-center">
                     <span className="text-primary">{tour.price}</span>
-                    <span className="text-lg text-muted-foreground"> / person</span>
+                    <span className="text-lg text-muted-foreground">
+                      {category === 'group-tours' ? ' / group' : ' / person'}
+                    </span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
