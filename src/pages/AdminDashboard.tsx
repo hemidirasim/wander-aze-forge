@@ -19,7 +19,8 @@ import {
   Handshake,
   FileText,
   Calendar,
-  MessageSquare
+  MessageSquare,
+  LogOut
 } from 'lucide-react';
 
 interface DashboardStats {
