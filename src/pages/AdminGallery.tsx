@@ -254,7 +254,7 @@ const AdminGallery: React.FC = () => {
         <Card className="shadow-lg">
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
-              <ImageIcon className="w-5 h-5 text-green-500" />
+              <ImageIcon className="w-5 h-5 text-yellow-500" />
               <span>Images ({filteredImages.length})</span>
             </CardTitle>
           </CardHeader>

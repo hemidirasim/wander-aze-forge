@@ -93,7 +93,7 @@ const AdminDashboard: React.FC = () => {
       title: 'Projects',
       value: stats.projects,
       icon: FolderOpen,
-      color: 'bg-gradient-to-r from-green-500 to-green-600',
+      color: 'bg-gradient-to-r from-yellow-500 to-orange-500',
       change: '+8%',
       description: 'Development projects'
     },
@@ -133,7 +133,7 @@ const AdminDashboard: React.FC = () => {
       title: 'Messages',
       value: stats.contactMessages,
       icon: MessageSquare,
-      color: 'bg-gradient-to-r from-teal-500 to-teal-600',
+      color: 'bg-gradient-to-r from-amber-500 to-yellow-500',
       change: '+3%',
       description: 'Contact messages'
     }
@@ -143,7 +143,7 @@ const AdminDashboard: React.FC = () => {
     {
       title: 'Hiking Tours',
       icon: Mountain,
-      color: 'bg-gradient-to-r from-green-500 to-green-600',
+      color: 'bg-gradient-to-r from-yellow-500 to-orange-500',
       count: 8,
       description: 'Nature hiking adventures'
     },
@@ -258,7 +258,7 @@ const AdminDashboard: React.FC = () => {
                   <div className={`w-12 h-12 ${stat.color} rounded-xl flex items-center justify-center shadow-lg`}>
                     <stat.icon className="w-6 h-6 text-white" />
                   </div>
-                  <Badge className="bg-green-100 text-green-800 border-green-200">
+                  <Badge className="bg-yellow-100 text-yellow-800 border-yellow-200">
                     {stat.change}
                   </Badge>
                 </div>
@@ -309,14 +309,14 @@ const AdminDashboard: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div>
                 <h4 className="font-bold text-gray-900 mb-4 flex items-center">
-                  <Database className="w-5 h-5 mr-2 text-green-500" />
+                  <Database className="w-5 h-5 mr-2 text-yellow-500" />
                   Database Status
                 </h4>
                 <div className="space-y-3">
                   {['Tours Table', 'Projects Table', 'Programs Table', 'Partners Table', 'Blog Table', 'Bookings Table'].map((table, index) => (
-                    <div key={index} className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
+                    <div key={index} className="flex justify-between items-center p-3 bg-yellow-50 rounded-lg">
                       <span className="font-medium text-gray-700">{table}</span>
-                      <Badge className="bg-green-100 text-green-800 border-green-200">
+                      <Badge className="bg-yellow-100 text-yellow-800 border-yellow-200">
                         <Clock className="w-3 h-3 mr-1" />
                         Connected
                       </Badge>

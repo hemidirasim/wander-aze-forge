@@ -688,7 +688,7 @@ const AdminTourEdit: React.FC = () => {
           <Card className="shadow-lg">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
-                <Check className="w-5 h-5 text-green-500" />
+                <Check className="w-5 h-5 text-yellow-500" />
                 <span>What's Included</span>
               </CardTitle>
             </CardHeader>
@@ -992,7 +992,7 @@ Day 3: Cultural visits..."
           <Card className="shadow-lg">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
-                <Car className="w-5 h-5 text-teal-500" />
+                <Car className="w-5 h-5 text-amber-500" />
                 <span>Transport</span>
               </CardTitle>
             </CardHeader>
@@ -1061,7 +1061,7 @@ Day 3: Cultural visits..."
           <Card className="shadow-lg">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
-                <DollarSign className="w-5 h-5 text-green-500" />
+                <DollarSign className="w-5 h-5 text-yellow-500" />
                 <span>Price Details</span>
               </CardTitle>
             </CardHeader>

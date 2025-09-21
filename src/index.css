@@ -16,10 +16,10 @@
     --popover: 0 0% 100%;
     --popover-foreground: 25 20% 15%;
 
-    /* Adventure greens and earth tones */
-    --primary: 142 35% 35%;
+    /* Adventure golden tones */
+    --primary: 39 75% 67%;
     --primary-foreground: 0 0% 98%;
-    --primary-glow: 142 40% 45%;
+    --primary-glow: 39 80% 72%;
 
     --secondary: 35 25% 85%;
     --secondary-foreground: 25 20% 15%;
@@ -35,12 +35,12 @@
 
     --border: 35 15% 88%;
     --input: 35 15% 88%;
-    --ring: 142 35% 35%;
+    --ring: 39 75% 67%;
 
     /* Adventure-specific colors */
     --mountain-peak: 200 15% 25%;
-    --forest-green: 142 50% 30%;
-    --autumn-gold: 35 65% 55%;
+    --forest-green: 39 75% 67%;
+    --autumn-gold: 39 80% 72%;
     --sky-blue: 200 60% 70%;
     --earth-brown: 25 40% 45%;
 
@@ -48,7 +48,7 @@
     --gradient-hero: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
     --gradient-mountain: linear-gradient(180deg, hsl(200 20% 30%), hsl(200 15% 25%));
     --gradient-sunset: linear-gradient(135deg, hsl(35 65% 55%), hsl(15 75% 60%));
-    --gradient-forest: linear-gradient(180deg, hsl(142 50% 30%), hsl(142 40% 25%));
+    --gradient-forest: linear-gradient(180deg, hsl(39 75% 67%), hsl(39 70% 62%));
 
     /* Shadows with natural feel */
     --shadow-natural: 0 4px 20px -4px hsl(var(--primary) / 0.2);
@@ -89,9 +89,9 @@
     --popover: 25 20% 12%;
     --popover-foreground: 35 25% 90%;
 
-    --primary: 142 45% 55%;
+    --primary: 39 75% 67%;
     --primary-foreground: 25 15% 8%;
-    --primary-glow: 142 50% 65%;
+    --primary-glow: 39 80% 72%;
 
     --secondary: 25 15% 18%;
     --secondary-foreground: 35 25% 90%;
@@ -107,12 +107,12 @@
 
     --border: 25 15% 20%;
     --input: 25 15% 20%;
-    --ring: 142 45% 55%;
+    --ring: 39 75% 67%;
 
     /* Dark mode adventure colors */
     --mountain-peak: 200 20% 15%;
-    --forest-green: 142 45% 35%;
-    --autumn-gold: 35 50% 50%;
+    --forest-green: 39 75% 67%;
+    --autumn-gold: 39 80% 72%;
     --sky-blue: 200 45% 60%;
     --earth-brown: 25 35% 35%;
 
@@ -120,7 +120,7 @@
     --gradient-hero: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
     --gradient-mountain: linear-gradient(180deg, hsl(200 25% 20%), hsl(200 20% 15%));
     --gradient-sunset: linear-gradient(135deg, hsl(35 50% 45%), hsl(15 60% 50%));
-    --gradient-forest: linear-gradient(180deg, hsl(142 45% 25%), hsl(142 35% 20%));
+    --gradient-forest: linear-gradient(180deg, hsl(39 75% 67%), hsl(39 70% 62%));
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;

@@ -423,7 +423,7 @@ const AdminTourFormExtended: React.FC = () => {
           <Card className="shadow-lg">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
-                <Clock className="w-5 h-5 text-green-500" />
+                <Clock className="w-5 h-5 text-yellow-500" />
                 <span>Overview</span>
               </CardTitle>
             </CardHeader>
@@ -656,7 +656,7 @@ const AdminTourFormExtended: React.FC = () => {
           <Card className="shadow-lg">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
-                <DollarSign className="w-5 h-5 text-green-500" />
+                <DollarSign className="w-5 h-5 text-yellow-500" />
                 <span>Price Details</span>
               </CardTitle>
             </CardHeader>

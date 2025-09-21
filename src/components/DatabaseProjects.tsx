@@ -68,7 +68,7 @@ const DatabaseProjects: React.FC = () => {
       case 'community_development':
         return 'bg-blue-100 text-blue-800';
       case 'conservation':
-        return 'bg-green-100 text-green-800';
+        return 'bg-yellow-100 text-yellow-800';
       case 'research':
         return 'bg-purple-100 text-purple-800';
       default:
@@ -111,7 +111,7 @@ const DatabaseProjects: React.FC = () => {
                 <Badge className={getCategoryColor(project.category || '')}>
                   {project.category?.replace('_', ' ') || 'Project'}
                 </Badge>
-                <Badge variant="outline" className="text-green-600">
+                <Badge variant="outline" className="text-yellow-600">
                   {project.status}
                 </Badge>
               </div>

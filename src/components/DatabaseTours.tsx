@@ -63,7 +63,7 @@ const DatabaseTours: React.FC = () => {
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty.toLowerCase()) {
       case 'easy':
-        return 'bg-green-100 text-green-800';
+        return 'bg-yellow-100 text-yellow-800';
       case 'moderate':
         return 'bg-yellow-100 text-yellow-800';
       case 'challenging':
@@ -82,7 +82,7 @@ const DatabaseTours: React.FC = () => {
       case 'mountaineering':
         return 'bg-purple-100 text-purple-800';
       case 'wildlife':
-        return 'bg-green-100 text-green-800';
+        return 'bg-yellow-100 text-yellow-800';
       case 'cultural':
         return 'bg-amber-100 text-amber-800';
       default:
@@ -124,7 +124,7 @@ const DatabaseTours: React.FC = () => {
                 {tour.description}
               </p>
               <div className="flex justify-between items-center">
-                <span className="text-2xl font-bold text-green-600">
+                <span className="text-2xl font-bold text-yellow-600">
                   ${tour.price}
                 </span>
                 <span className="text-xs text-gray-400">

@@ -60,7 +60,7 @@ const AdminTourCategories: React.FC = () => {
       id: 'hiking',
       title: 'Hiking Tours',
       icon: Mountain,
-      color: 'bg-gradient-to-r from-green-500 to-green-600',
+      color: 'bg-gradient-to-r from-yellow-500 to-orange-500',
       description: 'Nature hiking adventures',
       count: 8,
       difficultyOptions: ['Easy', 'Moderate', 'Challenging'],

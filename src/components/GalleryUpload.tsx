@@ -386,7 +386,7 @@ const GalleryUpload: React.FC<GalleryUploadProps> = ({
         <Card className="shadow-lg">
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
-              <ImageIcon className="w-5 h-5 text-green-500" />
+              <ImageIcon className="w-5 h-5 text-yellow-500" />
               <span>Uploaded Images ({images.length})</span>
             </CardTitle>
           </CardHeader>

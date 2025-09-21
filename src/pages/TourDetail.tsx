@@ -166,7 +166,7 @@ const TourDetail = () => {
                   <p className="text-muted-foreground">
                     Comprehensive daily schedule with activities, timings, and highlights
                     {dbPrograms.length > 0 && (
-                      <span className="block mt-2 text-sm text-green-600">
+                      <span className="block mt-2 text-sm text-yellow-600">
                         📊 Live data from database
                       </span>
                     )}

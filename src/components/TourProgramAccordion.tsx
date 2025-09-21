@@ -57,7 +57,7 @@ const getActivityIcon = (iconType?: string) => {
 const getDifficultyColor = (difficulty: string) => {
   switch (difficulty) {
     case 'Easy':
-      return 'bg-green-100 text-green-800';
+      return 'bg-yellow-100 text-yellow-800';
     case 'Moderate':
       return 'bg-yellow-100 text-yellow-800';
     case 'Challenging':
@@ -216,9 +216,9 @@ const TourProgramAccordion: React.FC<TourProgramAccordionProps> = ({ program, ca
                   )}
 
                   {category === 'wildlife' && (
-                    <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                      <h4 className="font-semibold text-green-900 mb-2">Wildlife Information</h4>
-                      <div className="text-sm text-green-800">
+                    <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+                      <h4 className="font-semibold text-yellow-900 mb-2">Wildlife Information</h4>
+                      <div className="text-sm text-yellow-800">
                         <p>Best viewing times and wildlife spotting opportunities throughout the day.</p>
                         <p className="mt-2">
                           <strong>What to bring:</strong> Binoculars, camera with zoom lens, and comfortable walking shoes.

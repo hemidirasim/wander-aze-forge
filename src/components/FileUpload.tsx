@@ -203,15 +203,15 @@ const FileUpload: React.FC<FileUploadProps> = ({
               {uploadedFiles.map((file, index) => (
                 <div
                   key={index}
-                  className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-md"
+                  className="flex items-center justify-between p-3 bg-yellow-50 border border-yellow-200 rounded-md"
                 >
                   <div className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-green-500" />
+                    <CheckCircle className="w-4 h-4 text-yellow-500" />
                     <div>
-                      <p className="text-sm font-medium text-green-800">
+                      <p className="text-sm font-medium text-yellow-800">
                         {file.pathname.split('/').pop()}
                       </p>
-                      <p className="text-xs text-green-600">
+                      <p className="text-xs text-yellow-600">
                         {(file.size / 1024).toFixed(1)} KB
                       </p>
                     </div>

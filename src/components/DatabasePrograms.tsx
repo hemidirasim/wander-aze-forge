@@ -67,7 +67,7 @@ const DatabasePrograms: React.FC = () => {
       case 'education':
         return 'bg-blue-100 text-blue-800';
       case 'youth_development':
-        return 'bg-green-100 text-green-800';
+        return 'bg-yellow-100 text-yellow-800';
       case 'women_empowerment':
         return 'bg-pink-100 text-pink-800';
       default:
@@ -94,7 +94,7 @@ const DatabasePrograms: React.FC = () => {
                 <Badge className={getTypeColor(program.type || '')}>
                   {program.type?.replace('_', ' ') || 'Program'}
                 </Badge>
-                <Badge variant="outline" className="text-green-600">
+                <Badge variant="outline" className="text-yellow-600">
                   {program.status}
                 </Badge>
               </div>
@@ -136,7 +136,7 @@ const DatabasePrograms: React.FC = () => {
                   <div className="space-y-1">
                     {program.activities.slice(0, 3).map((activity, index) => (
                       <div key={index} className="flex items-center text-xs text-gray-600">
-                        <CheckCircle className="w-3 h-3 mr-2 text-green-500" />
+                        <CheckCircle className="w-3 h-3 mr-2 text-yellow-500" />
                         {activity}
                       </div>
                     ))}
