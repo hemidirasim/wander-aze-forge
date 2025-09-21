@@ -47,7 +47,6 @@ const App = () => (
           <Route path="/accordion-demo" element={<AccordionDemo />} />
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin" element={<SimpleAdminLayout />}>
-            <Route path="dashboard" element={<AdminDashboard />} />
             <Route path="tours" element={<AdminTours />} />
             <Route path="tour-categories" element={<AdminTourCategories />} />
             <Route path="test" element={<AdminTest />} />

@@ -34,7 +34,7 @@ const AdminLogin: React.FC = () => {
       if (data.success) {
         localStorage.setItem('adminToken', data.token);
         localStorage.setItem('adminUser', JSON.stringify(data.user));
-        navigate('/admin/dashboard');
+        navigate('/admin');
       } else {
         setError(data.message || 'Invalid credentials');
       }
