@@ -1,0 +1,18 @@
+{
+  "functions": {
+    "src/server/index.ts": {
+      "maxDuration": 30
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/index"
+    }
+  ],
+  "env": {
+    "ADMIN_USERNAME": "admin",
+    "ADMIN_PASSWORD": "admin123",
+    "SESSION_SECRET": "your-secret-key-here"
+  }
+}

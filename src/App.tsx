@@ -19,6 +19,7 @@ import AccordionDemo from "./pages/AccordionDemo";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminTours from "./pages/AdminTours";
+import AdminTest from "./pages/AdminTest";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -46,6 +47,7 @@ const App = () => (
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
           <Route path="/admin/tours" element={<AdminTours />} />
           <Route path="/admin/tours/new" element={<AdminTours />} />
+          <Route path="/admin/test" element={<AdminTest />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
