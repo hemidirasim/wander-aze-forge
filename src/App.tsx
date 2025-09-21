@@ -21,7 +21,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminTours from "./pages/AdminTours";
 import AdminTest from "./pages/AdminTest";
 import AdminTourCategories from "./pages/AdminTourCategories";
-import AdminLayout from "./components/AdminLayout";
+import SimpleAdminLayout from "./components/SimpleAdminLayout";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -46,7 +46,7 @@ const App = () => (
           <Route path="/upload-demo" element={<UploadDemo />} />
           <Route path="/accordion-demo" element={<AccordionDemo />} />
           <Route path="/admin/login" element={<AdminLogin />} />
-          <Route path="/admin" element={<AdminLayout />}>
+          <Route path="/admin" element={<SimpleAdminLayout />}>
             <Route path="dashboard" element={<AdminDashboard />} />
             <Route path="tours" element={<AdminTours />} />
             <Route path="tour-categories" element={<AdminTourCategories />} />
