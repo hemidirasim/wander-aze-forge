@@ -3,6 +3,7 @@ import TourCategoryGallery from '@/components/TourCategoryGallery';
 import RecommendationsSection from '@/components/RecommendationsSection';
 import JourneyContactForm from '@/components/JourneyContactForm';
 import DatabasePartners from '@/components/DatabasePartners';
+import DatabaseBlog from '@/components/DatabaseBlog';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -208,6 +209,8 @@ const Index = () => {
       {/* Plan Your Journey Contact Form */}
       <JourneyContactForm />
 
+      {/* Latest Blog Stories */}
+      <DatabaseBlog />
 
       {/* Business Partners */}
       <DatabasePartners />
