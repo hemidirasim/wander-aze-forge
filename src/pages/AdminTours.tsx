@@ -213,6 +213,7 @@ const AdminTours: React.FC = () => {
   };
 
   const handleEdit = (tour: Tour) => {
+    console.log('Edit button clicked for tour:', tour);
     setIsEditing(true);
     setIsCreating(false);
     setSelectedTour(tour);
@@ -340,7 +341,7 @@ const AdminTours: React.FC = () => {
 
   const filteredTours = tours.filter(tour =>
     tour.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    tour.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (tour.location && tour.location.toLowerCase().includes(searchTerm.toLowerCase())) ||
     tour.category.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -404,13 +405,16 @@ const AdminTours: React.FC = () => {
                     <div key={tour.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
                       <div className="flex items-center space-x-4">
                         <img 
-                          src={tour.image_url} 
+                          src={tour.image_url || '/placeholder-tour.jpg'} 
                           alt={tour.title}
                           className="w-16 h-16 object-cover rounded-lg"
+                          onError={(e) => {
+                            e.currentTarget.src = '/placeholder-tour.jpg';
+                          }}
                         />
                         <div>
                           <h3 className="font-medium text-gray-900">{tour.title}</h3>
-                          <p className="text-sm text-gray-500">{tour.location}</p>
+                          <p className="text-sm text-gray-500">{tour.location || 'No location specified'}</p>
                           <div className="flex items-center space-x-2 mt-1">
                             <Badge variant="outline">{tour.category}</Badge>
                             <Badge variant={tour.is_active ? 'default' : 'secondary'}>
