@@ -2,7 +2,7 @@ import Navigation from '@/components/Navigation';
 import TourCategoryGallery from '@/components/TourCategoryGallery';
 import RecommendationsSection from '@/components/RecommendationsSection';
 import JourneyContactForm from '@/components/JourneyContactForm';
-import BusinessPartners from '@/components/BusinessPartners';
+import DatabasePartners from '@/components/DatabasePartners';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -210,7 +210,7 @@ const Index = () => {
 
 
       {/* Business Partners */}
-      <BusinessPartners />
+      <DatabasePartners />
     </div>
   );
 };
