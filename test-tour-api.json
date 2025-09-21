@@ -33,6 +33,7 @@
   "excludes": ["Personal items", "Travel insurance", "Tips", "Alcoholic beverages"],
   "itinerary": "Day 1: Meet in Baku, drive to mountains, 4-hour hike, overnight in guesthouse. Day 2: Morning exploration, return to Baku",
   "requirements": "Basic fitness level required, comfortable walking shoes, weather-appropriate clothing",
+  "specialFields": {},
   "isActive": true,
   "featured": true
 }

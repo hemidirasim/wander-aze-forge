@@ -123,7 +123,7 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
         excludes || [],
         itinerary?.trim() || '',
         requirements?.trim() || '',
-        specialFields ? JSON.stringify(specialFields) : null,
+        specialFields || null,
         
         // Extended fields with defaults
         parseFloat(req.body.rating) || 4.5,
@@ -143,7 +143,7 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
         
         req.body.transportDetails?.trim() || null,
         req.body.pickupService?.trim() || null,
-        req.body.galleryImages ? JSON.stringify(req.body.galleryImages) : null,
+        req.body.galleryImages || [],
         req.body.photographyService?.trim() || null,
         
         req.body.priceIncludes || [],
