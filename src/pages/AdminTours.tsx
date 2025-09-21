@@ -33,6 +33,33 @@ interface Tour {
   category: string;
   is_active?: boolean;
   featured?: boolean;
+  max_participants?: number;
+  // Extended fields
+  highlights?: string[];
+  includes?: string[];
+  excludes?: string[];
+  itinerary?: string;
+  requirements?: string;
+  reviews_count?: number;
+  overview?: string;
+  best_season?: string;
+  meeting_point?: string;
+  languages?: string;
+  accommodation_details?: string;
+  meals_details?: string;
+  water_snacks_details?: string;
+  provided_equipment?: string[];
+  what_to_bring?: string[];
+  transport_details?: string;
+  pickup_service?: string;
+  gallery_images?: string[];
+  photography_service?: string;
+  price_includes?: string[];
+  group_discounts?: string;
+  early_bird_discount?: string;
+  contact_phone?: string;
+  booking_terms?: string;
+  special_fields?: any;
   created_at: string;
   updated_at: string;
 }
@@ -48,17 +75,67 @@ const AdminTours: React.FC = () => {
     title: '',
     description: '',
     duration: '',
-    group_size: '',
     difficulty: '',
-    location: '',
     price: '',
+    maxParticipants: '',
     rating: '',
-    image_url: '',
+    reviewsCount: '',
+    groupSize: '',
+    location: '',
+    overview: '',
+    bestSeason: '',
+    meetingPoint: '',
+    languages: '',
+    accommodationDetails: '',
+    mealsDetails: '',
+    waterSnacksDetails: '',
+    transportDetails: '',
+    pickupService: '',
+    photographyService: '',
+    groupDiscounts: '',
+    earlyBirdDiscount: '',
+    contactPhone: '',
+    bookingTerms: '',
+    itinerary: '',
+    requirements: '',
+    imageUrl: '',
     category: '',
-    is_active: true,
-    featured: false
+    isActive: true,
+    featured: false,
+    highlights: [] as string[],
+    includes: [] as string[],
+    excludes: [] as string[],
+    providedEquipment: [] as string[],
+    whatToBring: [] as string[],
+    priceIncludes: [] as string[],
+    galleryImages: [] as string[],
+    specialFields: {} as any
   });
   const navigate = useNavigate();
+
+  // Helper functions for array fields
+  const addArrayField = (fieldName: keyof typeof formData, value: string) => {
+    if (value.trim()) {
+      setFormData(prev => ({
+        ...prev,
+        [fieldName]: [...(prev[fieldName] as string[]), value.trim()]
+      }));
+    }
+  };
+
+  const removeArrayField = (fieldName: keyof typeof formData, index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      [fieldName]: (prev[fieldName] as string[]).filter((_, i) => i !== index)
+    }));
+  };
+
+  const updateArrayField = (fieldName: keyof typeof formData, index: number, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      [fieldName]: (prev[fieldName] as string[]).map((item, i) => i === index ? value : item)
+    }));
+  };
 
   useEffect(() => {
     // Check authentication
@@ -97,15 +174,41 @@ const AdminTours: React.FC = () => {
       title: '',
       description: '',
       duration: '',
-      group_size: '',
       difficulty: '',
-      location: '',
       price: '',
+      maxParticipants: '',
       rating: '',
-      image_url: '',
+      reviewsCount: '',
+      groupSize: '',
+      location: '',
+      overview: '',
+      bestSeason: '',
+      meetingPoint: '',
+      languages: '',
+      accommodationDetails: '',
+      mealsDetails: '',
+      waterSnacksDetails: '',
+      transportDetails: '',
+      pickupService: '',
+      photographyService: '',
+      groupDiscounts: '',
+      earlyBirdDiscount: '',
+      contactPhone: '',
+      bookingTerms: '',
+      itinerary: '',
+      requirements: '',
+      imageUrl: '',
       category: '',
-      is_active: true,
-      featured: false
+      isActive: true,
+      featured: false,
+      highlights: [],
+      includes: [],
+      excludes: [],
+      providedEquipment: [],
+      whatToBring: [],
+      priceIncludes: [],
+      galleryImages: [],
+      specialFields: {}
     });
   };
 
@@ -117,24 +220,85 @@ const AdminTours: React.FC = () => {
       title: tour.title,
       description: tour.description,
       duration: tour.duration,
-      group_size: tour.group_size || '',
       difficulty: tour.difficulty,
-      location: tour.location || '',
       price: tour.price.toString(),
+      maxParticipants: tour.max_participants?.toString() || '',
       rating: tour.rating.toString(),
-      image_url: tour.image_url || '',
+      reviewsCount: tour.reviews_count?.toString() || '',
+      groupSize: tour.group_size || '',
+      location: tour.location || '',
+      overview: tour.overview || '',
+      bestSeason: tour.best_season || '',
+      meetingPoint: tour.meeting_point || '',
+      languages: tour.languages || '',
+      accommodationDetails: tour.accommodation_details || '',
+      mealsDetails: tour.meals_details || '',
+      waterSnacksDetails: tour.water_snacks_details || '',
+      transportDetails: tour.transport_details || '',
+      pickupService: tour.pickup_service || '',
+      photographyService: tour.photography_service || '',
+      groupDiscounts: tour.group_discounts || '',
+      earlyBirdDiscount: tour.early_bird_discount || '',
+      contactPhone: tour.contact_phone || '',
+      bookingTerms: tour.booking_terms || '',
+      itinerary: tour.itinerary || '',
+      requirements: tour.requirements || '',
+      imageUrl: tour.image_url || '',
       category: tour.category,
-      is_active: tour.is_active || true,
-      featured: tour.featured || false
+      isActive: tour.is_active || true,
+      featured: tour.featured || false,
+      highlights: tour.highlights || [],
+      includes: tour.includes || [],
+      excludes: tour.excludes || [],
+      providedEquipment: tour.provided_equipment || [],
+      whatToBring: tour.what_to_bring || [],
+      priceIncludes: tour.price_includes || [],
+      galleryImages: tour.gallery_images || [],
+      specialFields: tour.special_fields || {}
     });
   };
 
   const handleSave = async () => {
     try {
       const tourData = {
-        ...formData,
+        title: formData.title,
+        description: formData.description,
+        category: formData.category,
+        duration: formData.duration,
+        difficulty: formData.difficulty,
         price: parseFloat(formData.price),
-        rating: parseFloat(formData.rating)
+        maxParticipants: parseInt(formData.maxParticipants),
+        rating: parseFloat(formData.rating),
+        reviewsCount: parseInt(formData.reviewsCount) || 0,
+        groupSize: formData.groupSize,
+        location: formData.location,
+        overview: formData.overview,
+        bestSeason: formData.bestSeason,
+        meetingPoint: formData.meetingPoint,
+        languages: formData.languages,
+        accommodationDetails: formData.accommodationDetails,
+        mealsDetails: formData.mealsDetails,
+        waterSnacksDetails: formData.waterSnacksDetails,
+        transportDetails: formData.transportDetails,
+        pickupService: formData.pickupService,
+        photographyService: formData.photographyService,
+        groupDiscounts: formData.groupDiscounts,
+        earlyBirdDiscount: formData.earlyBirdDiscount,
+        contactPhone: formData.contactPhone,
+        bookingTerms: formData.bookingTerms,
+        highlights: formData.highlights,
+        includes: formData.includes,
+        excludes: formData.excludes,
+        itinerary: formData.itinerary,
+        requirements: formData.requirements,
+        providedEquipment: formData.providedEquipment,
+        whatToBring: formData.whatToBring,
+        priceIncludes: formData.priceIncludes,
+        galleryImages: formData.galleryImages,
+        specialFields: formData.specialFields,
+        imageUrl: formData.imageUrl,
+        isActive: formData.isActive,
+        featured: formData.featured
       };
 
       let response;
@@ -216,9 +380,9 @@ const AdminTours: React.FC = () => {
       </header>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 gap-8">
           {/* Tours List */}
-          <div className="lg:col-span-2">
+          <div>
             <Card>
               <CardHeader>
                 <div className="flex items-center justify-between">
@@ -271,7 +435,7 @@ const AdminTours: React.FC = () => {
           </div>
 
           {/* Tour Form */}
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-3">
             {(isCreating || isEditing) && (
               <Card>
                 <CardHeader>
@@ -286,68 +450,97 @@ const AdminTours: React.FC = () => {
                     </Button>
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <Label htmlFor="title">Title</Label>
-                    <Input
-                      id="title"
-                      value={formData.title}
-                      onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                      placeholder="Tour title"
-                    />
+                <CardContent className="space-y-6 max-h-[80vh] overflow-y-auto">
+                  {/* Basic Information */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="title">Title *</Label>
+                      <Input
+                        id="title"
+                        value={formData.title}
+                        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                        placeholder="Tour title"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="category">Category *</Label>
+                      <Select value={formData.category} onValueChange={(value) => setFormData({ ...formData, category: value })}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select category" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="hiking">Hiking</SelectItem>
+                          <SelectItem value="trekking">Trekking</SelectItem>
+                          <SelectItem value="wildlife">Wildlife</SelectItem>
+                          <SelectItem value="group-tours">Group Tours</SelectItem>
+                          <SelectItem value="tailor-made">Tailor-made</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </div>
 
                   <div>
-                    <Label htmlFor="description">Description</Label>
+                    <Label htmlFor="description">Description *</Label>
                     <Textarea
                       id="description"
                       value={formData.description}
                       onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                       placeholder="Tour description"
                       rows={3}
+                      required
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
-                      <Label htmlFor="duration">Duration</Label>
+                      <Label htmlFor="duration">Duration *</Label>
                       <Input
                         id="duration"
                         value={formData.duration}
                         onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
                         placeholder="e.g., 3 days"
+                        required
                       />
                     </div>
                     <div>
-                      <Label htmlFor="group_size">Group Size</Label>
+                      <Label htmlFor="difficulty">Difficulty *</Label>
+                      <Select value={formData.difficulty} onValueChange={(value) => setFormData({ ...formData, difficulty: value })}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select difficulty" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Easy">Easy</SelectItem>
+                          <SelectItem value="Moderate">Moderate</SelectItem>
+                          <SelectItem value="Challenging">Challenging</SelectItem>
+                          <SelectItem value="Expert">Expert</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label htmlFor="maxParticipants">Max Participants *</Label>
                       <Input
-                        id="group_size"
-                        value={formData.group_size}
-                        onChange={(e) => setFormData({ ...formData, group_size: e.target.value })}
-                        placeholder="e.g., 2-8 people"
+                        id="maxParticipants"
+                        type="number"
+                        value={formData.maxParticipants}
+                        onChange={(e) => setFormData({ ...formData, maxParticipants: e.target.value })}
+                        placeholder="e.g., 12"
+                        required
                       />
                     </div>
                   </div>
 
-                  <div>
-                    <Label htmlFor="location">Location</Label>
-                    <Input
-                      id="location"
-                      value={formData.location}
-                      onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                      placeholder="Tour location"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="price">Price</Label>
+                      <Label htmlFor="price">Price *</Label>
                       <Input
                         id="price"
                         type="number"
+                        step="0.01"
                         value={formData.price}
                         onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                         placeholder="Tour price"
+                        required
                       />
                     </div>
                     <div>
@@ -365,51 +558,209 @@ const AdminTours: React.FC = () => {
                     </div>
                   </div>
 
-                  <div>
-                    <Label htmlFor="category">Category</Label>
-                    <Select value={formData.category} onValueChange={(value) => setFormData({ ...formData, category: value })}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select category" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="hiking">Hiking</SelectItem>
-                        <SelectItem value="trekking">Trekking</SelectItem>
-                        <SelectItem value="wildlife">Wildlife</SelectItem>
-                        <SelectItem value="group-tours">Group Tours</SelectItem>
-                        <SelectItem value="tailor-made">Tailor-made</SelectItem>
-                      </SelectContent>
-                    </Select>
+                  {/* Location & Overview */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="location">Location</Label>
+                      <Input
+                        id="location"
+                        value={formData.location}
+                        onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                        placeholder="Tour location"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="groupSize">Group Size</Label>
+                      <Input
+                        id="groupSize"
+                        value={formData.groupSize}
+                        onChange={(e) => setFormData({ ...formData, groupSize: e.target.value })}
+                        placeholder="e.g., 2-8 people"
+                      />
+                    </div>
                   </div>
 
                   <div>
-                    <Label htmlFor="difficulty">Difficulty</Label>
-                    <Select value={formData.difficulty} onValueChange={(value) => setFormData({ ...formData, difficulty: value })}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select difficulty" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Easy">Easy</SelectItem>
-                        <SelectItem value="Moderate">Moderate</SelectItem>
-                        <SelectItem value="Challenging">Challenging</SelectItem>
-                        <SelectItem value="Expert">Expert</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="image_url">Image URL</Label>
-                    <Input
-                      id="image_url"
-                      value={formData.image_url}
-                      onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                      placeholder="https://example.com/image.jpg"
+                    <Label htmlFor="overview">Overview</Label>
+                    <Textarea
+                      id="overview"
+                      value={formData.overview}
+                      onChange={(e) => setFormData({ ...formData, overview: e.target.value })}
+                      placeholder="Tour overview"
+                      rows={3}
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  {/* Highlights */}
+                  <div>
+                    <Label>Highlights</Label>
+                    <div className="space-y-2">
+                      {formData.highlights.map((highlight, index) => (
+                        <div key={index} className="flex gap-2">
+                          <Input
+                            value={highlight}
+                            onChange={(e) => updateArrayField('highlights', index, e.target.value)}
+                            placeholder="Tour highlight"
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => removeArrayField('highlights', index)}
+                          >
+                            <X className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      ))}
+                      <div className="flex gap-2">
+                        <Input
+                          placeholder="Add highlight"
+                          onKeyPress={(e) => {
+                            if (e.key === 'Enter') {
+                              addArrayField('highlights', e.currentTarget.value);
+                              e.currentTarget.value = '';
+                            }
+                          }}
+                        />
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={(e) => {
+                            const input = e.currentTarget.previousElementSibling as HTMLInputElement;
+                            addArrayField('highlights', input.value);
+                            input.value = '';
+                          }}
+                        >
+                          <Plus className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Includes & Excludes */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="is_active">Active Status</Label>
-                      <Select value={formData.is_active ? 'active' : 'inactive'} onValueChange={(value) => setFormData({ ...formData, is_active: value === 'active' })}>
+                      <Label>Includes</Label>
+                      <div className="space-y-2">
+                        {formData.includes.map((include, index) => (
+                          <div key={index} className="flex gap-2">
+                            <Input
+                              value={include}
+                              onChange={(e) => updateArrayField('includes', index, e.target.value)}
+                              placeholder="What's included"
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              onClick={() => removeArrayField('includes', index)}
+                            >
+                              <X className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        ))}
+                        <div className="flex gap-2">
+                          <Input
+                            placeholder="Add inclusion"
+                            onKeyPress={(e) => {
+                              if (e.key === 'Enter') {
+                                addArrayField('includes', e.currentTarget.value);
+                                e.currentTarget.value = '';
+                              }
+                            }}
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={(e) => {
+                              const input = e.currentTarget.previousElementSibling as HTMLInputElement;
+                              addArrayField('includes', input.value);
+                              input.value = '';
+                            }}
+                          >
+                            <Plus className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <Label>Excludes</Label>
+                      <div className="space-y-2">
+                        {formData.excludes.map((exclude, index) => (
+                          <div key={index} className="flex gap-2">
+                            <Input
+                              value={exclude}
+                              onChange={(e) => updateArrayField('excludes', index, e.target.value)}
+                              placeholder="What's not included"
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              onClick={() => removeArrayField('excludes', index)}
+                            >
+                              <X className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        ))}
+                        <div className="flex gap-2">
+                          <Input
+                            placeholder="Add exclusion"
+                            onKeyPress={(e) => {
+                              if (e.key === 'Enter') {
+                                addArrayField('excludes', e.currentTarget.value);
+                                e.currentTarget.value = '';
+                              }
+                            }}
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={(e) => {
+                              const input = e.currentTarget.previousElementSibling as HTMLInputElement;
+                              addArrayField('excludes', input.value);
+                              input.value = '';
+                            }}
+                          >
+                            <Plus className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Itinerary & Requirements */}
+                  <div>
+                    <Label htmlFor="itinerary">Itinerary</Label>
+                    <Textarea
+                      id="itinerary"
+                      value={formData.itinerary}
+                      onChange={(e) => setFormData({ ...formData, itinerary: e.target.value })}
+                      placeholder="Detailed itinerary"
+                      rows={4}
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="requirements">Requirements</Label>
+                    <Textarea
+                      id="requirements"
+                      value={formData.requirements}
+                      onChange={(e) => setFormData({ ...formData, requirements: e.target.value })}
+                      placeholder="What participants need to bring/know"
+                      rows={3}
+                    />
+                  </div>
+
+                  {/* Status */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="isActive">Active Status</Label>
+                      <Select value={formData.isActive ? 'active' : 'inactive'} onValueChange={(value) => setFormData({ ...formData, isActive: value === 'active' })}>
                         <SelectTrigger>
                           <SelectValue placeholder="Select status" />
                         </SelectTrigger>
