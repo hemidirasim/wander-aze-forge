@@ -14,7 +14,11 @@ import {
   Trash2,
   Eye,
   Copy,
-  Download
+  Download,
+  Star,
+  StarIcon,
+  GripVertical,
+  Crown
 } from 'lucide-react';
 
 interface UploadedImage {
@@ -25,6 +29,7 @@ interface UploadedImage {
   uploadedAt: string;
   description?: string;
   alt?: string;
+  isMain?: boolean;
 }
 
 interface GalleryUploadProps {
@@ -47,6 +52,7 @@ const GalleryUpload: React.FC<GalleryUploadProps> = ({
   const [dragActive, setDragActive] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<Record<string, number>>({});
   const [errors, setErrors] = useState<string[]>([]);
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
 
   const formatFileSize = (bytes: number): string => {
     if (bytes === 0) return '0 Bytes';
@@ -246,6 +252,53 @@ const GalleryUpload: React.FC<GalleryUploadProps> = ({
     // You could add a toast notification here
   };
 
+  // Set image as main
+  const setAsMain = (id: string) => {
+    const newImages = images.map(img => ({
+      ...img,
+      isMain: img.id === id
+    }));
+    setImages(newImages);
+    onImagesChange?.(newImages);
+  };
+
+  // Drag and drop handlers
+  const handleDragStart = (e: React.DragEvent, index: number) => {
+    setDraggedIndex(index);
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  };
+
+  const handleDrop = (e: React.DragEvent, dropIndex: number) => {
+    e.preventDefault();
+    
+    if (draggedIndex === null || draggedIndex === dropIndex) {
+      setDraggedIndex(null);
+      return;
+    }
+
+    const newImages = [...images];
+    const draggedImage = newImages[draggedIndex];
+    
+    // Remove dragged image from original position
+    newImages.splice(draggedIndex, 1);
+    
+    // Insert at new position
+    newImages.splice(dropIndex, 0, draggedImage);
+    
+    setImages(newImages);
+    onImagesChange?.(newImages);
+    setDraggedIndex(null);
+  };
+
+  const handleDragEnd = () => {
+    setDraggedIndex(null);
+  };
+
   return (
     <div className="space-y-6">
       {/* Upload Area */}
@@ -350,42 +403,92 @@ const GalleryUpload: React.FC<GalleryUploadProps> = ({
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {images.map((image) => (
-                <div key={image.id} className="border rounded-lg p-4 space-y-3">
-                  {/* Image Preview */}
-                  <div className="relative group">
-                    <img
-                      src={image.url}
-                      alt={image.alt || image.filename}
-                      className="w-full h-48 object-cover rounded-lg"
-                    />
-                    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-200 rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100">
-                      <div className="flex space-x-2">
-                        <Button
-                          size="sm"
-                          variant="secondary"
-                          onClick={() => window.open(image.url, '_blank')}
-                        >
-                          <Eye className="w-4 h-4" />
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="secondary"
-                          onClick={() => copyImageUrl(image.url)}
-                        >
-                          <Copy className="w-4 h-4" />
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          onClick={() => removeImage(image.id)}
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
+            <div className="space-y-4">
+              <div className="text-sm text-gray-600 mb-4">
+                💡 Drag images to reorder • Click "Set as Main" to make an image the primary tour image
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {images.map((image, index) => (
+                  <div 
+                    key={image.id} 
+                    className={`border rounded-lg p-4 space-y-3 relative transition-all duration-200 ${
+                      image.isMain ? 'ring-2 ring-yellow-400 bg-yellow-50' : ''
+                    } ${draggedIndex === index ? 'opacity-50 scale-95' : ''}`}
+                    draggable
+                    onDragStart={(e) => handleDragStart(e, index)}
+                    onDragOver={handleDragOver}
+                    onDrop={(e) => handleDrop(e, index)}
+                    onDragEnd={handleDragEnd}
+                  >
+                    {/* Main Image Badge */}
+                    {image.isMain && (
+                      <div className="absolute top-2 left-2 z-10">
+                        <Badge className="bg-yellow-500 text-white flex items-center space-x-1">
+                          <Crown className="w-3 h-3" />
+                          <span>Main</span>
+                        </Badge>
+                      </div>
+                    )}
+
+                    {/* Drag Handle */}
+                    <div className="absolute top-2 right-2 z-10">
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="cursor-move hover:bg-gray-200"
+                        onMouseDown={(e) => e.preventDefault()}
+                      >
+                        <GripVertical className="w-4 h-4 text-gray-400" />
+                      </Button>
+                    </div>
+
+                    {/* Image Preview */}
+                    <div className="relative group">
+                      <img
+                        src={image.url}
+                        alt={image.alt || image.filename}
+                        className="w-full h-48 object-cover rounded-lg"
+                      />
+                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-200 rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100">
+                        <div className="flex space-x-2">
+                          <Button
+                            size="sm"
+                            variant="secondary"
+                            onClick={() => window.open(image.url, '_blank')}
+                          >
+                            <Eye className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="secondary"
+                            onClick={() => copyImageUrl(image.url)}
+                          >
+                            <Copy className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="destructive"
+                            onClick={() => removeImage(image.id)}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
                       </div>
                     </div>
-                  </div>
+
+                    {/* Set as Main Button */}
+                    <div className="flex justify-center">
+                      <Button
+                        size="sm"
+                        variant={image.isMain ? "default" : "outline"}
+                        onClick={() => setAsMain(image.id)}
+                        className={`w-full ${image.isMain ? 'bg-yellow-500 hover:bg-yellow-600' : ''}`}
+                      >
+                        <Star className={`w-4 h-4 mr-2 ${image.isMain ? 'fill-current' : ''}`} />
+                        {image.isMain ? 'Main Image' : 'Set as Main'}
+                      </Button>
+                    </div>
 
                   {/* Image Info */}
                   <div className="space-y-2">

@@ -158,7 +158,11 @@ const AdminTourFormExtended: React.FC = () => {
 
   // Update main image when gallery changes
   React.useEffect(() => {
-    if (formData.galleryImages.length > 0) {
+    const mainImage = formData.galleryImages.find(img => img.isMain);
+    if (mainImage) {
+      setFormData(prev => ({ ...prev, imageUrl: mainImage.url }));
+    } else if (formData.galleryImages.length > 0) {
+      // If no main image is set, use the first one
       const firstImageUrl = formData.galleryImages[0].url;
       setFormData(prev => ({ ...prev, imageUrl: firstImageUrl }));
     }

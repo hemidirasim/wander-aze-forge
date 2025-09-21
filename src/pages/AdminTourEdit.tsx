@@ -256,7 +256,11 @@ const AdminTourEdit: React.FC = () => {
 
   // Update main image when gallery changes
   React.useEffect(() => {
-    if (formData.galleryImages.length > 0) {
+    const mainImage = formData.galleryImages.find(img => img.isMain);
+    if (mainImage) {
+      setFormData(prev => ({ ...prev, imageUrl: mainImage.url }));
+    } else if (formData.galleryImages.length > 0) {
+      // If no main image is set, use the first one
       const firstImageUrl = formData.galleryImages[0].url;
       setFormData(prev => ({ ...prev, imageUrl: firstImageUrl }));
     }
@@ -326,7 +330,10 @@ const AdminTourEdit: React.FC = () => {
         priceIncludes: formData.priceIncludes,
         galleryImages: formData.galleryImages.map(img => img.url),
         specialFields: {},
-        imageUrl: formData.galleryImages.length > 0 ? formData.galleryImages[0].url : '',
+        imageUrl: (() => {
+          const mainImage = formData.galleryImages.find(img => img.isMain);
+          return mainImage ? mainImage.url : (formData.galleryImages.length > 0 ? formData.galleryImages[0].url : '');
+        })(),
         isActive: formData.isActive,
         featured: formData.featured
       };
