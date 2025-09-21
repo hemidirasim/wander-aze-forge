@@ -1,0 +1,9 @@
+{
+  "title": "Simple Test Tour",
+  "description": "A simple test tour",
+  "category": "hiking",
+  "duration": "1 day",
+  "difficulty": "Easy",
+  "price": 50,
+  "maxParticipants": 10
+}
