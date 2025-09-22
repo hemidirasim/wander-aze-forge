@@ -42,226 +42,33 @@ const ToursByCategory = () => {
   const category = getCategoryById(categoryId);
 
   useEffect(() => {
-    const loadToursByCategory = () => {
+    const fetchToursByCategory = async () => {
       try {
         setLoading(true);
-        
-        // Static mock data based on category
-        const mockTours = {
-          hiking: [
-            {
-              id: 101,
-              title: "Shahdag Day Hike",
-              description: "Experience the beauty of Shahdag National Park with this guided day hike.",
-              price: "$89",
-              duration: "1 day",
-              difficulty: "Moderate",
-              rating: 4.8,
-              reviews_count: 127,
-              group_size: "6-12 people",
-              location: "Shahdag National Park",
-              image_url: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop",
-              category: "hiking",
-              highlights: ["Breathtaking mountain views", "Professional guide", "All equipment included"],
-              includes: ["Professional guide", "Safety equipment", "Transportation"],
-              excludes: ["Personal items", "Lunch"],
-              is_active: true,
-              featured: true
-            },
-            {
-              id: 102,
-              title: "Khinalig Village Trek",
-              description: "Discover the ancient village of Khinalig on this cultural hiking adventure.",
-              price: "$129",
-              duration: "2 days",
-              difficulty: "Challenging",
-              rating: 4.9,
-              reviews_count: 89,
-              group_size: "4-8 people",
-              location: "Khinalig Village",
-              image_url: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&h=300&fit=crop",
-              category: "hiking",
-              highlights: ["Ancient village", "Cultural experience", "Mountain trekking"],
-              includes: ["Professional guide", "Accommodation", "All meals"],
-              excludes: ["Personal items"],
-              is_active: true,
-              featured: false
-            },
-            {
-              id: 103,
-              title: "Gobustan Petroglyphs Hike",
-              description: "Explore ancient rock art and unique mud volcanoes on this cultural hiking experience.",
-              price: "$75",
-              duration: "1 day",
-              difficulty: "Easy",
-              rating: 4.6,
-              reviews_count: 124,
-              group_size: "2-15 people",
-              location: "Gobustan National Park",
-              image_url: "https://images.unsplash.com/photo-1464207687429-7505649dae38?w=400&h=300&fit=crop",
-              category: "hiking",
-              highlights: ["Ancient rock art", "Mud volcanoes", "Cultural heritage"],
-              includes: ["Professional guide", "Transportation", "Entry fees"],
-              excludes: ["Personal items", "Lunch"],
-              is_active: true,
-              featured: false
-            }
-          ],
-          wildlife: [
-            {
-              id: 301,
-              title: "Caucasian Wildlife Safari",
-              description: "Explore Azerbaijan's diverse wildlife in their natural habitat.",
-              price: "$159",
-              duration: "3 days",
-              difficulty: "Easy",
-              rating: 4.7,
-              reviews_count: 156,
-              group_size: "8-15 people",
-              location: "Goygol National Park",
-              image_url: "https://images.unsplash.com/photo-1445308394109-4ec2920981b1?w=400&h=300&fit=crop",
-              category: "wildlife",
-              highlights: ["Wildlife spotting", "Bird watching", "Nature photography"],
-              includes: ["Professional guide", "Binoculars", "Transportation", "Accommodation"],
-              excludes: ["Camera equipment"],
-              is_active: true,
-              featured: true
-            },
-            {
-              id: 302,
-              title: "Bird Watching Tour",
-              description: "Perfect for bird enthusiasts to spot rare species in Azerbaijan.",
-              price: "$99",
-              duration: "1 day",
-              difficulty: "Easy",
-              rating: 4.6,
-              reviews_count: 78,
-              group_size: "6-10 people",
-              location: "Shirvan National Park",
-              image_url: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=400&h=300&fit=crop",
-              category: "wildlife",
-              highlights: ["Rare bird species", "Expert ornithologist", "Photography opportunities"],
-              includes: ["Professional guide", "Binoculars", "Transportation"],
-              excludes: ["Camera equipment", "Lunch"],
-              is_active: true,
-              featured: false
-            },
-            {
-              id: 303,
-              title: "Caspian Seal Conservation Tour",
-              description: "Learn about marine conservation while observing endangered Caspian seals.",
-              price: "$149",
-              duration: "1 day",
-              difficulty: "Easy",
-              rating: 4.8,
-              reviews_count: 36,
-              group_size: "2-12 people",
-              location: "Caspian Sea Coast",
-              image_url: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400&h=300&fit=crop",
-              category: "wildlife",
-              highlights: ["Marine conservation", "Seal observation", "Educational experience"],
-              includes: ["Professional guide", "Transportation", "Educational materials"],
-              excludes: ["Camera equipment"],
-              is_active: true,
-              featured: false
-            }
-          ],
-          trekking: [
-            {
-              id: 201,
-              title: "Bazarduzu Summit Trek",
-              description: "Challenge yourself with this demanding trek to Azerbaijan's highest peak.",
-              price: "$199",
-              duration: "4 days",
-              difficulty: "Expert",
-              rating: 4.9,
-              reviews_count: 45,
-              group_size: "4-6 people",
-              location: "Bazarduzu Peak",
-              image_url: "https://images.unsplash.com/photo-1464822759844-d150baec5b2e?w=400&h=300&fit=crop",
-              category: "trekking",
-              highlights: ["Highest peak in Azerbaijan", "Alpine experience", "Mountain camping"],
-              includes: ["Professional guide", "All camping equipment", "All meals"],
-              excludes: ["Personal items"],
-              is_active: true,
-              featured: true
-            },
-            {
-              id: 202,
-              title: "Laza to Laza Cross-Caucasus Trek",
-              description: "3-day circular trek through pristine Caucasus wilderness visiting remote villages.",
-              price: "$399",
-              duration: "3 days",
-              difficulty: "Challenging",
-              rating: 4.9,
-              reviews_count: 42,
-              group_size: "2-8 people",
-              location: "Greater Caucasus",
-              image_url: "https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=400&h=300&fit=crop",
-              category: "trekking",
-              highlights: ["Remote villages", "Pristine wilderness", "Cultural immersion"],
-              includes: ["Professional guide", "All camping equipment", "All meals", "Accommodation"],
-              excludes: ["Personal items"],
-              is_active: true,
-              featured: false
-            }
-          ],
-          "group-tours": [
-            {
-              id: 401,
-              title: "Azerbaijan Adventure Group",
-              description: "Perfect for groups wanting to explore Azerbaijan together.",
-              price: "$299",
-              duration: "5 days",
-              difficulty: "Moderate",
-              rating: 4.8,
-              reviews_count: 203,
-              group_size: "12-20 people",
-              location: "Multiple locations",
-              image_url: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop",
-              category: "group-tours",
-              highlights: ["Group bonding", "Multiple destinations", "Cultural experiences"],
-              includes: ["Professional guide", "All transportation", "All meals", "Accommodation"],
-              excludes: ["Personal items"],
-              is_active: true,
-              featured: true
-            },
-            {
-              id: 402,
-              title: "Weekend Warriors Group Trek",
-              description: "Join like-minded adventurers for an action-packed weekend of mountain exploration.",
-              price: "$199",
-              duration: "2 days",
-              difficulty: "Moderate",
-              rating: 4.7,
-              reviews_count: 89,
-              group_size: "6-10 people",
-              location: "Guba Region",
-              image_url: "https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=400&h=300&fit=crop",
-              category: "group-tours",
-              highlights: ["Group adventure", "Mountain exploration", "Weekend getaway"],
-              includes: ["Professional guide", "Transportation", "All meals"],
-              excludes: ["Personal items"],
-              is_active: true,
-              featured: false
-            }
-          ]
-        };
+        const response = await fetch(`/api/check-tours`);
+        const result = await response.json();
 
-        const tours = mockTours[categoryId as keyof typeof mockTours] || [];
-        setTours(tours);
-        console.log(`Loaded ${tours.length} tours for category ${categoryId}`);
-        
+        if (result.success) {
+          // Filter tours by category
+          const categoryTours = result.data.tours.filter((tour: TourData) => 
+            tour.category === categoryId && tour.is_active
+          );
+          setTours(categoryTours);
+          console.log(`Found ${categoryTours.length} tours for category ${categoryId}`);
+          console.log('All tours from database:', result.data.tours);
+        } else {
+          setError(result.error || 'Failed to load tours');
+        }
       } catch (err) {
         setError('Failed to load tours');
-        console.error('Error loading tours by category:', err);
+        console.error('Error fetching tours by category:', err);
       } finally {
         setLoading(false);
       }
     };
 
     if (categoryId) {
-      loadToursByCategory();
+      fetchToursByCategory();
     }
   }, [categoryId]);
 
