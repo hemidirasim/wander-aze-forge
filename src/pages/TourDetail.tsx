@@ -1,30 +1,128 @@
 import { useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import Navigation from '@/components/Navigation';
-import TourProgramAccordion from '@/components/TourProgramAccordion';
 import DatabaseTourProgramAccordion from '@/components/DatabaseTourProgramAccordion';
-import { useTourPrograms } from '@/hooks/useTourPrograms';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Clock, Users, MapPin, Star, CheckCircle, Calendar, Phone, ArrowLeft } from 'lucide-react';
+import { Clock, Users, MapPin, Star, CheckCircle, Calendar, Phone, ArrowLeft, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { getTourById } from '@/data/tourCategories';
-import { allTourPrograms } from '@/data/tourPrograms';
+
+interface TourData {
+  id: number;
+  title: string;
+  description: string;
+  price: string;
+  duration: string;
+  difficulty: string;
+  rating: number;
+  reviews_count: number;
+  group_size: string;
+  location: string;
+  overview: string;
+  best_season: string;
+  meeting_point: string;
+  languages: string;
+  accommodation_details: string;
+  meals_details: string;
+  water_snacks_details: string;
+  provided_equipment: string[];
+  what_to_bring: string[];
+  transport_details: string;
+  pickup_service: string;
+  gallery_images: string[];
+  photography_service: string;
+  price_includes: string[];
+  group_discounts: string;
+  early_bird_discount: string;
+  contact_phone: string;
+  booking_terms: string;
+  is_active: boolean;
+  featured: boolean;
+  image_url: string;
+  highlights: string[];
+  includes: string[];
+  excludes: string[];
+  itinerary: string;
+  requirements: string;
+  special_fields: any;
+  category: string;
+}
+
+interface ProgramData {
+  id: number;
+  tour_id: number;
+  day_number: number;
+  title: string;
+  description: string;
+  activities: string;
+  meals: string;
+  accommodation: string;
+  transport: string;
+  highlights: string;
+  duration: string;
+  difficulty_level: string;
+  distance: string;
+  elevation_gain: string;
+}
 
 const TourDetail = () => {
   const { id, category } = useParams();
-  const tourId = parseInt(id || '0');
-  const tour = getTourById(tourId);
-  const { programs: dbPrograms, loading: programsLoading, error: programsError } = useTourPrograms(tourId);
+  const [tour, setTour] = useState<TourData | null>(null);
+  const [programs, setPrograms] = useState<ProgramData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  if (!tour) {
+  useEffect(() => {
+    const fetchTourDetail = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`/api/tour-detail?id=${id}&category=${category}`);
+        const result = await response.json();
+
+        if (result.success) {
+          setTour(result.data.tour);
+          setPrograms(result.data.programs || []);
+        } else {
+          setError(result.error || 'Failed to load tour');
+        }
+      } catch (err) {
+        setError('Failed to load tour details');
+        console.error('Error fetching tour detail:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) {
+      fetchTourDetail();
+    }
+  }, [id, category]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navigation />
+        <div className="pt-24 px-4">
+          <div className="container mx-auto max-w-4xl text-center">
+            <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4" />
+            <p className="text-muted-foreground">Loading tour details...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !tour) {
     return (
       <div className="min-h-screen bg-background">
         <Navigation />
         <div className="pt-24 px-4">
           <div className="container mx-auto max-w-4xl text-center">
             <h1 className="text-4xl font-bold text-foreground mb-4">Tour Not Found</h1>
-            <p className="text-muted-foreground mb-8">The tour you're looking for doesn't exist.</p>
+            <p className="text-muted-foreground mb-8">
+              {error || "The tour you're looking for doesn't exist."}
+            </p>
             <Button asChild>
               <Link to="/tours">Browse All Tours</Link>
             </Button>
@@ -34,41 +132,10 @@ const TourDetail = () => {
     );
   }
 
-  // Mock additional data for tour detail
-  const tourDetail = {
-    ...tour,
-    reviews: tour.reviews || 127,
-    gallery: [
-      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop",
-      "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&h=300&fit=crop",
-      "https://images.unsplash.com/photo-1445308394109-4ec2920981b1?w=400&h=300&fit=crop",
-    ],
-    includes: tour.included || [
-      "Professional mountain guide",
-      "All necessary safety equipment",
-      "Accommodation (where applicable)",
-      "Transportation from meeting point",
-      "Insurance coverage",
-      "Emergency communication device",
-    ],
-    itinerary: tour.itinerary || [
-      {
-        day: "Day 1",
-        title: "Adventure Begins",
-        description: "Meet your guide and begin your incredible journey into Azerbaijan's wilderness."
-      },
-      {
-        day: "Day 2", 
-        title: "Mountain Exploration",
-        description: "Full day of trekking through pristine landscapes with breathtaking views."
-      },
-      {
-        day: "Day 3",
-        title: "Return Journey",
-        description: "Complete your adventure and return with unforgettable memories."
-      }
-    ]
-  };
+  // Get main image from gallery or use image_url
+  const mainImage = tour.gallery_images && tour.gallery_images.length > 0 
+    ? tour.gallery_images[0] 
+    : tour.image_url || '/placeholder-tour.jpg';
 
   return (
     <div className="min-h-screen bg-background">
@@ -89,7 +156,7 @@ const TourDetail = () => {
       {/* Hero Image */}
       <section className="relative h-[60vh]">
         <img 
-          src={tour.image} 
+          src={mainImage} 
           alt={tour.title}
           className="w-full h-full object-cover"
         />
@@ -111,7 +178,7 @@ const TourDetail = () => {
                   <div className="flex items-center space-x-1">
                     <Star className="w-5 h-5 fill-current text-autumn" />
                     <span className="font-semibold">{tour.rating}</span>
-                    <span className="text-muted-foreground">({tourDetail.reviews} reviews)</span>
+                    <span className="text-muted-foreground">({tour.reviews_count} reviews)</span>
                   </div>
                 </div>
                 
@@ -131,7 +198,7 @@ const TourDetail = () => {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <p className="text-muted-foreground">
-                    This {tour.category} adventure offers an incredible opportunity to explore Azerbaijan's stunning landscapes and rich cultural heritage. Perfect for {tour.difficulty.toLowerCase()} level adventurers, this tour combines natural beauty with authentic local experiences.
+                    {tour.overview || `This ${tour.category} adventure offers an incredible opportunity to explore Azerbaijan's stunning landscapes and rich cultural heritage. Perfect for ${tour.difficulty.toLowerCase()} level adventurers, this tour combines natural beauty with authentic local experiences.`}
                   </p>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
                     <div className="flex items-center space-x-3">
@@ -145,7 +212,7 @@ const TourDetail = () => {
                       <Users className="w-5 h-5 text-primary" />
                       <div>
                         <div className="font-semibold">Group Size</div>
-                        <div className="text-muted-foreground">{tour.groupSize}</div>
+                        <div className="text-muted-foreground">{tour.group_size}</div>
                       </div>
                     </div>
                     <div className="flex items-center space-x-3">
@@ -165,7 +232,7 @@ const TourDetail = () => {
                   <h2 className="text-3xl font-bold text-foreground mb-2">Detailed Tour Program</h2>
                   <p className="text-muted-foreground">
                     Comprehensive daily schedule with activities, timings, and highlights
-                    {dbPrograms.length > 0 && (
+                    {programs.length > 0 && (
                       <span className="block mt-2 text-sm text-yellow-600">
                         📊 Live data from database
                       </span>
@@ -173,46 +240,26 @@ const TourDetail = () => {
                   </p>
                 </div>
 
-                {programsLoading ? (
-                  <Card>
-                    <CardContent className="p-6 text-center">
-                      <p className="text-muted-foreground">Loading tour program...</p>
-                    </CardContent>
-                  </Card>
-                ) : programsError ? (
-                  <Card>
-                    <CardContent className="p-6 text-center">
-                      <p className="text-red-500">Error loading tour program: {programsError}</p>
-                      <p className="text-sm text-muted-foreground mt-2">
-                        Falling back to static program data
-                      </p>
-                    </CardContent>
-                  </Card>
-                ) : dbPrograms.length > 0 ? (
+                {programs.length > 0 ? (
                   <DatabaseTourProgramAccordion 
-                    programs={dbPrograms} 
+                    programs={programs} 
                     category={tour.category}
                   />
-                ) : allTourPrograms[tourId] ? (
-                  <TourProgramAccordion 
-                    program={allTourPrograms[tourId]} 
-                    category={tour.category}
-                  />
-                ) : (
+                ) : tour.itinerary ? (
                   <Card>
                     <CardHeader>
                       <CardTitle className="text-2xl">Tour Program</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-6">
-                      {tourDetail.itinerary.map((day, index) => (
-                        <div key={index} className="border-l-2 border-primary pl-6 relative">
-                          <div className="absolute w-4 h-4 bg-primary rounded-full -left-2 top-0" />
-                          <h3 className="text-lg font-semibold text-foreground mb-2">
-                            {day.day}: {day.title}
-                          </h3>
-                          <p className="text-muted-foreground">{day.description}</p>
-                        </div>
-                      ))}
+                      <div className="prose max-w-none">
+                        <div dangerouslySetInnerHTML={{ __html: tour.itinerary }} />
+                      </div>
+                    </CardContent>
+                  </Card>
+                ) : (
+                  <Card>
+                    <CardContent className="p-6 text-center">
+                      <p className="text-muted-foreground">Tour program details will be available soon.</p>
                     </CardContent>
                   </Card>
                 )}
@@ -227,19 +274,19 @@ const TourDetail = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <h4 className="font-semibold mb-2">Difficulty Level</h4>
-                      <p className="text-muted-foreground">{tour.difficulty} - Suitable for participants with appropriate fitness level</p>
+                      <p className="text-muted-foreground">{tour.difficulty} - {tour.requirements || 'Suitable for participants with appropriate fitness level'}</p>
                     </div>
                     <div>
                       <h4 className="font-semibold mb-2">Best Season</h4>
-                      <p className="text-muted-foreground">May to October (weather dependent)</p>
+                      <p className="text-muted-foreground">{tour.best_season || 'May to October (weather dependent)'}</p>
                     </div>
                     <div>
                       <h4 className="font-semibold mb-2">Meeting Point</h4>
-                      <p className="text-muted-foreground">Baku city center (exact location provided upon booking)</p>
+                      <p className="text-muted-foreground">{tour.meeting_point || 'Baku city center (exact location provided upon booking)'}</p>
                     </div>
                     <div>
                       <h4 className="font-semibold mb-2">Language</h4>
-                      <p className="text-muted-foreground">English, Azerbaijani, Russian</p>
+                      <p className="text-muted-foreground">{tour.languages || 'English, Azerbaijani, Russian'}</p>
                     </div>
                   </div>
                 </CardContent>
@@ -254,22 +301,22 @@ const TourDetail = () => {
                   <div>
                     <h4 className="font-semibold mb-2">Accommodation</h4>
                     <p className="text-muted-foreground">
-                      {tour.duration.includes('day') && !tour.duration.includes('1 day') 
+                      {tour.accommodation_details || (tour.duration.includes('day') && !tour.duration.includes('1 day') 
                         ? 'Mountain guesthouses, traditional villages, and camping under the stars (weather permitting). All accommodations are clean, comfortable, and provide authentic local experiences.'
                         : 'Day tour - no overnight accommodation required.'
-                      }
+                      )}
                     </p>
                   </div>
                   <div>
                     <h4 className="font-semibold mb-2">Meals</h4>
                     <p className="text-muted-foreground">
-                      Traditional Azerbaijani cuisine featuring fresh, local ingredients. Vegetarian and dietary restrictions can be accommodated with advance notice. Includes breakfast, lunch, and dinner for multi-day tours.
+                      {tour.meals_details || 'Traditional Azerbaijani cuisine featuring fresh, local ingredients. Vegetarian and dietary restrictions can be accommodated with advance notice. Includes breakfast, lunch, and dinner for multi-day tours.'}
                     </p>
                   </div>
                   <div>
                     <h4 className="font-semibold mb-2">Water & Snacks</h4>
                     <p className="text-muted-foreground">
-                      Fresh drinking water, energy snacks, and local fruits provided throughout the tour.
+                      {tour.water_snacks_details || 'Fresh drinking water, energy snacks, and local fruits provided throughout the tour.'}
                     </p>
                   </div>
                 </CardContent>
@@ -284,25 +331,37 @@ const TourDetail = () => {
                   <div>
                     <h4 className="font-semibold mb-2">Provided Equipment</h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {tourDetail.includes.map((item, index) => (
-                        <div key={index} className="flex items-center space-x-3">
-                          <CheckCircle className="w-5 h-5 text-primary flex-shrink-0" />
-                          <span>{item}</span>
-                        </div>
-                      ))}
+                      {tour.provided_equipment && tour.provided_equipment.length > 0 ? (
+                        tour.provided_equipment.map((item, index) => (
+                          <div key={index} className="flex items-center space-x-3">
+                            <CheckCircle className="w-5 h-5 text-primary flex-shrink-0" />
+                            <span>{item}</span>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="text-muted-foreground">Equipment details will be provided upon booking.</div>
+                      )}
                     </div>
                   </div>
                   <div>
                     <h4 className="font-semibold mb-2">What to Bring</h4>
-                    <ul className="text-muted-foreground space-y-1">
-                      <li>• Comfortable hiking boots</li>
-                      <li>• Weather-appropriate clothing (layers recommended)</li>
-                      <li>• Rain jacket</li>
-                      <li>• Hat and sunglasses</li>
-                      <li>• Personal water bottle</li>
-                      <li>• Camera</li>
-                      <li>• Personal medications</li>
-                    </ul>
+                    {tour.what_to_bring && tour.what_to_bring.length > 0 ? (
+                      <ul className="text-muted-foreground space-y-1">
+                        {tour.what_to_bring.map((item, index) => (
+                          <li key={index}>• {item}</li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <ul className="text-muted-foreground space-y-1">
+                        <li>• Comfortable hiking boots</li>
+                        <li>• Weather-appropriate clothing (layers recommended)</li>
+                        <li>• Rain jacket</li>
+                        <li>• Hat and sunglasses</li>
+                        <li>• Personal water bottle</li>
+                        <li>• Camera</li>
+                        <li>• Personal medications</li>
+                      </ul>
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -316,13 +375,13 @@ const TourDetail = () => {
                   <div>
                     <h4 className="font-semibold mb-2">Included Transportation</h4>
                     <p className="text-muted-foreground">
-                      Comfortable, air-conditioned vehicles from Baku to the tour starting point and return. Professional drivers familiar with mountain roads ensure safe and scenic journeys.
+                      {tour.transport_details || 'Comfortable, air-conditioned vehicles from Baku to the tour starting point and return. Professional drivers familiar with mountain roads ensure safe and scenic journeys.'}
                     </p>
                   </div>
                   <div>
                     <h4 className="font-semibold mb-2">Pick-up Service</h4>
                     <p className="text-muted-foreground">
-                      Pick-up from central Baku locations or your hotel (within city limits). Exact pick-up time and location will be confirmed 24 hours before departure.
+                      {tour.pickup_service || 'Pick-up from central Baku locations or your hotel (within city limits). Exact pick-up time and location will be confirmed 24 hours before departure.'}
                     </p>
                   </div>
                 </CardContent>
@@ -334,18 +393,24 @@ const TourDetail = () => {
                   <CardTitle className="text-2xl">Media</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {tourDetail.gallery.map((image, index) => (
-                      <img
-                        key={index}
-                        src={image}
-                        alt={`Gallery image ${index + 1}`}
-                        className="w-full h-48 object-cover rounded-lg hover:scale-105 transition-transform duration-300"
-                      />
-                    ))}
-                  </div>
+                  {tour.gallery_images && tour.gallery_images.length > 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      {tour.gallery_images.map((image, index) => (
+                        <img
+                          key={index}
+                          src={image}
+                          alt={`Gallery image ${index + 1}`}
+                          className="w-full h-48 object-cover rounded-lg hover:scale-105 transition-transform duration-300"
+                        />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8">
+                      <p className="text-muted-foreground">Gallery images will be available soon.</p>
+                    </div>
+                  )}
                   <p className="text-muted-foreground mt-4">
-                    Professional photography service available upon request. All participants receive digital copies of group photos taken during the tour.
+                    {tour.photography_service || 'Professional photography service available upon request. All participants receive digital copies of group photos taken during the tour.'}
                   </p>
                 </CardContent>
               </Card>
@@ -364,21 +429,32 @@ const TourDetail = () => {
                   </div>
                   <div className="border-t pt-4">
                     <h4 className="font-semibold mb-2">Price Includes:</h4>
-                    <ul className="text-muted-foreground space-y-1">
-                      <li>• Professional guide services</li>
-                      <li>• All transportation</li>
-                      <li>• Safety equipment</li>
-                      <li>• Insurance coverage</li>
-                      <li>• Meals (as specified)</li>
-                      <li>• Accommodation (multi-day tours)</li>
-                    </ul>
+                    {tour.price_includes && tour.price_includes.length > 0 ? (
+                      <ul className="text-muted-foreground space-y-1">
+                        {tour.price_includes.map((item, index) => (
+                          <li key={index}>• {item}</li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <ul className="text-muted-foreground space-y-1">
+                        <li>• Professional guide services</li>
+                        <li>• All transportation</li>
+                        <li>• Safety equipment</li>
+                        <li>• Insurance coverage</li>
+                        <li>• Meals (as specified)</li>
+                        <li>• Accommodation (multi-day tours)</li>
+                      </ul>
+                    )}
                   </div>
-                  <div className="bg-muted/50 p-4 rounded-lg">
-                    <p className="text-sm text-muted-foreground">
-                      <strong>Group Discounts:</strong> 10% off for groups of 6+ people. 
-                      <strong>Early Bird:</strong> 15% off bookings made 30 days in advance.
-                    </p>
-                  </div>
+                  {(tour.group_discounts || tour.early_bird_discount) && (
+                    <div className="bg-muted/50 p-4 rounded-lg">
+                      <p className="text-sm text-muted-foreground">
+                        {tour.group_discounts && <><strong>Group Discounts:</strong> {tour.group_discounts}</>}
+                        {tour.group_discounts && tour.early_bird_discount && <><br /></>}
+                        {tour.early_bird_discount && <><strong>Early Bird:</strong> {tour.early_bird_discount}</>}
+                      </p>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
 
@@ -395,13 +471,13 @@ const TourDetail = () => {
                     </Button>
                     
                     <div className="text-sm text-muted-foreground">
-                      Free cancellation up to 24 hours before departure
+                      {tour.booking_terms || 'Free cancellation up to 24 hours before departure'}
                     </div>
                     
                     <div className="border-t pt-4">
                       <div className="flex items-center justify-center space-x-2 text-primary">
                         <Phone className="w-5 h-5" />
-                        <span className="font-semibold">+994 51 400 90 91</span>
+                        <span className="font-semibold">{tour.contact_phone || '+994 51 400 90 91'}</span>
                       </div>
                       <div className="text-center text-sm text-muted-foreground mt-1">
                         Call for custom arrangements or questions
@@ -437,13 +513,13 @@ const TourDetail = () => {
                   </Button>
                   
                   <div className="text-center text-sm text-muted-foreground">
-                    Free cancellation up to 24 hours before
+                    {tour.booking_terms || 'Free cancellation up to 24 hours before'}
                   </div>
                   
                   <div className="border-t pt-4">
                     <div className="flex items-center justify-center space-x-2 text-primary">
                       <Phone className="w-5 h-5" />
-                      <span className="font-semibold">+994 51 400 90 91</span>
+                      <span className="font-semibold">{tour.contact_phone || '+994 51 400 90 91'}</span>
                     </div>
                     <div className="text-center text-sm text-muted-foreground mt-1">
                       Call for custom arrangements
