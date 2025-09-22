@@ -85,7 +85,8 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
       itinerary,
       requirements,
       specialFields,
-      imageUrl
+      imageUrl,
+      galleryImages
     } = req.body;
 
     // Validate required fields
