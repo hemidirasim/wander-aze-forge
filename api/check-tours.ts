@@ -36,6 +36,7 @@ export async function GET(request: NextRequest) {
         highlights, includes, excludes, is_active, featured,
         created_at, updated_at
       FROM tours 
+      WHERE is_active = true
       ORDER BY created_at DESC
     `;
     
