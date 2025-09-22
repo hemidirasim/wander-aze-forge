@@ -297,6 +297,51 @@ const AdminDashboard: React.FC = () => {
         </div>
 
 
+        {/* Quick Actions */}
+        <Card className="shadow-lg border-0">
+          <CardHeader>
+            <CardTitle className="flex items-center space-x-2 text-xl">
+              <Shield className="w-6 h-6 text-green-500" />
+              <span>Quick Actions</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <Button 
+                asChild
+                className="h-20 flex flex-col items-center justify-center space-y-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700"
+              >
+                <a href="/admin/tour-form-extended">
+                  <MapPin className="w-6 h-6" />
+                  <span className="font-semibold">Add New Tour</span>
+                </a>
+              </Button>
+              
+              <Button 
+                asChild
+                variant="outline"
+                className="h-20 flex flex-col items-center justify-center space-y-2 border-2 hover:bg-gray-50"
+              >
+                <a href="/admin/tours">
+                  <FolderOpen className="w-6 h-6" />
+                  <span className="font-semibold">Manage Tours</span>
+                </a>
+              </Button>
+              
+              <Button 
+                asChild
+                variant="outline"
+                className="h-20 flex flex-col items-center justify-center space-y-2 border-2 hover:bg-gray-50"
+              >
+                <a href="/admin/projects">
+                  <Calendar className="w-6 h-6" />
+                  <span className="font-semibold">Manage Projects</span>
+                </a>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* System Overview */}
         <Card className="shadow-lg border-0">
           <CardHeader>
