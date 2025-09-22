@@ -98,7 +98,7 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
     }
 
     // Set first gallery image as main image if no imageUrl provided
-    const mainImageUrl = imageUrl || (req.body.galleryImages && req.body.galleryImages.length > 0 ? req.body.galleryImages[0] : '');
+    const mainImageUrl = imageUrl || (galleryImages && galleryImages.length > 0 ? galleryImages[0] : '');
 
     // Create tour in database with extended fields
     const result = await pool.query(
@@ -147,7 +147,7 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
         
         req.body.transportDetails?.trim() || null,
         req.body.pickupService?.trim() || null,
-        req.body.galleryImages || [],
+        galleryImages || [],
         req.body.photographyService?.trim() || null,
         
         req.body.priceIncludes || [],
