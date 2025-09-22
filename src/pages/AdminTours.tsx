@@ -176,49 +176,7 @@ const AdminTours: React.FC = () => {
   };
 
   const handleCreate = () => {
-    setIsCreating(true);
-    setIsEditing(false);
-    setSelectedTour(null);
-    setFormData({
-      title: '',
-      description: '',
-      duration: '',
-      difficulty: '',
-      price: '',
-      maxParticipants: '',
-      rating: '',
-      reviewsCount: '',
-      groupSize: '',
-      location: '',
-      overview: '',
-      bestSeason: '',
-      meetingPoint: '',
-      languages: '',
-      accommodationDetails: '',
-      mealsDetails: '',
-      waterSnacksDetails: '',
-      transportDetails: '',
-      pickupService: '',
-      photographyService: '',
-      groupDiscounts: '',
-      earlyBirdDiscount: '',
-      contactPhone: '',
-      bookingTerms: '',
-      itinerary: '',
-      requirements: '',
-      imageUrl: '',
-      category: '',
-      isActive: true,
-      featured: false,
-      highlights: [],
-      includes: [],
-      excludes: [],
-      providedEquipment: [],
-      whatToBring: [],
-      priceIncludes: [],
-      galleryImages: [],
-      specialFields: {}
-    });
+    navigate('/admin/tour-form-extended');
   };
 
   const handleEdit = (tour: Tour) => {

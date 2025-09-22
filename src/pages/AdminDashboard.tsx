@@ -307,26 +307,16 @@ const AdminDashboard: React.FC = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-              <Button 
-                asChild
-                className="h-20 flex flex-col items-center justify-center space-y-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700"
-              >
-                <Link to="/admin/tour-form-extended">
-                  <MapPin className="w-6 h-6" />
-                  <span className="font-semibold">Add New Tour</span>
-                </Link>
-              </Button>
-              
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Button 
                 asChild
                 variant="outline"
                 className="h-20 flex flex-col items-center justify-center space-y-2 border-2 hover:bg-gray-50"
               >
-                <a href="/admin/tours">
+                <Link to="/admin/tours">
                   <FolderOpen className="w-6 h-6" />
                   <span className="font-semibold">Manage Tours</span>
-                </a>
+                </Link>
               </Button>
               
               <Button 
@@ -338,26 +328,6 @@ const AdminDashboard: React.FC = () => {
                   <Calendar className="w-6 h-6" />
                   <span className="font-semibold">Manage Projects</span>
                 </a>
-              </Button>
-              
-              <Button 
-                asChild
-                className="h-20 flex flex-col items-center justify-center space-y-2 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700"
-              >
-                <Link to="/admin/tour-form-simple">
-                  <Shield className="w-6 h-6" />
-                  <span className="font-semibold">Simple Tour Form</span>
-                </Link>
-              </Button>
-              
-              <Button 
-                asChild
-                className="h-20 flex flex-col items-center justify-center space-y-2 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700"
-              >
-                <Link to="/admin/test-route">
-                  <BarChart3 className="w-6 h-6" />
-                  <span className="font-semibold">Test Route</span>
-                </Link>
               </Button>
             </div>
           </CardContent>
