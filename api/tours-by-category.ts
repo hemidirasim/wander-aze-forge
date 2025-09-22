@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { Pool } from 'pg';
 
 export async function GET(request: NextRequest) {
+  let pool: Pool | null = null;
+  
   try {
     console.log('Tours by category API called');
     
@@ -28,9 +30,16 @@ export async function GET(request: NextRequest) {
     }
 
     console.log('Creating database connection...');
-    const pool = new Pool({
+    pool = new Pool({
       connectionString: process.env.DATABASE_URL,
+      ssl: {
+        rejectUnauthorized: false
+      }
     });
+
+    // Test connection
+    await pool.query('SELECT 1');
+    console.log('Database connection successful');
 
     // Fetch tours by category
     const toursQuery = `
@@ -83,5 +92,14 @@ export async function GET(request: NextRequest) {
       success: false, 
       error: error instanceof Error ? error.message : 'Internal server error' 
     }, { status: 500 });
+  } finally {
+    if (pool) {
+      try {
+        await pool.end();
+        console.log('Database connection closed');
+      } catch (closeError) {
+        console.error('Error closing database connection:', closeError);
+      }
+    }
   }
 }
