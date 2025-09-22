@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Mountain, Menu, X, Binoculars, Users, Wrench, ChevronDown } from 'lucide-react';
 import { useState } from 'react';
 import { tourCategories } from '@/data/tourCategories';
+import { scrollToTopInstant } from '@/hooks/useScrollToTop';
 
 const Navigation = () => {
   const location = useLocation();
@@ -29,7 +30,11 @@ const Navigation = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2 text-foreground hover:text-primary transition-smooth">
+          <Link 
+            to="/" 
+            className="flex items-center space-x-2 text-foreground hover:text-primary transition-smooth"
+            onClick={scrollToTopInstant}
+          >
             <Mountain className="w-8 h-8 text-primary" />
             <span className="text-xl font-bold">Camping Azerbaijan</span>
           </Link>
@@ -76,7 +81,10 @@ const Navigation = () => {
                             className={`flex items-center px-4 py-3 text-sm hover:bg-accent hover:text-accent-foreground transition-colors ${
                               isActive ? 'bg-accent text-accent-foreground' : 'text-foreground'
                             }`}
-                            onClick={() => setIsToursOpen(false)}
+                            onClick={() => {
+                              setIsToursOpen(false);
+                              scrollToTopInstant();
+                            }}
                           >
                             <IconComponent className="w-4 h-4 mr-3 text-primary" />
                             <div>
@@ -101,12 +109,13 @@ const Navigation = () => {
                 className={`text-foreground hover:text-primary transition-smooth font-medium ${
                   location.pathname === item.path ? 'text-primary' : ''
                 }`}
+                onClick={scrollToTopInstant}
               >
                 {item.label}
               </Link>
             ))}
             <Button variant="adventure" asChild>
-              <Link to="/contact">Book Now</Link>
+              <Link to="/contact" onClick={scrollToTopInstant}>Book Now</Link>
             </Button>
           </div>
 
@@ -144,7 +153,10 @@ const Navigation = () => {
                         className={`block py-2 text-sm text-foreground hover:text-primary transition-smooth ${
                           location.pathname === `/tours/${category.id}` ? 'text-primary' : ''
                         }`}
-                        onClick={() => setIsMenuOpen(false)}
+                        onClick={() => {
+                          setIsMenuOpen(false);
+                          scrollToTopInstant();
+                        }}
                       >
                         {category.name}
                       </Link>
@@ -160,13 +172,19 @@ const Navigation = () => {
                   className={`text-foreground hover:text-primary transition-smooth font-medium py-2 ${
                     location.pathname === item.path ? 'text-primary' : ''
                   }`}
-                  onClick={() => setIsMenuOpen(false)}
+                  onClick={() => {
+                    setIsMenuOpen(false);
+                    scrollToTopInstant();
+                  }}
                 >
                   {item.label}
                 </Link>
               ))}
               <Button variant="adventure" className="w-fit mt-4" asChild>
-                <Link to="/contact" onClick={() => setIsMenuOpen(false)}>Book Now</Link>
+                <Link to="/contact" onClick={() => {
+                  setIsMenuOpen(false);
+                  scrollToTopInstant();
+                }}>Book Now</Link>
               </Button>
             </div>
           </div>
