@@ -344,9 +344,9 @@ const AdminDashboard: React.FC = () => {
                 asChild
                 className="h-20 flex flex-col items-center justify-center space-y-2 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700"
               >
-                <Link to="/admin/tour-form-test">
+                <Link to="/admin/tour-form-simple">
                   <Shield className="w-6 h-6" />
-                  <span className="font-semibold">Test Tour Form</span>
+                  <span className="font-semibold">Simple Tour Form</span>
                 </Link>
               </Button>
             </div>
