@@ -1,25 +1,106 @@
 import { useParams, Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import Navigation from '@/components/Navigation';
 import TourCategoryDropdown from '@/components/TourCategoryDropdown';
 import TailorMadeForm from '@/components/TailorMadeForm';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Clock, Users, MapPin, Star, ArrowLeft } from 'lucide-react';
-import { getCategoryById, getToursByCategory } from '@/data/tourCategories';
+import { Clock, Users, MapPin, Star, ArrowLeft, Loader2 } from 'lucide-react';
+import { getCategoryById } from '@/data/tourCategories';
+
+interface TourData {
+  id: number;
+  title: string;
+  description: string;
+  price: string;
+  duration: string;
+  difficulty: string;
+  rating: number;
+  reviews_count: number;
+  group_size: string;
+  location: string;
+  image_url: string;
+  category: string;
+  highlights: string[];
+  includes: string[];
+  excludes: string[];
+  is_active: boolean;
+  featured: boolean;
+}
 
 const ToursByCategory = () => {
   const { category: categoryId } = useParams<{ category: string }>();
+  const [tours, setTours] = useState<TourData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   
   if (!categoryId) {
     return <div>Category not found</div>;
   }
 
   const category = getCategoryById(categoryId);
-  const tours = getToursByCategory(categoryId);
+
+  useEffect(() => {
+    const fetchToursByCategory = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`/api/tours-by-category?category=${categoryId}`);
+        const result = await response.json();
+
+        if (result.success) {
+          setTours(result.data.tours);
+        } else {
+          setError(result.error || 'Failed to load tours');
+        }
+      } catch (err) {
+        setError('Failed to load tours');
+        console.error('Error fetching tours by category:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (categoryId) {
+      fetchToursByCategory();
+    }
+  }, [categoryId]);
 
   if (!category) {
     return <div>Category not found</div>;
+  }
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navigation />
+        <div className="pt-24 px-4">
+          <div className="container mx-auto max-w-4xl text-center">
+            <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4" />
+            <p className="text-muted-foreground">Loading {category.name} tours...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navigation />
+        <div className="pt-24 px-4">
+          <div className="container mx-auto max-w-4xl text-center">
+            <h1 className="text-4xl font-bold text-foreground mb-4">Error Loading Tours</h1>
+            <p className="text-muted-foreground mb-8">{error}</p>
+            <Button asChild>
+              <Link to="/tours">Browse All Tours</Link>
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   // Special handling for tailor-made category
@@ -115,6 +196,11 @@ const ToursByCategory = () => {
             
             <div className="flex items-center space-x-4 text-sm text-muted-foreground">
               <span>{tours.length} tour{tours.length !== 1 ? 's' : ''} available</span>
+              {tours.length > 0 && (
+                <span className="text-yellow-600 text-xs">
+                  📊 Live data from database
+                </span>
+              )}
             </div>
           </div>
         </div>
@@ -157,9 +243,13 @@ const ToursByCategory = () => {
                   <Card key={tour.id} className="group hover:shadow-elevated transition-all duration-300 overflow-hidden border-0 bg-card/80 backdrop-blur-sm">
                     <div className="relative h-64 overflow-hidden">
                       <img 
-                        src={tour.image} 
+                        src={tour.image_url || '/placeholder-tour.jpg'} 
                         alt={tour.title}
                         className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.src = '/placeholder-tour.jpg';
+                        }}
                       />
                       <div className="absolute top-4 right-4">
                         <Badge variant="secondary" className="bg-background/90">
@@ -169,9 +259,7 @@ const ToursByCategory = () => {
                       <div className="absolute bottom-4 left-4 flex items-center space-x-1 text-white">
                         <Star className="w-4 h-4 fill-current text-autumn" />
                         <span className="text-sm font-medium">{tour.rating}</span>
-                        {tour.reviews && (
-                          <span className="text-xs text-white/80">({tour.reviews})</span>
-                        )}
+                        <span className="text-xs text-white/80">({tour.reviews_count})</span>
                       </div>
                     </div>
                     
@@ -189,11 +277,11 @@ const ToursByCategory = () => {
                       </div>
                       <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                         <Users className="w-4 h-4" />
-                        <span>{tour.groupSize}</span>
+                        <span>{tour.group_size}</span>
                       </div>
                       <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                         <MapPin className="w-4 h-4" />
-                        <span>{tour.location}</span>
+                        <span>{tour.location || 'Location TBD'}</span>
                       </div>
                     </CardContent>
                     
