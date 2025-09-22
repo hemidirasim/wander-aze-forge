@@ -45,7 +45,7 @@ const ToursByCategory = () => {
     const fetchToursByCategory = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`/api/check-tours`);
+        const response = await fetch(`/api/simple-tours`);
         const result = await response.json();
 
         if (result.success) {
