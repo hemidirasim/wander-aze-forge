@@ -267,7 +267,7 @@ const AdminTourFormExtended: React.FC = () => {
       };
 
       // Send to API
-      const response = await fetch('/api/tours', {
+      const response = await fetch('/api/create-tour', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
