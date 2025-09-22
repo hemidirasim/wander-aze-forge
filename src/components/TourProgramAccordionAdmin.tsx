@@ -120,7 +120,7 @@ const TourProgramAccordionAdmin: React.FC<TourProgramAccordionAdminProps> = ({
             <Calendar className="w-5 h-5" />
             Tour Program Details
           </CardTitle>
-          <Button onClick={addDay} size="sm" className="flex items-center gap-2">
+          <Button type="button" onClick={addDay} size="sm" className="flex items-center gap-2">
             <Plus className="w-4 h-4" />
             Add Day
           </Button>
@@ -152,6 +152,7 @@ const TourProgramAccordionAdmin: React.FC<TourProgramAccordionAdminProps> = ({
                   </div>
                   <div className="flex items-center gap-2">
                     <Button
+                      type="button"
                       variant="ghost"
                       size="sm"
                       onClick={() => toggleDay(program.id)}
@@ -163,6 +164,7 @@ const TourProgramAccordionAdmin: React.FC<TourProgramAccordionAdminProps> = ({
                       )}
                     </Button>
                     <Button
+                      type="button"
                       variant="ghost"
                       size="sm"
                       onClick={() => removeDay(program.id)}
@@ -236,6 +238,7 @@ const TourProgramAccordionAdmin: React.FC<TourProgramAccordionAdminProps> = ({
                             placeholder="Activity description"
                           />
                           <Button
+                            type="button"
                             variant="ghost"
                             size="sm"
                             onClick={() => removeArrayItem(program.id, 'activities', index)}
@@ -245,6 +248,7 @@ const TourProgramAccordionAdmin: React.FC<TourProgramAccordionAdminProps> = ({
                         </div>
                       ))}
                       <Button
+                        type="button"
                         variant="outline"
                         size="sm"
                         onClick={() => {
@@ -319,6 +323,7 @@ const TourProgramAccordionAdmin: React.FC<TourProgramAccordionAdminProps> = ({
                             placeholder="Highlight description"
                           />
                           <Button
+                            type="button"
                             variant="ghost"
                             size="sm"
                             onClick={() => removeArrayItem(program.id, 'highlights', index)}
@@ -328,6 +333,7 @@ const TourProgramAccordionAdmin: React.FC<TourProgramAccordionAdminProps> = ({
                         </div>
                       ))}
                       <Button
+                        type="button"
                         variant="outline"
                         size="sm"
                         onClick={() => {
