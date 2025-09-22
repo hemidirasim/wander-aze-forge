@@ -77,7 +77,7 @@ const TourDetail = () => {
     const fetchTourDetail = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`/api/tour-detail?id=${id}&category=${category}`);
+        const response = await fetch(`/api/tour-detail-simple?id=${id}&category=${category}`);
         const result = await response.json();
 
         if (result.success) {
