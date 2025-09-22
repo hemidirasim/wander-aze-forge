@@ -5,6 +5,7 @@ import JourneyContactForm from '@/components/JourneyContactForm';
 import DatabasePartners from '@/components/DatabasePartners';
 import DatabaseBlog from '@/components/DatabaseBlog';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
 import { Award, Leaf, Heart, ArrowRight } from 'lucide-react';
 import heroImage from '@/assets/hero-mountain.jpg';
