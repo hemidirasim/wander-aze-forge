@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -311,10 +312,10 @@ const AdminDashboard: React.FC = () => {
                 asChild
                 className="h-20 flex flex-col items-center justify-center space-y-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700"
               >
-                <a href="/admin/tour-form-extended">
+                <Link to="/admin/tour-form-extended">
                   <MapPin className="w-6 h-6" />
                   <span className="font-semibold">Add New Tour</span>
-                </a>
+                </Link>
               </Button>
               
               <Button 
@@ -343,10 +344,10 @@ const AdminDashboard: React.FC = () => {
                 asChild
                 className="h-20 flex flex-col items-center justify-center space-y-2 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700"
               >
-                <a href="/admin/tour-form-test">
+                <Link to="/admin/tour-form-test">
                   <Shield className="w-6 h-6" />
                   <span className="font-semibold">Test Tour Form</span>
-                </a>
+                </Link>
               </Button>
             </div>
           </CardContent>
