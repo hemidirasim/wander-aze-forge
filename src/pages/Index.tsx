@@ -4,7 +4,6 @@ import RecommendationsSection from '@/components/RecommendationsSection';
 import JourneyContactForm from '@/components/JourneyContactForm';
 import DatabasePartners from '@/components/DatabasePartners';
 import DatabaseBlog from '@/components/DatabaseBlog';
-import DatabaseTours from '@/components/DatabaseTours';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { Award, Leaf, Heart, ArrowRight } from 'lucide-react';
@@ -119,7 +118,45 @@ const Index = () => {
             </p>
           </div>
 
-          <DatabaseTours />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="text-center py-12">
+              <h3 className="text-2xl font-bold text-foreground mb-4">Featured Tours</h3>
+              <p className="text-muted-foreground mb-6">
+                Discover our most popular adventure tours
+              </p>
+              <Button variant="adventure" asChild>
+                <Link to="/tours" className="flex items-center">
+                  Explore All Tours
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Link>
+              </Button>
+            </div>
+            
+            <div className="text-center py-12">
+              <h3 className="text-2xl font-bold text-foreground mb-4">Adventure Categories</h3>
+              <p className="text-muted-foreground mb-6">
+                Choose your perfect adventure type
+              </p>
+              <div className="space-y-2">
+                <Link to="/tours/hiking" className="block text-primary hover:underline">Hiking Tours</Link>
+                <Link to="/tours/trekking" className="block text-primary hover:underline">Trekking Adventures</Link>
+                <Link to="/tours/wildlife" className="block text-primary hover:underline">Wildlife Safaris</Link>
+              </div>
+            </div>
+            
+            <div className="text-center py-12">
+              <h3 className="text-2xl font-bold text-foreground mb-4">Custom Tours</h3>
+              <p className="text-muted-foreground mb-6">
+                Tailor-made experiences just for you
+              </p>
+              <Button variant="outline" asChild>
+                <Link to="/contact" className="flex items-center">
+                  Plan Your Adventure
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Link>
+              </Button>
+            </div>
+          </div>
 
           <div className="text-center mt-16 space-y-4">
             <Button size="lg" variant="outline" asChild className="hover:bg-primary hover:text-primary-foreground">

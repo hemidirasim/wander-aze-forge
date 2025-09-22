@@ -44,9 +44,9 @@ const DatabaseTours: React.FC = () => {
   if (error) {
     return (
       <div className="text-center py-8">
-        <p className="text-red-500">Error loading tours: {error}</p>
-        <p className="text-sm text-gray-500 mt-2">
-          Make sure the API server is running on port 3001
+        <p className="text-muted-foreground">Tours will be available soon</p>
+        <p className="text-sm text-muted-foreground mt-2">
+          We're working on bringing you the best tour experiences
         </p>
       </div>
     );
