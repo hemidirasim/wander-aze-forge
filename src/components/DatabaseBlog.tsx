@@ -27,29 +27,23 @@ const DatabaseBlog: React.FC = () => {
 
   if (loading) {
     return (
-      <section className="py-24 px-4 bg-background">
+      <section className="py-16 px-4 bg-background">
         <div className="container mx-auto">
-          <div className="text-center mb-20">
-            <Skeleton className="h-16 w-96 mx-auto mb-6" />
-            <Skeleton className="h-6 w-2/3 mx-auto" />
+          <div className="text-center mb-12">
+            <Skeleton className="h-10 w-64 mx-auto mb-4" />
+            <Skeleton className="h-6 w-96 mx-auto" />
           </div>
           
-          {/* Featured Post Skeleton */}
-          <div className="mb-16">
-            <Skeleton className="h-96 w-full rounded-lg" />
-          </div>
-          
-          {/* Regular Posts Skeleton */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="max-w-4xl mx-auto space-y-6">
             {[...Array(3)].map((_, i) => (
-              <div key={i} className="space-y-4">
-                <Skeleton className="h-48 w-full rounded-lg" />
-                <div className="space-y-2">
-                  <Skeleton className="h-6 w-3/4" />
+              <div key={i} className="flex items-center space-x-4 p-4">
+                <Skeleton className="w-20 h-16 rounded-md" />
+                <div className="flex-1 space-y-2">
+                  <Skeleton className="h-5 w-3/4" />
                   <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-2/3" />
+                  <Skeleton className="h-3 w-1/2" />
                 </div>
+                <Skeleton className="w-16 h-8" />
               </div>
             ))}
           </div>
@@ -60,21 +54,11 @@ const DatabaseBlog: React.FC = () => {
 
   if (error) {
     return (
-      <section className="py-24 px-4 bg-background">
+      <section className="py-16 px-4 bg-background">
         <div className="container mx-auto">
-          <div className="text-center mb-20">
-            <h2 className="text-5xl md:text-6xl font-bold text-foreground mb-6">
-              Latest Stories
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Discover our latest adventures, travel tips, and conservation stories
-            </p>
-          </div>
-          <div className="text-center py-8">
-            <p className="text-red-500">Error loading blog posts: {error}</p>
-            <p className="text-sm text-gray-500 mt-2">
-              Make sure the API server is running
-            </p>
+          <div className="text-center">
+            <h2 className="text-4xl font-bold text-foreground mb-4">Latest Stories</h2>
+            <p className="text-red-500">Error loading blog posts</p>
           </div>
         </div>
       </section>
@@ -83,170 +67,81 @@ const DatabaseBlog: React.FC = () => {
 
   if (!posts || posts.length === 0) {
     return (
-      <section className="py-24 px-4 bg-background">
+      <section className="py-16 px-4 bg-background">
         <div className="container mx-auto">
-          <div className="text-center mb-20">
-            <h2 className="text-5xl md:text-6xl font-bold text-foreground mb-6">
-              Latest Stories
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Discover our latest adventures, travel tips, and conservation stories
-            </p>
-          </div>
-          <div className="text-center py-8">
-            <p className="text-gray-500">No blog posts available</p>
+          <div className="text-center">
+            <h2 className="text-4xl font-bold text-foreground mb-4">Latest Stories</h2>
+            <p className="text-muted-foreground">No blog posts available</p>
           </div>
         </div>
       </section>
     );
   }
 
-  const featuredPost = posts.find(post => post.featured);
-  const regularPosts = posts.filter(post => !post.featured).slice(0, 3);
+  // Sadələşdirilmiş: Yalnız 3 ən son post'u göstər
+  const latestPosts = posts.slice(0, 3);
 
   return (
-    <section className="py-24 px-4 bg-background">
+    <section className="py-16 px-4 bg-background">
       <div className="container mx-auto">
-        <div className="text-center mb-20">
-          <h2 className="text-5xl md:text-6xl font-bold text-foreground mb-6">
+        <div className="text-center mb-12">
+          <h2 className="text-4xl font-bold text-foreground mb-4">
             Latest Stories
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Discover our latest adventures, travel tips, and conservation stories
+          <p className="text-lg text-muted-foreground">
+            Discover our latest adventures and travel tips
           </p>
         </div>
 
-        {/* Featured Post */}
-        {featuredPost && (
-          <div className="mb-16">
-            <div className="text-center mb-12">
-              <h3 className="text-3xl font-bold text-foreground mb-4">Featured Story</h3>
-            </div>
-            
-            <Card className="group hover:shadow-elevated transition-all duration-500 overflow-hidden border-0 bg-card/80 backdrop-blur-sm">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
-                <div className="relative h-80 lg:h-full overflow-hidden">
-                  <img 
-                    src={featuredPost.featured_image || "https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&h=600&fit=crop"}
-                    alt={featuredPost.title}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                  {featuredPost.category && (
-                    <div className="absolute top-4 left-4">
-                      <Badge variant="secondary" className="bg-background/90">
-                        {featuredPost.category}
+        {/* Sadə Post List */}
+        <div className="max-w-4xl mx-auto space-y-6">
+          {latestPosts.map((post) => (
+            <div key={post.id} className="flex items-center space-x-4 p-4 rounded-lg hover:bg-muted/50 transition-colors">
+              <div className="flex-shrink-0">
+                <img 
+                  src={post.featured_image || "https://images.unsplash.com/photo-1551632811-561732d1e306?w=120&h=80&fit=crop"}
+                  alt={post.title}
+                  className="w-20 h-16 object-cover rounded-md"
+                />
+              </div>
+              
+              <div className="flex-1 min-w-0">
+                <h3 className="text-lg font-semibold text-foreground mb-1 line-clamp-1">
+                  {post.title}
+                </h3>
+                <p className="text-sm text-muted-foreground mb-2 line-clamp-2">
+                  {post.excerpt || post.content.substring(0, 100) + '...'}
+                </p>
+                <div className="flex items-center space-x-4 text-xs text-muted-foreground">
+                  <span>{post.author}</span>
+                  <span>•</span>
+                  <span>{new Date(post.created_at).toLocaleDateString()}</span>
+                  {post.category && (
+                    <>
+                      <span>•</span>
+                      <Badge variant="secondary" className="text-xs">
+                        {post.category}
                       </Badge>
-                    </div>
+                    </>
                   )}
                 </div>
-                
-                <div className="p-8 flex flex-col justify-center">
-                  <CardHeader className="pb-4">
-                    <CardTitle className="text-2xl lg:text-3xl font-bold text-foreground group-hover:text-primary transition-colors leading-tight">
-                      {featuredPost.title}
-                    </CardTitle>
-                    <div className="flex items-center space-x-4 text-sm text-muted-foreground pt-4">
-                      <div className="flex items-center space-x-1">
-                        <User className="w-4 h-4" />
-                        <span>{featuredPost.author}</span>
-                      </div>
-                      <div className="flex items-center space-x-1">
-                        <Calendar className="w-4 h-4" />
-                        <span>{new Date(featuredPost.created_at).toLocaleDateString()}</span>
-                      </div>
-                      <div className="flex items-center space-x-1">
-                        <Clock className="w-4 h-4" />
-                        <span>5 min read</span>
-                      </div>
-                    </div>
-                  </CardHeader>
-                  
-                  <CardContent className="flex-1">
-                    <p className="text-muted-foreground leading-relaxed text-lg">
-                      {featuredPost.excerpt || featuredPost.content.substring(0, 200) + '...'}
-                    </p>
-                  </CardContent>
-                  
-                  <CardFooter className="pt-4">
-                    <Button variant="adventure" asChild className="w-fit">
-                      <Link to={`/blog/${featuredPost.id}`} className="flex items-center">
-                        Read Full Story
-                        <ArrowRight className="w-4 h-4 ml-2" />
-                      </Link>
-                    </Button>
-                  </CardFooter>
-                </div>
               </div>
-            </Card>
-          </div>
-        )}
-
-        {/* Regular Posts */}
-        {regularPosts.length > 0 && (
-          <div>
-            <div className="text-center mb-12">
-              <h3 className="text-3xl font-bold text-foreground mb-4">More Stories</h3>
+              
+              <div className="flex-shrink-0">
+                <Button variant="ghost" size="sm" asChild>
+                  <Link to={`/blog/${post.id}`} className="flex items-center">
+                    Read
+                    <ArrowRight className="w-3 h-3 ml-1" />
+                  </Link>
+                </Button>
+              </div>
             </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {regularPosts.map((post) => (
-                <Card key={post.id} className="group hover:shadow-elevated transition-all duration-500 overflow-hidden border-0 bg-card/80 backdrop-blur-sm">
-                  <div className="relative h-48 overflow-hidden">
-                    <img 
-                      src={post.featured_image || "https://images.unsplash.com/photo-1551632811-561732d1e306?w=600&h=400&fit=crop"}
-                      alt={post.title}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                    {post.category && (
-                      <div className="absolute top-4 right-4">
-                        <Badge variant="secondary" className="bg-background/90">
-                          {post.category}
-                        </Badge>
-                      </div>
-                    )}
-                  </div>
-                  
-                  <CardHeader>
-                    <CardTitle className="text-xl font-bold text-foreground group-hover:text-primary transition-colors line-clamp-2">
-                      {post.title}
-                    </CardTitle>
-                    <div className="flex items-center space-x-4 text-sm text-muted-foreground">
-                      <div className="flex items-center space-x-1">
-                        <User className="w-4 h-4" />
-                        <span>{post.author}</span>
-                      </div>
-                      <div className="flex items-center space-x-1">
-                        <Calendar className="w-4 h-4" />
-                        <span>{new Date(post.created_at).toLocaleDateString()}</span>
-                      </div>
-                    </div>
-                  </CardHeader>
-                  
-                  <CardContent>
-                    <p className="text-muted-foreground leading-relaxed line-clamp-3">
-                      {post.excerpt || post.content.substring(0, 150) + '...'}
-                    </p>
-                  </CardContent>
-                  
-                  <CardFooter>
-                    <Button variant="ghost" asChild className="w-full group-hover:bg-primary group-hover:text-primary-foreground">
-                      <Link to={`/blog/${post.id}`} className="flex items-center justify-center">
-                        Read More
-                        <ArrowRight className="w-4 h-4 ml-2" />
-                      </Link>
-                    </Button>
-                  </CardFooter>
-                </Card>
-              ))}
-            </div>
-          </div>
-        )}
+          ))}
+        </div>
 
-        {/* View All Blog Button */}
-        <div className="text-center mt-16">
-          <Button size="lg" variant="outline" asChild className="hover:bg-primary hover:text-primary-foreground">
+        {/* View All Button */}
+        <div className="text-center mt-8">
+          <Button variant="outline" asChild>
             <Link to="/blog">View All Stories</Link>
           </Button>
         </div>
