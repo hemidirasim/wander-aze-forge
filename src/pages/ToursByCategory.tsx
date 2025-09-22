@@ -45,17 +45,14 @@ const ToursByCategory = () => {
     const fetchToursByCategory = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`/api/check-tours`);
+        const response = await fetch(`/api/test-db`);
         const result = await response.json();
 
         if (result.success) {
-          // Filter tours by category
-          const categoryTours = result.data.tours.filter((tour: TourData) => 
-            tour.category === categoryId && tour.is_active
-          );
-          setTours(categoryTours);
-          console.log(`Found ${categoryTours.length} tours for category ${categoryId}`);
-          console.log('All tours from database:', result.data.tours);
+          // For test API, show all tours regardless of category
+          setTours(result.tours || []);
+          console.log(`Found ${result.tours?.length || 0} tours from database`);
+          console.log('All tours from database:', result.tours);
         } else {
           setError(result.error || 'Failed to load tours');
         }
