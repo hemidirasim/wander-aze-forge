@@ -49,10 +49,34 @@ const ToursByCategory = () => {
         const result = await response.json();
 
         if (result.success) {
-          // For test API, show all tours regardless of category
-          setTours(result.tours || []);
-          console.log(`Found ${result.tours?.length || 0} tours from database`);
-          console.log('All tours from database:', result.tours);
+          // Parse JSON fields safely
+          const tours = (result.tours || []).map((tour: any) => {
+            try {
+              return {
+                ...tour,
+                highlights: tour.highlights ? (typeof tour.highlights === 'string' ? JSON.parse(tour.highlights) : tour.highlights) : [],
+                includes: tour.includes ? (typeof tour.includes === 'string' ? JSON.parse(tour.includes) : tour.includes) : [],
+                excludes: tour.excludes ? (typeof tour.excludes === 'string' ? JSON.parse(tour.excludes) : tour.excludes) : [],
+              };
+            } catch (parseError) {
+              console.error('Error parsing JSON fields for tour:', tour.id, parseError);
+              return {
+                ...tour,
+                highlights: [],
+                includes: [],
+                excludes: [],
+              };
+            }
+          });
+          
+          // Filter by category
+          const categoryTours = tours.filter((tour: TourData) => 
+            tour.category === categoryId
+          );
+          
+          setTours(categoryTours);
+          console.log(`Found ${categoryTours.length} tours for category ${categoryId}`);
+          console.log('All tours from database:', tours);
         } else {
           setError(result.error || 'Failed to load tours');
         }

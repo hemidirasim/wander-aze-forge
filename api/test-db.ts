@@ -30,8 +30,16 @@ export async function GET() {
     await pool.query('SELECT 1');
     console.log('Database connection successful');
 
-    // Simple query to get tours
-    const result = await pool.query('SELECT id, title, category FROM tours LIMIT 5');
+    // Get all tour data
+    const result = await pool.query(`
+      SELECT 
+        id, title, description, price, duration, difficulty, rating, 
+        reviews_count, group_size, location, image_url, category,
+        highlights, includes, excludes, is_active, featured
+      FROM tours 
+      WHERE is_active = true
+      ORDER BY id DESC
+    `);
     console.log('Query result:', result.rows);
     
     return new Response(JSON.stringify({
