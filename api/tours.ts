@@ -71,6 +71,17 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
 
 async function handlePost(req: VercelRequest, res: VercelResponse) {
   try {
+    console.log('Received tour data:', JSON.stringify(req.body, null, 2));
+
+    // Validate required fields
+    if (!req.body.title || !req.body.description || !req.body.category || !req.body.duration || !req.body.difficulty || !req.body.price || !req.body.maxParticipants) {
+      return res.status(400).json({
+        success: false,
+        error: 'Missing required fields'
+      });
+    }
+
+    // Extract all fields from request body
     const {
       title,
       description,
@@ -79,26 +90,43 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
       difficulty,
       price,
       maxParticipants,
-      highlights,
-      includes,
-      excludes,
-      itinerary,
-      requirements,
-      specialFields,
-      imageUrl,
-      galleryImages
+      highlights = [],
+      includes = [],
+      excludes = [],
+      itinerary = '',
+      requirements = '',
+      specialFields = null,
+      imageUrl = '',
+      galleryImages = [],
+      rating = 4.5,
+      reviewsCount = 0,
+      groupSize = '',
+      location = '',
+      overview = '',
+      bestSeason = 'May to October',
+      meetingPoint = '',
+      languages = 'English, Azerbaijani, Russian',
+      accommodationDetails = '',
+      mealsDetails = '',
+      waterSnacksDetails = '',
+      providedEquipment = [],
+      whatToBring = [],
+      transportDetails = '',
+      pickupService = '',
+      photographyService = '',
+      priceIncludes = [],
+      groupDiscounts = '',
+      earlyBirdDiscount = '',
+      contactPhone = '+994 51 400 90 91',
+      bookingTerms = '',
+      isActive = true,
+      featured = false
     } = req.body;
-
-    // Validate required fields
-    if (!title || !description || !category || !duration || !difficulty || !price || !maxParticipants) {
-      return res.status(400).json({
-        success: false,
-        error: 'Missing required fields'
-      });
-    }
 
     // Set first gallery image as main image if no imageUrl provided
     const mainImageUrl = imageUrl || (galleryImages && galleryImages.length > 0 ? galleryImages[0] : '');
+
+    console.log('Creating tour with main image URL:', mainImageUrl);
 
     // Create tour in database with extended fields
     const result = await pool.query(
@@ -122,44 +150,46 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
         parseFloat(price),
         parseInt(maxParticipants),
         mainImageUrl?.trim() || null,
-        highlights ? JSON.stringify(highlights) : '[]',
-        includes ? JSON.stringify(includes) : '[]',
-        excludes ? JSON.stringify(excludes) : '[]',
-        itinerary?.trim() || '',
-        requirements?.trim() || '',
-        specialFields || null,
+        JSON.stringify(highlights),
+        JSON.stringify(includes),
+        JSON.stringify(excludes),
+        itinerary.trim(),
+        requirements.trim(),
+        specialFields,
         
         // Extended fields with defaults
-        parseFloat(req.body.rating) || 4.5,
-        parseInt(req.body.reviewsCount) || 0,
-        req.body.groupSize?.trim() || null,
-        req.body.location?.trim() || null,
-        req.body.overview?.trim() || null,
-        req.body.bestSeason?.trim() || 'May to October',
-        req.body.meetingPoint?.trim() || null,
-        req.body.languages?.trim() || 'English, Azerbaijani, Russian',
+        parseFloat(rating),
+        parseInt(reviewsCount),
+        groupSize.trim(),
+        location.trim(),
+        overview.trim(),
+        bestSeason.trim(),
+        meetingPoint.trim(),
+        languages.trim(),
         
-        req.body.accommodationDetails?.trim() || null,
-        req.body.mealsDetails?.trim() || null,
-        req.body.waterSnacksDetails?.trim() || null,
-        req.body.providedEquipment || [],
-        req.body.whatToBring || [],
+        accommodationDetails.trim(),
+        mealsDetails.trim(),
+        waterSnacksDetails.trim(),
+        providedEquipment,
+        whatToBring,
         
-        req.body.transportDetails?.trim() || null,
-        req.body.pickupService?.trim() || null,
-        galleryImages || [],
-        req.body.photographyService?.trim() || null,
+        transportDetails.trim(),
+        pickupService.trim(),
+        galleryImages,
+        photographyService.trim(),
         
-        req.body.priceIncludes || [],
-        req.body.groupDiscounts?.trim() || null,
-        req.body.earlyBirdDiscount?.trim() || null,
-        req.body.contactPhone?.trim() || '+994 51 400 90 91',
-        req.body.bookingTerms?.trim() || null,
+        priceIncludes,
+        groupDiscounts.trim(),
+        earlyBirdDiscount.trim(),
+        contactPhone.trim(),
+        bookingTerms.trim(),
         
-        req.body.isActive !== false,
-        req.body.featured === true
+        isActive,
+        featured
       ]
     );
+
+    console.log('Tour created successfully:', result.rows[0]);
 
     return res.status(201).json({
       success: true,
