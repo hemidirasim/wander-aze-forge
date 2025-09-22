@@ -306,7 +306,7 @@ const AdminDashboard: React.FC = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <Button 
                 asChild
                 className="h-20 flex flex-col items-center justify-center space-y-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700"
@@ -336,6 +336,16 @@ const AdminDashboard: React.FC = () => {
                 <a href="/admin/projects">
                   <Calendar className="w-6 h-6" />
                   <span className="font-semibold">Manage Projects</span>
+                </a>
+              </Button>
+              
+              <Button 
+                asChild
+                className="h-20 flex flex-col items-center justify-center space-y-2 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700"
+              >
+                <a href="/admin/tour-form-test">
+                  <Shield className="w-6 h-6" />
+                  <span className="font-semibold">Test Tour Form</span>
                 </a>
               </Button>
             </div>
