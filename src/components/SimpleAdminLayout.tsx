@@ -29,7 +29,7 @@ const SimpleAdminLayout: React.FC = () => {
       title: 'Projects',
       icon: '📁',
       children: [
-        { title: 'New Project', path: '/admin/projects/new' },
+        { title: 'New Project', path: '/admin/project-form' },
         { title: 'All Projects', path: '/admin/projects' }
       ]
     },

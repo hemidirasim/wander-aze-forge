@@ -26,8 +26,9 @@ import AdminTourFormExtended from "./pages/AdminTourFormExtended";
 import AdminTourEdit from "./pages/AdminTourEdit";
 import AdminGallery from "./pages/AdminGallery";
 import AdminTourFormTest from "./pages/AdminTourFormTest";
-import AdminTourFormSimple from "./pages/AdminTourFormSimple";
 import AdminTestRoute from "./pages/AdminTestRoute";
+import AdminProjects from "./pages/AdminProjects";
+import AdminProjectForm from "./pages/AdminProjectForm";
 import SimpleAdminLayout from "./components/SimpleAdminLayout";
 import NotFound from "./pages/NotFound";
 
@@ -59,10 +60,12 @@ const App = () => (
             <Route path="tour-categories" element={<AdminTourCategories />} />
             <Route path="tour-form-extended" element={<AdminTourFormExtended />} />
             <Route path="tour-form-test" element={<AdminTourFormTest />} />
-            <Route path="tour-form-simple" element={<AdminTourFormSimple />} />
             <Route path="test-route" element={<AdminTestRoute />} />
             <Route path="gallery" element={<AdminGallery />} />
             <Route path="test" element={<AdminTest />} />
+            <Route path="projects" element={<AdminProjects />} />
+            <Route path="project-form" element={<AdminProjectForm />} />
+            <Route path="project-form/:id" element={<AdminProjectForm />} />
           </Route>
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

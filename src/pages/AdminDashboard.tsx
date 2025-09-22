@@ -324,10 +324,10 @@ const AdminDashboard: React.FC = () => {
                 variant="outline"
                 className="h-20 flex flex-col items-center justify-center space-y-2 border-2 hover:bg-gray-50"
               >
-                <a href="/admin/projects">
+                <Link to="/admin/projects">
                   <Calendar className="w-6 h-6" />
                   <span className="font-semibold">Manage Projects</span>
-                </a>
+                </Link>
               </Button>
             </div>
           </CardContent>
