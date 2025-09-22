@@ -1,21 +1,36 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Pool } from 'pg';
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
-
 export async function GET(request: NextRequest) {
   try {
+    console.log('Tours by category API called');
+    
     const { searchParams } = new URL(request.url);
     const category = searchParams.get('category');
+    
+    console.log('Category parameter:', category);
 
     if (!category) {
+      console.log('No category provided');
       return NextResponse.json({ 
         success: false, 
         error: 'Category is required' 
       }, { status: 400 });
     }
+
+    // Check if DATABASE_URL is available
+    if (!process.env.DATABASE_URL) {
+      console.log('DATABASE_URL not found');
+      return NextResponse.json({ 
+        success: false, 
+        error: 'Database connection not configured' 
+      }, { status: 500 });
+    }
+
+    console.log('Creating database connection...');
+    const pool = new Pool({
+      connectionString: process.env.DATABASE_URL,
+    });
 
     // Fetch tours by category
     const toursQuery = `
@@ -29,16 +44,31 @@ export async function GET(request: NextRequest) {
       ORDER BY featured DESC, created_at DESC
     `;
     
+    console.log('Executing query for category:', category);
     const toursResult = await pool.query(toursQuery, [category]);
+    console.log('Query executed, found tours:', toursResult.rows.length);
     
-    // Parse JSON fields
-    const tours = toursResult.rows.map(tour => ({
-      ...tour,
-      highlights: tour.highlights ? JSON.parse(tour.highlights) : [],
-      includes: tour.includes ? JSON.parse(tour.includes) : [],
-      excludes: tour.excludes ? JSON.parse(tour.excludes) : [],
-    }));
+    // Parse JSON fields safely
+    const tours = toursResult.rows.map(tour => {
+      try {
+        return {
+          ...tour,
+          highlights: tour.highlights ? (typeof tour.highlights === 'string' ? JSON.parse(tour.highlights) : tour.highlights) : [],
+          includes: tour.includes ? (typeof tour.includes === 'string' ? JSON.parse(tour.includes) : tour.includes) : [],
+          excludes: tour.excludes ? (typeof tour.excludes === 'string' ? JSON.parse(tour.excludes) : tour.excludes) : [],
+        };
+      } catch (parseError) {
+        console.error('Error parsing JSON fields for tour:', tour.id, parseError);
+        return {
+          ...tour,
+          highlights: [],
+          includes: [],
+          excludes: [],
+        };
+      }
+    });
 
+    console.log('Returning tours:', tours.length);
     return NextResponse.json({
       success: true,
       data: {
@@ -51,7 +81,7 @@ export async function GET(request: NextRequest) {
     console.error('Error fetching tours by category:', error);
     return NextResponse.json({ 
       success: false, 
-      error: 'Internal server error' 
+      error: error instanceof Error ? error.message : 'Internal server error' 
     }, { status: 500 });
   }
 }
