@@ -1,25 +1,111 @@
 import { useParams, Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import Navigation from '@/components/Navigation';
 import TourCategoryDropdown from '@/components/TourCategoryDropdown';
 import TailorMadeForm from '@/components/TailorMadeForm';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Clock, Users, MapPin, Star, ArrowLeft } from 'lucide-react';
-import { getCategoryById, getToursByCategory } from '@/data/tourCategories';
+import { Clock, Users, MapPin, Star, ArrowLeft, Loader2 } from 'lucide-react';
+import { getCategoryById } from '@/data/tourCategories';
+
+interface TourData {
+  id: number;
+  title: string;
+  description: string;
+  price: string;
+  duration: string;
+  difficulty: string;
+  rating: number;
+  reviews_count: number;
+  group_size: string;
+  location: string;
+  image_url: string;
+  category: string;
+  highlights: string[];
+  includes: string[];
+  excludes: string[];
+  is_active: boolean;
+  featured: boolean;
+}
 
 const ToursByCategory = () => {
   const { category: categoryId } = useParams<{ category: string }>();
+  const [tours, setTours] = useState<TourData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   
   if (!categoryId) {
     return <div>Category not found</div>;
   }
 
   const category = getCategoryById(categoryId);
-  const tours = getToursByCategory(categoryId);
+
+  useEffect(() => {
+    const fetchToursByCategory = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`/api/check-tours`);
+        const result = await response.json();
+
+        if (result.success) {
+          // Filter tours by category
+          const categoryTours = result.data.tours.filter((tour: TourData) => 
+            tour.category === categoryId && tour.is_active
+          );
+          setTours(categoryTours);
+          console.log(`Found ${categoryTours.length} tours for category ${categoryId}`);
+        } else {
+          setError(result.error || 'Failed to load tours');
+        }
+      } catch (err) {
+        setError('Failed to load tours');
+        console.error('Error fetching tours by category:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (categoryId) {
+      fetchToursByCategory();
+    }
+  }, [categoryId]);
 
   if (!category) {
     return <div>Category not found</div>;
+  }
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navigation />
+        <div className="pt-24 px-4">
+          <div className="container mx-auto max-w-4xl text-center">
+            <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4" />
+            <p className="text-muted-foreground">Loading {category.name} tours...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navigation />
+        <div className="pt-24 px-4">
+          <div className="container mx-auto max-w-4xl text-center">
+            <h1 className="text-4xl font-bold text-foreground mb-4">Error Loading Tours</h1>
+            <p className="text-muted-foreground mb-8">{error}</p>
+            <Button asChild>
+              <Link to="/tours">Browse All Tours</Link>
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   // Special handling for tailor-made category
@@ -115,6 +201,11 @@ const ToursByCategory = () => {
             
             <div className="flex items-center space-x-4 text-sm text-muted-foreground">
               <span>{tours.length} tour{tours.length !== 1 ? 's' : ''} available</span>
+              {tours.length > 0 && (
+                <span className="text-yellow-600 text-xs">
+                  📊 Live data from database
+                </span>
+              )}
             </div>
           </div>
         </div>
