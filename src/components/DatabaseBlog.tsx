@@ -48,7 +48,7 @@ const DatabaseBlog: React.FC = () => {
             {/* Other Posts Skeleton */}
             <div className="lg:col-span-1 space-y-4">
               <Skeleton className="h-6 w-32" />
-              {[...Array(4)].map((_, i) => (
+              {[...Array(5)].map((_, i) => (
                 <div key={i} className="flex items-start space-x-3 p-3">
                   <Skeleton className="w-20 h-16 rounded-md" />
                   <div className="flex-1 space-y-2">
@@ -93,7 +93,7 @@ const DatabaseBlog: React.FC = () => {
 
   // Featured post (sol tərəf) və digər post'lar (sağ tərəf)
   const featuredPost = posts[0]; // İlk post featured olaraq
-  const otherPosts = posts.slice(1, 5); // Sonrakı 4 post
+  const otherPosts = posts.slice(1, 6); // Sonrakı 5 post
 
   return (
     <section className="py-16 px-4 bg-background">
