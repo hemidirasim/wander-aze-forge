@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import GalleryUpload from '@/components/GalleryUpload';
+import TourProgramAccordionAdmin from '@/components/TourProgramAccordionAdmin';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -31,6 +32,20 @@ interface GalleryImage {
   uploadedAt: string;
   description?: string;
   alt?: string;
+}
+
+interface TourProgramDay {
+  id: string;
+  dayNumber: number;
+  title: string;
+  description: string;
+  activities: string[];
+  accommodation: string;
+  meals: string[];
+  transportation: string;
+  highlights: string[];
+  difficultyLevel: string;
+  durationHours: number;
 }
 
 interface ExtendedTourForm {
@@ -85,6 +100,9 @@ interface ExtendedTourForm {
   excludes: string[];
   itinerary: string;
   requirements: string;
+  
+  // Tour Programs
+  tourPrograms: TourProgramDay[];
   
   // Status
   isActive: boolean;
@@ -145,6 +163,9 @@ const AdminTourFormExtended: React.FC = () => {
     itinerary: '',
     requirements: '',
     
+    // Tour Programs
+    tourPrograms: [],
+    
     // Status
     isActive: true,
     featured: false
@@ -152,7 +173,7 @@ const AdminTourFormExtended: React.FC = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleInputChange = (field: keyof ExtendedTourForm, value: string | boolean | GalleryImage[]) => {
+  const handleInputChange = (field: keyof ExtendedTourForm, value: string | boolean | GalleryImage[] | TourProgramDay[]) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
@@ -843,6 +864,12 @@ const AdminTourFormExtended: React.FC = () => {
                   Add Exclusion
                 </Button>
               </div>
+
+              {/* Tour Program Accordion */}
+              <TourProgramAccordionAdmin
+                programs={formData.tourPrograms}
+                onProgramsChange={(programs) => handleInputChange('tourPrograms', programs)}
+              />
 
               <div className="space-y-2">
                 <Label htmlFor="itinerary">Detailed Itinerary</Label>
