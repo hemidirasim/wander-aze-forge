@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Navigation from '@/components/Navigation';
 import { Button } from '@/components/ui/button';
@@ -9,66 +10,80 @@ import { Link } from 'react-router-dom';
 const ProjectDetail = () => {
   const { id } = useParams();
 
-  // Mock project data - in real app, fetch based on ID
-  const project = {
-    id: 1,
-    title: "Eco-Tourism Trail Development",
-    description: "Creating sustainable hiking trails that minimize environmental impact while providing economic opportunities for local communities in the Guba region.",
-    category: "Infrastructure", 
-    status: "Ongoing",
-    location: "Guba Region",
-    impact: "500+ visitors/month",
-    completedDate: "2024",
-    startDate: "2022",
-    budget: "$75,000",
-    partners: ["Ministry of Tourism", "Local Communities", "Environmental NGOs"],
-    image: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=600&fit=crop",
-    gallery: [
-      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop",
-      "https://images.unsplash.com/photo-1464822759844-d150356c4f2e?w=400&h=300&fit=crop", 
-      "https://images.unsplash.com/photo-1445308394109-4ec2920981b1?w=400&h=300&fit=crop",
-    ],
-    objectives: [
-      "Develop 5 sustainable hiking trails with minimal environmental impact",
-      "Train 20 local guides in sustainable tourism practices", 
-      "Create employment opportunities for 50+ local residents",
-      "Establish waste management systems along all trails",
-      "Implement monitoring system for environmental protection"
-    ],
-    achievements: [
-      "3 trails completed and operational",
-      "15 local guides trained and certified",
-      "35 jobs created for local community", 
-      "Zero waste policy implemented",
-      "Monthly environmental monitoring established"
-    ],
-    timeline: [
-      {
-        phase: "Phase 1: Planning & Assessment",
-        period: "2022 Q1-Q2",
-        description: "Environmental impact assessment and community consultations",
-        status: "completed"
-      },
-      {
-        phase: "Phase 2: Trail Construction", 
-        period: "2022 Q3-2023 Q2",
-        description: "Sustainable trail development using eco-friendly materials",
-        status: "completed"
-      },
-      {
-        phase: "Phase 3: Guide Training",
-        period: "2023 Q3-Q4", 
-        description: "Training local guides in sustainable tourism practices",
-        status: "completed"
-      },
-      {
-        phase: "Phase 4: Operations & Monitoring",
-        period: "2024 Ongoing",
-        description: "Full operations with continuous environmental monitoring",
-        status: "ongoing"
+  interface Project {
+    id: number;
+    title: string;
+    description: string;
+    category: string;
+    location: string;
+    start_date: string;
+    end_date: string;
+    budget: number;
+    status: string;
+    image_url: string;
+    gallery_urls: string[];
+    created_at: string;
+    updated_at: string;
+  }
+
+  const [project, setProject] = useState<Project | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (id) {
+      fetchProject(parseInt(id));
+    }
+  }, [id]);
+
+  const fetchProject = async (projectId: number) => {
+    try {
+      setLoading(true);
+      const response = await fetch('/api/projects');
+      const result = await response.json();
+      
+      if (result.success) {
+        const foundProject = result.data.projects.find((p: Project) => p.id === projectId);
+        if (foundProject) {
+          setProject(foundProject);
+        }
       }
-    ]
+    } catch (error) {
+      console.error('Error fetching project:', error);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navigation />
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+            <p className="text-muted-foreground">Loading project...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!project) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navigation />
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-foreground mb-4">Project Not Found</h1>
+            <p className="text-muted-foreground mb-6">The project you're looking for doesn't exist.</p>
+            <Button asChild>
+              <Link to="/projects">Back to Projects</Link>
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -91,7 +106,7 @@ const ProjectDetail = () => {
         <div className="container mx-auto max-w-6xl">
           <div className="relative h-[50vh] rounded-2xl overflow-hidden">
             <img 
-              src={project.image} 
+              src={project.image_url || 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=600&fit=crop'} 
               alt={project.title}
               className="w-full h-full object-cover"
             />
@@ -139,7 +154,10 @@ const ProjectDetail = () => {
                       <Calendar className="w-5 h-5 text-primary" />
                       <div>
                         <div className="font-semibold">Timeline</div>
-                        <div className="text-muted-foreground">{project.startDate} - {project.completedDate}</div>
+                        <div className="text-muted-foreground">
+                          {project.start_date ? new Date(project.start_date).getFullYear() : 'N/A'} - 
+                          {project.end_date ? new Date(project.end_date).getFullYear() : 'Ongoing'}
+                        </div>
                       </div>
                     </div>
                     <div className="flex items-center space-x-3">
@@ -153,101 +171,40 @@ const ProjectDetail = () => {
                       <Target className="w-5 h-5 text-primary" />
                       <div>
                         <div className="font-semibold">Budget</div>
-                        <div className="text-muted-foreground">{project.budget}</div>
+                        <div className="text-muted-foreground">${project.budget?.toLocaleString()}</div>
                       </div>
                     </div>
                     <div className="flex items-center space-x-3">
                       <Leaf className="w-5 h-5 text-primary" />
                       <div>
-                        <div className="font-semibold">Impact</div>
-                        <div className="text-muted-foreground">{project.impact}</div>
+                        <div className="font-semibold">Status</div>
+                        <div className="text-muted-foreground">{project.status}</div>
                       </div>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
-
-              {/* Objectives */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-2xl">Project Objectives</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    {project.objectives.map((objective, index) => (
-                      <div key={index} className="flex items-start space-x-3">
-                        <Target className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                        <span>{objective}</span>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Achievements */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-2xl">Key Achievements</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    {project.achievements.map((achievement, index) => (
-                      <div key={index} className="flex items-start space-x-3">
-                        <CheckCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                        <span>{achievement}</span>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Timeline */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-2xl">Project Timeline</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  {project.timeline.map((phase, index) => (
-                    <div key={index} className="border-l-2 border-primary pl-6 relative">
-                      <div className={`absolute w-4 h-4 rounded-full -left-2 top-0 ${
-                        phase.status === 'completed' ? 'bg-primary' : 'bg-autumn'
-                      }`} />
-                      <div className="flex items-center space-x-3 mb-2">
-                        <h3 className="text-lg font-semibold text-foreground">
-                          {phase.phase}
-                        </h3>
-                        <Badge 
-                          variant={phase.status === 'completed' ? 'default' : 'secondary'}
-                          className={phase.status === 'completed' ? 'bg-primary' : 'bg-autumn'}
-                        >
-                          {phase.status}
-                        </Badge>
-                      </div>
-                      <div className="text-sm text-primary font-medium mb-2">{phase.period}</div>
-                      <p className="text-muted-foreground">{phase.description}</p>
-                    </div>
-                  ))}
                 </CardContent>
               </Card>
 
               {/* Gallery */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-2xl">Project Gallery</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {project.gallery.map((image, index) => (
-                      <img
-                        key={index}
-                        src={image}
-                        alt={`Project image ${index + 1}`}
-                        className="w-full h-48 object-cover rounded-lg hover:scale-105 transition-transform duration-300"
-                      />
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
+              {project.gallery_urls && project.gallery_urls.length > 0 && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-2xl">Project Gallery</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      {project.gallery_urls.map((image, index) => (
+                        <img
+                          key={index}
+                          src={image}
+                          alt={`Project image ${index + 1}`}
+                          className="w-full h-48 object-cover rounded-lg hover:scale-105 transition-transform duration-300"
+                        />
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
             </div>
 
           </div>
