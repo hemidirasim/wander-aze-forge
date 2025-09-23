@@ -46,8 +46,8 @@ const SimpleAdminLayout: React.FC = () => {
       title: 'Blog',
       icon: '📝',
       children: [
-        { title: 'New Post', path: '/admin/blog/new' },
-        { title: 'All Posts', path: '/admin/blog' }
+        { title: 'New Post', path: '/admin/blog-form' },
+        { title: 'All Posts', path: '/admin/blogs' }
       ]
     },
     {
