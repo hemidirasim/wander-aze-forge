@@ -45,6 +45,7 @@ interface ProjectFormData {
   status: string;
   image_url: string;
   gallery_urls: string[];
+  gallery_images: any[];
   galleryImages: UploadedImage[];
 }
 
@@ -64,6 +65,7 @@ const AdminProjectForm: React.FC = () => {
     status: 'active',
     image_url: '',
     gallery_urls: [],
+    gallery_images: [],
     galleryImages: []
   });
 
@@ -98,13 +100,25 @@ const AdminProjectForm: React.FC = () => {
             status: project.status || 'active',
             image_url: project.image_url || '',
             gallery_urls: project.gallery_urls || [],
-            galleryImages: project.gallery_urls?.map((url: string, index: number) => ({
+            gallery_images: project.gallery_images || [],
+            galleryImages: project.gallery_images?.map((img: any, index: number) => ({
+              id: img.id || `existing-${index}`,
+              url: img.url || project.gallery_urls?.[index] || '',
+              filename: img.filename || `image-${index + 1}.jpg`,
+              size: img.size || 0,
+              uploadedAt: img.uploadedAt || new Date().toISOString(),
+              isMain: img.isMain || index === 0,
+              description: img.description || '',
+              alt: img.alt || ''
+            })) || project.gallery_urls?.map((url: string, index: number) => ({
               id: `existing-${index}`,
               url: url,
               filename: `image-${index + 1}.jpg`,
               size: 0,
               uploadedAt: new Date().toISOString(),
-              isMain: index === 0
+              isMain: index === 0,
+              description: '',
+              alt: ''
             })) || []
           });
         } else {
@@ -137,6 +151,16 @@ const AdminProjectForm: React.FC = () => {
         budget: parseFloat(formData.budget) || 0,
         image_url: formData.galleryImages.length > 0 ? formData.galleryImages[0].url : formData.image_url,
         gallery_urls: formData.galleryImages.map(img => img.url),
+        gallery_images: formData.galleryImages.map(img => ({
+          id: img.id,
+          url: img.url,
+          filename: img.filename,
+          size: img.size,
+          uploadedAt: img.uploadedAt,
+          isMain: img.isMain,
+          description: img.description || '',
+          alt: img.alt || ''
+        })),
         // Add edit information
         ...(isEditing && { id: parseInt(id!), _method: 'PUT' })
       };

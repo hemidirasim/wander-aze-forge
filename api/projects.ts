@@ -26,7 +26,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         SELECT 
           id, title, description, category, location, 
           start_date, end_date, budget, status, 
-          image_url, gallery_urls, created_at, updated_at
+          image_url, gallery_urls, gallery_images, created_at, updated_at
         FROM projects 
         ORDER BY created_at DESC
       `);
@@ -53,7 +53,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     try {
       console.log('Processing project request:', req.body);
       
-      const { title, description, category, location, start_date, end_date, budget, status, image_url, gallery_urls, id, _method } = req.body;
+      const { title, description, category, location, start_date, end_date, budget, status, image_url, gallery_urls, gallery_images, id, _method } = req.body;
       
       // Check if this is an update request
       if (_method === 'PUT' && id) {
@@ -63,13 +63,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           UPDATE projects SET
             title = $1, description = $2, category = $3, location = $4,
             start_date = $5, end_date = $6, budget = $7, status = $8,
-            image_url = $9, gallery_urls = $10, updated_at = NOW()
-          WHERE id = $11
+            image_url = $9, gallery_urls = $10, gallery_images = $11, updated_at = NOW()
+          WHERE id = $12
           RETURNING *
         `, [
           title, description, category, location,
           start_date, end_date, budget, status,
-          image_url, gallery_urls || [], id
+          image_url, gallery_urls || [], JSON.stringify(gallery_images || []), id
         ]);
 
         if (result.rows.length === 0) {
@@ -97,13 +97,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           INSERT INTO projects (
             title, description, category, location, 
             start_date, end_date, budget, status, 
-            image_url, gallery_urls
-          ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+            image_url, gallery_urls, gallery_images
+          ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
           RETURNING *
         `, [
           title, description, category, location,
           start_date, end_date, budget, status,
-          image_url, gallery_urls || []
+          image_url, gallery_urls || [], JSON.stringify(gallery_images || [])
         ]);
 
         const project = {
