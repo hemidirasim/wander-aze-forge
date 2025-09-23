@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import Navigation from '@/components/Navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -5,7 +6,6 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Link } from 'react-router-dom';
 import { Calendar, User, Clock, ArrowRight } from 'lucide-react';
-import { useApi } from '@/hooks/useApi';
 
 interface BlogPost {
   id: number;
@@ -23,7 +23,32 @@ interface BlogPost {
 }
 
 const Blog = () => {
-  const { data: posts, loading, error } = useApi<BlogPost[]>('/blog');
+  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
+  const fetchPosts = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('/api/blog');
+      const result = await response.json();
+      
+      if (result.success) {
+        setPosts(result.data || []);
+      } else {
+        setError(result.error || 'Failed to fetch posts');
+      }
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+      setError('Failed to fetch posts');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -89,8 +114,11 @@ const Blog = () => {
 
         <section className="py-16 px-4">
           <div className="container mx-auto text-center">
-            <p className="text-red-500 text-xl">Error loading blog posts: {error}</p>
-            <p className="text-gray-500 mt-2">Please try again later</p>
+            <h2 className="text-3xl font-bold text-foreground mb-4">Error Loading Posts</h2>
+            <p className="text-muted-foreground mb-6">{error}</p>
+            <Button onClick={fetchPosts}>
+              Try Again
+            </Button>
           </div>
         </section>
       </div>
