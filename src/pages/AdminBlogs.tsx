@@ -80,7 +80,6 @@ const AdminBlogs = () => {
           const result = await response.json();
           console.log('Delete response:', result);
           setPosts(posts.filter(post => post.id !== id));
-          alert('Blog post deleted successfully');
         } else {
           const errorResult = await response.json();
           console.error('Delete error:', errorResult);
