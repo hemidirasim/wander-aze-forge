@@ -1,4 +1,12 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { Pool } from 'pg';
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false,
+  },
+});
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Enable CORS
@@ -11,53 +19,72 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   if (req.method === 'GET') {
-    // Return mock projects data for now
-    const mockProjects = [
-      {
-        id: 1,
-        title: "Khinalig Village Development",
-        description: "A comprehensive development project focused on improving infrastructure and tourism facilities in the ancient village of Khinalig.",
-        category: "community_development",
-        location: "Khinalig, Quba District",
-        start_date: "2024-01-15",
-        end_date: "2025-12-31",
-        budget: 250000.00,
-        status: "active",
-        image_url: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600&h=400&fit=crop",
-        gallery_urls: [],
-        created_at: "2024-01-15T00:00:00Z",
-        updated_at: "2024-01-15T00:00:00Z"
-      },
-      {
-        id: 2,
-        title: "Gobustan National Park Conservation",
-        description: "Environmental conservation project to protect the UNESCO World Heritage site of Gobustan.",
-        category: "conservation",
-        location: "Gobustan, Absheron District",
-        start_date: "2023-06-01",
-        end_date: "2024-12-31",
-        budget: 180000.00,
-        status: "active",
-        image_url: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=400&fit=crop",
-        gallery_urls: [],
-        created_at: "2023-06-01T00:00:00Z",
-        updated_at: "2023-06-01T00:00:00Z"
-      }
-    ];
+    try {
+      console.log('Fetching all projects...');
+      
+      const result = await pool.query(`
+        SELECT 
+          id, title, description, category, location, 
+          start_date, end_date, budget, status, 
+          image_url, gallery_urls, created_at, updated_at
+        FROM projects 
+        ORDER BY created_at DESC
+      `);
+      
+      const projects = result.rows.map(row => ({
+        ...row,
+        gallery_urls: row.gallery_urls || []
+      }));
 
-    return res.status(200).json({
-      success: true,
-      data: { projects: mockProjects }
-    });
+      return res.status(200).json({
+        success: true,
+        data: { projects }
+      });
+    } catch (error: any) {
+      console.error('Database error:', error);
+      return res.status(500).json({
+        success: false,
+        error: error.message || 'Database error'
+      });
+    }
   }
 
   if (req.method === 'POST') {
-    // Return success for now
-    return res.status(201).json({
-      success: true,
-      data: { project: { id: Date.now(), ...req.body } },
-      message: 'Project created successfully'
-    });
+    try {
+      console.log('Creating new project:', req.body);
+      
+      const { title, description, category, location, start_date, end_date, budget, status, image_url, gallery_urls } = req.body;
+      
+      const result = await pool.query(`
+        INSERT INTO projects (
+          title, description, category, location, 
+          start_date, end_date, budget, status, 
+          image_url, gallery_urls
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+        RETURNING *
+      `, [
+        title, description, category, location,
+        start_date, end_date, budget, status,
+        image_url, gallery_urls || []
+      ]);
+
+      const project = {
+        ...result.rows[0],
+        gallery_urls: result.rows[0].gallery_urls || []
+      };
+
+      return res.status(201).json({
+        success: true,
+        data: { project },
+        message: 'Project created successfully'
+      });
+    } catch (error: any) {
+      console.error('Database error:', error);
+      return res.status(500).json({
+        success: false,
+        error: error.message || 'Database error'
+      });
+    }
   }
 
   return res.status(405).json({
