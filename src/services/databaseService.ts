@@ -314,6 +314,20 @@ export class DatabaseService {
     return result.rows[0] || null;
   }
 
+  static async createPartner(partner: Omit<Partner, 'id' | 'created_at' | 'updated_at'>): Promise<Partner> {
+    const result = await pool.query(
+      `INSERT INTO partners (
+        name, type, description, website_url, contact_email, contact_phone, 
+        logo_url, partnership_type, status
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+      RETURNING *`,
+      [partner.name, partner.type, partner.description, partner.website_url, 
+       partner.contact_email, partner.contact_phone, partner.logo_url, 
+       partner.partnership_type, partner.status]
+    );
+    return result.rows[0];
+  }
+
   static async getPartnersByType(type: string): Promise<Partner[]> {
     const result = await pool.query('SELECT * FROM partners WHERE type = $1 AND status = \'active\' ORDER BY created_at DESC', [type]);
     return result.rows;
