@@ -112,7 +112,19 @@ const AdminPartnerForm = () => {
     e.preventDefault();
     
     if (!formData.name.trim()) {
-      alert('Please fill in required fields');
+      alert('Partner name is required');
+      return;
+    }
+
+    // Validate email format if provided
+    if (formData.email && !formData.email.includes('@')) {
+      alert('Please enter a valid email address');
+      return;
+    }
+
+    // Validate website format if provided
+    if (formData.website && !formData.website.startsWith('http')) {
+      alert('Please enter a valid website URL (starting with http:// or https://)');
       return;
     }
 
@@ -135,6 +147,8 @@ const AdminPartnerForm = () => {
         ...(isEditing && { id: parseInt(id!), _method: 'PUT' })
       };
 
+      console.log('Saving partner:', requestData);
+
       const response = await fetch('/api/partners', {
         method: 'POST',
         headers: {
@@ -143,14 +157,20 @@ const AdminPartnerForm = () => {
         body: JSON.stringify(requestData)
       });
 
+      console.log('Partner response status:', response.status);
+
       if (response.ok) {
+        const result = await response.json();
+        console.log('Partner saved successfully:', result);
         navigate('/admin/partners');
       } else {
-        alert('Failed to save partner');
+        const errorResult = await response.json();
+        console.error('Partner save error:', errorResult);
+        alert('Failed to save partner: ' + (errorResult.error || 'Unknown error'));
       }
     } catch (error) {
       console.error('Error saving partner:', error);
-      alert('Error saving partner');
+      alert('Error saving partner: ' + error.message);
     } finally {
       setSaving(false);
     }
@@ -219,6 +239,7 @@ const AdminPartnerForm = () => {
                   value={formData.website}
                   onChange={(e) => handleInputChange('website', e.target.value)}
                   placeholder="https://example.com"
+                  type="url"
                 />
               </div>
 
@@ -241,6 +262,7 @@ const AdminPartnerForm = () => {
                 value={formData.phone}
                 onChange={(e) => handleInputChange('phone', e.target.value)}
                 placeholder="+994 50 123 45 67"
+                type="tel"
               />
             </div>
           </CardContent>
