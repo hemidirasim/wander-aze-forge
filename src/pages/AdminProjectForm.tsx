@@ -79,31 +79,37 @@ const AdminProjectForm: React.FC = () => {
   const fetchProject = async (projectId: number) => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/projects/${projectId}`);
+      // Fetch all projects and filter by ID
+      const response = await fetch('/api/projects');
       const result = await response.json();
       
       if (result.success) {
-        const project = result.data.project;
-        setFormData({
-          title: project.title || '',
-          description: project.description || '',
-          category: project.category || '',
-          location: project.location || '',
-          start_date: project.start_date || '',
-          end_date: project.end_date || '',
-          budget: project.budget?.toString() || '',
-          status: project.status || 'active',
-          image_url: project.image_url || '',
-          gallery_urls: project.gallery_urls || [],
-          galleryImages: project.gallery_urls?.map((url: string, index: number) => ({
-            id: `existing-${index}`,
-            url: url,
-            filename: `image-${index + 1}.jpg`,
-            size: 0,
-            uploadedAt: new Date().toISOString(),
-            isMain: index === 0
-          })) || []
-        });
+        const project = result.data.projects.find((p: any) => p.id === projectId);
+        
+        if (project) {
+          setFormData({
+            title: project.title || '',
+            description: project.description || '',
+            category: project.category || '',
+            location: project.location || '',
+            start_date: project.start_date || '',
+            end_date: project.end_date || '',
+            budget: project.budget?.toString() || '',
+            status: project.status || 'active',
+            image_url: project.image_url || '',
+            gallery_urls: project.gallery_urls || [],
+            galleryImages: project.gallery_urls?.map((url: string, index: number) => ({
+              id: `existing-${index}`,
+              url: url,
+              filename: `image-${index + 1}.jpg`,
+              size: 0,
+              uploadedAt: new Date().toISOString(),
+              isMain: index === 0
+            })) || []
+          });
+        } else {
+          console.error('Project not found');
+        }
       }
     } catch (error) {
       console.error('Error fetching project:', error);
