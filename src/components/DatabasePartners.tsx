@@ -119,31 +119,43 @@ const DatabasePartners: React.FC = () => {
         )}
         
         {!loading && !error && partners && partners.length > 0 && (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
-        {partners.map((partner, index) => (
-          <div 
-            key={partner.id} 
-            className="flex flex-col items-center text-center group hover:scale-105 transition-transform duration-300"
-          >
-            <div className="w-24 h-24 mb-4 rounded-full bg-gradient-to-br from-primary/20 to-primary/40 flex items-center justify-center group-hover:shadow-lg transition-shadow">
-              {partner.logo_url ? (
-                <img 
-                  src={partner.logo_url} 
-                  alt={partner.name}
-                  className="w-16 h-16 object-contain rounded-full"
-                />
-              ) : (
-                <Building2 className="w-8 h-8 text-primary" />
-              )}
-            </div>
-            <h3 className="font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">
-              {partner.name}
-            </h3>
-            <p className="text-sm text-muted-foreground line-clamp-2">
-              {partner.description}
-            </p>
-          </div>
-        ))}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-4xl mx-auto">
+            {partners.map((partner, index) => (
+              <div 
+                key={partner.id} 
+                className="flex items-center space-x-6 p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100"
+              >
+                <div className="flex-shrink-0 w-20 h-20 bg-gray-50 rounded-lg flex items-center justify-center">
+                  {partner.logo_url ? (
+                    <img 
+                      src={partner.logo_url} 
+                      alt={partner.name}
+                      className="w-16 h-16 object-contain"
+                    />
+                  ) : (
+                    <Building2 className="w-8 h-8 text-primary" />
+                  )}
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-semibold text-foreground mb-2 text-lg">
+                    {partner.name}
+                  </h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {partner.description}
+                  </p>
+                  {partner.website_url && (
+                    <a 
+                      href={partner.website_url} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-primary hover:text-primary/80 text-sm font-medium mt-2 inline-block"
+                    >
+                      Visit Website →
+                    </a>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
         )}
         
