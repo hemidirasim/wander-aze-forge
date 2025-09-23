@@ -115,11 +115,11 @@ const GalleryUpload: React.FC<GalleryUploadProps> = ({
       const result = await response.json();
       
       return {
-        id: result.blob.url,
-        url: result.blob.url,
-        filename: result.blob.pathname.split('/').pop() || file.name,
-        size: file.size,
-        uploadedAt: new Date().toISOString(),
+        id: result.id || result.url,
+        url: result.url,
+        filename: result.filename || file.name,
+        size: result.size || file.size,
+        uploadedAt: result.uploadedAt || new Date().toISOString(),
         isMain: false
       };
     } catch (error) {
@@ -157,8 +157,11 @@ const GalleryUpload: React.FC<GalleryUploadProps> = ({
         const uploadedImage = await uploadImage(file);
         
         if (uploadedImage) {
-          setImages(prev => [...prev, uploadedImage]);
-          onImagesChange?.([...images, uploadedImage]);
+          setImages(prev => {
+            const newImages = [...prev, uploadedImage];
+            onImagesChange?.(newImages);
+            return newImages;
+          });
         }
         
         // Remove progress tracking
