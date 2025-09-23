@@ -74,6 +74,7 @@ const App = () => (
             <Route path="blog-form" element={<AdminBlogForm />} />
             <Route path="blog-form/:id" element={<AdminBlogForm />} />
             <Route path="partners" element={<AdminPartners />} />
+            <Route path="partners/new" element={<AdminPartnerForm />} />
             <Route path="partner-form" element={<AdminPartnerForm />} />
             <Route path="partner-form/:id" element={<AdminPartnerForm />} />
           </Route>
