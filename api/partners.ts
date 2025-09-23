@@ -108,10 +108,10 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
         const updateResult = await client.query(
           `UPDATE partners SET 
             name = $1, description = $2, website_url = $3, contact_email = $4, contact_phone = $5, 
-            logo_url = $6, partnership_type = $7, status = $8,
+            logo_url = $6, type = $7, partnership_type = $8, status = $9,
             updated_at = CURRENT_TIMESTAMP
-          WHERE id = $9 RETURNING *`,
-          [name, description, website, email, phone, logo_url, category, status, id]
+          WHERE id = $10 RETURNING *`,
+          [name, description, website, email, phone, logo_url, category, category, status, id]
         );
         
         if (updateResult.rows.length === 0) {
@@ -133,13 +133,17 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
       }
 
       // Handle CREATE request
+      console.log('Creating partner with data:', { name, description, website, email, phone, logo_url, category, status });
+      
       const result = await client.query(
         `INSERT INTO partners (
-          name, description, website_url, contact_email, contact_phone, logo_url, partnership_type, status
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+          name, description, website_url, contact_email, contact_phone, logo_url, type, partnership_type, status
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
         RETURNING *`,
-        [name, description, website, email, phone, logo_url, category, status]
+        [name, description, website, email, phone, logo_url, category, category, status]
       );
+
+      console.log('Partner created successfully:', result.rows[0]);
 
       res.status(201).json({
         success: true,
