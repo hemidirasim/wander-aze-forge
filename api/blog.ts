@@ -109,16 +109,20 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
 
       // Handle DELETE request
       if (_method === 'DELETE' && id) {
+        console.log('Deleting blog post with ID:', id);
+        
         const deleteResult = await client.query(
           'DELETE FROM blog_posts WHERE id = $1 RETURNING id',
           [id]
         );
         
         if (deleteResult.rows.length === 0) {
+          console.log('Blog post not found for deletion');
           res.status(404).json({ error: 'Blog post not found' });
           return;
         }
         
+        console.log('Blog post deleted successfully');
         res.status(200).json({
           success: true,
           message: 'Blog post deleted successfully'

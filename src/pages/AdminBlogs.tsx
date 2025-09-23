@@ -61,6 +61,8 @@ const AdminBlogs = () => {
   const handleDelete = async (id: number) => {
     if (window.confirm('Are you sure you want to delete this blog post?')) {
       try {
+        console.log('Deleting blog post with ID:', id);
+        
         const response = await fetch('/api/blog', {
           method: 'POST',
           headers: {
@@ -72,11 +74,21 @@ const AdminBlogs = () => {
           })
         });
 
+        console.log('Delete response status:', response.status);
+        
         if (response.ok) {
+          const result = await response.json();
+          console.log('Delete response:', result);
           setPosts(posts.filter(post => post.id !== id));
+          alert('Blog post deleted successfully');
+        } else {
+          const errorResult = await response.json();
+          console.error('Delete error:', errorResult);
+          alert('Failed to delete blog post: ' + (errorResult.error || 'Unknown error'));
         }
       } catch (error) {
         console.error('Error deleting post:', error);
+        alert('Error deleting blog post: ' + error.message);
       }
     }
   };
