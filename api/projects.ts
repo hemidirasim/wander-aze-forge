@@ -55,6 +55,30 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       
       const { title, description, category, location, start_date, end_date, budget, status, image_url, gallery_urls, gallery_images, id, _method } = req.body;
       
+      // Check if this is a delete request
+      if (_method === 'DELETE' && id) {
+        console.log('Deleting project with ID:', id);
+        
+        const result = await pool.query(`
+          DELETE FROM projects 
+          WHERE id = $1
+          RETURNING id, title
+        `, [id]);
+
+        if (result.rows.length === 0) {
+          return res.status(404).json({
+            success: false,
+            error: 'Project not found'
+          });
+        }
+
+        return res.status(200).json({
+          success: true,
+          message: 'Project deleted successfully',
+          data: { deletedProject: result.rows[0] }
+        });
+      }
+      
       // Check if this is an update request
       if (_method === 'PUT' && id) {
         console.log('Updating project with ID:', id);

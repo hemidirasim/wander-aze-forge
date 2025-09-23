@@ -73,15 +73,27 @@ const AdminProjects: React.FC = () => {
   const handleDelete = async (id: number) => {
     if (window.confirm('Are you sure you want to delete this project?')) {
       try {
-        const response = await fetch(`/api/projects/${id}`, {
-          method: 'DELETE'
+        const response = await fetch('/api/projects', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            id: id,
+            _method: 'DELETE'
+          })
         });
         
         if (response.ok) {
           setProjects(projects.filter(project => project.id !== id));
+        } else {
+          const errorData = await response.json();
+          console.error('Delete failed:', errorData);
+          alert('Failed to delete project: ' + (errorData.error || 'Unknown error'));
         }
       } catch (error) {
         console.error('Error deleting project:', error);
+        alert('Error deleting project: ' + (error instanceof Error ? error.message : 'Unknown error'));
       }
     }
   };
