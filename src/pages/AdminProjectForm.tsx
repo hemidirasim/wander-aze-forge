@@ -89,6 +89,10 @@ const AdminProjectForm: React.FC = () => {
         const project = result.data.projects.find((p: any) => p.id === projectId);
         
         if (project) {
+          console.log('Project data:', project);
+          console.log('Gallery URLs:', project.gallery_urls);
+          console.log('Gallery Images:', project.gallery_images);
+          
           setFormData({
             title: project.title || '',
             description: project.description || '',
@@ -101,25 +105,29 @@ const AdminProjectForm: React.FC = () => {
             image_url: project.image_url || '',
             gallery_urls: project.gallery_urls || [],
             gallery_images: project.gallery_images || [],
-            galleryImages: project.gallery_images?.map((img: any, index: number) => ({
-              id: img.id || `existing-${index}`,
-              url: img.url || project.gallery_urls?.[index] || '',
-              filename: img.filename || `image-${index + 1}.jpg`,
-              size: img.size || 0,
-              uploadedAt: img.uploadedAt || new Date().toISOString(),
-              isMain: img.isMain || index === 0,
-              description: img.description || '',
-              alt: img.alt || ''
-            })) || project.gallery_urls?.map((url: string, index: number) => ({
-              id: `existing-${index}`,
-              url: url,
-              filename: `image-${index + 1}.jpg`,
-              size: 0,
-              uploadedAt: new Date().toISOString(),
-              isMain: index === 0,
-              description: '',
-              alt: ''
-            })) || []
+            galleryImages: (project.gallery_images && project.gallery_images.length > 0) 
+              ? project.gallery_images.map((img: any, index: number) => ({
+                  id: img.id || `existing-${index}`,
+                  url: img.url || project.gallery_urls?.[index] || '',
+                  filename: img.filename || `image-${index + 1}.jpg`,
+                  size: img.size || 0,
+                  uploadedAt: img.uploadedAt || new Date().toISOString(),
+                  isMain: img.isMain || index === 0,
+                  description: img.description || '',
+                  alt: img.alt || ''
+                }))
+              : (project.gallery_urls && project.gallery_urls.length > 0)
+                ? project.gallery_urls.map((url: string, index: number) => ({
+                    id: `existing-${index}`,
+                    url: url,
+                    filename: `image-${index + 1}.jpg`,
+                    size: 0,
+                    uploadedAt: new Date().toISOString(),
+                    isMain: index === 0,
+                    description: '',
+                    alt: ''
+                  }))
+                : []
           });
         } else {
           console.error('Project not found');
