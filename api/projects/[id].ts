@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { Pool } from 'pg';
 
 const pool = new Pool({
@@ -12,8 +12,8 @@ export const config = {
   runtime: 'edge',
 };
 
-export default async function handler(req: NextRequest, { params }: { params: { id: string } }) {
-  const projectId = params.id;
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  const projectId = req.query.id;
 
   if (req.method === 'GET') {
     try {
@@ -29,7 +29,7 @@ export default async function handler(req: NextRequest, { params }: { params: { 
       `, [projectId]);
       
       if (result.rows.length === 0) {
-        return NextResponse.json({ 
+        return res.status(200).json({ 
           success: false, 
           error: 'Project not found' 
         }, { status: 404 });
@@ -40,13 +40,13 @@ export default async function handler(req: NextRequest, { params }: { params: { 
         gallery_urls: result.rows[0].gallery_urls ? (typeof result.rows[0].gallery_urls === 'string' ? JSON.parse(result.rows[0].gallery_urls) : result.rows[0].gallery_urls) : []
       };
 
-      return NextResponse.json({ 
+      return res.status(200).json({ 
         success: true, 
         data: { project } 
       });
     } catch (error: any) {
       console.error('Database error:', error);
-      return NextResponse.json({ 
+      return res.status(200).json({ 
         success: false, 
         error: error.message || 'Database error' 
       }, { status: 500 });
@@ -72,7 +72,7 @@ export default async function handler(req: NextRequest, { params }: { params: { 
       ]);
 
       if (result.rows.length === 0) {
-        return NextResponse.json({ 
+        return res.status(200).json({ 
           success: false, 
           error: 'Project not found' 
         }, { status: 404 });
@@ -83,14 +83,14 @@ export default async function handler(req: NextRequest, { params }: { params: { 
         gallery_urls: result.rows[0].gallery_urls ? JSON.parse(result.rows[0].gallery_urls) : []
       };
 
-      return NextResponse.json({ 
+      return res.status(200).json({ 
         success: true, 
         data: { project },
         message: 'Project updated successfully'
       });
     } catch (error: any) {
       console.error('Database error:', error);
-      return NextResponse.json({ 
+      return res.status(200).json({ 
         success: false, 
         error: error.message || 'Database error' 
       }, { status: 500 });
@@ -104,25 +104,25 @@ export default async function handler(req: NextRequest, { params }: { params: { 
       `, [projectId]);
 
       if (result.rows.length === 0) {
-        return NextResponse.json({ 
+        return res.status(200).json({ 
           success: false, 
           error: 'Project not found' 
         }, { status: 404 });
       }
 
-      return NextResponse.json({ 
+      return res.status(200).json({ 
         success: true, 
         message: 'Project deleted successfully'
       });
     } catch (error: any) {
       console.error('Database error:', error);
-      return NextResponse.json({ 
+      return res.status(200).json({ 
         success: false, 
         error: error.message || 'Database error' 
       }, { status: 500 });
     }
   } else {
-    return NextResponse.json({ 
+    return res.status(200).json({ 
       success: false, 
       error: 'Method not allowed' 
     }, { status: 405 });

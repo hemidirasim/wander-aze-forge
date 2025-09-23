@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { Pool } from 'pg';
 
 const pool = new Pool({
@@ -12,7 +12,7 @@ export const config = {
   runtime: 'edge',
 };
 
-export default async function handler(req: NextRequest) {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method === 'GET') {
     try {
       console.log('Fetching all projects...');
@@ -31,16 +31,16 @@ export default async function handler(req: NextRequest) {
         gallery_urls: row.gallery_urls ? (typeof row.gallery_urls === 'string' ? JSON.parse(row.gallery_urls) : row.gallery_urls) : []
       }));
 
-      return NextResponse.json({ 
+      return res.status(200).json({ 
         success: true, 
         data: { projects } 
       });
     } catch (error: any) {
       console.error('Database error:', error);
-      return NextResponse.json({ 
+      return res.status(500).json({ 
         success: false, 
         error: error.message || 'Database error' 
-      }, { status: 500 });
+      });
     }
   } else if (req.method === 'POST') {
     try {
@@ -74,15 +74,15 @@ export default async function handler(req: NextRequest) {
       });
     } catch (error: any) {
       console.error('Database error:', error);
-      return NextResponse.json({ 
+      return res.status(500).json({ 
         success: false, 
         error: error.message || 'Database error' 
-      }, { status: 500 });
+      });
     }
   } else {
-    return NextResponse.json({ 
+    return res.status(405).json({ 
       success: false, 
       error: 'Method not allowed' 
-    }, { status: 405 });
+    });
   }
 }
