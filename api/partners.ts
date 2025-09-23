@@ -107,12 +107,11 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
       if (_method === 'PUT' && id) {
         const updateResult = await client.query(
           `UPDATE partners SET 
-            name = $1, description = $2, website = $3, email = $4, phone = $5, 
-            logo_url = $6, category = $7, status = $8, gallery_images = $9,
+            name = $1, description = $2, website_url = $3, contact_email = $4, contact_phone = $5, 
+            logo_url = $6, partnership_type = $7, status = $8,
             updated_at = CURRENT_TIMESTAMP
-          WHERE id = $10 RETURNING *`,
-          [name, description, website, email, phone, logo_url, category, status, 
-           JSON.stringify(gallery_images || []), id]
+          WHERE id = $9 RETURNING *`,
+          [name, description, website, email, phone, logo_url, category, status, id]
         );
         
         if (updateResult.rows.length === 0) {
@@ -136,11 +135,10 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
       // Handle CREATE request
       const result = await client.query(
         `INSERT INTO partners (
-          name, description, website, email, phone, logo_url, category, status, gallery_images
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+          name, description, website_url, contact_email, contact_phone, logo_url, partnership_type, status
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
         RETURNING *`,
-        [name, description, website, email, phone, logo_url, category, status, 
-         JSON.stringify(gallery_images || [])]
+        [name, description, website, email, phone, logo_url, category, status]
       );
 
       res.status(201).json({
