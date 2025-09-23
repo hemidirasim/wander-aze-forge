@@ -35,8 +35,13 @@ const AdminBlogs = () => {
       const response = await fetch('/api/blog');
       const result = await response.json();
       
+      console.log('Blog API Response:', result);
+      
       if (result.success) {
-        setPosts(result.data.posts || []);
+        setPosts(result.data || []);
+        console.log('Blog posts loaded:', result.data?.length || 0);
+      } else {
+        console.error('API Error:', result.error);
       }
     } catch (error) {
       console.error('Error fetching posts:', error);

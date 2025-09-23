@@ -67,7 +67,7 @@ const AdminBlogForm = () => {
       const result = await response.json();
       
       if (result.success) {
-        const post = result.data.posts.find((p: any) => p.id === postId);
+        const post = result.data.find((p: any) => p.id === postId);
         if (post) {
           // Convert gallery_images to UploadedImage format
           let galleryImages: UploadedImage[] = [];
