@@ -4,7 +4,7 @@ import AdminDashboard from '../pages/AdminDashboard';
 
 const SimpleAdminLayout: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [expandedMenus, setExpandedMenus] = useState<string[]>(['tours', 'projects', 'programs', 'partners', 'blog']);
+  const [expandedMenus, setExpandedMenus] = useState<string[]>(['tours', 'projects', 'partners', 'blog']);
   const location = useLocation();
 
   const menuItems = [
@@ -30,15 +30,6 @@ const SimpleAdminLayout: React.FC = () => {
       children: [
         { title: 'New Project', path: '/admin/project-form' },
         { title: 'All Projects', path: '/admin/projects' }
-      ]
-    },
-    {
-      id: 'programs',
-      title: 'Programs',
-      icon: '👥',
-      children: [
-        { title: 'New Program', path: '/admin/programs/new' },
-        { title: 'All Programs', path: '/admin/programs' }
       ]
     },
     {
