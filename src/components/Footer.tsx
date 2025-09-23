@@ -13,7 +13,7 @@ const Footer = () => {
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
               <Mountain className="w-8 h-8 text-primary" />
-              <span className="text-xl font-bold">WanderAze</span>
+              <span className="text-xl font-bold">OutTour.az</span>
             </div>
             <p className="text-gray-300 leading-relaxed">
               Azerbaijan's premier eco-tourism company, offering authentic mountain adventures and sustainable travel experiences since 2014.
@@ -129,8 +129,8 @@ const Footer = () => {
               </div>
               <div className="flex items-center space-x-3">
                 <Mail className="w-5 h-5 text-primary flex-shrink-0" />
-                <a href="mailto:info@wanderaze.az" className="text-gray-300 hover:text-primary transition-colors">
-                  info@wanderaze.az
+                <a href="mailto:info@outtour.az" className="text-gray-300 hover:text-primary transition-colors">
+                  info@outtour.az
                 </a>
               </div>
             </div>
@@ -141,7 +141,7 @@ const Footer = () => {
         <div className="border-t border-gray-800 mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-gray-400 text-sm">
-              © {currentYear} WanderAze. All rights reserved. | Sustainable Tourism in Azerbaijan
+              © {currentYear} OutTour.az. All rights reserved. | Sustainable Tourism in Azerbaijan
             </p>
             <div className="flex space-x-6 text-sm">
               <a href="#" className="text-gray-400 hover:text-primary transition-colors">
