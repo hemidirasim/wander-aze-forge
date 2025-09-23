@@ -68,27 +68,79 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
     try {
       const {
         name,
-        type,
         description,
-        website_url,
-        contact_email,
-        contact_phone,
+        website,
+        email,
+        phone,
         logo_url,
-        partnership_type,
-        status = 'active'
+        category,
+        status = 'active',
+        gallery_images,
+        id,
+        _method
       } = req.body;
 
-      if (!name) {
+      // Handle DELETE request
+      if (_method === 'DELETE' && id) {
+        console.log('Deleting partner with ID:', id);
+        
+        const deleteResult = await client.query(
+          'DELETE FROM partners WHERE id = $1 RETURNING id',
+          [id]
+        );
+        
+        if (deleteResult.rows.length === 0) {
+          console.log('Partner not found for deletion');
+          res.status(404).json({ error: 'Partner not found' });
+          return;
+        }
+        
+        console.log('Partner deleted successfully');
+        res.status(200).json({
+          success: true,
+          message: 'Partner deleted successfully'
+        });
+        return;
+      }
+
+      // Handle UPDATE request
+      if (_method === 'PUT' && id) {
+        const updateResult = await client.query(
+          `UPDATE partners SET 
+            name = $1, description = $2, website = $3, email = $4, phone = $5, 
+            logo_url = $6, category = $7, status = $8, gallery_images = $9,
+            updated_at = CURRENT_TIMESTAMP
+          WHERE id = $10 RETURNING *`,
+          [name, description, website, email, phone, logo_url, category, status, 
+           JSON.stringify(gallery_images || []), id]
+        );
+        
+        if (updateResult.rows.length === 0) {
+          res.status(404).json({ error: 'Partner not found' });
+          return;
+        }
+        
+        res.status(200).json({
+          success: true,
+          data: updateResult.rows[0]
+        });
+        return;
+      }
+
+      // Validate required fields for CREATE and UPDATE operations
+      if (_method !== 'DELETE' && !name) {
         res.status(400).json({ error: 'Name is required' });
         return;
       }
 
+      // Handle CREATE request
       const result = await client.query(
         `INSERT INTO partners (
-          name, type, description, website_url, contact_email, contact_phone, logo_url, partnership_type, status
+          name, description, website, email, phone, logo_url, category, status, gallery_images
         ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
         RETURNING *`,
-        [name, type, description, website_url, contact_email, contact_phone, logo_url, partnership_type, status]
+        [name, description, website, email, phone, logo_url, category, status, 
+         JSON.stringify(gallery_images || [])]
       );
 
       res.status(201).json({
