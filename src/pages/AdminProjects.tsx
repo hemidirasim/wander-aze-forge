@@ -47,21 +47,6 @@ const AdminProjects: React.FC = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-  const [isEditing, setIsEditing] = useState(false);
-  const [isCreating, setIsCreating] = useState(false);
-  const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    category: '',
-    location: '',
-    start_date: '',
-    end_date: '',
-    budget: '',
-    status: 'active',
-    image_url: '',
-    gallery_urls: [] as string[]
-  });
 
   useEffect(() => {
     fetchProjects();
@@ -102,74 +87,14 @@ const AdminProjects: React.FC = () => {
   };
 
   const handleEdit = (project: Project) => {
-    setSelectedProject(project);
-    setFormData({
-      title: project.title,
-      description: project.description,
-      category: project.category,
-      location: project.location,
-      start_date: project.start_date,
-      end_date: project.end_date,
-      budget: project.budget.toString(),
-      status: project.status,
-      image_url: project.image_url,
-      gallery_urls: project.gallery_urls
-    });
-    setIsEditing(true);
-    setIsCreating(false);
+    navigate(`/admin/project-form/${project.id}`);
   };
 
   const handleCreate = () => {
     navigate('/admin/project-form');
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    try {
-      const url = selectedProject 
-        ? `/api/projects/${selectedProject.id}`
-        : '/api/projects';
-      
-      const method = selectedProject ? 'PUT' : 'POST';
-      
-      const response = await fetch(url, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...formData,
-          budget: parseFloat(formData.budget)
-        }),
-      });
-      
-      if (response.ok) {
-        await fetchProjects();
-        resetForm();
-      }
-    } catch (error) {
-      console.error('Error saving project:', error);
-    }
-  };
 
-  const resetForm = () => {
-    setFormData({
-      title: '',
-      description: '',
-      category: '',
-      location: '',
-      start_date: '',
-      end_date: '',
-      budget: '',
-      status: 'active',
-      image_url: '',
-      gallery_urls: []
-    });
-    setSelectedProject(null);
-    setIsEditing(false);
-    setIsCreating(false);
-  };
 
   const filteredProjects = projects.filter(project =>
     project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
