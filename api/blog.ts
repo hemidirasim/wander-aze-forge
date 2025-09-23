@@ -102,11 +102,6 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
         _method
       } = req.body;
 
-      if (!title || !content || !author) {
-        res.status(400).json({ error: 'Title, content, and author are required' });
-        return;
-      }
-
       // Handle DELETE request
       if (_method === 'DELETE' && id) {
         console.log('Deleting blog post with ID:', id);
@@ -127,6 +122,12 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
           success: true,
           message: 'Blog post deleted successfully'
         });
+        return;
+      }
+
+      // Validate required fields for CREATE and UPDATE operations
+      if (_method !== 'DELETE' && (!title || !content || !author)) {
+        res.status(400).json({ error: 'Title, content, and author are required' });
         return;
       }
 
