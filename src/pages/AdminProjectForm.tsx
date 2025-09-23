@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
+import GalleryUpload from '@/components/GalleryUpload';
 import { 
   ArrowLeft,
   Save,
@@ -22,6 +23,17 @@ import {
   X
 } from 'lucide-react';
 
+interface UploadedImage {
+  id: string;
+  url: string;
+  filename: string;
+  size: number;
+  uploadedAt: string;
+  description?: string;
+  alt?: string;
+  isMain?: boolean;
+}
+
 interface ProjectFormData {
   title: string;
   description: string;
@@ -33,6 +45,7 @@ interface ProjectFormData {
   status: string;
   image_url: string;
   gallery_urls: string[];
+  galleryImages: UploadedImage[];
 }
 
 const AdminProjectForm: React.FC = () => {
@@ -50,7 +63,8 @@ const AdminProjectForm: React.FC = () => {
     budget: '',
     status: 'active',
     image_url: '',
-    gallery_urls: []
+    gallery_urls: [],
+    galleryImages: []
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -80,7 +94,15 @@ const AdminProjectForm: React.FC = () => {
           budget: project.budget?.toString() || '',
           status: project.status || 'active',
           image_url: project.image_url || '',
-          gallery_urls: project.gallery_urls || []
+          gallery_urls: project.gallery_urls || [],
+          galleryImages: project.gallery_urls?.map((url: string, index: number) => ({
+            id: `existing-${index}`,
+            url: url,
+            filename: `image-${index + 1}.jpg`,
+            size: 0,
+            uploadedAt: new Date().toISOString(),
+            isMain: index === 0
+          })) || []
         });
       }
     } catch (error) {
@@ -90,7 +112,7 @@ const AdminProjectForm: React.FC = () => {
     }
   };
 
-  const handleInputChange = (field: keyof ProjectFormData, value: string | string[]) => {
+  const handleInputChange = (field: keyof ProjectFormData, value: string | string[] | UploadedImage[]) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
@@ -102,15 +124,20 @@ const AdminProjectForm: React.FC = () => {
       const url = isEditing ? `/api/projects/${id}` : '/api/projects';
       const method = isEditing ? 'PUT' : 'POST';
       
+      // Prepare project data with gallery images
+      const projectData = {
+        ...formData,
+        budget: parseFloat(formData.budget) || 0,
+        image_url: formData.galleryImages.length > 0 ? formData.galleryImages[0].url : formData.image_url,
+        gallery_urls: formData.galleryImages.map(img => img.url)
+      };
+      
       const response = await fetch(url, {
         method,
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          ...formData,
-          budget: parseFloat(formData.budget) || 0
-        }),
+        body: JSON.stringify(projectData),
       });
 
       if (response.ok) {
@@ -125,26 +152,6 @@ const AdminProjectForm: React.FC = () => {
     }
   };
 
-  const addGalleryImage = () => {
-    setFormData(prev => ({
-      ...prev,
-      gallery_urls: [...prev.gallery_urls, '']
-    }));
-  };
-
-  const removeGalleryImage = (index: number) => {
-    setFormData(prev => ({
-      ...prev,
-      gallery_urls: prev.gallery_urls.filter((_, i) => i !== index)
-    }));
-  };
-
-  const updateGalleryImage = (index: number, value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      gallery_urls: prev.gallery_urls.map((url, i) => i === index ? value : url)
-    }));
-  };
 
   if (loading) {
     return (
@@ -321,67 +328,17 @@ const AdminProjectForm: React.FC = () => {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="image_url">Main Project Image URL</Label>
-              <Input
-                id="image_url"
-                value={formData.image_url}
-                onChange={(e) => handleInputChange('image_url', e.target.value)}
-                placeholder="https://example.com/project-image.jpg"
+            <div className="space-y-4">
+              <Label>Project Images</Label>
+              <GalleryUpload
+                onImagesChange={(images) => handleInputChange('galleryImages', images)}
+                initialImages={formData.galleryImages}
+                maxImages={10}
+                allowedTypes={['image/jpeg', 'image/png', 'image/webp']}
+                maxSize={5}
               />
             </div>
 
-            {formData.image_url && (
-              <div className="space-y-2">
-                <Label>Image Preview</Label>
-                <div className="relative w-full h-48 rounded-lg overflow-hidden border">
-                  <img
-                    src={formData.image_url}
-                    alt="Project preview"
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      e.currentTarget.style.display = 'none';
-                    }}
-                  />
-                </div>
-              </div>
-            )}
-
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <Label>Gallery Images</Label>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={addGalleryImage}
-                  className="flex items-center space-x-2"
-                >
-                  <Plus className="w-4 h-4" />
-                  <span>Add Image</span>
-                </Button>
-              </div>
-
-              {formData.gallery_urls.map((url, index) => (
-                <div key={index} className="flex space-x-2">
-                  <Input
-                    value={url}
-                    onChange={(e) => updateGalleryImage(index, e.target.value)}
-                    placeholder={`Gallery image ${index + 1} URL`}
-                    className="flex-1"
-                  />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => removeGalleryImage(index)}
-                    className="text-red-600 hover:text-red-700"
-                  >
-                    <X className="w-4 h-4" />
-                  </Button>
-                </div>
-              ))}
-            </div>
           </CardContent>
         </Card>
 
