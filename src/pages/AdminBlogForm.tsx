@@ -8,6 +8,17 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { ArrowLeft, Save } from 'lucide-react';
+import GalleryUpload from '@/components/GalleryUpload';
+
+interface UploadedImage {
+  url: string;
+  filename: string;
+  size: number;
+  uploadedAt: string;
+  isMain?: boolean;
+  description?: string;
+  alt?: string;
+}
 
 interface BlogFormData {
   title: string;
@@ -19,6 +30,7 @@ interface BlogFormData {
   featured_image: string;
   status: string;
   featured: boolean;
+  galleryImages: UploadedImage[];
 }
 
 const AdminBlogForm = () => {
@@ -35,7 +47,8 @@ const AdminBlogForm = () => {
     tags: '',
     featured_image: '',
     status: 'draft',
-    featured: false
+    featured: false,
+    galleryImages: []
   });
 
   const [loading, setLoading] = useState(false);
@@ -56,6 +69,21 @@ const AdminBlogForm = () => {
       if (result.success) {
         const post = result.data.posts.find((p: any) => p.id === postId);
         if (post) {
+          // Convert gallery_images to UploadedImage format
+          let galleryImages: UploadedImage[] = [];
+          if (post.gallery_images && post.gallery_images.length > 0) {
+            galleryImages = post.gallery_images;
+          } else if (post.featured_image) {
+            // Fallback to featured_image if no gallery_images
+            galleryImages = [{
+              url: post.featured_image,
+              filename: 'featured-image',
+              size: 0,
+              uploadedAt: new Date().toISOString(),
+              isMain: true
+            }];
+          }
+
           setFormData({
             title: post.title || '',
             content: post.content || '',
@@ -65,7 +93,8 @@ const AdminBlogForm = () => {
             tags: post.tags ? post.tags.join(', ') : '',
             featured_image: post.featured_image || '',
             status: post.status || 'draft',
-            featured: post.featured || false
+            featured: post.featured || false,
+            galleryImages: galleryImages
           });
         }
       }
@@ -76,7 +105,7 @@ const AdminBlogForm = () => {
     }
   };
 
-  const handleInputChange = (field: keyof BlogFormData, value: string | boolean) => {
+  const handleInputChange = (field: keyof BlogFormData, value: string | boolean | UploadedImage[]) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
@@ -96,6 +125,9 @@ const AdminBlogForm = () => {
       
       const tagsArray = formData.tags ? formData.tags.split(',').map(tag => tag.trim()).filter(tag => tag) : [];
       
+      // Set featured_image from first gallery image if available
+      const featuredImage = formData.galleryImages.length > 0 ? formData.galleryImages[0].url : formData.featured_image;
+      
       const requestData = {
         title: formData.title,
         content: formData.content,
@@ -103,7 +135,8 @@ const AdminBlogForm = () => {
         author: formData.author,
         category: formData.category,
         tags: tagsArray,
-        featured_image: formData.featured_image,
+        featured_image: featuredImage,
+        gallery_images: formData.galleryImages,
         status: formData.status,
         featured: formData.featured,
         ...(isEditing && { id: parseInt(id!), _method: 'PUT' })
@@ -244,12 +277,12 @@ const AdminBlogForm = () => {
             </div>
 
             <div>
-              <Label htmlFor="featured_image">Featured Image URL</Label>
-              <Input
-                id="featured_image"
-                value={formData.featured_image}
-                onChange={(e) => handleInputChange('featured_image', e.target.value)}
-                placeholder="https://example.com/image.jpg"
+              <Label>Blog Images</Label>
+              <GalleryUpload
+                initialImages={formData.galleryImages}
+                onImagesChange={(images) => handleInputChange('galleryImages', images)}
+                maxImages={10}
+                allowMultiple={true}
               />
             </div>
           </CardContent>

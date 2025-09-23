@@ -95,8 +95,11 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
         category,
         tags,
         featured_image,
+        gallery_images,
         status = 'published',
-        featured = false
+        featured = false,
+        id,
+        _method
       } = req.body;
 
       if (!title || !content || !author) {
@@ -104,12 +107,57 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
         return;
       }
 
+      // Handle DELETE request
+      if (_method === 'DELETE' && id) {
+        const deleteResult = await client.query(
+          'DELETE FROM blog_posts WHERE id = $1 RETURNING id',
+          [id]
+        );
+        
+        if (deleteResult.rows.length === 0) {
+          res.status(404).json({ error: 'Blog post not found' });
+          return;
+        }
+        
+        res.status(200).json({
+          success: true,
+          message: 'Blog post deleted successfully'
+        });
+        return;
+      }
+
+      // Handle UPDATE request
+      if (_method === 'PUT' && id) {
+        const updateResult = await client.query(
+          `UPDATE blog_posts SET 
+            title = $1, content = $2, excerpt = $3, author = $4, category = $5, 
+            tags = $6, featured_image = $7, gallery_images = $8, status = $9, featured = $10,
+            updated_at = CURRENT_TIMESTAMP
+          WHERE id = $11 RETURNING *`,
+          [title, content, excerpt, author, category, tags, featured_image, 
+           JSON.stringify(gallery_images || []), status, featured, id]
+        );
+        
+        if (updateResult.rows.length === 0) {
+          res.status(404).json({ error: 'Blog post not found' });
+          return;
+        }
+        
+        res.status(200).json({
+          success: true,
+          data: updateResult.rows[0]
+        });
+        return;
+      }
+
+      // Handle CREATE request
       const result = await client.query(
         `INSERT INTO blog_posts (
-          title, content, excerpt, author, category, tags, featured_image, status, featured
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+          title, content, excerpt, author, category, tags, featured_image, gallery_images, status, featured
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
         RETURNING *`,
-        [title, content, excerpt, author, category, tags, featured_image, status, featured]
+        [title, content, excerpt, author, category, tags, featured_image, 
+         JSON.stringify(gallery_images || []), status, featured]
       );
 
       res.status(201).json({
