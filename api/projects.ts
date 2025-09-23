@@ -51,33 +51,72 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   if (req.method === 'POST') {
     try {
-      console.log('Creating new project:', req.body);
+      console.log('Processing project request:', req.body);
       
-      const { title, description, category, location, start_date, end_date, budget, status, image_url, gallery_urls } = req.body;
+      const { title, description, category, location, start_date, end_date, budget, status, image_url, gallery_urls, id, _method } = req.body;
       
-      const result = await pool.query(`
-        INSERT INTO projects (
-          title, description, category, location, 
-          start_date, end_date, budget, status, 
-          image_url, gallery_urls
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
-        RETURNING *
-      `, [
-        title, description, category, location,
-        start_date, end_date, budget, status,
-        image_url, gallery_urls || []
-      ]);
+      // Check if this is an update request
+      if (_method === 'PUT' && id) {
+        console.log('Updating project with ID:', id);
+        
+        const result = await pool.query(`
+          UPDATE projects SET
+            title = $1, description = $2, category = $3, location = $4,
+            start_date = $5, end_date = $6, budget = $7, status = $8,
+            image_url = $9, gallery_urls = $10, updated_at = NOW()
+          WHERE id = $11
+          RETURNING *
+        `, [
+          title, description, category, location,
+          start_date, end_date, budget, status,
+          image_url, gallery_urls || [], id
+        ]);
 
-      const project = {
-        ...result.rows[0],
-        gallery_urls: result.rows[0].gallery_urls || []
-      };
+        if (result.rows.length === 0) {
+          return res.status(404).json({
+            success: false,
+            error: 'Project not found'
+          });
+        }
 
-      return res.status(201).json({
-        success: true,
-        data: { project },
-        message: 'Project created successfully'
-      });
+        const project = {
+          ...result.rows[0],
+          gallery_urls: result.rows[0].gallery_urls || []
+        };
+
+        return res.status(200).json({
+          success: true,
+          data: { project },
+          message: 'Project updated successfully'
+        });
+      } else {
+        // Create new project
+        console.log('Creating new project');
+        
+        const result = await pool.query(`
+          INSERT INTO projects (
+            title, description, category, location, 
+            start_date, end_date, budget, status, 
+            image_url, gallery_urls
+          ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+          RETURNING *
+        `, [
+          title, description, category, location,
+          start_date, end_date, budget, status,
+          image_url, gallery_urls || []
+        ]);
+
+        const project = {
+          ...result.rows[0],
+          gallery_urls: result.rows[0].gallery_urls || []
+        };
+
+        return res.status(201).json({
+          success: true,
+          data: { project },
+          message: 'Project created successfully'
+        });
+      }
     } catch (error: any) {
       console.error('Database error:', error);
       return res.status(500).json({

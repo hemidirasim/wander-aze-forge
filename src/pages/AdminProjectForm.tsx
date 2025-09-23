@@ -127,15 +127,18 @@ const AdminProjectForm: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      const url = isEditing ? `/api/projects/${id}` : '/api/projects';
-      const method = isEditing ? 'PUT' : 'POST';
+      // Always use /api/projects endpoint
+      const url = '/api/projects';
+      const method = 'POST';
       
       // Prepare project data with gallery images
       const projectData = {
         ...formData,
         budget: parseFloat(formData.budget) || 0,
         image_url: formData.galleryImages.length > 0 ? formData.galleryImages[0].url : formData.image_url,
-        gallery_urls: formData.galleryImages.map(img => img.url)
+        gallery_urls: formData.galleryImages.map(img => img.url),
+        // Add edit information
+        ...(isEditing && { id: parseInt(id!), _method: 'PUT' })
       };
       
       const response = await fetch(url, {
