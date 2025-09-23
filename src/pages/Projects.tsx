@@ -112,7 +112,11 @@ const Projects = () => {
                   <CardTitle className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
                     {project.title}
                   </CardTitle>
-                  <p className="text-muted-foreground text-sm">{project.description}</p>
+                  <p className="text-muted-foreground text-sm">
+                    {project.description && project.description.length > 100 
+                      ? `${project.description.substring(0, 100)}...` 
+                      : project.description}
+                  </p>
                 </CardHeader>
                 
                 <CardContent className="space-y-3">
