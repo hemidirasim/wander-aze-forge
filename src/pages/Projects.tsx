@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import Navigation from '@/components/Navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -6,53 +7,45 @@ import { Link } from 'react-router-dom';
 import { Leaf, Users, Calendar, ArrowRight } from 'lucide-react';
 import projectsHero from '@/assets/projects-hero.jpg';
 
+interface Project {
+  id: number;
+  title: string;
+  description: string;
+  category: string;
+  location: string;
+  start_date: string;
+  end_date: string;
+  budget: number;
+  status: string;
+  image_url: string;
+  gallery_urls: string[];
+  created_at: string;
+  updated_at: string;
+}
+
 const Projects = () => {
-  const projects = [
-    {
-      id: 1,
-      title: "Eco-Tourism Trail Development", 
-      description: "Creating sustainable hiking trails that minimize environmental impact while providing economic opportunities for local communities.",
-      category: "Infrastructure",
-      status: "Ongoing",
-      location: "Guba Region",
-      impact: "500+ visitors/month",
-      completedDate: "2024",
-      image: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600&h=400&fit=crop",
-    },
-    {
-      id: 2,
-      title: "Village Homestay Network",
-      description: "Establishing a network of authentic homestays in remote mountain villages, providing income for families while preserving culture.",
-      category: "Community",
-      status: "Completed", 
-      location: "Khinalig & Laza",
-      impact: "25 families supported",
-      completedDate: "2023",
-      image: "https://images.unsplash.com/photo-1464822759844-d150356c4f2e?w=600&h=400&fit=crop",
-    },
-    {
-      id: 3,
-      title: "Wildlife Conservation Initiative",
-      description: "Protecting endangered species through research, education, and sustainable tourism practices in the Caucasus region.",
-      category: "Conservation",
-      status: "Ongoing",
-      location: "Caucasus Mountains",
-      impact: "3 species protected",
-      completedDate: "2025",
-      image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=400&fit=crop",
-    },
-    {
-      id: 4,
-      title: "Clean Mountain Initiative",
-      description: "Regular cleanup campaigns and waste management systems for popular hiking destinations, keeping Azerbaijan's nature pristine.",
-      category: "Environmental",
-      status: "Completed",
-      location: "Multiple Regions",
-      impact: "50+ tons waste removed",
-      completedDate: "2023",
-      image: "https://images.unsplash.com/photo-1445308394109-4ec2920981b1?w=600&h=400&fit=crop",
-    },
-  ];
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchProjects();
+  }, []);
+
+  const fetchProjects = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('/api/projects');
+      const result = await response.json();
+      
+      if (result.success) {
+        setProjects(result.data.projects);
+      }
+    } catch (error) {
+      console.error('Error fetching projects:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -85,12 +78,18 @@ const Projects = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {projects.map((project) => (
+          {loading ? (
+            <div className="text-center py-20">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+              <p className="text-muted-foreground">Loading projects...</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {projects.map((project) => (
               <Card key={project.id} className="group hover:shadow-elevated transition-all duration-300 overflow-hidden border-0 bg-card/80 backdrop-blur-sm">
                 <div className="relative h-64 overflow-hidden">
                   <img 
-                    src={project.image} 
+                    src={project.image_url || 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600&h=400&fit=crop'} 
                     alt={project.title}
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
@@ -119,8 +118,8 @@ const Projects = () => {
                 <CardContent className="space-y-3">
                   <div className="flex items-center space-x-2 text-sm">
                     <Leaf className="w-4 h-4 text-primary" />
-                    <span className="font-medium">Impact:</span>
-                    <span className="text-muted-foreground">{project.impact}</span>
+                    <span className="font-medium">Budget:</span>
+                    <span className="text-muted-foreground">${project.budget?.toLocaleString()}</span>
                   </div>
                   <div className="flex items-center space-x-2 text-sm">
                     <Users className="w-4 h-4 text-primary" />
@@ -129,8 +128,11 @@ const Projects = () => {
                   </div>
                   <div className="flex items-center space-x-2 text-sm">
                     <Calendar className="w-4 h-4 text-primary" />
-                    <span className="font-medium">Year:</span>
-                    <span className="text-muted-foreground">{project.completedDate}</span>
+                    <span className="font-medium">Duration:</span>
+                    <span className="text-muted-foreground">
+                      {project.start_date ? new Date(project.start_date).getFullYear() : 'N/A'} - 
+                      {project.end_date ? new Date(project.end_date).getFullYear() : 'Ongoing'}
+                    </span>
                   </div>
                 </CardContent>
                 
@@ -144,7 +146,8 @@ const Projects = () => {
                 </CardFooter>
               </Card>
             ))}
-          </div>
+            </div>
+          )}
         </div>
       </section>
 
