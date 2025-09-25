@@ -91,11 +91,11 @@ const Index = () => {
           <h1 className="text-6xl md:text-8xl font-bold mb-8 leading-tight">
             {heroData?.title || 'Discover'}
             <span className="block text-transparent bg-gradient-sunset bg-clip-text">
-              Azerbaijan
+              {heroData?.subtitle || 'Azerbaijan'}
             </span>
           </h1>
           <p className="text-xl md:text-3xl mb-12 text-white/90 leading-relaxed">
-            {heroData?.subtitle || 'Authentic mountain adventures • Sustainable tourism • Cultural immersion'}
+            {heroData?.description || 'Authentic mountain adventures • Sustainable tourism • Cultural immersion'}
           </p>
           
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
