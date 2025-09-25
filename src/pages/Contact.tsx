@@ -293,9 +293,9 @@ const Contact = () => {
               <Card className="border-0 bg-card/80 backdrop-blur-sm">
                 <CardHeader>
                   <CardTitle className="text-xl">{faqData?.title || 'Quick Answers'}</CardTitle>
-                  {faqData?.content && (
-                    <p className="text-muted-foreground text-sm">{faqData.content}</p>
-                  )}
+                  <p className="text-muted-foreground text-sm">
+                    {faqData?.contact_info?.faq_description || faqData?.content || 'Find quick answers to common questions about our tours, booking process, and what to expect.'}
+                  </p>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {faqData?.contact_info ? (
