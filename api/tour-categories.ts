@@ -36,6 +36,35 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
 async function handleGet(req: VercelRequest, res: VercelResponse) {
   try {
+    // Ensure table exists
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS tour_categories (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(100) NOT NULL UNIQUE,
+        slug VARCHAR(100) NOT NULL UNIQUE,
+        description TEXT,
+        image_url VARCHAR(500),
+        is_active BOOLEAN DEFAULT true,
+        sort_order INTEGER DEFAULT 0,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // Insert default categories if table is empty
+    const countResult = await pool.query('SELECT COUNT(*) FROM tour_categories');
+    if (countResult.rows[0].count === '0') {
+      await pool.query(`
+        INSERT INTO tour_categories (name, slug, description, image_url, is_active, sort_order) VALUES 
+        ('Trekking', 'trekking', 'Multi-day hiking adventures through Azerbaijan''s stunning mountain landscapes', '/tours-hero.jpg', true, 1),
+        ('Hiking', 'hiking', 'Day hikes and short trails perfect for all skill levels', '/tours-hero.jpg', true, 2),
+        ('Cultural Tours', 'cultural', 'Explore Azerbaijan''s rich history, traditions, and cultural heritage', '/tours-hero.jpg', true, 3),
+        ('Adventure Tours', 'adventure', 'Thrilling outdoor activities and extreme sports experiences', '/tours-hero.jpg', true, 4),
+        ('Tailor-Made', 'tailor-made', 'Custom tours designed specifically for your interests and schedule', '/tours-hero.jpg', true, 5)
+        ON CONFLICT (slug) DO NOTHING
+      `);
+    }
+
     const { id } = req.query;
     
     if (id) {
@@ -71,7 +100,8 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
     console.error('Error fetching tour categories:', error);
     return res.status(500).json({
       success: false,
-      error: 'Failed to fetch tour categories'
+      error: 'Failed to fetch tour categories',
+      message: error instanceof Error ? error.message : 'Unknown error'
     });
   }
 }
