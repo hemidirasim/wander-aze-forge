@@ -100,11 +100,11 @@ const AdminReviews = () => {
 
       const data = await response.json();
       
-      if (data.success) {
+      if (response.ok) {
         await fetchReviews();
         resetForm();
       } else {
-        alert('Error saving review: ' + data.error);
+        alert('Error saving review: ' + (data.error || data.message || 'Unknown error'));
       }
     } catch (error) {
       console.error('Error saving review:', error);
@@ -136,10 +136,10 @@ const AdminReviews = () => {
 
       const data = await response.json();
       
-      if (data.success) {
+      if (response.ok) {
         await fetchReviews();
       } else {
-        alert('Error deleting review: ' + data.error);
+        alert('Error deleting review: ' + (data.error || data.message || 'Unknown error'));
       }
     } catch (error) {
       console.error('Error deleting review:', error);
