@@ -9,6 +9,13 @@ import { Badge } from '@/components/ui/badge';
 import { Clock, Users, MapPin, Star, CheckCircle, Calendar, Phone, ArrowLeft, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
+// Declare Fancybox for TypeScript
+declare global {
+  interface Window {
+    Fancybox: any;
+  }
+}
+
 interface TourData {
   id: number;
   title: string;
@@ -99,6 +106,31 @@ const TourDetail = () => {
       fetchTourDetail();
     }
   }, [id, category]);
+
+  // Initialize Fancybox for gallery images
+  useEffect(() => {
+    if (window.Fancybox && tour.gallery_images && tour.gallery_images.length > 0) {
+      window.Fancybox.bind('[data-fancybox="tour-gallery"]', {
+        Thumbs: {
+          autoStart: false,
+        },
+        Toolbar: {
+          display: {
+            left: ["infobar"],
+            middle: ["zoomIn", "zoomOut", "toggle1to1", "rotateCCW", "rotateCW", "flipX", "flipY"],
+            right: ["slideshow", "thumbs", "close"]
+          }
+        }
+      });
+    }
+
+    // Cleanup Fancybox when component unmounts
+    return () => {
+      if (window.Fancybox) {
+        window.Fancybox.destroy();
+      }
+    };
+  }, [tour.gallery_images]);
 
   if (loading) {
     return (
@@ -397,12 +429,19 @@ const TourDetail = () => {
                   {tour.gallery_images && tour.gallery_images.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       {tour.gallery_images.map((image, index) => (
-                        <img
+                        <a
                           key={index}
-                          src={image}
-                          alt={`Gallery image ${index + 1}`}
-                          className="w-full h-48 object-cover rounded-lg hover:scale-105 transition-transform duration-300"
-                        />
+                          href={image}
+                          data-fancybox="tour-gallery"
+                          data-caption={`${tour.title} - Image ${index + 1}`}
+                          className="block"
+                        >
+                          <img
+                            src={image}
+                            alt={`Gallery image ${index + 1}`}
+                            className="w-full h-48 object-cover rounded-lg hover:scale-105 transition-transform duration-300 cursor-pointer"
+                          />
+                        </a>
                       ))}
                     </div>
                   ) : (
