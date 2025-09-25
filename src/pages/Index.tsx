@@ -220,18 +220,17 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Customer Reviews */}
+      <DatabaseReviews />
+
       {/* Tour Category Gallery - 5 Photos Layout */}
       <TourCategoryGallery />
-
 
       {/* Plan Your Journey Contact Form */}
       <JourneyContactForm />
 
       {/* Latest Blog Stories */}
       <DatabaseBlog />
-
-      {/* Customer Reviews */}
-      <DatabaseReviews />
 
       {/* Business Partners */}
       <DatabasePartners />
