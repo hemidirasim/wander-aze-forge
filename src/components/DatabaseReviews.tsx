@@ -55,9 +55,7 @@ const DatabaseReviews = () => {
     );
   }
 
-  if (!reviews || reviews.length === 0) {
-    return null;
-  }
+  // Always show the section, even if no reviews
 
   return (
     <section className="py-24 px-4 bg-gradient-to-br from-muted/20 to-background">
@@ -71,65 +69,71 @@ const DatabaseReviews = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {reviews.map((review) => (
-            <Card key={review.id} className="group hover:shadow-elevated transition-all duration-300 overflow-hidden border-0 bg-card/80 backdrop-blur-sm hover:scale-105">
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <CardTitle className="text-lg font-bold text-foreground group-hover:text-primary transition-colors">
-                      {review.name}
-                    </CardTitle>
-                    <div className="flex items-center gap-2 mt-2">
-                      <div className="flex items-center">
-                        {[...Array(5)].map((_, i) => (
-                          <Star
-                            key={i}
-                            className={`w-4 h-4 ${
-                              i < review.rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
-                            }`}
-                          />
-                        ))}
+        {reviews && reviews.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {reviews.map((review) => (
+              <Card key={review.id} className="group hover:shadow-elevated transition-all duration-300 overflow-hidden border-0 bg-card/80 backdrop-blur-sm hover:scale-105">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <CardTitle className="text-lg font-bold text-foreground group-hover:text-primary transition-colors">
+                        {review.name}
+                      </CardTitle>
+                      <div className="flex items-center gap-2 mt-2">
+                        <div className="flex items-center">
+                          {[...Array(5)].map((_, i) => (
+                            <Star
+                              key={i}
+                              className={`w-4 h-4 ${
+                                i < review.rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
+                              }`}
+                            />
+                          ))}
+                        </div>
+                        <Badge variant="default" className="text-xs">
+                          {review.rating} Star{review.rating > 1 ? 's' : ''}
+                        </Badge>
                       </div>
-                      <Badge variant="default" className="text-xs">
-                        {review.rating} Star{review.rating > 1 ? 's' : ''}
-                      </Badge>
                     </div>
                   </div>
-                </div>
-              </CardHeader>
-              
-              <CardContent>
-                <p className="text-muted-foreground leading-relaxed mb-4 line-clamp-4">
-                  "{review.review_text}"
-                </p>
+                </CardHeader>
                 
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    {review.source_logo && (
-                      <img
-                        src={review.source_logo}
-                        alt={review.source}
-                        className="h-6 w-auto max-w-20 object-contain"
-                      />
+                <CardContent>
+                  <p className="text-muted-foreground leading-relaxed mb-4 line-clamp-4">
+                    "{review.review_text}"
+                  </p>
+                  
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      {review.source_logo && (
+                        <img
+                          src={review.source_logo}
+                          alt={review.source}
+                          className="h-6 w-auto max-w-20 object-contain"
+                        />
+                      )}
+                      <span className="text-sm text-muted-foreground">{review.source}</span>
+                    </div>
+                    {review.source_url && (
+                      <a
+                        href={review.source_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary hover:text-primary/80 transition-colors"
+                      >
+                        <ExternalLink className="w-4 h-4" />
+                      </a>
                     )}
-                    <span className="text-sm text-muted-foreground">{review.source}</span>
                   </div>
-                  {review.source_url && (
-                    <a
-                      href={review.source_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-primary hover:text-primary/80 transition-colors"
-                    >
-                      <ExternalLink className="w-4 h-4" />
-                    </a>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center">
+            <p className="text-muted-foreground text-lg">No reviews available at the moment.</p>
+          </div>
+        )}
       </div>
     </section>
   );
