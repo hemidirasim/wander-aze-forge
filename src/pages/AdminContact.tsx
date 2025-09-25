@@ -24,16 +24,10 @@ const AdminContact = () => {
   const [contactData, setContactData] = useState<ContactSection[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [editingSection, setEditingSection] = useState<string | null>('office_info');
+  const [editingSection, setEditingSection] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     title: '',
     content: '',
-    contact_info: {
-      phone: '',
-      email: '',
-      address: '',
-      working_hours: ''
-    },
     image_url: ''
   });
 
@@ -142,31 +136,12 @@ const AdminContact = () => {
     setFormData({ 
       title: '', 
       content: '', 
-      contact_info: {
-        phone: '',
-        email: '',
-        address: '',
-        working_hours: '',
-        emergency_phone: '',
-        emergency_email: '',
-        available: ''
-      },
-      image_url: '', 
-      galleryImages: [] 
+      image_url: '' 
     });
   };
 
-  const handleContactInfoChange = (field: string, value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      contact_info: {
-        ...prev.contact_info,
-        [field]: value
-      }
-    }));
-  };
 
-  const handleInputChange = (field: string, value: string | UploadedImage[]) => {
+  const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
@@ -200,7 +175,7 @@ const AdminContact = () => {
 
         <div className="space-y-6">
           {contactData
-            .filter(section => ['hero', 'office_info'].includes(section.section))
+            .filter(section => ['hero'].includes(section.section))
             .map((section) => (
           <Card key={section.id}>
             <CardHeader>
@@ -241,45 +216,6 @@ const AdminContact = () => {
                     />
                   </div>
 
-                  {/* Contact Information Fields */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="phone">Phone</Label>
-                      <Input
-                        id="phone"
-                        value={formData.contact_info.phone}
-                        onChange={(e) => handleContactInfoChange('phone', e.target.value)}
-                        placeholder="Phone number"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="email">Email</Label>
-                      <Input
-                        id="email"
-                        value={formData.contact_info.email}
-                        onChange={(e) => handleContactInfoChange('email', e.target.value)}
-                        placeholder="Email address"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="address">Address</Label>
-                      <Input
-                        id="address"
-                        value={formData.contact_info.address}
-                        onChange={(e) => handleContactInfoChange('address', e.target.value)}
-                        placeholder="Physical address"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="working_hours">Working Hours</Label>
-                      <Input
-                        id="working_hours"
-                        value={formData.contact_info.working_hours}
-                        onChange={(e) => handleContactInfoChange('working_hours', e.target.value)}
-                        placeholder="Working hours"
-                      />
-                    </div>
-                  </div>
 
 
                   <div className="flex gap-2">
@@ -304,35 +240,6 @@ const AdminContact = () => {
                     </div>
                   </div>
                   
-                  {/* Display Contact Information */}
-                  {section.contact_info && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                      {section.contact_info.phone && (
-                        <div className="flex items-center gap-2">
-                          <Phone className="w-4 h-4 text-primary" />
-                          <span className="text-sm">{section.contact_info.phone}</span>
-                        </div>
-                      )}
-                      {section.contact_info.email && (
-                        <div className="flex items-center gap-2">
-                          <Mail className="w-4 h-4 text-primary" />
-                          <span className="text-sm">{section.contact_info.email}</span>
-                        </div>
-                      )}
-                      {section.contact_info.address && (
-                        <div className="flex items-center gap-2">
-                          <MapPin className="w-4 h-4 text-primary" />
-                          <span className="text-sm">{section.contact_info.address}</span>
-                        </div>
-                      )}
-                      {section.contact_info.working_hours && (
-                        <div className="flex items-center gap-2">
-                          <Clock className="w-4 h-4 text-primary" />
-                          <span className="text-sm">{section.contact_info.working_hours}</span>
-                        </div>
-                      )}
-                    </div>
-                  )}
                   
                   {section.image_url && (
                     <div className="mt-4">
