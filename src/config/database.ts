@@ -416,6 +416,41 @@ We believe that the best adventures come from combining professional expertise w
     ON CONFLICT DO NOTHING
   `);
 
+    // Create hero_section table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS hero_section (
+        id SERIAL PRIMARY KEY,
+        title VARCHAR(255) NOT NULL,
+        subtitle VARCHAR(500),
+        description TEXT,
+        image_url VARCHAR(500),
+        button1_text VARCHAR(100),
+        button1_link VARCHAR(255),
+        button2_text VARCHAR(100),
+        button2_link VARCHAR(255),
+        is_active BOOLEAN DEFAULT true,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // Insert default hero section data
+    await client.query(`
+      INSERT INTO hero_section (title, subtitle, description, image_url, button1_text, button1_link, button2_text, button2_link, is_active) VALUES 
+      (
+        'Discover Azerbaijan',
+        'Authentic mountain adventures • Sustainable tourism • Cultural immersion',
+        'Experience the breathtaking beauty of Azerbaijan through our carefully crafted adventure tours. From the majestic Caucasus Mountains to ancient cultural sites, discover the hidden gems of this incredible country.',
+        '/hero-mountain-custom.jpg',
+        'Explore Tours',
+        '/tours',
+        'Our Story',
+        '/about',
+        true
+      )
+      ON CONFLICT DO NOTHING
+    `);
+
     client.release();
     console.log('Database tables initialized successfully');
     return true;

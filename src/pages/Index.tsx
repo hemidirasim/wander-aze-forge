@@ -17,10 +17,12 @@ const heroImage = '/hero-mountain-custom.jpg';
 const Index = () => {
   const [featuredTours, setFeaturedTours] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [heroData, setHeroData] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchFeaturedTours();
+    fetchHeroData();
   }, []);
 
   const fetchFeaturedTours = async () => {
@@ -37,6 +39,19 @@ const Index = () => {
       console.error('Error fetching featured tours:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchHeroData = async () => {
+    try {
+      const response = await fetch('/api/hero-section');
+      const data = await response.json();
+      
+      if (data.success) {
+        setHeroData(data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching hero data:', error);
     }
   };
 
@@ -67,28 +82,28 @@ const Index = () => {
       <section className="relative h-screen flex items-center justify-center">
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: `url(${heroImage})` }}
+          style={{ backgroundImage: `url(${heroData?.image_url || heroImage})` }}
         />
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent" />
         
         {/* Hero Content */}
         <div className="relative z-10 text-center text-white max-w-5xl px-4">
           <h1 className="text-6xl md:text-8xl font-bold mb-8 leading-tight">
-            Discover
+            {heroData?.title || 'Discover'}
             <span className="block text-transparent bg-gradient-sunset bg-clip-text">
               Azerbaijan
             </span>
           </h1>
           <p className="text-xl md:text-3xl mb-12 text-white/90 leading-relaxed">
-            Authentic mountain adventures • Sustainable tourism • Cultural immersion
+            {heroData?.subtitle || 'Authentic mountain adventures • Sustainable tourism • Cultural immersion'}
           </p>
           
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
             <Button size="lg" variant="adventure" asChild className="text-lg px-8 py-4">
-              <Link to="/tours">Explore Tours</Link>
+              <Link to={heroData?.button1_link || '/tours'}>{heroData?.button1_text || 'Explore Tours'}</Link>
             </Button>
             <Button size="lg" variant="hero-outline" asChild className="text-lg px-8 py-4">
-              <Link to="/about">Our Story</Link>
+              <Link to={heroData?.button2_link || '/about'}>{heroData?.button2_text || 'Our Story'}</Link>
             </Button>
           </div>
         </div>
