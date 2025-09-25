@@ -22,42 +22,9 @@ const Tours = () => {
     <div className="min-h-screen bg-background">
       <Navigation />
       
-      {/* Hero Section */}
-      <section className="relative h-[60vh] flex items-center justify-center">
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: `url(${toursHero})` }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-transparent" />
-        <div className="relative z-10 text-center text-white max-w-4xl px-4">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6">Adventure Tours</h1>
-          <p className="text-xl md:text-2xl mb-8 text-white/90">
-            Explore Azerbaijan's pristine wilderness with expert local guides
-          </p>
-          
-          {/* Compact Category Selection */}
-          <div className="flex flex-wrap justify-center gap-3 mb-6">
-            <Link
-              to="/tours"
-              className="px-4 py-2 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full text-sm font-medium hover:bg-white/30 transition-smooth"
-            >
-              All Tours
-            </Link>
-            {tourCategories.map((category) => (
-              <Link
-                key={category.id}
-                to={`/tours/${category.id}`}
-                className="px-4 py-2 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full text-sm font-medium hover:bg-white/30 transition-smooth"
-              >
-                {category.name}
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* Tour Categories */}
-      <section className="py-20 px-4">
+      <section className="pt-32 pb-20 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">

@@ -158,19 +158,10 @@ const Blog = () => {
     <div className="min-h-screen bg-background">
       <Navigation />
       
-      {/* Hero Section */}
-      <section className="pt-24 pb-16 px-4 bg-gradient-mountain">
-        <div className="container mx-auto text-center">
-          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6">Adventure Blog</h1>
-          <p className="text-xl md:text-2xl text-white/90 max-w-2xl mx-auto">
-            Stories, guides, and insights from the trails of Azerbaijan
-          </p>
-        </div>
-      </section>
 
       {/* Featured Post */}
       {featuredPost && (
-        <section className="py-16 px-4">
+        <section className="pt-32 pb-16 px-4">
           <div className="container mx-auto">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-bold text-foreground mb-4">Featured Story</h2>

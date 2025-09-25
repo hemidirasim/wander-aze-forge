@@ -51,23 +51,9 @@ const Projects = () => {
     <div className="min-h-screen bg-background">
       <Navigation />
       
-      {/* Hero Section */}
-      <section className="relative h-[70vh] flex items-center justify-center">
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: `url(${projectsHero})` }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-transparent" />
-        <div className="relative z-10 text-center text-white max-w-4xl px-4">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6">Our Projects</h1>
-          <p className="text-xl md:text-2xl mb-8 text-white/90">
-            Building sustainable tourism that benefits communities and protects nature
-          </p>
-        </div>
-      </section>
 
       {/* Projects Section */}
-      <section className="py-20 px-4">
+      <section className="pt-32 pb-20 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
