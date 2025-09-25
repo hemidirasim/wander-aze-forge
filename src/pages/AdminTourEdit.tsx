@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import GalleryUpload from '@/components/GalleryUpload';
+import TourProgramAccordionAdmin from '@/components/TourProgramAccordionAdmin';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -22,8 +23,7 @@ import {
   Car,
   Camera,
   DollarSign,
-  ArrowLeft,
-  Check
+  ArrowLeft
 } from 'lucide-react';
 
 interface GalleryImage {
@@ -34,6 +34,20 @@ interface GalleryImage {
   uploadedAt: string;
   description?: string;
   alt?: string;
+}
+
+interface TourProgramDay {
+  id: string;
+  dayNumber: number;
+  title: string;
+  description: string;
+  activities: string[];
+  accommodation: string;
+  meals: string[];
+  transportation: string;
+  highlights: string[];
+  difficultyLevel: string;
+  durationHours: number;
 }
 
 interface ExtendedTourForm {
@@ -89,6 +103,9 @@ interface ExtendedTourForm {
   itinerary: string;
   requirements: string;
   
+  // Tour Programs
+  tourPrograms: TourProgramDay[];
+  
   // Status
   isActive: boolean;
   featured: boolean;
@@ -98,7 +115,7 @@ const AdminTourEdit: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [formData, setFormData] = useState<ExtendedTourForm>({
     // Basic Info
@@ -109,16 +126,16 @@ const AdminTourEdit: React.FC = () => {
     difficulty: '',
     price: '',
     maxParticipants: '',
-    rating: '',
-    reviewsCount: '',
+    rating: '4.5',
+    reviewsCount: '0',
     groupSize: '',
     location: '',
     
     // Overview
     overview: '',
-    bestSeason: '',
+    bestSeason: 'May to October',
     meetingPoint: '',
-    languages: '',
+    languages: 'English, Azerbaijani, Russian',
     
     // Accommodation & Food
     accommodationDetails: '',
@@ -126,8 +143,8 @@ const AdminTourEdit: React.FC = () => {
     waterSnacksDetails: '',
     
     // Equipment
-    providedEquipment: [],
-    whatToBring: [],
+    providedEquipment: [''],
+    whatToBring: [''],
     
     // Transport
     transportDetails: '',
@@ -138,20 +155,23 @@ const AdminTourEdit: React.FC = () => {
     photographyService: '',
     
     // Price
-    priceIncludes: [],
+    priceIncludes: [''],
     groupDiscounts: '',
     earlyBirdDiscount: '',
     
     // Contact & Booking
-    contactPhone: '',
+    contactPhone: '+994 51 400 90 91',
     bookingTerms: '',
     
     // Highlights, Includes, Excludes
-    highlights: [],
-    includes: [],
-    excludes: [],
+    highlights: [''],
+    includes: [''],
+    excludes: [''],
     itinerary: '',
     requirements: '',
+    
+    // Tour Programs
+    tourPrograms: [],
     
     // Status
     isActive: true,
@@ -195,16 +215,16 @@ const AdminTourEdit: React.FC = () => {
             difficulty: tour.difficulty || '',
             price: tour.price?.toString() || '',
             maxParticipants: tour.max_participants?.toString() || '',
-            rating: tour.rating?.toString() || '',
-            reviewsCount: tour.reviews_count?.toString() || '',
+            rating: tour.rating?.toString() || '4.5',
+            reviewsCount: tour.reviews_count?.toString() || '0',
             groupSize: tour.group_size || '',
             location: tour.location || '',
             
             // Overview
             overview: tour.overview || '',
-            bestSeason: tour.best_season || '',
+            bestSeason: tour.best_season || 'May to October',
             meetingPoint: tour.meeting_point || '',
-            languages: tour.languages || '',
+            languages: tour.languages || 'English, Azerbaijani, Russian',
             
             // Accommodation & Food
             accommodationDetails: tour.accommodation_details || '',
@@ -212,8 +232,8 @@ const AdminTourEdit: React.FC = () => {
             waterSnacksDetails: tour.water_snacks_details || '',
             
             // Equipment
-            providedEquipment: tour.provided_equipment || [],
-            whatToBring: tour.what_to_bring || [],
+            providedEquipment: tour.provided_equipment && tour.provided_equipment.length > 0 ? tour.provided_equipment : [''],
+            whatToBring: tour.what_to_bring && tour.what_to_bring.length > 0 ? tour.what_to_bring : [''],
             
             // Transport
             transportDetails: tour.transport_details || '',
@@ -230,20 +250,23 @@ const AdminTourEdit: React.FC = () => {
             photographyService: tour.photography_service || '',
             
             // Price
-            priceIncludes: tour.price_includes || [],
+            priceIncludes: tour.price_includes && tour.price_includes.length > 0 ? tour.price_includes : [''],
             groupDiscounts: tour.group_discounts || '',
             earlyBirdDiscount: tour.early_bird_discount || '',
             
             // Contact & Booking
-            contactPhone: tour.contact_phone || '',
+            contactPhone: tour.contact_phone || '+994 51 400 90 91',
             bookingTerms: tour.booking_terms || '',
             
             // Highlights, Includes, Excludes
-            highlights: tour.highlights || [],
-            includes: tour.includes || [],
-            excludes: tour.excludes || [],
+            highlights: tour.highlights && tour.highlights.length > 0 ? tour.highlights : [''],
+            includes: tour.includes && tour.includes.length > 0 ? tour.includes : [''],
+            excludes: tour.excludes && tour.excludes.length > 0 ? tour.excludes : [''],
             itinerary: tour.itinerary || '',
             requirements: tour.requirements || '',
+            
+            // Tour Programs
+            tourPrograms: tour.tour_programs || [],
             
             // Status
             isActive: tour.is_active !== false,
@@ -268,9 +291,7 @@ const AdminTourEdit: React.FC = () => {
     }
   };
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const handleInputChange = (field: keyof ExtendedTourForm, value: string | boolean | GalleryImage[]) => {
+  const handleInputChange = (field: keyof ExtendedTourForm, value: string | boolean | GalleryImage[] | TourProgramDay[]) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
@@ -293,13 +314,11 @@ const AdminTourEdit: React.FC = () => {
     }));
   };
 
-  const addArrayField = (field: 'highlights' | 'includes' | 'excludes' | 'providedEquipment' | 'whatToBring' | 'priceIncludes', value: string) => {
-    if (value.trim()) {
-      setFormData(prev => ({
-        ...prev,
-        [field]: [...prev[field], value.trim()]
-      }));
-    }
+  const addArrayField = (field: 'highlights' | 'includes' | 'excludes' | 'providedEquipment' | 'whatToBring' | 'priceIncludes') => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: [...prev[field], '']
+    }));
   };
 
   const removeArrayField = (field: 'highlights' | 'includes' | 'excludes' | 'providedEquipment' | 'whatToBring' | 'priceIncludes', index: number) => {
@@ -314,18 +333,19 @@ const AdminTourEdit: React.FC = () => {
     setIsSubmitting(true);
 
     try {
+      // Prepare form data
       const tourData = {
         title: formData.title.trim(),
         description: formData.description.trim(),
-        category: formData.category.trim(),
-        duration: formData.duration.trim(),
-        difficulty: formData.difficulty.trim(),
+        category: formData.category,
+        duration: formData.duration,
+        difficulty: formData.difficulty,
         price: parseFloat(formData.price),
         maxParticipants: parseInt(formData.maxParticipants),
         
         // Extended fields
-        rating: parseFloat(formData.rating) || 4.5,
-        reviewsCount: parseInt(formData.reviewsCount) || 0,
+        rating: parseFloat(formData.rating),
+        reviewsCount: parseInt(formData.reviewsCount),
         groupSize: formData.groupSize.trim(),
         location: formData.location.trim(),
         
@@ -360,6 +380,8 @@ const AdminTourEdit: React.FC = () => {
         itinerary: formData.itinerary.trim(),
         requirements: formData.requirements.trim(),
         
+        tourPrograms: formData.tourPrograms,
+        
         isActive: formData.isActive,
         featured: formData.featured
       };
@@ -379,11 +401,11 @@ const AdminTourEdit: React.FC = () => {
         alert('Tour updated successfully!');
         navigate('/admin/tours');
       } else {
-        alert(`Failed to update tour: ${result.error || 'Unknown error'}`);
+        throw new Error(result.error || 'Failed to update tour');
       }
     } catch (error) {
       console.error('Error updating tour:', error);
-      alert('Failed to update tour. Please try again.');
+      alert(`Error updating tour: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setIsSubmitting(false);
     }
@@ -391,7 +413,7 @@ const AdminTourEdit: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
           <p className="mt-4 text-gray-600">Loading tour data...</p>
@@ -401,39 +423,34 @@ const AdminTourEdit: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <div className="flex items-center space-x-4">
-              <Button variant="ghost" onClick={() => navigate('/admin/tours')} className="flex items-center space-x-2">
-                <ArrowLeft className="w-4 h-4" />
-                <span>Back to Tours</span>
-              </Button>
-              <div>
-                <h1 className="text-xl font-bold text-gray-900">Edit Tour</h1>
-                <p className="text-sm text-gray-500">Update tour information</p>
-              </div>
-            </div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-6">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="mb-8">
+          <div className="flex items-center space-x-4 mb-4">
+            <Button variant="ghost" onClick={() => navigate('/admin/tours')} className="flex items-center space-x-2">
+              <ArrowLeft className="w-4 h-4" />
+              <span>Back to Tours</span>
+            </Button>
           </div>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Edit Tour</h1>
+          <p className="text-gray-600">Update all tour information and details</p>
         </div>
-      </header>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <form onSubmit={handleSubmit} className="space-y-8">
+          
           {/* 1. Basic Information */}
           <Card className="shadow-lg">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
-                <Users className="w-5 h-5 text-blue-500" />
+                <MapPin className="w-5 h-5 text-blue-500" />
                 <span>Basic Information</span>
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="title">Title *</Label>
+                  <Label htmlFor="title">Tour Title *</Label>
                   <Input
                     id="title"
                     value={formData.title}
@@ -488,7 +505,7 @@ const AdminTourEdit: React.FC = () => {
                     type="number"
                     value={formData.price}
                     onChange={(e) => handleInputChange('price', e.target.value)}
-                    placeholder="Enter tour price"
+                    placeholder="Enter price"
                     required
                   />
                 </div>
@@ -499,80 +516,31 @@ const AdminTourEdit: React.FC = () => {
                     type="number"
                     value={formData.maxParticipants}
                     onChange={(e) => handleInputChange('maxParticipants', e.target.value)}
-                    placeholder="Maximum number of participants"
+                    placeholder="Enter max participants"
                     required
                   />
                 </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="description">Description *</Label>
-                <Textarea
-                  id="description"
-                  value={formData.description}
-                  onChange={(e) => handleInputChange('description', e.target.value)}
-                  placeholder="Describe your tour in detail..."
-                  rows={4}
-                  required
-                />
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* 2. Rating & Reviews */}
-          <Card className="shadow-lg">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Star className="w-5 h-5 text-yellow-500" />
-                <span>Rating & Reviews</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="rating">Rating (1-5)</Label>
+                  <Label htmlFor="rating">Rating</Label>
                   <Input
                     id="rating"
                     type="number"
+                    step="0.1"
                     min="1"
                     max="5"
-                    step="0.1"
                     value={formData.rating}
                     onChange={(e) => handleInputChange('rating', e.target.value)}
                     placeholder="4.5"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="reviewsCount">Number of Reviews</Label>
+                  <Label htmlFor="reviewsCount">Reviews Count</Label>
                   <Input
                     id="reviewsCount"
                     type="number"
                     value={formData.reviewsCount}
                     onChange={(e) => handleInputChange('reviewsCount', e.target.value)}
-                    placeholder="50"
-                  />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* 3. Location & Group Details */}
-          <Card className="shadow-lg">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <MapPin className="w-5 h-5 text-red-500" />
-                <span>Location & Group Details</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <Label htmlFor="location">Location</Label>
-                  <Input
-                    id="location"
-                    value={formData.location}
-                    onChange={(e) => handleInputChange('location', e.target.value)}
-                    placeholder="e.g., Baku, Gabala, Sheki"
+                    placeholder="127"
                   />
                 </div>
                 <div className="space-y-2">
@@ -581,22 +549,53 @@ const AdminTourEdit: React.FC = () => {
                     id="groupSize"
                     value={formData.groupSize}
                     onChange={(e) => handleInputChange('groupSize', e.target.value)}
-                    placeholder="e.g., 2-8 people, Small groups"
+                    placeholder="e.g., 8-12 people"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="location">Location</Label>
+                  <Input
+                    id="location"
+                    value={formData.location}
+                    onChange={(e) => handleInputChange('location', e.target.value)}
+                    placeholder="e.g., Greater Caucasus Mountains"
                   />
                 </div>
               </div>
-
+              
               <div className="space-y-2">
-                <Label htmlFor="overview">Tour Overview</Label>
+                <Label htmlFor="description">Description *</Label>
+                <Textarea
+                  id="description"
+                  value={formData.description}
+                  onChange={(e) => handleInputChange('description', e.target.value)}
+                  placeholder="Enter detailed tour description"
+                  rows={4}
+                  required
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* 2. Overview Section */}
+          <Card className="shadow-lg">
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Clock className="w-5 h-5 text-yellow-500" />
+                <span>Overview</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="space-y-2">
+                <Label htmlFor="overview">Overview Description</Label>
                 <Textarea
                   id="overview"
                   value={formData.overview}
                   onChange={(e) => handleInputChange('overview', e.target.value)}
-                  placeholder="Brief overview of the tour experience..."
-                  rows={3}
+                  placeholder="Describe what makes this tour special and what participants can expect..."
+                  rows={4}
                 />
               </div>
-
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <Label htmlFor="bestSeason">Best Season</Label>
@@ -604,246 +603,38 @@ const AdminTourEdit: React.FC = () => {
                     id="bestSeason"
                     value={formData.bestSeason}
                     onChange={(e) => handleInputChange('bestSeason', e.target.value)}
-                    placeholder="e.g., May to October, All year"
+                    placeholder="May to October"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="meetingPoint">Meeting Point</Label>
+                  <Label htmlFor="languages">Languages</Label>
                   <Input
-                    id="meetingPoint"
-                    value={formData.meetingPoint}
-                    onChange={(e) => handleInputChange('meetingPoint', e.target.value)}
-                    placeholder="Where to meet for the tour"
+                    id="languages"
+                    value={formData.languages}
+                    onChange={(e) => handleInputChange('languages', e.target.value)}
+                    placeholder="English, Azerbaijani, Russian"
                   />
                 </div>
               </div>
-
               <div className="space-y-2">
-                <Label htmlFor="languages">Languages</Label>
-                <Input
-                  id="languages"
-                  value={formData.languages}
-                  onChange={(e) => handleInputChange('languages', e.target.value)}
-                  placeholder="e.g., English, Azerbaijani, Russian"
-                />
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* 4. Highlights */}
-          <Card className="shadow-lg">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Star className="w-5 h-5 text-yellow-500" />
-                <span>Tour Highlights</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                {formData.highlights.map((highlight, index) => (
-                  <div key={index} className="flex gap-2">
-                    <Input
-                      value={highlight}
-                      onChange={(e) => handleArrayFieldChange('highlights', index, e.target.value)}
-                      placeholder="Enter tour highlight"
-                    />
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => removeArrayField('highlights', index)}
-                    >
-                      <X className="w-4 h-4" />
-                    </Button>
-                  </div>
-                ))}
-                <div className="flex gap-2">
-                  <Input
-                    placeholder="Add highlight"
-                    onKeyPress={(e) => {
-                      if (e.key === 'Enter') {
-                        addArrayField('highlights', e.currentTarget.value);
-                        e.currentTarget.value = '';
-                      }
-                    }}
-                  />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={(e) => {
-                      const input = e.currentTarget.previousElementSibling as HTMLInputElement;
-                      addArrayField('highlights', input.value);
-                      input.value = '';
-                    }}
-                  >
-                    <Plus className="w-4 h-4" />
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* 5. What's Included */}
-          <Card className="shadow-lg">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Check className="w-5 h-5 text-yellow-500" />
-                <span>What's Included</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                {formData.includes.map((include, index) => (
-                  <div key={index} className="flex gap-2">
-                    <Input
-                      value={include}
-                      onChange={(e) => handleArrayFieldChange('includes', index, e.target.value)}
-                      placeholder="What's included in the tour"
-                    />
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => removeArrayField('includes', index)}
-                    >
-                      <X className="w-4 h-4" />
-                    </Button>
-                  </div>
-                ))}
-                <div className="flex gap-2">
-                  <Input
-                    placeholder="Add inclusion"
-                    onKeyPress={(e) => {
-                      if (e.key === 'Enter') {
-                        addArrayField('includes', e.currentTarget.value);
-                        e.currentTarget.value = '';
-                      }
-                    }}
-                  />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={(e) => {
-                      const input = e.currentTarget.previousElementSibling as HTMLInputElement;
-                      addArrayField('includes', input.value);
-                      input.value = '';
-                    }}
-                  >
-                    <Plus className="w-4 h-4" />
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* 6. What's Not Included */}
-          <Card className="shadow-lg">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <X className="w-5 h-5 text-red-500" />
-                <span>What's Not Included</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                {formData.excludes.map((exclude, index) => (
-                  <div key={index} className="flex gap-2">
-                    <Input
-                      value={exclude}
-                      onChange={(e) => handleArrayFieldChange('excludes', index, e.target.value)}
-                      placeholder="What's not included in the tour"
-                    />
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => removeArrayField('excludes', index)}
-                    >
-                      <X className="w-4 h-4" />
-                    </Button>
-                  </div>
-                ))}
-                <div className="flex gap-2">
-                  <Input
-                    placeholder="Add exclusion"
-                    onKeyPress={(e) => {
-                      if (e.key === 'Enter') {
-                        addArrayField('excludes', e.currentTarget.value);
-                        e.currentTarget.value = '';
-                      }
-                    }}
-                  />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={(e) => {
-                      const input = e.currentTarget.previousElementSibling as HTMLInputElement;
-                      addArrayField('excludes', input.value);
-                      input.value = '';
-                    }}
-                  >
-                    <Plus className="w-4 h-4" />
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* 7. Itinerary */}
-          <Card className="shadow-lg">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Clock className="w-5 h-5 text-purple-500" />
-                <span>Detailed Itinerary</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="itinerary">Day-by-day Itinerary</Label>
+                <Label htmlFor="meetingPoint">Meeting Point</Label>
                 <Textarea
-                  id="itinerary"
-                  value={formData.itinerary}
-                  onChange={(e) => handleInputChange('itinerary', e.target.value)}
-                  placeholder="Day 1: Arrival and welcome...
-Day 2: Morning hiking tour...
-Day 3: Cultural visits..."
-                  rows={8}
+                  id="meetingPoint"
+                  value={formData.meetingPoint}
+                  onChange={(e) => handleInputChange('meetingPoint', e.target.value)}
+                  placeholder="Describe where participants should meet..."
+                  rows={3}
                 />
               </div>
             </CardContent>
           </Card>
 
-          {/* 8. Requirements */}
-          <Card className="shadow-lg">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Users className="w-5 h-5 text-indigo-500" />
-                <span>Requirements</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="requirements">What Participants Need</Label>
-                <Textarea
-                  id="requirements"
-                  value={formData.requirements}
-                  onChange={(e) => handleInputChange('requirements', e.target.value)}
-                  placeholder="Physical fitness level, special equipment, documents needed..."
-                  rows={4}
-                />
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* 9. Accommodation & Food */}
+          {/* 3. Accommodation and Food */}
           <Card className="shadow-lg">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <Utensils className="w-5 h-5 text-orange-500" />
-                <span>Accommodation & Food</span>
+                <span>Accommodation and Food</span>
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -853,146 +644,109 @@ Day 3: Cultural visits..."
                   id="accommodationDetails"
                   value={formData.accommodationDetails}
                   onChange={(e) => handleInputChange('accommodationDetails', e.target.value)}
-                  placeholder="Hotel, guesthouse, camping details..."
+                  placeholder="Describe accommodation options..."
                   rows={3}
                 />
               </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <Label htmlFor="mealsDetails">Meals Details</Label>
-                  <Textarea
-                    id="mealsDetails"
-                    value={formData.mealsDetails}
-                    onChange={(e) => handleInputChange('mealsDetails', e.target.value)}
-                    placeholder="Breakfast, lunch, dinner arrangements..."
-                    rows={3}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="waterSnacksDetails">Water & Snacks</Label>
-                  <Textarea
-                    id="waterSnacksDetails"
-                    value={formData.waterSnacksDetails}
-                    onChange={(e) => handleInputChange('waterSnacksDetails', e.target.value)}
-                    placeholder="Water provided, snack arrangements..."
-                    rows={3}
-                  />
-                </div>
+              <div className="space-y-2">
+                <Label htmlFor="mealsDetails">Meals Details</Label>
+                <Textarea
+                  id="mealsDetails"
+                  value={formData.mealsDetails}
+                  onChange={(e) => handleInputChange('mealsDetails', e.target.value)}
+                  placeholder="Describe meal arrangements..."
+                  rows={3}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="waterSnacksDetails">Water & Snacks Details</Label>
+                <Textarea
+                  id="waterSnacksDetails"
+                  value={formData.waterSnacksDetails}
+                  onChange={(e) => handleInputChange('waterSnacksDetails', e.target.value)}
+                  placeholder="Describe water and snack provisions..."
+                  rows={2}
+                />
               </div>
             </CardContent>
           </Card>
 
-          {/* 10. Equipment */}
+          {/* 4. Equipment */}
           <Card className="shadow-lg">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
-                <Upload className="w-5 h-5 text-indigo-500" />
+                <Users className="w-5 h-5 text-purple-500" />
                 <span>Equipment</span>
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <Label>Provided Equipment</Label>
-                  <div className="space-y-2">
-                    {formData.providedEquipment.map((equipment, index) => (
-                      <div key={index} className="flex gap-2">
-                        <Input
-                          value={equipment}
-                          onChange={(e) => handleArrayFieldChange('providedEquipment', index, e.target.value)}
-                          placeholder="Equipment provided by tour"
-                        />
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          onClick={() => removeArrayField('providedEquipment', index)}
-                        >
-                          <X className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    ))}
-                    <div className="flex gap-2">
-                      <Input
-                        placeholder="Add provided equipment"
-                        onKeyPress={(e) => {
-                          if (e.key === 'Enter') {
-                            addArrayField('providedEquipment', e.currentTarget.value);
-                            e.currentTarget.value = '';
-                          }
-                        }}
-                      />
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={(e) => {
-                          const input = e.currentTarget.previousElementSibling as HTMLInputElement;
-                          addArrayField('providedEquipment', input.value);
-                          input.value = '';
-                        }}
-                      >
-                        <Plus className="w-4 h-4" />
-                      </Button>
-                    </div>
+              <div className="space-y-2">
+                <Label>Provided Equipment</Label>
+                {formData.providedEquipment.map((item, index) => (
+                  <div key={index} className="flex space-x-2">
+                    <Input
+                      value={item}
+                      onChange={(e) => handleArrayFieldChange('providedEquipment', index, e.target.value)}
+                      placeholder="Enter provided equipment"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => removeArrayField('providedEquipment', index)}
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
                   </div>
-                </div>
-
-                <div>
-                  <Label>What to Bring</Label>
-                  <div className="space-y-2">
-                    {formData.whatToBring.map((item, index) => (
-                      <div key={index} className="flex gap-2">
-                        <Input
-                          value={item}
-                          onChange={(e) => handleArrayFieldChange('whatToBring', index, e.target.value)}
-                          placeholder="Item participants should bring"
-                        />
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          onClick={() => removeArrayField('whatToBring', index)}
-                        >
-                          <X className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    ))}
-                    <div className="flex gap-2">
-                      <Input
-                        placeholder="Add required item"
-                        onKeyPress={(e) => {
-                          if (e.key === 'Enter') {
-                            addArrayField('whatToBring', e.currentTarget.value);
-                            e.currentTarget.value = '';
-                          }
-                        }}
-                      />
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={(e) => {
-                          const input = e.currentTarget.previousElementSibling as HTMLInputElement;
-                          addArrayField('whatToBring', input.value);
-                          input.value = '';
-                        }}
-                      >
-                        <Plus className="w-4 h-4" />
-                      </Button>
-                    </div>
+                ))}
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => addArrayField('providedEquipment')}
+                  className="w-full"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Provided Equipment
+                </Button>
+              </div>
+              
+              <div className="space-y-2">
+                <Label>What to Bring</Label>
+                {formData.whatToBring.map((item, index) => (
+                  <div key={index} className="flex space-x-2">
+                    <Input
+                      value={item}
+                      onChange={(e) => handleArrayFieldChange('whatToBring', index, e.target.value)}
+                      placeholder="Enter required items"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => removeArrayField('whatToBring', index)}
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
                   </div>
-                </div>
+                ))}
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => addArrayField('whatToBring')}
+                  className="w-full"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Required Item
+                </Button>
               </div>
             </CardContent>
           </Card>
 
-          {/* 11. Transport */}
+          {/* 5. Transport */}
           <Card className="shadow-lg">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
-                <Car className="w-5 h-5 text-amber-500" />
+                <Car className="w-5 h-5 text-indigo-500" />
                 <span>Transport</span>
               </CardTitle>
             </CardHeader>
@@ -1003,25 +757,24 @@ Day 3: Cultural visits..."
                   id="transportDetails"
                   value={formData.transportDetails}
                   onChange={(e) => handleInputChange('transportDetails', e.target.value)}
-                  placeholder="Vehicle type, driver, transportation arrangements..."
+                  placeholder="Describe transportation arrangements..."
                   rows={3}
                 />
               </div>
-
               <div className="space-y-2">
                 <Label htmlFor="pickupService">Pickup Service</Label>
                 <Textarea
                   id="pickupService"
                   value={formData.pickupService}
                   onChange={(e) => handleInputChange('pickupService', e.target.value)}
-                  placeholder="Hotel pickup, meeting point, pickup times..."
-                  rows={3}
+                  placeholder="Describe pickup service details..."
+                  rows={2}
                 />
               </div>
             </CardContent>
           </Card>
 
-          {/* 12. Media */}
+          {/* 6. Media */}
           <Card className="shadow-lg">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
@@ -1050,14 +803,14 @@ Day 3: Cultural visits..."
                   id="photographyService"
                   value={formData.photographyService}
                   onChange={(e) => handleInputChange('photographyService', e.target.value)}
-                  placeholder="Professional photography, photo opportunities..."
+                  placeholder="Describe photography services..."
                   rows={2}
                 />
               </div>
             </CardContent>
           </Card>
 
-          {/* 13. Price Details */}
+          {/* 7. Price Details */}
           <Card className="shadow-lg">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
@@ -1066,52 +819,36 @@ Day 3: Cultural visits..."
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div>
+              <div className="space-y-2">
                 <Label>Price Includes</Label>
-                <div className="space-y-2">
-                  {formData.priceIncludes.map((item, index) => (
-                    <div key={index} className="flex gap-2">
-                      <Input
-                        value={item}
-                        onChange={(e) => handleArrayFieldChange('priceIncludes', index, e.target.value)}
-                        placeholder="What's included in the price"
-                      />
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => removeArrayField('priceIncludes', index)}
-                      >
-                        <X className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  ))}
-                  <div className="flex gap-2">
+                {formData.priceIncludes.map((item, index) => (
+                  <div key={index} className="flex space-x-2">
                     <Input
-                      placeholder="Add price inclusion"
-                      onKeyPress={(e) => {
-                        if (e.key === 'Enter') {
-                          addArrayField('priceIncludes', e.currentTarget.value);
-                          e.currentTarget.value = '';
-                        }
-                      }}
+                      value={item}
+                      onChange={(e) => handleArrayFieldChange('priceIncludes', index, e.target.value)}
+                      placeholder="Enter what's included"
                     />
                     <Button
                       type="button"
                       variant="outline"
                       size="sm"
-                      onClick={(e) => {
-                        const input = e.currentTarget.previousElementSibling as HTMLInputElement;
-                        addArrayField('priceIncludes', input.value);
-                        input.value = '';
-                      }}
+                      onClick={() => removeArrayField('priceIncludes', index)}
                     >
-                      <Plus className="w-4 h-4" />
+                      <X className="w-4 h-4" />
                     </Button>
                   </div>
-                </div>
+                ))}
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => addArrayField('priceIncludes')}
+                  className="w-full"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Included Item
+                </Button>
               </div>
-
+              
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <Label htmlFor="groupDiscounts">Group Discounts</Label>
@@ -1128,18 +865,18 @@ Day 3: Cultural visits..."
                     id="earlyBirdDiscount"
                     value={formData.earlyBirdDiscount}
                     onChange={(e) => handleInputChange('earlyBirdDiscount', e.target.value)}
-                    placeholder="e.g., 15% off for early booking"
+                    placeholder="e.g., 15% off 30 days advance"
                   />
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          {/* 14. Contact & Booking */}
+          {/* 8. Contact & Booking */}
           <Card className="shadow-lg">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
-                <Users className="w-5 h-5 text-gray-500" />
+                <Star className="w-5 h-5 text-yellow-500" />
                 <span>Contact & Booking</span>
               </CardTitle>
             </CardHeader>
@@ -1150,57 +887,147 @@ Day 3: Cultural visits..."
                   id="contactPhone"
                   value={formData.contactPhone}
                   onChange={(e) => handleInputChange('contactPhone', e.target.value)}
-                  placeholder="Contact phone number"
+                  placeholder="+994 51 400 90 91"
                 />
               </div>
-
               <div className="space-y-2">
                 <Label htmlFor="bookingTerms">Booking Terms</Label>
                 <Textarea
                   id="bookingTerms"
                   value={formData.bookingTerms}
                   onChange={(e) => handleInputChange('bookingTerms', e.target.value)}
-                  placeholder="Cancellation policy, booking requirements, terms and conditions..."
-                  rows={4}
+                  placeholder="Describe booking terms and conditions..."
+                  rows={3}
                 />
               </div>
             </CardContent>
           </Card>
 
-          {/* 15. Status */}
+          {/* 9. Highlights, Includes, Excludes */}
           <Card className="shadow-lg">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
-                <Users className="w-5 h-5 text-gray-500" />
-                <span>Status</span>
+                <Star className="w-5 h-5 text-amber-500" />
+                <span>Highlights, Includes & Excludes</span>
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <Label htmlFor="isActive">Active Status</Label>
-                  <Select value={formData.isActive ? 'active' : 'inactive'} onValueChange={(value) => handleInputChange('isActive', value === 'active')}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="active">Active</SelectItem>
-                      <SelectItem value="inactive">Inactive</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <Label htmlFor="featured">Featured</Label>
-                  <Select value={formData.featured ? 'yes' : 'no'} onValueChange={(value) => handleInputChange('featured', value === 'yes')}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Featured?" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="yes">Yes</SelectItem>
-                      <SelectItem value="no">No</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+              <div className="space-y-2">
+                <Label>Highlights</Label>
+                {formData.highlights.map((highlight, index) => (
+                  <div key={index} className="flex space-x-2">
+                    <Input
+                      value={highlight}
+                      onChange={(e) => handleArrayFieldChange('highlights', index, e.target.value)}
+                      placeholder="Enter highlight"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => removeArrayField('highlights', index)}
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
+                ))}
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => addArrayField('highlights')}
+                  className="w-full"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Highlight
+                </Button>
+              </div>
+
+              <div className="space-y-2">
+                <Label>What's Included</Label>
+                {formData.includes.map((include, index) => (
+                  <div key={index} className="flex space-x-2">
+                    <Input
+                      value={include}
+                      onChange={(e) => handleArrayFieldChange('includes', index, e.target.value)}
+                      placeholder="Enter inclusion"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => removeArrayField('includes', index)}
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
+                ))}
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => addArrayField('includes')}
+                  className="w-full"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Inclusion
+                </Button>
+              </div>
+
+              <div className="space-y-2">
+                <Label>What's Not Included</Label>
+                {formData.excludes.map((exclude, index) => (
+                  <div key={index} className="flex space-x-2">
+                    <Input
+                      value={exclude}
+                      onChange={(e) => handleArrayFieldChange('excludes', index, e.target.value)}
+                      placeholder="Enter exclusion"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => removeArrayField('excludes', index)}
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
+                ))}
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => addArrayField('excludes')}
+                  className="w-full"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Exclusion
+                </Button>
+              </div>
+
+              {/* Tour Program Accordion */}
+              <TourProgramAccordionAdmin
+                programs={formData.tourPrograms}
+                onProgramsChange={(programs) => handleInputChange('tourPrograms', programs)}
+              />
+
+              <div className="space-y-2">
+                <Label htmlFor="itinerary">Detailed Itinerary</Label>
+                <Textarea
+                  id="itinerary"
+                  value={formData.itinerary}
+                  onChange={(e) => handleInputChange('itinerary', e.target.value)}
+                  placeholder="Enter detailed itinerary"
+                  rows={6}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="requirements">Requirements & Recommendations</Label>
+                <Textarea
+                  id="requirements"
+                  value={formData.requirements}
+                  onChange={(e) => handleInputChange('requirements', e.target.value)}
+                  placeholder="Enter requirements and recommendations"
+                  rows={4}
+                />
               </div>
             </CardContent>
           </Card>
@@ -1246,8 +1073,8 @@ Day 3: Cultural visits..."
             </CardContent>
           </Card>
 
-          {/* Submit Button */}
-          <div className="flex justify-end space-x-4">
+          {/* Submit Buttons */}
+          <div className="flex justify-end space-x-4 pt-6">
             <Button
               type="button"
               variant="outline"
@@ -1255,18 +1082,13 @@ Day 3: Cultural visits..."
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? (
-                <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  Updating...
-                </>
-              ) : (
-                <>
-                  <Save className="w-4 h-4 mr-2" />
-                  Update Tour
-                </>
-              )}
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+              className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 disabled:opacity-50"
+            >
+              <Save className="w-4 h-4 mr-2" />
+              {isSubmitting ? 'Updating Tour...' : 'Update Tour'}
             </Button>
           </div>
         </form>
