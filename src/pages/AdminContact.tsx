@@ -49,6 +49,22 @@ const AdminContact = () => {
       
       if (data.success) {
         setContactData(data.data);
+        
+        // Auto-load hero section data into form
+        const heroSection = data.data.find((item: any) => item.section === 'hero');
+        if (heroSection) {
+          setFormData({
+            title: heroSection.title || '',
+            content: heroSection.content || '',
+            image_url: heroSection.image_url || '',
+            contact_info: {
+              phone: heroSection.contact_info?.phone || '',
+              email: heroSection.contact_info?.email || '',
+              address: heroSection.contact_info?.address || '',
+              working_hours: heroSection.contact_info?.working_hours || ''
+            }
+          });
+        }
       }
     } catch (error) {
       console.error('Error fetching contact data:', error);
