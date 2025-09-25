@@ -531,6 +531,8 @@ const TourDetail = () => {
           </div>
         </div>
       </section>
+      
+      <Footer />
     </div>
   );
 };

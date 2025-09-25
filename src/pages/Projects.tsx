@@ -155,6 +155,8 @@ const Projects = () => {
           </Button>
         </div>
       </section>
+      
+      <Footer />
     </div>
   );
 };

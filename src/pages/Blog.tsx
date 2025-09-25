@@ -303,6 +303,8 @@ const Blog = () => {
           </Button>
         </div>
       </section>
+      
+      <Footer />
     </div>
   );
 };
