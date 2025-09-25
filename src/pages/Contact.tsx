@@ -48,6 +48,8 @@ const Contact = () => {
   };
 
   const heroData = getSectionData('hero');
+  const faqData = getSectionData('faq_section');
+  const socialData = getSectionData('social_media');
 
   const socialLinks = [
     { icon: Facebook, url: "https://www.facebook.com/campingazerbaijan2014", name: "Facebook" },
@@ -290,45 +292,104 @@ const Contact = () => {
               {/* FAQ Quick Answers */}
               <Card className="border-0 bg-card/80 backdrop-blur-sm">
                 <CardHeader>
-                  <CardTitle className="text-xl">Quick Answers</CardTitle>
+                  <CardTitle className="text-xl">{faqData?.title || 'Quick Answers'}</CardTitle>
+                  {faqData?.content && (
+                    <p className="text-muted-foreground text-sm">{faqData.content}</p>
+                  )}
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div>
-                    <h4 className="font-semibold text-foreground mb-2">How far in advance should I book?</h4>
-                    <p className="text-sm text-muted-foreground">We recommend booking 2-4 weeks in advance, especially for popular tours during peak season (June-September).</p>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-foreground mb-2">What's included in the price?</h4>
-                    <p className="text-sm text-muted-foreground">All tours include professional guides, safety equipment, accommodation (where applicable), and transportation from designated meeting points.</p>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-foreground mb-2">Do you offer private tours?</h4>
-                    <p className="text-sm text-muted-foreground">Yes! We can customize any tour for private groups. Contact us for personalized itineraries and pricing.</p>
-                  </div>
+                  {faqData?.contact_info?.faqs ? (
+                    faqData.contact_info.faqs.map((faq: any, index: number) => (
+                      <div key={index}>
+                        <h4 className="font-semibold text-foreground mb-2">{faq.question}</h4>
+                        <p className="text-sm text-muted-foreground">{faq.answer}</p>
+                      </div>
+                    ))
+                  ) : (
+                    <>
+                      <div>
+                        <h4 className="font-semibold text-foreground mb-2">How far in advance should I book?</h4>
+                        <p className="text-sm text-muted-foreground">We recommend booking 2-4 weeks in advance, especially for popular tours during peak season (June-September).</p>
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-foreground mb-2">What's included in the price?</h4>
+                        <p className="text-sm text-muted-foreground">All tours include professional guides, safety equipment, accommodation (where applicable), and transportation from designated meeting points.</p>
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-foreground mb-2">Do you offer private tours?</h4>
+                        <p className="text-sm text-muted-foreground">Yes! We can customize any tour for private groups. Contact us for personalized itineraries and pricing.</p>
+                      </div>
+                    </>
+                  )}
                 </CardContent>
               </Card>
 
               {/* Social Media */}
               <Card className="border-0 bg-card/80 backdrop-blur-sm">
                 <CardHeader>
-                  <CardTitle className="text-xl">Follow Our Adventures</CardTitle>
+                  <CardTitle className="text-xl">{socialData?.title || 'Follow Our Adventures'}</CardTitle>
                   <p className="text-muted-foreground text-sm">
-                    Stay updated with our latest tours and tips on social media
+                    {socialData?.content || 'Stay updated with our latest tours and tips on social media'}
                   </p>
                 </CardHeader>
                 <CardContent>
                   <div className="flex space-x-4">
-                    {socialLinks.map((social, index) => (
-                      <a
-                        key={index}
-                        href={social.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-12 h-12 bg-primary/10 hover:bg-primary hover:text-primary-foreground rounded-lg flex items-center justify-center transition-all duration-300 text-primary hover:scale-105"
-                      >
-                        <social.icon className="w-5 h-5" />
-                      </a>
-                    ))}
+                    {socialData?.contact_info ? (
+                      <>
+                        {socialData.contact_info.facebook && (
+                          <a
+                            href={socialData.contact_info.facebook}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-12 h-12 bg-primary/10 hover:bg-primary hover:text-primary-foreground rounded-lg flex items-center justify-center transition-all duration-300 text-primary hover:scale-105"
+                          >
+                            <Facebook className="w-5 h-5" />
+                          </a>
+                        )}
+                        {socialData.contact_info.instagram && (
+                          <a
+                            href={socialData.contact_info.instagram}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-12 h-12 bg-primary/10 hover:bg-primary hover:text-primary-foreground rounded-lg flex items-center justify-center transition-all duration-300 text-primary hover:scale-105"
+                          >
+                            <Instagram className="w-5 h-5" />
+                          </a>
+                        )}
+                        {socialData.contact_info.linkedin && (
+                          <a
+                            href={socialData.contact_info.linkedin}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-12 h-12 bg-primary/10 hover:bg-primary hover:text-primary-foreground rounded-lg flex items-center justify-center transition-all duration-300 text-primary hover:scale-105"
+                          >
+                            <Linkedin className="w-5 h-5" />
+                          </a>
+                        )}
+                        {socialData.contact_info.twitter && (
+                          <a
+                            href={socialData.contact_info.twitter}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-12 h-12 bg-primary/10 hover:bg-primary hover:text-primary-foreground rounded-lg flex items-center justify-center transition-all duration-300 text-primary hover:scale-105"
+                          >
+                            <Twitter className="w-5 h-5" />
+                          </a>
+                        )}
+                      </>
+                    ) : (
+                      socialLinks.map((social, index) => (
+                        <a
+                          key={index}
+                          href={social.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-12 h-12 bg-primary/10 hover:bg-primary hover:text-primary-foreground rounded-lg flex items-center justify-center transition-all duration-300 text-primary hover:scale-105"
+                        >
+                          <social.icon className="w-5 h-5" />
+                        </a>
+                      ))
+                    )}
                   </div>
                 </CardContent>
               </Card>
