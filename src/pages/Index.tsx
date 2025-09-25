@@ -18,6 +18,7 @@ const Index = () => {
   const [featuredTours, setFeaturedTours] = useState([]);
   const [loading, setLoading] = useState(true);
   const [heroData, setHeroData] = useState(null);
+  const [heroLoading, setHeroLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -44,6 +45,7 @@ const Index = () => {
 
   const fetchHeroData = async () => {
     try {
+      setHeroLoading(true);
       const response = await fetch('/api/hero-section');
       const data = await response.json();
       
@@ -52,6 +54,8 @@ const Index = () => {
       }
     } catch (error) {
       console.error('Error fetching hero data:', error);
+    } finally {
+      setHeroLoading(false);
     }
   };
 
@@ -88,24 +92,42 @@ const Index = () => {
         
         {/* Hero Content */}
         <div className="relative z-10 text-center text-white max-w-5xl px-4">
-          <h1 className="text-6xl md:text-8xl font-bold mb-8 leading-tight">
-            {heroData?.title || 'Discover'}
-            <span className="block text-transparent bg-gradient-sunset bg-clip-text">
-              {heroData?.subtitle || 'Azerbaijan'}
-            </span>
-          </h1>
-          <p className="text-xl md:text-3xl mb-12 text-white/90 leading-relaxed">
-            {heroData?.description || 'Authentic mountain adventures • Sustainable tourism • Cultural immersion'}
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-6 justify-center">
-            <Button size="lg" variant="hero-outline" asChild className="text-lg px-8 py-4">
-              <Link to={heroData?.button1_link || '/tours'}>{heroData?.button1_text || 'Explore Tours'}</Link>
-            </Button>
-            <Button size="lg" variant="hero-outline" asChild className="text-lg px-8 py-4">
-              <Link to={heroData?.button2_link || '/about'}>{heroData?.button2_text || 'Our Story'}</Link>
-            </Button>
-          </div>
+          {heroLoading ? (
+            // Loading state
+            <div className="space-y-8">
+              <div className="space-y-4">
+                <div className="h-16 bg-white/20 rounded-lg animate-pulse"></div>
+                <div className="h-16 bg-white/20 rounded-lg animate-pulse"></div>
+              </div>
+              <div className="h-8 bg-white/20 rounded-lg animate-pulse w-3/4 mx-auto"></div>
+              <div className="flex flex-col sm:flex-row gap-6 justify-center">
+                <div className="h-12 bg-white/20 rounded-lg animate-pulse w-32"></div>
+                <div className="h-12 bg-white/20 rounded-lg animate-pulse w-32"></div>
+              </div>
+            </div>
+          ) : (
+            // Actual content
+            <>
+              <h1 className="text-6xl md:text-8xl font-bold mb-8 leading-tight">
+                {heroData?.title || 'Discover'}
+                <span className="block text-transparent bg-gradient-sunset bg-clip-text">
+                  {heroData?.subtitle || 'Azerbaijan'}
+                </span>
+              </h1>
+              <p className="text-xl md:text-3xl mb-12 text-white/90 leading-relaxed">
+                {heroData?.description || 'Authentic mountain adventures • Sustainable tourism • Cultural immersion'}
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-6 justify-center">
+                <Button size="lg" variant="hero-outline" asChild className="text-lg px-8 py-4">
+                  <Link to={heroData?.button1_link || '/tours'}>{heroData?.button1_text || 'Explore Tours'}</Link>
+                </Button>
+                <Button size="lg" variant="hero-outline" asChild className="text-lg px-8 py-4">
+                  <Link to={heroData?.button2_link || '/about'}>{heroData?.button2_text || 'Our Story'}</Link>
+                </Button>
+              </div>
+            </>
+          )}
         </div>
 
         {/* Scroll Indicator */}
