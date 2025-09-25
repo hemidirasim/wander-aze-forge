@@ -362,6 +362,17 @@ const AdminDashboard: React.FC = () => {
                   <span className="font-semibold">Team Members</span>
                 </Link>
               </Button>
+
+              <Button 
+                asChild
+                variant="outline"
+                className="h-20 flex flex-col items-center justify-center space-y-2 border-2 hover:bg-gray-50"
+              >
+                <Link to="/admin/reviews">
+                  <Star className="w-6 h-6" />
+                  <span className="font-semibold">Manage Reviews</span>
+                </Link>
+              </Button>
             </div>
           </CardContent>
         </Card>

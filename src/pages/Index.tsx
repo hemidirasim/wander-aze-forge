@@ -4,6 +4,7 @@ import RecommendationsSection from '@/components/RecommendationsSection';
 import JourneyContactForm from '@/components/JourneyContactForm';
 import DatabasePartners from '@/components/DatabasePartners';
 import DatabaseBlog from '@/components/DatabaseBlog';
+import DatabaseReviews from '@/components/DatabaseReviews';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -231,6 +232,9 @@ const Index = () => {
 
       {/* Latest Blog Stories */}
       <DatabaseBlog />
+
+      {/* Customer Reviews */}
+      <DatabaseReviews />
 
       {/* Business Partners */}
       <DatabasePartners />
