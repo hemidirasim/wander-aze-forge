@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { useApi } from '@/hooks/useApi';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -18,36 +19,7 @@ interface Review {
 }
 
 const DatabaseReviews = () => {
-  const [reviews, setReviews] = useState<Review[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchReviews();
-  }, []);
-
-  const fetchReviews = async () => {
-    try {
-      const response = await fetch('/api/reviews?featured=true');
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const data = await response.json();
-      
-      if (data.success) {
-        setReviews(data.data);
-      } else {
-        console.error('API returned error:', data.error);
-        setReviews([]);
-      }
-    } catch (error) {
-      console.error('Error fetching reviews:', error);
-      setReviews([]);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { data: reviews, loading, error } = useApi<Review[]>('/reviews?featured=true');
 
   if (loading) {
     return (
@@ -83,24 +55,8 @@ const DatabaseReviews = () => {
     );
   }
 
-  if (reviews.length === 0) {
-    return (
-      <section className="py-24 px-4 bg-gradient-to-br from-muted/20 to-background">
-        <div className="container mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-              What Our Travelers Say
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Don't just take our word for it - hear from the adventurers who have experienced Azerbaijan with us
-            </p>
-          </div>
-          <div className="text-center">
-            <p className="text-muted-foreground">No reviews available at the moment.</p>
-          </div>
-        </div>
-      </section>
-    );
+  if (!reviews || reviews.length === 0) {
+    return null;
   }
 
   return (

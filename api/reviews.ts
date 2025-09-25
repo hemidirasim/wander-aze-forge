@@ -35,13 +35,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       case 'DELETE':
         return await handleDelete(req, res);
       default:
-        return res.status(405).json({ success: false, error: 'Method not allowed' });
+        return res.status(405).json({ error: 'Method not allowed' });
     }
   } catch (error) {
-    console.error('Database error:', error);
-    return res.status(500).json({
-      success: false,
-      error: 'Internal server error'
+    console.error('Reviews API error:', error);
+    return res.status(500).json({ 
+      error: 'Internal server error',
+      message: error instanceof Error ? error.message : 'Unknown error'
     });
   }
 }
@@ -51,7 +51,7 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
     const { featured } = req.query;
     
     let query = 'SELECT * FROM reviews';
-    const params = [];
+    const params: any[] = [];
     
     if (featured === 'true') {
       query += ' WHERE is_featured = true';
@@ -61,15 +61,12 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
     
     const result = await pool.query(query, params);
     
-    return res.status(200).json({
-      success: true,
-      data: result.rows
-    });
+    return res.status(200).json(result.rows);
   } catch (error) {
     console.error('Error fetching reviews:', error);
-    return res.status(500).json({
-      success: false,
-      error: 'Failed to fetch reviews'
+    return res.status(500).json({ 
+      error: 'Failed to fetch reviews',
+      message: error instanceof Error ? error.message : 'Unknown error'
     });
   }
 }
@@ -80,7 +77,6 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
     
     if (!name || !rating || !review_text || !source) {
       return res.status(400).json({
-        success: false,
         error: 'Missing required fields: name, rating, review_text, source'
       });
     }
@@ -92,15 +88,12 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
       [name, rating, review_text, source, source_logo || null, source_url || null, is_featured || false]
     );
     
-    return res.status(201).json({
-      success: true,
-      data: result.rows[0]
-    });
+    return res.status(201).json(result.rows[0]);
   } catch (error) {
     console.error('Error creating review:', error);
     return res.status(500).json({
-      success: false,
-      error: 'Failed to create review'
+      error: 'Failed to create review',
+      message: error instanceof Error ? error.message : 'Unknown error'
     });
   }
 }
@@ -111,7 +104,6 @@ async function handlePut(req: VercelRequest, res: VercelResponse) {
     
     if (!id) {
       return res.status(400).json({
-        success: false,
         error: 'Review ID is required'
       });
     }
@@ -126,20 +118,16 @@ async function handlePut(req: VercelRequest, res: VercelResponse) {
     
     if (result.rows.length === 0) {
       return res.status(404).json({
-        success: false,
         error: 'Review not found'
       });
     }
     
-    return res.status(200).json({
-      success: true,
-      data: result.rows[0]
-    });
+    return res.status(200).json(result.rows[0]);
   } catch (error) {
     console.error('Error updating review:', error);
     return res.status(500).json({
-      success: false,
-      error: 'Failed to update review'
+      error: 'Failed to update review',
+      message: error instanceof Error ? error.message : 'Unknown error'
     });
   }
 }
@@ -150,7 +138,6 @@ async function handleDelete(req: VercelRequest, res: VercelResponse) {
     
     if (!id) {
       return res.status(400).json({
-        success: false,
         error: 'Review ID is required'
       });
     }
@@ -159,20 +146,18 @@ async function handleDelete(req: VercelRequest, res: VercelResponse) {
     
     if (result.rows.length === 0) {
       return res.status(404).json({
-        success: false,
         error: 'Review not found'
       });
     }
     
     return res.status(200).json({
-      success: true,
       message: 'Review deleted successfully'
     });
   } catch (error) {
     console.error('Error deleting review:', error);
     return res.status(500).json({
-      success: false,
-      error: 'Failed to delete review'
+      error: 'Failed to delete review',
+      message: error instanceof Error ? error.message : 'Unknown error'
     });
   }
 }
