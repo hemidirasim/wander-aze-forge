@@ -84,7 +84,23 @@ const DatabaseReviews = () => {
   }
 
   if (reviews.length === 0) {
-    return null;
+    return (
+      <section className="py-24 px-4 bg-gradient-to-br from-muted/20 to-background">
+        <div className="container mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
+              What Our Travelers Say
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              Don't just take our word for it - hear from the adventurers who have experienced Azerbaijan with us
+            </p>
+          </div>
+          <div className="text-center">
+            <p className="text-muted-foreground">No reviews available at the moment.</p>
+          </div>
+        </div>
+      </section>
+    );
   }
 
   return (
