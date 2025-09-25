@@ -7,6 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Save, Upload, Image, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import FileUpload from '@/components/FileUpload';
 
 interface HeroSection {
   id: number;
@@ -81,6 +82,15 @@ const AdminHero: React.FC = () => {
 
   const handleInputChange = (field: string, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleImageUpload = (url: string) => {
+    setFormData(prev => ({ ...prev, image_url: url }));
+  };
+
+  const handleImageUploadError = (error: string) => {
+    console.error('Image upload error:', error);
+    alert(`Image upload failed: ${error}`);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -197,17 +207,55 @@ const AdminHero: React.FC = () => {
                 />
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="image_url">Hero Image URL</Label>
-                <Input
-                  id="image_url"
-                  value={formData.image_url}
-                  onChange={(e) => handleInputChange('image_url', e.target.value)}
-                  placeholder="/hero-mountain-custom.jpg"
-                />
-                <p className="text-sm text-gray-500">
-                  Use a path to an image in the public folder (e.g., /hero-mountain-custom.jpg)
-                </p>
+              <div className="space-y-4">
+                <Label htmlFor="image_url">Hero Image</Label>
+                
+                {/* Image Upload Component */}
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 hover:border-blue-400 transition-colors">
+                  <FileUpload
+                    onUploadComplete={handleImageUpload}
+                    onUploadError={handleImageUploadError}
+                    type="tour"
+                    accept="image/*"
+                    maxSizeMB={10}
+                    multiple={false}
+                    className="w-full"
+                  />
+                </div>
+
+                {/* Manual URL Input */}
+                <div className="space-y-2">
+                  <Label htmlFor="image_url">Or enter image URL manually</Label>
+                  <Input
+                    id="image_url"
+                    value={formData.image_url}
+                    onChange={(e) => handleInputChange('image_url', e.target.value)}
+                    placeholder="/hero-mountain-custom.jpg"
+                  />
+                  <p className="text-sm text-gray-500">
+                    Use a path to an image in the public folder (e.g., /hero-mountain-custom.jpg) or upload a new image above
+                  </p>
+                </div>
+
+                {/* Current Image Preview */}
+                {formData.image_url && (
+                  <div className="space-y-2">
+                    <Label>Current Image Preview</Label>
+                    <div className="relative w-full h-48 rounded-lg overflow-hidden border">
+                      <img 
+                        src={formData.image_url} 
+                        alt="Hero preview" 
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                        }}
+                      />
+                      <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">
+                        <span className="text-gray-500">Image preview</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
