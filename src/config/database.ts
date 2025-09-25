@@ -273,7 +273,7 @@ We believe that the best adventures come from combining professional expertise w
       'faq_section',
       'Quick Answers',
       'Find quick answers to common questions about our tours, booking process, and what to expect.',
-      '{"faqs": [{"question": "How far in advance should I book?", "answer": "We recommend booking 2-4 weeks in advance, especially for popular tours during peak season (June-September)."}, {"question": "What''s included in the price?", "answer": "All tours include professional guides, safety equipment, accommodation (where applicable), and transportation from designated meeting points."}, {"question": "Do you offer private tours?", "answer": "Yes! We can customize any tour for private groups. Contact us for personalized itineraries and pricing."}]}',
+      '{"faq_description": "Find quick answers to common questions about our tours, booking process, and what to expect.", "faq_1_question": "How far in advance should I book?", "faq_1_answer": "We recommend booking 2-4 weeks in advance, especially for popular tours during peak season (June-September).", "faq_2_question": "What''s included in the price?", "faq_2_answer": "All tours include professional guides, safety equipment, accommodation (where applicable), and transportation from designated meeting points.", "faq_3_question": "Do you offer private tours?", "faq_3_answer": "Yes! We can customize any tour for private groups. Contact us for personalized itineraries and pricing."}',
       null
     ),
     (
