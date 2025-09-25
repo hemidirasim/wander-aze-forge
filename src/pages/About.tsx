@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Link } from 'react-router-dom';
-import { Users, Mountain, Calendar, Globe, Mail, Phone, Linkedin, Instagram } from 'lucide-react';
+import { Users, Mail, Phone, Linkedin, Instagram } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 
 interface AboutSection {
@@ -74,13 +74,6 @@ const About = () => {
   const getSectionData = (section: string) => {
     return aboutData.find(item => item.section === section);
   };
-
-  const stats = [
-    { icon: Calendar, label: "Years of Experience", value: "10+" },
-    { icon: Users, label: "Happy Travelers", value: "2,500+" },
-    { icon: Mountain, label: "Tours Completed", value: "700+" },
-    { icon: Globe, label: "Trails Explored", value: "30+" },
-  ];
 
   if (loading) {
     return (
@@ -154,25 +147,6 @@ const About = () => {
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="py-16 px-4 bg-gradient-mountain">
-        <div className="container mx-auto">
-          <div className="text-center text-white mb-12">
-            <h2 className="text-4xl font-bold mb-4">Our Impact in Numbers</h2>
-            <p className="text-xl text-white/90">Years of meaningful adventures</p>
-          </div>
-          
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {stats.map((stat, index) => (
-              <div key={index} className="text-center text-white">
-                <stat.icon className="w-12 h-12 mx-auto mb-4 text-white/80" />
-                <div className="text-4xl font-bold mb-2">{stat.value}</div>
-                <div className="text-white/90">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* Our Team */}
       <section className="py-20 px-4 bg-muted/20">
@@ -181,9 +155,6 @@ const About = () => {
             <h2 className="text-4xl font-bold text-foreground mb-6">
               {ourTeamData?.title || 'Our Team'}
             </h2>
-            <div className="text-xl text-muted-foreground max-w-2xl mx-auto whitespace-pre-line">
-              {ourTeamData?.content || 'Loading...'}
-            </div>
           </div>
 
           {/* Team Members Grid */}
