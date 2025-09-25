@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 
 const TourCategoryGallery = () => {
   const categories = [
@@ -60,9 +59,6 @@ const TourCategoryGallery = () => {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                 <div className="absolute bottom-6 left-6 right-6 text-white">
-                  <Badge variant="secondary" className="bg-white/20 text-white mb-3">
-                    {categories[0].name}
-                  </Badge>
                   <h3 className="text-2xl font-bold mb-2">{categories[0].name}</h3>
                   <p className="text-white/90">{categories[0].description}</p>
                 </div>
@@ -80,9 +76,6 @@ const TourCategoryGallery = () => {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                 <div className="absolute bottom-6 left-6 right-6 text-white">
-                  <Badge variant="secondary" className="bg-white/20 text-white mb-3">
-                    {categories[1].name}
-                  </Badge>
                   <h3 className="text-2xl font-bold mb-2">{categories[1].name}</h3>
                   <p className="text-white/90">{categories[1].description}</p>
                 </div>
@@ -101,9 +94,6 @@ const TourCategoryGallery = () => {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                 <div className="absolute bottom-6 left-6 right-6 text-white">
-                  <Badge variant="secondary" className="bg-white/20 text-white mb-3">
-                    {categories[2].name}
-                  </Badge>
                   <h3 className="text-3xl font-bold mb-4">{categories[2].name}</h3>
                   <p className="text-white/90 text-lg">{categories[2].description}</p>
                 </div>
@@ -122,9 +112,6 @@ const TourCategoryGallery = () => {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                 <div className="absolute bottom-6 left-6 right-6 text-white">
-                  <Badge variant="secondary" className="bg-white/20 text-white mb-3">
-                    {categories[3].name}
-                  </Badge>
                   <h3 className="text-2xl font-bold mb-2">{categories[3].name}</h3>
                   <p className="text-white/90">{categories[3].description}</p>
                 </div>
@@ -142,9 +129,6 @@ const TourCategoryGallery = () => {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                 <div className="absolute bottom-6 left-6 right-6 text-white">
-                  <Badge variant="secondary" className="bg-white/20 text-white mb-3">
-                    {categories[4].name}
-                  </Badge>
                   <h3 className="text-2xl font-bold mb-2">{categories[4].name}</h3>
                   <p className="text-white/90">{categories[4].description}</p>
                 </div>
