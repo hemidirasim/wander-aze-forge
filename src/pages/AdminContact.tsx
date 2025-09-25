@@ -6,7 +6,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { ArrowLeft, Save, Edit, Phone, Mail, MapPin, Clock } from 'lucide-react';
-import GalleryUpload from '@/components/GalleryUpload';
 
 interface ContactSection {
   id: number;
@@ -19,21 +18,13 @@ interface ContactSection {
   updated_at: string;
 }
 
-interface UploadedImage {
-  url: string;
-  filename: string;
-  size: number;
-  uploadedAt: string;
-  isMain?: boolean;
-  description?: string;
-}
 
 const AdminContact = () => {
   const navigate = useNavigate();
   const [contactData, setContactData] = useState<ContactSection[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [editingSection, setEditingSection] = useState<string | null>(null);
+  const [editingSection, setEditingSection] = useState<string | null>('office_info');
   const [formData, setFormData] = useState({
     title: '',
     content: '',
@@ -43,8 +34,7 @@ const AdminContact = () => {
       address: '',
       working_hours: ''
     },
-    image_url: '',
-    galleryImages: [] as UploadedImage[]
+    image_url: ''
   });
 
   useEffect(() => {
@@ -291,14 +281,6 @@ const AdminContact = () => {
                     </div>
                   </div>
 
-                  <div>
-                    <Label>Image</Label>
-                    <GalleryUpload
-                      images={formData.galleryImages}
-                      onImagesChange={(images) => handleInputChange('galleryImages', images)}
-                      maxImages={1}
-                    />
-                  </div>
 
                   <div className="flex gap-2">
                     <Button
@@ -347,18 +329,6 @@ const AdminContact = () => {
                         <div className="flex items-center gap-2">
                           <Clock className="w-4 h-4 text-primary" />
                           <span className="text-sm">{section.contact_info.working_hours}</span>
-                        </div>
-                      )}
-                      {section.contact_info.emergency_phone && (
-                        <div className="flex items-center gap-2">
-                          <Phone className="w-4 h-4 text-primary" />
-                          <span className="text-sm text-red-600">{section.contact_info.emergency_phone}</span>
-                        </div>
-                      )}
-                      {section.contact_info.emergency_email && (
-                        <div className="flex items-center gap-2">
-                          <Mail className="w-4 h-4 text-primary" />
-                          <span className="text-sm text-red-600">{section.contact_info.emergency_email}</span>
                         </div>
                       )}
                     </div>
