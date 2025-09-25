@@ -14,22 +14,38 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     // Ensure reviews table exists
-    const client = await pool.connect();
+    let client;
+    try {
+      client = await pool.connect();
+    } catch (dbError) {
+      console.error('Database connection error:', dbError);
+      return res.status(500).json({
+        success: false,
+        error: 'Database connection failed',
+        details: dbError instanceof Error ? dbError.message : 'Unknown database error'
+      });
+    }
     
     // Check if reviews table exists
-    const tableCheck = await client.query(`
-      SELECT EXISTS (
-        SELECT FROM information_schema.tables 
-        WHERE table_schema = 'public' 
-        AND table_name = 'reviews'
-      );
-    `);
-    
-    const tableExists = tableCheck.rows[0].exists;
+    let tableExists = false;
+    try {
+      const tableCheck = await client.query(`
+        SELECT EXISTS (
+          SELECT FROM information_schema.tables 
+          WHERE table_schema = 'public' 
+          AND table_name = 'reviews'
+        );
+      `);
+      tableExists = tableCheck.rows[0].exists;
+    } catch (tableError) {
+      console.error('Table check error:', tableError);
+      // Continue with table creation attempt
+    }
     
     if (!tableExists) {
-      // Create reviews table if it doesn't exist
-      await client.query(`
+      try {
+        // Create reviews table if it doesn't exist
+        await client.query(`
         CREATE TABLE IF NOT EXISTS reviews (
           id SERIAL PRIMARY KEY,
           name VARCHAR(255) NOT NULL,
@@ -103,27 +119,40 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         )
         ON CONFLICT DO NOTHING
       `);
+      } catch (createError) {
+        console.error('Table creation error:', createError);
+        // Continue with API operations even if table creation fails
+      }
     }
     
     client.release();
     if (req.method === 'GET') {
-      const { featured } = req.query;
-      
-      let query = 'SELECT * FROM reviews';
-      const params = [];
-      
-      if (featured === 'true') {
-        query += ' WHERE is_featured = true';
+      try {
+        const { featured } = req.query;
+        
+        let query = 'SELECT * FROM reviews';
+        const params = [];
+        
+        if (featured === 'true') {
+          query += ' WHERE is_featured = true';
+        }
+        
+        query += ' ORDER BY created_at DESC';
+        
+        const result = await pool.query(query, params);
+        
+        res.status(200).json({
+          success: true,
+          data: result.rows
+        });
+      } catch (queryError) {
+        console.error('Query error:', queryError);
+        res.status(500).json({
+          success: false,
+          error: 'Failed to fetch reviews',
+          details: queryError instanceof Error ? queryError.message : 'Unknown query error'
+        });
       }
-      
-      query += ' ORDER BY created_at DESC';
-      
-      const result = await pool.query(query, params);
-      
-      res.status(200).json({
-        success: true,
-        data: result.rows
-      });
     } 
     else if (req.method === 'POST') {
       const { name, rating, review_text, source, source_logo, source_url, is_featured } = req.body;
