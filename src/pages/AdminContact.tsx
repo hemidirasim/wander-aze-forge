@@ -77,8 +77,6 @@ const AdminContact = () => {
     try {
       setSaving(true);
       
-      const imageUrl = formData.galleryImages.length > 0 ? formData.galleryImages[0].url : formData.image_url;
-      
       const response = await fetch('/api/contact-page', {
         method: 'POST',
         headers: {
@@ -89,7 +87,7 @@ const AdminContact = () => {
           title: formData.title,
           content: formData.content,
           contact_info: formData.contact_info,
-          image_url: imageUrl,
+          image_url: formData.image_url,
           _method: 'PUT'
         })
       });
@@ -99,21 +97,7 @@ const AdminContact = () => {
         console.log('Contact section updated:', result);
         await fetchContactData(); // Refresh data
         setEditingSection(null);
-        setFormData({ 
-          title: '', 
-          content: '', 
-          contact_info: {
-            phone: '',
-            email: '',
-            address: '',
-            working_hours: '',
-            emergency_phone: '',
-            emergency_email: '',
-            available: ''
-          },
-          image_url: '', 
-          galleryImages: [] 
-        });
+        resetForm();
       } else {
         const errorResult = await response.json();
         console.error('Update error:', errorResult);
@@ -129,17 +113,7 @@ const AdminContact = () => {
 
   const handleCancel = () => {
     setEditingSection(null);
-    setFormData({ 
-      title: '', 
-      content: '', 
-      image_url: '',
-      contact_info: {
-        phone: '',
-        email: '',
-        address: '',
-        working_hours: ''
-      }
-    });
+    resetForm();
   };
 
 
@@ -151,6 +125,20 @@ const AdminContact = () => {
         [field]: value
       }
     }));
+  };
+
+  const resetForm = () => {
+    setFormData({
+      title: '',
+      content: '',
+      image_url: '',
+      contact_info: {
+        phone: '',
+        email: '',
+        address: '',
+        working_hours: ''
+      }
+    });
   };
 
   const handleInputChange = (field: string, value: string) => {
