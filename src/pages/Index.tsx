@@ -99,7 +99,7 @@ const Index = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
-            <Button size="lg" variant="adventure" asChild className="text-lg px-8 py-4">
+            <Button size="lg" variant="hero-outline" asChild className="text-lg px-8 py-4">
               <Link to={heroData?.button1_link || '/tours'}>{heroData?.button1_text || 'Explore Tours'}</Link>
             </Button>
             <Button size="lg" variant="hero-outline" asChild className="text-lg px-8 py-4">
