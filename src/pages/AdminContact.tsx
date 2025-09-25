@@ -212,7 +212,9 @@ const AdminContact = () => {
       </div>
 
       <div className="space-y-6">
-        {contactData.map((section) => (
+        {contactData
+          .filter(section => ['hero', 'office_info', 'emergency_contact'].includes(section.section))
+          .map((section) => (
           <Card key={section.id}>
             <CardHeader>
               <div className="flex items-center justify-between">
