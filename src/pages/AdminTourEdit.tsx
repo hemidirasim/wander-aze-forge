@@ -315,10 +315,10 @@ const AdminTourEdit: React.FC = () => {
   };
 
   const addArrayField = (field: 'highlights' | 'includes' | 'excludes' | 'providedEquipment' | 'whatToBring' | 'priceIncludes') => {
-    setFormData(prev => ({
-      ...prev,
+      setFormData(prev => ({
+        ...prev,
       [field]: [...prev[field], '']
-    }));
+      }));
   };
 
   const removeArrayField = (field: 'highlights' | 'includes' | 'excludes' | 'providedEquipment' | 'whatToBring' | 'priceIncludes', index: number) => {
@@ -386,9 +386,9 @@ const AdminTourEdit: React.FC = () => {
         featured: formData.featured
       };
 
-      // Send to API
-      const response = await fetch('/api/tours', {
-        method: 'POST',
+      // Send to API - Use PUT for update
+      const response = await fetch(`/api/tours/${id}`, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -425,17 +425,17 @@ const AdminTourEdit: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-6">
       <div className="max-w-6xl mx-auto">
-        {/* Header */}
+      {/* Header */}
         <div className="mb-8">
           <div className="flex items-center space-x-4 mb-4">
-            <Button variant="ghost" onClick={() => navigate('/admin/tours')} className="flex items-center space-x-2">
-              <ArrowLeft className="w-4 h-4" />
-              <span>Back to Tours</span>
-            </Button>
-          </div>
+              <Button variant="ghost" onClick={() => navigate('/admin/tours')} className="flex items-center space-x-2">
+                <ArrowLeft className="w-4 h-4" />
+                <span>Back to Tours</span>
+              </Button>
+              </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Edit Tour</h1>
           <p className="text-gray-600">Update all tour information and details</p>
-        </div>
+            </div>
 
         <form onSubmit={handleSubmit} className="space-y-8">
           
@@ -520,7 +520,7 @@ const AdminTourEdit: React.FC = () => {
                     required
                   />
                 </div>
-                <div className="space-y-2">
+              <div className="space-y-2">
                   <Label htmlFor="rating">Rating</Label>
                   <Input
                     id="rating"
@@ -551,7 +551,7 @@ const AdminTourEdit: React.FC = () => {
                     onChange={(e) => handleInputChange('groupSize', e.target.value)}
                     placeholder="e.g., 8-12 people"
                   />
-                </div>
+              </div>
                 <div className="space-y-2">
                   <Label htmlFor="location">Location</Label>
                   <Input
@@ -563,7 +563,7 @@ const AdminTourEdit: React.FC = () => {
                 </div>
               </div>
               
-              <div className="space-y-2">
+                <div className="space-y-2">
                 <Label htmlFor="description">Description *</Label>
                 <Textarea
                   id="description"
@@ -572,8 +572,8 @@ const AdminTourEdit: React.FC = () => {
                   placeholder="Enter detailed tour description"
                   rows={4}
                   required
-                />
-              </div>
+                  />
+                </div>
             </CardContent>
           </Card>
 
@@ -606,16 +606,16 @@ const AdminTourEdit: React.FC = () => {
                     placeholder="May to October"
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="languages">Languages</Label>
-                  <Input
-                    id="languages"
-                    value={formData.languages}
-                    onChange={(e) => handleInputChange('languages', e.target.value)}
+              <div className="space-y-2">
+                <Label htmlFor="languages">Languages</Label>
+                <Input
+                  id="languages"
+                  value={formData.languages}
+                  onChange={(e) => handleInputChange('languages', e.target.value)}
                     placeholder="English, Azerbaijani, Russian"
-                  />
-                </div>
+                />
               </div>
+                  </div>
               <div className="space-y-2">
                 <Label htmlFor="meetingPoint">Meeting Point</Label>
                 <Textarea
@@ -648,25 +648,25 @@ const AdminTourEdit: React.FC = () => {
                   rows={3}
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="mealsDetails">Meals Details</Label>
-                <Textarea
-                  id="mealsDetails"
-                  value={formData.mealsDetails}
-                  onChange={(e) => handleInputChange('mealsDetails', e.target.value)}
+                <div className="space-y-2">
+                  <Label htmlFor="mealsDetails">Meals Details</Label>
+                  <Textarea
+                    id="mealsDetails"
+                    value={formData.mealsDetails}
+                    onChange={(e) => handleInputChange('mealsDetails', e.target.value)}
                   placeholder="Describe meal arrangements..."
-                  rows={3}
-                />
-              </div>
-              <div className="space-y-2">
+                    rows={3}
+                  />
+                </div>
+                <div className="space-y-2">
                 <Label htmlFor="waterSnacksDetails">Water & Snacks Details</Label>
-                <Textarea
-                  id="waterSnacksDetails"
-                  value={formData.waterSnacksDetails}
-                  onChange={(e) => handleInputChange('waterSnacksDetails', e.target.value)}
+                  <Textarea
+                    id="waterSnacksDetails"
+                    value={formData.waterSnacksDetails}
+                    onChange={(e) => handleInputChange('waterSnacksDetails', e.target.value)}
                   placeholder="Describe water and snack provisions..."
                   rows={2}
-                />
+                  />
               </div>
             </CardContent>
           </Card>
@@ -680,64 +680,64 @@ const AdminTourEdit: React.FC = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="space-y-2">
+                  <div className="space-y-2">
                 <Label>Provided Equipment</Label>
                 {formData.providedEquipment.map((item, index) => (
                   <div key={index} className="flex space-x-2">
-                    <Input
+                        <Input
                       value={item}
-                      onChange={(e) => handleArrayFieldChange('providedEquipment', index, e.target.value)}
+                          onChange={(e) => handleArrayFieldChange('providedEquipment', index, e.target.value)}
                       placeholder="Enter provided equipment"
-                    />
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => removeArrayField('providedEquipment', index)}
-                    >
-                      <X className="w-4 h-4" />
-                    </Button>
-                  </div>
-                ))}
-                <Button
-                  type="button"
-                  variant="outline"
+                        />
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => removeArrayField('providedEquipment', index)}
+                        >
+                          <X className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    ))}
+                      <Button
+                        type="button"
+                        variant="outline"
                   onClick={() => addArrayField('providedEquipment')}
                   className="w-full"
                 >
                   <Plus className="w-4 h-4 mr-2" />
                   Add Provided Equipment
-                </Button>
-              </div>
-              
-              <div className="space-y-2">
+                      </Button>
+                </div>
+
+                  <div className="space-y-2">
                 <Label>What to Bring</Label>
-                {formData.whatToBring.map((item, index) => (
+                    {formData.whatToBring.map((item, index) => (
                   <div key={index} className="flex space-x-2">
-                    <Input
-                      value={item}
-                      onChange={(e) => handleArrayFieldChange('whatToBring', index, e.target.value)}
+                        <Input
+                          value={item}
+                          onChange={(e) => handleArrayFieldChange('whatToBring', index, e.target.value)}
                       placeholder="Enter required items"
-                    />
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => removeArrayField('whatToBring', index)}
-                    >
-                      <X className="w-4 h-4" />
-                    </Button>
-                  </div>
-                ))}
-                <Button
-                  type="button"
-                  variant="outline"
+                        />
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => removeArrayField('whatToBring', index)}
+                        >
+                          <X className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    ))}
+                      <Button
+                        type="button"
+                        variant="outline"
                   onClick={() => addArrayField('whatToBring')}
                   className="w-full"
                 >
                   <Plus className="w-4 h-4 mr-2" />
                   Add Required Item
-                </Button>
+                      </Button>
               </div>
             </CardContent>
           </Card>
@@ -819,36 +819,36 @@ const AdminTourEdit: React.FC = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="space-y-2">
+                <div className="space-y-2">
                 <Label>Price Includes</Label>
-                {formData.priceIncludes.map((item, index) => (
+                  {formData.priceIncludes.map((item, index) => (
                   <div key={index} className="flex space-x-2">
-                    <Input
-                      value={item}
-                      onChange={(e) => handleArrayFieldChange('priceIncludes', index, e.target.value)}
+                      <Input
+                        value={item}
+                        onChange={(e) => handleArrayFieldChange('priceIncludes', index, e.target.value)}
                       placeholder="Enter what's included"
-                    />
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => removeArrayField('priceIncludes', index)}
+                      >
+                        <X className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  ))}
                     <Button
                       type="button"
                       variant="outline"
-                      size="sm"
-                      onClick={() => removeArrayField('priceIncludes', index)}
-                    >
-                      <X className="w-4 h-4" />
-                    </Button>
-                  </div>
-                ))}
-                <Button
-                  type="button"
-                  variant="outline"
                   onClick={() => addArrayField('priceIncludes')}
                   className="w-full"
                 >
                   <Plus className="w-4 h-4 mr-2" />
                   Add Included Item
-                </Button>
+                    </Button>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <Label htmlFor="groupDiscounts">Group Discounts</Label>
@@ -1087,7 +1087,7 @@ const AdminTourEdit: React.FC = () => {
               disabled={isSubmitting}
               className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 disabled:opacity-50"
             >
-              <Save className="w-4 h-4 mr-2" />
+                  <Save className="w-4 h-4 mr-2" />
               {isSubmitting ? 'Updating Tour...' : 'Update Tour'}
             </Button>
           </div>

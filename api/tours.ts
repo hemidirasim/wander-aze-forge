@@ -30,6 +30,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         return await handleGet(req, res);
       case 'POST':
         return await handlePost(req, res);
+      case 'PUT':
+        return await handlePut(req, res);
       default:
         return res.status(405).json({ error: 'Method not allowed' });
     }
@@ -202,6 +204,184 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
     return res.status(500).json({
       success: false,
       error: 'Failed to create tour',
+      message: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
+}
+
+async function handlePut(req: VercelRequest, res: VercelResponse) {
+  const { id } = req.query;
+  
+  if (!id) {
+    return res.status(400).json({
+      success: false,
+      error: 'Tour ID is required'
+    });
+  }
+
+  try {
+    const {
+      title,
+      description,
+      category,
+      duration,
+      difficulty,
+      price,
+      maxParticipants,
+      rating,
+      reviewsCount,
+      groupSize,
+      location,
+      overview,
+      bestSeason,
+      meetingPoint,
+      languages,
+      accommodationDetails,
+      mealsDetails,
+      waterSnacksDetails,
+      providedEquipment,
+      whatToBring,
+      transportDetails,
+      pickupService,
+      galleryImages,
+      photographyService,
+      priceIncludes,
+      groupDiscounts,
+      earlyBirdDiscount,
+      contactPhone,
+      bookingTerms,
+      highlights,
+      includes,
+      excludes,
+      itinerary,
+      requirements,
+      tourPrograms,
+      isActive,
+      featured
+    } = req.body;
+
+    // Validate required fields
+    if (!title || !description || !category || !duration || !difficulty || !price || !maxParticipants) {
+      return res.status(400).json({
+        success: false,
+        error: 'Missing required fields'
+      });
+    }
+
+    // Prepare arrays for database
+    const providedEquipmentArray = Array.isArray(providedEquipment) ? providedEquipment : [];
+    const whatToBringArray = Array.isArray(whatToBring) ? whatToBring : [];
+    const priceIncludesArray = Array.isArray(priceIncludes) ? priceIncludes : [];
+    const highlightsArray = Array.isArray(highlights) ? highlights : [];
+    const includesArray = Array.isArray(includes) ? includes : [];
+    const excludesArray = Array.isArray(excludes) ? excludes : [];
+    const galleryImagesArray = Array.isArray(galleryImages) ? galleryImages : [];
+    const tourProgramsArray = Array.isArray(tourPrograms) ? tourPrograms : [];
+
+    // Update tour in database
+    const result = await pool.query(`
+      UPDATE tours SET
+        title = $1,
+        description = $2,
+        category = $3,
+        duration = $4,
+        difficulty = $5,
+        price = $6,
+        max_participants = $7,
+        rating = $8,
+        reviews_count = $9,
+        group_size = $10,
+        location = $11,
+        overview = $12,
+        best_season = $13,
+        meeting_point = $14,
+        languages = $15,
+        accommodation_details = $16,
+        meals_details = $17,
+        water_snacks_details = $18,
+        provided_equipment = $19,
+        what_to_bring = $20,
+        transport_details = $21,
+        pickup_service = $22,
+        gallery_images = $23,
+        photography_service = $24,
+        price_includes = $25,
+        group_discounts = $26,
+        early_bird_discount = $27,
+        contact_phone = $28,
+        booking_terms = $29,
+        highlights = $30,
+        includes = $31,
+        excludes = $32,
+        itinerary = $33,
+        requirements = $34,
+        tour_programs = $35,
+        is_active = $36,
+        featured = $37,
+        updated_at = CURRENT_TIMESTAMP
+      WHERE id = $38
+      RETURNING *
+    `, [
+      title.trim(),
+      description.trim(),
+      category.trim(),
+      duration.trim(),
+      difficulty.trim(),
+      parseFloat(price),
+      parseInt(maxParticipants),
+      parseFloat(rating) || 4.5,
+      parseInt(reviewsCount) || 0,
+      groupSize?.trim() || '',
+      location?.trim() || '',
+      overview?.trim() || '',
+      bestSeason?.trim() || '',
+      meetingPoint?.trim() || '',
+      languages?.trim() || '',
+      accommodationDetails?.trim() || '',
+      mealsDetails?.trim() || '',
+      waterSnacksDetails?.trim() || '',
+      JSON.stringify(providedEquipmentArray),
+      JSON.stringify(whatToBringArray),
+      transportDetails?.trim() || '',
+      pickupService?.trim() || '',
+      JSON.stringify(galleryImagesArray),
+      photographyService?.trim() || '',
+      JSON.stringify(priceIncludesArray),
+      groupDiscounts?.trim() || '',
+      earlyBirdDiscount?.trim() || '',
+      contactPhone?.trim() || '',
+      bookingTerms?.trim() || '',
+      JSON.stringify(highlightsArray),
+      JSON.stringify(includesArray),
+      JSON.stringify(excludesArray),
+      itinerary?.trim() || '',
+      requirements?.trim() || '',
+      JSON.stringify(tourProgramsArray),
+      isActive !== false,
+      featured === true,
+      id
+    ]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: 'Tour not found'
+      });
+    }
+
+    console.log('Tour updated successfully:', result.rows[0]);
+
+    return res.status(200).json({
+      success: true,
+      data: result.rows[0],
+      message: 'Tour updated successfully'
+    });
+
+  } catch (error) {
+    console.error('Error updating tour:', error);
+    return res.status(500).json({
+      success: false,
+      error: 'Failed to update tour',
       message: error instanceof Error ? error.message : 'Unknown error'
     });
   }
