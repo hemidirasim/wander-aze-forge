@@ -7,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Save, Upload, Image, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import FileUpload from '@/components/FileUpload';
+import GalleryUpload from '@/components/GalleryUpload';
 
 interface HeroSection {
   id: number;
@@ -39,7 +39,8 @@ const AdminHero: React.FC = () => {
     button1_link: '',
     button2_text: '',
     button2_link: '',
-    is_active: true
+    is_active: true,
+    galleryImages: [] as any[]
   });
 
   useEffect(() => {
@@ -70,7 +71,15 @@ const AdminHero: React.FC = () => {
           button1_link: data.data.button1_link || '',
           button2_text: data.data.button2_text || '',
           button2_link: data.data.button2_link || '',
-          is_active: data.data.is_active !== false
+          is_active: data.data.is_active !== false,
+          galleryImages: data.data.image_url ? [{
+            id: 'hero-image',
+            url: data.data.image_url,
+            filename: 'hero-image.jpg',
+            size: 0,
+            uploadedAt: new Date().toISOString(),
+            isMain: true
+          }] : []
         });
       }
     } catch (error) {
@@ -84,14 +93,6 @@ const AdminHero: React.FC = () => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleImageUpload = (url: string) => {
-    setFormData(prev => ({ ...prev, image_url: url }));
-  };
-
-  const handleImageUploadError = (error: string) => {
-    console.error('Image upload error:', error);
-    alert(`Image upload failed: ${error}`);
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -101,12 +102,18 @@ const AdminHero: React.FC = () => {
       const url = heroData ? `/api/hero-section?id=${heroData.id}` : '/api/hero-section';
       const method = heroData ? 'PUT' : 'POST';
 
+      // Use first gallery image as main image if available
+      const heroDataToSend = {
+        ...formData,
+        image_url: formData.galleryImages.length > 0 ? formData.galleryImages[0].url : formData.image_url
+      };
+
       const response = await fetch(url, {
         method,
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(heroDataToSend),
       });
 
       const result = await response.json();
@@ -208,20 +215,16 @@ const AdminHero: React.FC = () => {
               </div>
 
               <div className="space-y-4">
-                <Label htmlFor="image_url">Hero Image</Label>
+                <Label>Hero Image</Label>
                 
-                {/* Image Upload Component */}
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 hover:border-blue-400 transition-colors">
-                  <FileUpload
-                    onUploadComplete={handleImageUpload}
-                    onUploadError={handleImageUploadError}
-                    type="tour"
-                    accept="image/*"
-                    maxSizeMB={10}
-                    multiple={false}
-                    className="w-full"
-                  />
-                </div>
+                {/* Gallery Upload Component */}
+                <GalleryUpload
+                  onImagesChange={(images) => handleInputChange('galleryImages', images)}
+                  initialImages={formData.galleryImages}
+                  maxImages={1}
+                  allowedTypes={['image/jpeg', 'image/png', 'image/webp', 'image/gif']}
+                  maxSize={10}
+                />
 
                 {/* Manual URL Input */}
                 <div className="space-y-2">
@@ -236,26 +239,6 @@ const AdminHero: React.FC = () => {
                     Use a path to an image in the public folder (e.g., /hero-mountain-custom.jpg) or upload a new image above
                   </p>
                 </div>
-
-                {/* Current Image Preview */}
-                {formData.image_url && (
-                  <div className="space-y-2">
-                    <Label>Current Image Preview</Label>
-                    <div className="relative w-full h-48 rounded-lg overflow-hidden border">
-                      <img 
-                        src={formData.image_url} 
-                        alt="Hero preview" 
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          e.currentTarget.style.display = 'none';
-                        }}
-                      />
-                      <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">
-                        <span className="text-gray-500">Image preview</span>
-                      </div>
-                    </div>
-                  </div>
-                )}
               </div>
             </CardContent>
           </Card>
