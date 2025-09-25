@@ -232,45 +232,151 @@ const AdminContact = () => {
                     />
                   </div>
 
-                  {/* Contact Information Fields */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="phone">Phone</Label>
-                      <Input
-                        id="phone"
-                        value={formData.contact_info.phone}
-                        onChange={(e) => handleContactInfoChange('phone', e.target.value)}
-                        placeholder="Phone number"
-                      />
+                  {/* Section-specific Fields */}
+                  {section.section === 'hero' && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="phone">Phone</Label>
+                        <Input
+                          id="phone"
+                          value={formData.contact_info.phone}
+                          onChange={(e) => handleContactInfoChange('phone', e.target.value)}
+                          placeholder="Phone number"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="email">Email</Label>
+                        <Input
+                          id="email"
+                          value={formData.contact_info.email}
+                          onChange={(e) => handleContactInfoChange('email', e.target.value)}
+                          placeholder="Email address"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="address">Address</Label>
+                        <Input
+                          id="address"
+                          value={formData.contact_info.address}
+                          onChange={(e) => handleContactInfoChange('address', e.target.value)}
+                          placeholder="Physical address"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="working_hours">Working Hours</Label>
+                        <Input
+                          id="working_hours"
+                          value={formData.contact_info.working_hours}
+                          onChange={(e) => handleContactInfoChange('working_hours', e.target.value)}
+                          placeholder="Working hours"
+                        />
+                      </div>
                     </div>
-                    <div>
-                      <Label htmlFor="email">Email</Label>
-                      <Input
-                        id="email"
-                        value={formData.contact_info.email}
-                        onChange={(e) => handleContactInfoChange('email', e.target.value)}
-                        placeholder="Email address"
-                      />
+                  )}
+
+                  {section.section === 'faq_section' && (
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="faq_description">FAQ Description</Label>
+                        <Textarea
+                          id="faq_description"
+                          value={formData.contact_info.faq_description || ''}
+                          onChange={(e) => handleContactInfoChange('faq_description', e.target.value)}
+                          placeholder="Description for FAQ section"
+                          rows={2}
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="faq_1_question">Question 1</Label>
+                        <Input
+                          id="faq_1_question"
+                          value={formData.contact_info.faq_1_question || ''}
+                          onChange={(e) => handleContactInfoChange('faq_1_question', e.target.value)}
+                          placeholder="First question"
+                        />
+                        <Textarea
+                          value={formData.contact_info.faq_1_answer || ''}
+                          onChange={(e) => handleContactInfoChange('faq_1_answer', e.target.value)}
+                          placeholder="Answer to first question"
+                          rows={2}
+                          className="mt-2"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="faq_2_question">Question 2</Label>
+                        <Input
+                          id="faq_2_question"
+                          value={formData.contact_info.faq_2_question || ''}
+                          onChange={(e) => handleContactInfoChange('faq_2_question', e.target.value)}
+                          placeholder="Second question"
+                        />
+                        <Textarea
+                          value={formData.contact_info.faq_2_answer || ''}
+                          onChange={(e) => handleContactInfoChange('faq_2_answer', e.target.value)}
+                          placeholder="Answer to second question"
+                          rows={2}
+                          className="mt-2"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="faq_3_question">Question 3</Label>
+                        <Input
+                          id="faq_3_question"
+                          value={formData.contact_info.faq_3_question || ''}
+                          onChange={(e) => handleContactInfoChange('faq_3_question', e.target.value)}
+                          placeholder="Third question"
+                        />
+                        <Textarea
+                          value={formData.contact_info.faq_3_answer || ''}
+                          onChange={(e) => handleContactInfoChange('faq_3_answer', e.target.value)}
+                          placeholder="Answer to third question"
+                          rows={2}
+                          className="mt-2"
+                        />
+                      </div>
                     </div>
-                    <div>
-                      <Label htmlFor="address">Address</Label>
-                      <Input
-                        id="address"
-                        value={formData.contact_info.address}
-                        onChange={(e) => handleContactInfoChange('address', e.target.value)}
-                        placeholder="Physical address"
-                      />
+                  )}
+
+                  {section.section === 'social_media' && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="facebook">Facebook URL</Label>
+                        <Input
+                          id="facebook"
+                          value={formData.contact_info.facebook || ''}
+                          onChange={(e) => handleContactInfoChange('facebook', e.target.value)}
+                          placeholder="Facebook page URL"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="instagram">Instagram URL</Label>
+                        <Input
+                          id="instagram"
+                          value={formData.contact_info.instagram || ''}
+                          onChange={(e) => handleContactInfoChange('instagram', e.target.value)}
+                          placeholder="Instagram profile URL"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="linkedin">LinkedIn URL</Label>
+                        <Input
+                          id="linkedin"
+                          value={formData.contact_info.linkedin || ''}
+                          onChange={(e) => handleContactInfoChange('linkedin', e.target.value)}
+                          placeholder="LinkedIn profile URL"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="twitter">Twitter URL</Label>
+                        <Input
+                          id="twitter"
+                          value={formData.contact_info.twitter || ''}
+                          onChange={(e) => handleContactInfoChange('twitter', e.target.value)}
+                          placeholder="Twitter profile URL"
+                        />
+                      </div>
                     </div>
-                    <div>
-                      <Label htmlFor="working_hours">Working Hours</Label>
-                      <Input
-                        id="working_hours"
-                        value={formData.contact_info.working_hours}
-                        onChange={(e) => handleContactInfoChange('working_hours', e.target.value)}
-                        placeholder="Working hours"
-                      />
-                    </div>
-                  </div>
+                  )}
 
 
 

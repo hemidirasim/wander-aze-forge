@@ -298,13 +298,27 @@ const Contact = () => {
                   )}
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  {faqData?.contact_info?.faqs ? (
-                    faqData.contact_info.faqs.map((faq: any, index: number) => (
-                      <div key={index}>
-                        <h4 className="font-semibold text-foreground mb-2">{faq.question}</h4>
-                        <p className="text-sm text-muted-foreground">{faq.answer}</p>
-                      </div>
-                    ))
+                  {faqData?.contact_info ? (
+                    <>
+                      {faqData.contact_info.faq_1_question && faqData.contact_info.faq_1_answer && (
+                        <div>
+                          <h4 className="font-semibold text-foreground mb-2">{faqData.contact_info.faq_1_question}</h4>
+                          <p className="text-sm text-muted-foreground">{faqData.contact_info.faq_1_answer}</p>
+                        </div>
+                      )}
+                      {faqData.contact_info.faq_2_question && faqData.contact_info.faq_2_answer && (
+                        <div>
+                          <h4 className="font-semibold text-foreground mb-2">{faqData.contact_info.faq_2_question}</h4>
+                          <p className="text-sm text-muted-foreground">{faqData.contact_info.faq_2_answer}</p>
+                        </div>
+                      )}
+                      {faqData.contact_info.faq_3_question && faqData.contact_info.faq_3_answer && (
+                        <div>
+                          <h4 className="font-semibold text-foreground mb-2">{faqData.contact_info.faq_3_question}</h4>
+                          <p className="text-sm text-muted-foreground">{faqData.contact_info.faq_3_answer}</p>
+                        </div>
+                      )}
+                    </>
                   ) : (
                     <>
                       <div>
