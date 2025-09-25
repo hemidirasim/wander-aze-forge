@@ -37,15 +37,22 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 async function handleGet(req: VercelRequest, res: VercelResponse) {
   try {
     console.log('Fetching tour categories...');
+    console.log('Database URL exists:', !!process.env.DATABASE_URL);
+    
+    // Test database connection first
+    const client = await pool.connect();
+    console.log('Database connection successful');
     
     const { id } = req.query;
     
     if (id) {
       // Get single category
-      const result = await pool.query(
+      const result = await client.query(
         'SELECT * FROM tour_categories WHERE id = $1',
         [id]
       );
+      
+      client.release();
       
       if (result.rows.length === 0) {
         return res.status(404).json({
@@ -60,9 +67,11 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
       });
     } else {
       // Get all categories
-      const result = await pool.query(
+      const result = await client.query(
         'SELECT * FROM tour_categories ORDER BY sort_order ASC, name ASC'
       );
+      
+      client.release();
       
       console.log(`Found ${result.rows.length} categories`);
       
@@ -75,13 +84,15 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
     console.error('Error fetching tour categories:', error);
     console.error('Error details:', {
       message: error instanceof Error ? error.message : 'Unknown error',
-      stack: error instanceof Error ? error.stack : undefined
+      stack: error instanceof Error ? error.stack : undefined,
+      database_url: process.env.DATABASE_URL ? 'Set' : 'Not set'
     });
     
     return res.status(500).json({
       success: false,
       error: 'Failed to fetch tour categories',
-      message: error instanceof Error ? error.message : 'Unknown error'
+      message: error instanceof Error ? error.message : 'Unknown error',
+      database_url: process.env.DATABASE_URL ? 'Set' : 'Not set'
     });
   }
 }
