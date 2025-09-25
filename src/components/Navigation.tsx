@@ -60,16 +60,14 @@ const Navigation = () => {
               variant="ghost" 
               size="sm"
               onClick={() => setIsSearchOpen(true)}
-              className="flex items-center gap-2 w-full max-w-sm px-4 py-2"
+              className="flex items-center gap-1.5 w-full max-w-sm px-3 py-1.5"
             >
-              <Search className="w-4 h-4" />
-              <span className="text-sm">Search tours, projects, blogs...</span>
-              <div className="flex items-center gap-1 ml-auto">
-                <kbd className="hidden lg:inline-flex items-center gap-0.5 px-1 py-0.5 text-xs font-medium text-muted-foreground bg-muted border border-border rounded">
-                  <span className="text-xs">⌘</span>
-                  <span className="text-xs">K</span>
-                </kbd>
-              </div>
+              <Search className="w-3.5 h-3.5" />
+              <span className="text-xs text-muted-foreground">Search...</span>
+              <kbd className="hidden lg:inline-flex items-center gap-0.5 px-1 py-0.5 text-xs font-medium text-muted-foreground bg-muted border border-border rounded ml-auto">
+                <span className="text-xs">⌘</span>
+                <span className="text-xs">K</span>
+              </kbd>
             </Button>
           </div>
 
@@ -227,14 +225,14 @@ const Navigation = () => {
               {/* Mobile Search Button */}
               <Button 
                 variant="ghost" 
-                className="w-fit flex items-center gap-2"
+                className="w-fit flex items-center gap-1.5"
                 onClick={() => {
                   setIsMenuOpen(false);
                   setIsSearchOpen(true);
                 }}
               >
-                <Search className="w-4 h-4" />
-                <span>Search</span>
+                <Search className="w-3.5 h-3.5" />
+                <span className="text-sm">Search</span>
                 <kbd className="flex items-center gap-0.5 px-1 py-0.5 text-xs font-medium text-muted-foreground bg-muted border border-border rounded">
                   <span className="text-xs">⌘</span>
                   <span className="text-xs">K</span>
