@@ -212,7 +212,13 @@ async function handlePut(req: VercelRequest, res: VercelResponse) {
       button1_link,
       button2_text,
       button2_link,
-      is_active
+      is_active,
+      title_color,
+      subtitle_color,
+      description_color,
+      title_size,
+      subtitle_size,
+      description_size
     } = req.body;
 
     if (!id) {
@@ -239,8 +245,14 @@ async function handlePut(req: VercelRequest, res: VercelResponse) {
         button2_text = $7,
         button2_link = $8,
         is_active = $9,
+        title_color = $10,
+        subtitle_color = $11,
+        description_color = $12,
+        title_size = $13,
+        subtitle_size = $14,
+        description_size = $15,
         updated_at = CURRENT_TIMESTAMP
-      WHERE id = $10
+      WHERE id = $16
       RETURNING *
     `, [
       title?.trim() || '',
@@ -252,6 +264,12 @@ async function handlePut(req: VercelRequest, res: VercelResponse) {
       button2_text?.trim() || '',
       button2_link?.trim() || '',
       is_active !== false,
+      title_color?.trim() || '#ffffff',
+      subtitle_color?.trim() || '#d46e39',
+      description_color?.trim() || '#ffffff',
+      title_size?.trim() || '6xl',
+      subtitle_size?.trim() || '4xl',
+      description_size?.trim() || 'xl',
       id
     ]);
 
