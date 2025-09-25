@@ -11,7 +11,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Link, useNavigate } from 'react-router-dom';
 import { Award, Leaf, Heart, ArrowRight } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import heroImage from '@/assets/hero-mountain.jpg';
+import heroImage from '@/assets/hero-mountain-new.jpg';
 
 const Index = () => {
   const [featuredTours, setFeaturedTours] = useState([]);
