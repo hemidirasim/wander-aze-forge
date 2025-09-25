@@ -44,15 +44,31 @@ const Navigation = () => {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-border shadow-natural">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link 
-            to="/" 
-            className="flex items-center space-x-2 text-foreground hover:text-primary transition-smooth"
-            onClick={scrollToTopInstant}
-          >
-            <Mountain className="w-8 h-8 text-primary" />
-            <span className="text-xl font-bold">OutTour.az</span>
-          </Link>
+          {/* Logo and Search */}
+          <div className="flex items-center space-x-6">
+            <Link 
+              to="/" 
+              className="flex items-center space-x-2 text-foreground hover:text-primary transition-smooth"
+              onClick={scrollToTopInstant}
+            >
+              <Mountain className="w-8 h-8 text-primary" />
+              <span className="text-xl font-bold">OutTour.az</span>
+            </Link>
+
+            {/* Search Button - Next to Logo */}
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={() => setIsSearchOpen(true)}
+              className="flex items-center gap-2 w-32"
+            >
+              <Search className="w-4 h-4" />
+              <span className="hidden lg:inline">Search</span>
+              <span className="hidden xl:inline text-xs text-muted-foreground ml-1">
+                (⌘K)
+              </span>
+            </Button>
+          </div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
@@ -129,20 +145,6 @@ const Navigation = () => {
                 {item.label}
               </Link>
             ))}
-            
-            {/* Search Button */}
-            <Button 
-              variant="ghost" 
-              size="sm"
-              onClick={() => setIsSearchOpen(true)}
-              className="flex items-center gap-2"
-            >
-              <Search className="w-4 h-4" />
-              <span className="hidden lg:inline">Search</span>
-              <span className="hidden xl:inline text-xs text-muted-foreground ml-1">
-                (⌘K)
-              </span>
-            </Button>
             
             <Button variant="adventure" asChild>
               <Link to="/contact" onClick={scrollToTopInstant}>Book Now</Link>
