@@ -58,79 +58,14 @@ const AdminTourCategories = () => {
   const fetchCategories = async () => {
     try {
       setLoading(true);
+      const response = await fetch('/api/tour-categories');
+      const data = await response.json();
       
-      // Check localStorage first
-      const savedCategories = localStorage.getItem('tour_categories');
-      if (savedCategories) {
-        const parsedCategories = JSON.parse(savedCategories);
-        setCategories(parsedCategories);
-        console.log('Loaded categories from localStorage:', parsedCategories.length);
-        setLoading(false);
-        return;
+      if (data.success) {
+        setCategories(data.data);
+      } else {
+        setError('Failed to fetch categories');
       }
-      
-      // Use static data if no localStorage data
-      const staticCategories = [
-        {
-          id: 1,
-          name: 'Trekking',
-          slug: 'trekking',
-          description: 'Multi-day hiking adventures through Azerbaijan\'s stunning mountain landscapes',
-          image_url: '/tours-hero.jpg',
-          is_active: true,
-          sort_order: 1,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        },
-        {
-          id: 2,
-          name: 'Hiking',
-          slug: 'hiking',
-          description: 'Day hikes and short trails perfect for all skill levels',
-          image_url: '/tours-hero.jpg',
-          is_active: true,
-          sort_order: 2,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        },
-        {
-          id: 3,
-          name: 'Cultural Tours',
-          slug: 'cultural',
-          description: 'Explore Azerbaijan\'s rich history, traditions, and cultural heritage',
-          image_url: '/tours-hero.jpg',
-          is_active: true,
-          sort_order: 3,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        },
-        {
-          id: 4,
-          name: 'Adventure Tours',
-          slug: 'adventure',
-          description: 'Thrilling outdoor activities and extreme sports experiences',
-          image_url: '/tours-hero.jpg',
-          is_active: true,
-          sort_order: 4,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        },
-        {
-          id: 5,
-          name: 'Tailor-Made',
-          slug: 'tailor-made',
-          description: 'Custom tours designed specifically for your interests and schedule',
-          image_url: '/tours-hero.jpg',
-          is_active: true,
-          sort_order: 5,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        }
-      ];
-      
-      setCategories(staticCategories);
-      localStorage.setItem('tour_categories', JSON.stringify(staticCategories));
-      console.log('Initialized with static categories and saved to localStorage');
     } catch (err) {
       console.error('Error fetching categories:', err);
       setError('Failed to fetch categories');
@@ -197,72 +132,24 @@ const AdminTourCategories = () => {
         image_url: galleryImages.length > 0 ? galleryImages[0].url : formData.image_url
       };
 
-      // Try to save to database first
-      try {
-        const url = editingId ? `/api/tour-categories?id=${editingId}` : '/api/tour-categories';
-        const method = editingId ? 'PUT' : 'POST';
+      const url = editingId ? `/api/tour-categories?id=${editingId}` : '/api/tour-categories';
+      const method = editingId ? 'PUT' : 'POST';
 
-        console.log('Attempting to save to database:', { url, method, submitData });
-
-        const response = await fetch(url, {
-          method,
+      const response = await fetch(url, {
+        method,
         headers: {
           'Content-Type': 'application/json',
         },
-          body: JSON.stringify(submitData),
-        });
+        body: JSON.stringify(submitData),
+      });
 
-        console.log('Database response status:', response.status);
-
-        if (response.ok) {
-          const data = await response.json();
-          console.log('Database response data:', data);
-          
-          if (data.success) {
-            console.log('Category saved to database successfully');
-            // Refresh from database
-            await fetchCategories();
-            handleCancel();
-            return;
-          }
-        } else {
-          console.error('Database request failed:', response.status, response.statusText);
-        }
-      } catch (apiError) {
-        console.warn('API call failed, using local state:', apiError);
-      }
-
-      // Fallback to local state if API fails
-      let updatedCategories;
-
-      if (editingId) {
-        // Update existing category
-        updatedCategories = categories.map(cat => 
-          cat.id === editingId 
-            ? { ...cat, ...submitData, updated_at: new Date().toISOString() }
-            : cat
-        );
-        console.log('Category updated in local state (fallback)');
+      if (response.ok) {
+        await fetchCategories();
+        handleCancel();
       } else {
-        // Create new category
-        const newCategory = {
-          id: Math.max(...categories.map(c => c.id)) + 1,
-          ...submitData,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        };
-        updatedCategories = [...categories, newCategory];
-        console.log('Category created in local state (fallback)');
+        const errorData = await response.json();
+        setError(errorData.error || 'Failed to save category');
       }
-
-      // Update state
-      setCategories(updatedCategories);
-      
-      // Save to localStorage
-      localStorage.setItem('tour_categories', JSON.stringify(updatedCategories));
-      console.log('Categories saved to localStorage (fallback)');
-
-      handleCancel();
     } catch (err) {
       console.error('Error saving category:', err);
       setError('Failed to save category');
@@ -275,41 +162,10 @@ const AdminTourCategories = () => {
     }
 
     try {
-      // Try to delete from database first
-      try {
-        console.log('Attempting to delete from database:', id);
-        
-        const response = await fetch(`/api/tour-categories?id=${id}`, {
-          method: 'DELETE',
-        });
-
-        console.log('Delete response status:', response.status);
-
-        if (response.ok) {
-          const data = await response.json();
-          console.log('Delete response data:', data);
-          
-          if (data.success) {
-            console.log('Category deleted from database successfully');
-            await fetchCategories();
-            return;
-          }
-      } else {
-          console.error('Delete request failed:', response.status, response.statusText);
-        }
-      } catch (apiError) {
-        console.warn('API delete call failed, using local state:', apiError);
-      }
-
-      // Fallback to local state if API fails
-      const updatedCategories = categories.filter(cat => cat.id !== id);
-      setCategories(updatedCategories);
-      
-      // Save to localStorage
-      localStorage.setItem('tour_categories', JSON.stringify(updatedCategories));
-      console.log('Category deleted from local state (fallback)');
-    } catch (err) {
-      console.error('Error deleting category:', err);
+      await fetch(`/api/tour-categories?id=${id}`, { method: 'DELETE' });
+      await fetchCategories();
+    } catch (error) {
+      console.error('Failed to delete category:', error);
       setError('Failed to delete category');
     }
   };
@@ -319,50 +175,23 @@ const AdminTourCategories = () => {
       const category = categories.find(c => c.id === id);
       if (!category) return;
 
-      // Try to update in database first
-      try {
-        console.log('Attempting to update status in database:', { id, currentStatus });
-        
-        const response = await fetch(`/api/tour-categories?id=${id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            ...category,
-            is_active: !currentStatus
-          }),
-        });
+      const response = await fetch(`/api/tour-categories?id=${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...category,
+          is_active: !currentStatus
+        }),
+      });
 
-        console.log('Toggle response status:', response.status);
-
-        if (response.ok) {
-          const data = await response.json();
-          console.log('Toggle response data:', data);
-          
-          if (data.success) {
-            console.log('Category status updated in database successfully');
-            await fetchCategories();
-            return;
-          }
-        } else {
-          console.error('Toggle request failed:', response.status, response.statusText);
-        }
-      } catch (apiError) {
-        console.warn('API toggle call failed, using local state:', apiError);
+      if (response.ok) {
+        await fetchCategories();
+      } else {
+        const errorData = await response.json();
+        setError(errorData.error || 'Failed to update category');
       }
-
-      // Fallback to local state if API fails
-      const updatedCategories = categories.map(cat => 
-        cat.id === id 
-          ? { ...cat, is_active: !currentStatus, updated_at: new Date().toISOString() }
-          : cat
-      );
-      setCategories(updatedCategories);
-      
-      // Save to localStorage
-      localStorage.setItem('tour_categories', JSON.stringify(updatedCategories));
-      console.log('Category status updated in local state (fallback)');
     } catch (err) {
       console.error('Error updating category:', err);
       setError('Failed to update category');
