@@ -84,6 +84,18 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
       is_active
     } = req.body;
 
+    console.log('Hero section POST request:', {
+      title,
+      subtitle,
+      description,
+      image_url,
+      button1_text,
+      button1_link,
+      button2_text,
+      button2_link,
+      is_active
+    });
+
     // Validate required fields
     if (!title) {
       return res.status(400).json({
@@ -91,6 +103,24 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
         error: 'Title is required'
       });
     }
+
+    // Ensure hero_section table exists
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS hero_section (
+        id SERIAL PRIMARY KEY,
+        title VARCHAR(255) NOT NULL,
+        subtitle VARCHAR(500),
+        description TEXT,
+        image_url VARCHAR(500),
+        button1_text VARCHAR(100),
+        button1_link VARCHAR(255),
+        button2_text VARCHAR(100),
+        button2_link VARCHAR(255),
+        is_active BOOLEAN DEFAULT true,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
 
     // Deactivate all existing hero sections
     await pool.query('UPDATE hero_section SET is_active = false');
@@ -127,7 +157,8 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
     return res.status(500).json({
       success: false,
       error: 'Failed to create hero section',
-      message: error instanceof Error ? error.message : 'Unknown error'
+      message: error instanceof Error ? error.message : 'Unknown error',
+      details: error instanceof Error ? error.stack : undefined
     });
   }
 }
