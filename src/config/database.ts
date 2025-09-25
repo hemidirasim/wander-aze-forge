@@ -280,6 +280,60 @@ We believe that the best adventures come from combining professional expertise w
     ON CONFLICT (section) DO NOTHING
   `);
 
+  // Create team_members table
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS team_members (
+      id SERIAL PRIMARY KEY,
+      name VARCHAR(255) NOT NULL,
+      position VARCHAR(255) NOT NULL,
+      bio TEXT,
+      photo_url VARCHAR(500),
+      email VARCHAR(255),
+      phone VARCHAR(50),
+      social_links JSONB,
+      order_index INTEGER DEFAULT 0,
+      is_active BOOLEAN DEFAULT true,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  // Insert default team members
+  await client.query(`
+    INSERT INTO team_members (name, position, bio, photo_url, email, phone, social_links, order_index) VALUES 
+    (
+      'Rashad Mammadov',
+      'Founder & Lead Guide',
+      'With over 10 years of experience exploring Azerbaijan''s wilderness, Rashad founded OutTour.az to share his passion for the country''s natural beauty. He has led hundreds of successful expeditions and is certified in mountain safety and wilderness first aid.',
+      '/assets/team/rashad-mammadov.jpg',
+      'rashad@outtour.az',
+      '+994 50 123 45 67',
+      '{"linkedin": "https://linkedin.com/in/rashad-mammadov", "instagram": "https://instagram.com/rashad_guide"}',
+      1
+    ),
+    (
+      'Leyla Gasimova',
+      'Cultural & Environmental Specialist',
+      'Leyla ensures our tours respect local traditions while promoting environmental conservation in the communities we visit. She holds a degree in Environmental Science and has worked with local communities for over 8 years.',
+      '/assets/team/leyla-gasimova.jpg',
+      'leyla@outtour.az',
+      '+994 50 123 45 68',
+      '{"linkedin": "https://linkedin.com/in/leyla-gasimova", "instagram": "https://instagram.com/leyla_eco"}',
+      2
+    ),
+    (
+      'Elvin Huseynov',
+      'Mountain Safety Expert',
+      'Elvin brings extensive mountaineering experience and ensures the highest safety standards on all our adventures. He is a certified mountain guide with international qualifications and has climbed peaks across the Caucasus region.',
+      '/assets/team/elvin-huseynov.jpg',
+      'elvin@outtour.az',
+      '+994 50 123 45 69',
+      '{"linkedin": "https://linkedin.com/in/elvin-huseynov", "instagram": "https://instagram.com/elvin_mountain"}',
+      3
+    )
+    ON CONFLICT DO NOTHING
+  `);
+
     client.release();
     console.log('Database tables initialized successfully');
     return true;

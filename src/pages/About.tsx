@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Link } from 'react-router-dom';
-import { Users, Mountain, Calendar, Globe } from 'lucide-react';
+import { Users, Mountain, Calendar, Globe, Mail, Phone, Linkedin, Instagram } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 
 interface AboutSection {
@@ -18,12 +18,29 @@ interface AboutSection {
   updated_at: string;
 }
 
+interface TeamMember {
+  id: number;
+  name: string;
+  position: string;
+  bio: string;
+  photo_url?: string;
+  email?: string;
+  phone?: string;
+  social_links?: any;
+  order_index: number;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
 const About = () => {
   const [aboutData, setAboutData] = useState<AboutSection[]>([]);
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchAboutData();
+    fetchTeamMembers();
   }, []);
 
   const fetchAboutData = async () => {
@@ -36,6 +53,19 @@ const About = () => {
       }
     } catch (error) {
       console.error('Error fetching about data:', error);
+    }
+  };
+
+  const fetchTeamMembers = async () => {
+    try {
+      const response = await fetch('/api/team-members');
+      const data = await response.json();
+      
+      if (data.success) {
+        setTeamMembers(data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching team members:', error);
     } finally {
       setLoading(false);
     }
@@ -156,15 +186,79 @@ const About = () => {
             </div>
           </div>
 
-          {ourTeamData?.image_url && (
-            <div className="relative h-80 rounded-2xl overflow-hidden max-w-4xl mx-auto">
-              <img 
-                src={ourTeamData.image_url}
-                alt="Our Team"
-                className="w-full h-full object-cover"
-              />
-            </div>
-          )}
+          {/* Team Members Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {teamMembers.map((member) => (
+              <Card key={member.id} className="text-center hover:shadow-elevated transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
+                <CardHeader>
+                  <div className="relative w-32 h-32 mx-auto mb-4">
+                    {member.photo_url ? (
+                      <img 
+                        src={member.photo_url}
+                        alt={member.name}
+                        className="w-full h-full object-cover rounded-full"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-primary/10 rounded-full flex items-center justify-center">
+                        <Users className="w-12 h-12 text-primary" />
+                      </div>
+                    )}
+                  </div>
+                  <CardTitle className="text-xl text-foreground">{member.name}</CardTitle>
+                  <Badge variant="secondary" className="w-fit mx-auto">
+                    {member.position}
+                  </Badge>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground text-sm leading-relaxed mb-4">
+                    {member.bio}
+                  </p>
+                  
+                  {/* Contact Information */}
+                  <div className="space-y-2 text-sm">
+                    {member.email && (
+                      <div className="flex items-center justify-center gap-2 text-muted-foreground">
+                        <Mail className="w-4 h-4" />
+                        <span>{member.email}</span>
+                      </div>
+                    )}
+                    {member.phone && (
+                      <div className="flex items-center justify-center gap-2 text-muted-foreground">
+                        <Phone className="w-4 h-4" />
+                        <span>{member.phone}</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Social Links */}
+                  {member.social_links && (
+                    <div className="flex justify-center gap-3 mt-4">
+                      {member.social_links.linkedin && (
+                        <a
+                          href={member.social_links.linkedin}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-8 h-8 bg-blue-100 hover:bg-blue-200 rounded-lg flex items-center justify-center transition-colors"
+                        >
+                          <Linkedin className="w-4 h-4 text-blue-600" />
+                        </a>
+                      )}
+                      {member.social_links.instagram && (
+                        <a
+                          href={member.social_links.instagram}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-8 h-8 bg-pink-100 hover:bg-pink-200 rounded-lg flex items-center justify-center transition-colors"
+                        >
+                          <Instagram className="w-4 h-4 text-pink-600" />
+                        </a>
+                      )}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
       </section>
 
