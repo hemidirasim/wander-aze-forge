@@ -57,9 +57,9 @@ const getActivityIcon = (iconType?: string) => {
 const getDifficultyColor = (difficulty: string) => {
   switch (difficulty) {
     case 'Easy':
-      return 'bg-yellow-100 text-yellow-800';
+      return 'bg-orange-100 text-orange-800';
     case 'Moderate':
-      return 'bg-yellow-100 text-yellow-800';
+      return 'bg-orange-100 text-orange-800';
     case 'Challenging':
       return 'bg-red-100 text-red-800';
     default:

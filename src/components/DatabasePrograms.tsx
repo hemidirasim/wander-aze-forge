@@ -67,7 +67,7 @@ const DatabasePrograms: React.FC = () => {
       case 'education':
         return 'bg-blue-100 text-blue-800';
       case 'youth_development':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-orange-100 text-orange-800';
       case 'women_empowerment':
         return 'bg-pink-100 text-pink-800';
       default:
