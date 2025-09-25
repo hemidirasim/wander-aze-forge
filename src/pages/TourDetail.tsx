@@ -109,7 +109,7 @@ const TourDetail = () => {
 
   // Initialize Fancybox for gallery images
   useEffect(() => {
-    if (window.Fancybox && tour.gallery_images && tour.gallery_images.length > 0) {
+    if (window.Fancybox && tour && tour.gallery_images && tour.gallery_images.length > 0) {
       window.Fancybox.bind('[data-fancybox="tour-gallery"]', {
         Thumbs: {
           autoStart: false,
@@ -130,7 +130,7 @@ const TourDetail = () => {
         window.Fancybox.destroy();
       }
     };
-  }, [tour.gallery_images]);
+  }, [tour?.gallery_images]);
 
   if (loading) {
     return (
@@ -426,7 +426,7 @@ const TourDetail = () => {
                   <CardTitle className="text-2xl">Media</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  {tour.gallery_images && tour.gallery_images.length > 0 ? (
+                  {tour && tour.gallery_images && tour.gallery_images.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       {tour.gallery_images.map((image, index) => (
                         <a
