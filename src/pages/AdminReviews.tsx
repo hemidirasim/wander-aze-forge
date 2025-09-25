@@ -63,13 +63,24 @@ const AdminReviews = () => {
   const fetchReviews = async () => {
     try {
       const response = await fetch('/api/reviews');
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
       const data = await response.json();
       
       if (data.success) {
         setReviews(data.data);
+      } else {
+        console.error('API returned error:', data.error);
+        // Show empty state with message
+        setReviews([]);
       }
     } catch (error) {
       console.error('Error fetching reviews:', error);
+      // Show empty state with message
+      setReviews([]);
     } finally {
       setLoading(false);
     }
@@ -296,8 +307,25 @@ const AdminReviews = () => {
           </Card>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {reviews.map((review) => (
+        {reviews.length === 0 ? (
+          <div className="text-center py-12">
+            <div className="mb-4">
+              <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+                <Star className="w-8 h-8 text-muted-foreground" />
+              </div>
+              <h3 className="text-lg font-semibold text-foreground mb-2">No Reviews Found</h3>
+              <p className="text-muted-foreground mb-4">
+                {loading ? 'Loading reviews...' : 'No reviews have been added yet or there was an error loading them.'}
+              </p>
+              <Button onClick={() => setShowForm(true)} className="flex items-center gap-2">
+                <Plus className="w-4 h-4" />
+                Add First Review
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {reviews.map((review) => (
             <Card key={review.id} className="relative">
               <CardHeader>
                 <div className="flex items-start justify-between">
@@ -367,7 +395,8 @@ const AdminReviews = () => {
               </CardContent>
             </Card>
           ))}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );

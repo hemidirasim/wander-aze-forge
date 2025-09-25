@@ -28,13 +28,22 @@ const DatabaseReviews = () => {
   const fetchReviews = async () => {
     try {
       const response = await fetch('/api/reviews?featured=true');
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
       const data = await response.json();
       
       if (data.success) {
         setReviews(data.data);
+      } else {
+        console.error('API returned error:', data.error);
+        setReviews([]);
       }
     } catch (error) {
       console.error('Error fetching reviews:', error);
+      setReviews([]);
     } finally {
       setLoading(false);
     }
