@@ -65,10 +65,11 @@ const AdminReviews = () => {
       const response = await fetch('/api/reviews');
       const data = await response.json();
       
-      if (data.success) {
-        setReviews(data.data);
+      // API now returns array directly, not wrapped in success/data
+      if (Array.isArray(data)) {
+        setReviews(data);
       } else {
-        console.error('Error:', data.error);
+        console.error('Error: API returned non-array data:', data);
         setReviews([]);
       }
     } catch (error) {
