@@ -64,9 +64,12 @@ const Navigation = () => {
             >
               <Search className="w-4 h-4" />
               <span className="text-sm">Search tours, projects, blogs...</span>
-              <span className="hidden xl:inline text-xs text-muted-foreground ml-auto">
-                (⌘K)
-              </span>
+              <div className="flex items-center gap-1 ml-auto">
+                <kbd className="hidden lg:inline-flex items-center gap-1 px-1.5 py-0.5 text-xs font-medium text-muted-foreground bg-muted border border-border rounded">
+                  <span className="text-xs">⌘</span>
+                  <span className="text-xs">K</span>
+                </kbd>
+              </div>
             </Button>
           </div>
 
@@ -231,7 +234,11 @@ const Navigation = () => {
                 }}
               >
                 <Search className="w-4 h-4" />
-                Search
+                <span>Search</span>
+                <kbd className="flex items-center gap-1 px-1.5 py-0.5 text-xs font-medium text-muted-foreground bg-muted border border-border rounded">
+                  <span className="text-xs">⌘</span>
+                  <span className="text-xs">K</span>
+                </kbd>
               </Button>
               
               <Button variant="adventure" className="w-fit mt-4" asChild>
