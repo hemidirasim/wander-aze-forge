@@ -145,6 +145,21 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
       });
     }
 
+    // Ensure table exists
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS tour_categories (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(100) NOT NULL UNIQUE,
+        slug VARCHAR(100) NOT NULL UNIQUE,
+        description TEXT,
+        image_url VARCHAR(500),
+        is_active BOOLEAN DEFAULT true,
+        sort_order INTEGER DEFAULT 0,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
     const result = await pool.query(`
       INSERT INTO tour_categories (name, slug, description, image_url, is_active, sort_order)
       VALUES ($1, $2, $3, $4, $5, $6)
@@ -158,6 +173,8 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
       sort_order || 0
     ]);
 
+    console.log('Category created in database:', result.rows[0]);
+
     return res.status(201).json({
       success: true,
       data: result.rows[0],
@@ -167,7 +184,8 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
     console.error('Error creating tour category:', error);
     return res.status(500).json({
       success: false,
-      error: 'Failed to create tour category'
+      error: 'Failed to create tour category',
+      message: error instanceof Error ? error.message : 'Unknown error'
     });
   }
 }
@@ -190,6 +208,21 @@ async function handlePut(req: VercelRequest, res: VercelResponse) {
         error: 'Name and slug are required'
       });
     }
+
+    // Ensure table exists
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS tour_categories (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(100) NOT NULL UNIQUE,
+        slug VARCHAR(100) NOT NULL UNIQUE,
+        description TEXT,
+        image_url VARCHAR(500),
+        is_active BOOLEAN DEFAULT true,
+        sort_order INTEGER DEFAULT 0,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
 
     const result = await pool.query(`
       UPDATE tour_categories SET
@@ -219,6 +252,8 @@ async function handlePut(req: VercelRequest, res: VercelResponse) {
       });
     }
 
+    console.log('Category updated in database:', result.rows[0]);
+
     return res.status(200).json({
       success: true,
       data: result.rows[0],
@@ -228,7 +263,8 @@ async function handlePut(req: VercelRequest, res: VercelResponse) {
     console.error('Error updating tour category:', error);
     return res.status(500).json({
       success: false,
-      error: 'Failed to update tour category'
+      error: 'Failed to update tour category',
+      message: error instanceof Error ? error.message : 'Unknown error'
     });
   }
 }
@@ -244,6 +280,21 @@ async function handleDelete(req: VercelRequest, res: VercelResponse) {
       });
     }
 
+    // Ensure table exists
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS tour_categories (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(100) NOT NULL UNIQUE,
+        slug VARCHAR(100) NOT NULL UNIQUE,
+        description TEXT,
+        image_url VARCHAR(500),
+        is_active BOOLEAN DEFAULT true,
+        sort_order INTEGER DEFAULT 0,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
     const result = await pool.query(
       'DELETE FROM tour_categories WHERE id = $1 RETURNING *',
       [id]
@@ -256,6 +307,8 @@ async function handleDelete(req: VercelRequest, res: VercelResponse) {
       });
     }
 
+    console.log('Category deleted from database:', result.rows[0]);
+
     return res.status(200).json({
       success: true,
       message: 'Category deleted successfully'
@@ -264,7 +317,8 @@ async function handleDelete(req: VercelRequest, res: VercelResponse) {
     console.error('Error deleting tour category:', error);
     return res.status(500).json({
       success: false,
-      error: 'Failed to delete tour category'
+      error: 'Failed to delete tour category',
+      message: error instanceof Error ? error.message : 'Unknown error'
     });
   }
 }
