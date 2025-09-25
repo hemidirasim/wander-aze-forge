@@ -8,7 +8,7 @@ import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Award, Leaf, Heart, ArrowRight } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import heroImage from '@/assets/hero-mountain.jpg';
@@ -16,6 +16,7 @@ import heroImage from '@/assets/hero-mountain.jpg';
 const Index = () => {
   const [featuredTours, setFeaturedTours] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchFeaturedTours();
@@ -168,7 +169,7 @@ const Index = () => {
           ) : featuredTours.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {featuredTours.map((tour) => (
-                <Card key={tour.id} className="group hover:shadow-elevated transition-all duration-300 overflow-hidden border-0 bg-card/80 backdrop-blur-sm hover:scale-105">
+                <Card key={tour.id} className="group hover:shadow-elevated transition-all duration-300 overflow-hidden border-0 bg-card/80 backdrop-blur-sm hover:scale-105 cursor-pointer" onClick={() => navigate(`/tours/${tour.id}`)}>
                   <div className="relative h-48 overflow-hidden">
                     <img 
                       src={tour.image_url || 'https://images.unsplash.com/photo-1551632811-561732d1e306?w=600&h=400&fit=crop'} 
