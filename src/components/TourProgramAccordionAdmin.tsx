@@ -281,6 +281,7 @@ const TourProgramAccordionAdmin: React.FC<TourProgramAccordionAdminProps> = ({
                       {mealOptions.map((meal) => (
                         <Button
                           key={meal}
+                          type="button"
                           variant={program.meals.includes(meal) ? "default" : "outline"}
                           size="sm"
                           onClick={() => {
