@@ -62,7 +62,7 @@ const Index = () => {
   const highlights = [
     {
       icon: Award,
-      title: "10 Years of Excellence", 
+      title: "10+ Years of Excellence", 
       description: "Azerbaijan's first ecotour company with over 700 successful tours since 2014"
     },
     {
