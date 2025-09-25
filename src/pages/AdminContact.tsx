@@ -61,7 +61,20 @@ const AdminContact = () => {
               phone: heroSection.contact_info?.phone || '',
               email: heroSection.contact_info?.email || '',
               address: heroSection.contact_info?.address || '',
-              working_hours: heroSection.contact_info?.working_hours || ''
+              working_hours: heroSection.contact_info?.working_hours || '',
+              // FAQ fields
+              faq_description: '',
+              faq_1_question: '',
+              faq_1_answer: '',
+              faq_2_question: '',
+              faq_2_answer: '',
+              faq_3_question: '',
+              faq_3_answer: '',
+              // Social media fields
+              facebook: '',
+              instagram: '',
+              linkedin: '',
+              twitter: ''
             }
           });
         }
@@ -83,7 +96,20 @@ const AdminContact = () => {
         phone: contactInfo.phone || '',
         email: contactInfo.email || '',
         address: contactInfo.address || '',
-        working_hours: contactInfo.working_hours || ''
+        working_hours: contactInfo.working_hours || '',
+        // FAQ fields
+        faq_description: contactInfo.faq_description || '',
+        faq_1_question: contactInfo.faq_1_question || '',
+        faq_1_answer: contactInfo.faq_1_answer || '',
+        faq_2_question: contactInfo.faq_2_question || '',
+        faq_2_answer: contactInfo.faq_2_answer || '',
+        faq_3_question: contactInfo.faq_3_question || '',
+        faq_3_answer: contactInfo.faq_3_answer || '',
+        // Social media fields
+        facebook: contactInfo.facebook || '',
+        instagram: contactInfo.instagram || '',
+        linkedin: contactInfo.linkedin || '',
+        twitter: contactInfo.twitter || ''
       },
       image_url: section.image_url || ''
     });
@@ -152,7 +178,20 @@ const AdminContact = () => {
         phone: '',
         email: '',
         address: '',
-        working_hours: ''
+        working_hours: '',
+        // FAQ fields
+        faq_description: '',
+        faq_1_question: '',
+        faq_1_answer: '',
+        faq_2_question: '',
+        faq_2_answer: '',
+        faq_3_question: '',
+        faq_3_answer: '',
+        // Social media fields
+        facebook: '',
+        instagram: '',
+        linkedin: '',
+        twitter: ''
       }
     });
   };
