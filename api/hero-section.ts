@@ -221,12 +221,42 @@ async function handlePut(req: VercelRequest, res: VercelResponse) {
       description_size
     } = req.body;
 
+    console.log('Hero section PUT request:', {
+      id,
+      title,
+      subtitle,
+      description,
+      image_url,
+      button1_text,
+      button1_link,
+      button2_text,
+      button2_link,
+      is_active,
+      title_color,
+      subtitle_color,
+      description_color,
+      title_size,
+      subtitle_size,
+      description_size
+    });
+
     if (!id) {
       return res.status(400).json({
         success: false,
         error: 'Hero section ID is required'
       });
     }
+
+    // Check if hero_section table exists and add columns if needed
+    await pool.query(`
+      ALTER TABLE hero_section 
+      ADD COLUMN IF NOT EXISTS title_color VARCHAR(7) DEFAULT '#ffffff',
+      ADD COLUMN IF NOT EXISTS subtitle_color VARCHAR(7) DEFAULT '#d46e39',
+      ADD COLUMN IF NOT EXISTS description_color VARCHAR(7) DEFAULT '#ffffff',
+      ADD COLUMN IF NOT EXISTS title_size VARCHAR(10) DEFAULT '6xl',
+      ADD COLUMN IF NOT EXISTS subtitle_size VARCHAR(10) DEFAULT '4xl',
+      ADD COLUMN IF NOT EXISTS description_size VARCHAR(10) DEFAULT 'xl'
+    `);
 
     // If this hero section is being activated, deactivate all others
     if (is_active === true) {
@@ -290,10 +320,16 @@ async function handlePut(req: VercelRequest, res: VercelResponse) {
 
   } catch (error) {
     console.error('Error updating hero section:', error);
+    console.error('Error details:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
+      name: error instanceof Error ? error.name : undefined
+    });
     return res.status(500).json({
       success: false,
       error: 'Failed to update hero section',
-      message: error instanceof Error ? error.message : 'Unknown error'
+      message: error instanceof Error ? error.message : 'Unknown error',
+      details: error instanceof Error ? error.stack : undefined
     });
   }
 }
