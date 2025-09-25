@@ -9,11 +9,11 @@ interface Partner {
   id: number;
   name: string;
   description: string;
-  website?: string;
-  email?: string;
-  phone?: string;
+  website_url?: string;
+  contact_email?: string;
+  contact_phone?: string;
   logo_url?: string;
-  category: string;
+  type: string;
   status: string;
   created_at: string;
   updated_at: string;
@@ -150,13 +150,13 @@ const AdminPartners = () => {
                   <div className="flex-1">
                     <CardTitle className="text-xl mb-2">{partner.name}</CardTitle>
                     <div className="flex items-center gap-4 text-sm text-muted-foreground mb-2">
-                      <span>{partner.category}</span>
+                      <span>{partner.type}</span>
                       <span>•</span>
                       <span>{formatDate(partner.created_at)}</span>
-                      {partner.website && (
+                      {partner.website_url && (
                         <>
                           <span>•</span>
-                          <a href={partner.website} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                          <a href={partner.website_url} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
                             Website
                           </a>
                         </>

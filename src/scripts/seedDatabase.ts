@@ -1,4 +1,4 @@
-import { DatabaseService } from '../services/databaseService';
+eimport { DatabaseService } from '../services/databaseService';
 
 const sampleTours = [
   {

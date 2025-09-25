@@ -84,11 +84,11 @@ const AdminPartnerForm = () => {
           setFormData({
             name: partner.name || '',
             description: partner.description || '',
-            website: partner.website || '',
-            email: partner.email || '',
-            phone: partner.phone || '',
+            website: partner.website_url || '',
+            email: partner.contact_email || '',
+            phone: partner.contact_phone || '',
             logo_url: partner.logo_url || '',
-            category: partner.category || '',
+            category: partner.type || '',
             status: partner.status || 'active',
             galleryImages: galleryImages
           });
