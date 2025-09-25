@@ -202,6 +202,84 @@ export const initializeDatabase = async () => {
     )
   `);
 
+  // Create about_page table
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS about_page (
+      id SERIAL PRIMARY KEY,
+      section VARCHAR(50) UNIQUE NOT NULL,
+      title VARCHAR(255) NOT NULL,
+      content TEXT NOT NULL,
+      image_url VARCHAR(500),
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  // Insert default content for about page sections
+  await client.query(`
+    INSERT INTO about_page (section, title, content, image_url) VALUES 
+    (
+      'our_story',
+      'Our Story',
+      'Founded in 2020, OutTour.az has been at the forefront of adventure tourism in Azerbaijan. We started with a simple mission: to showcase the breathtaking natural beauty of our country and provide unforgettable experiences for travelers from around the world.
+
+Our journey began when our founders, a group of passionate hikers and nature enthusiasts, realized that Azerbaijan''s incredible landscapes were largely unknown to international travelers. From the majestic peaks of the Greater Caucasus to the pristine shores of the Caspian Sea, we saw an opportunity to share these hidden gems with the world.
+
+Today, we are proud to be Azerbaijan''s leading adventure tourism company, having guided thousands of travelers through some of the most spectacular landscapes in the region. Our commitment to sustainable tourism, safety, and authentic experiences has earned us the trust of adventurers worldwide.',
+      '/assets/about-story.jpg'
+    ),
+    (
+      'our_team',
+      'Our Team',
+      'Our team consists of experienced guides, safety experts, and local experts who are passionate about sharing Azerbaijan''s natural beauty. Each team member brings unique skills and deep knowledge of the region''s geography, culture, and wildlife.
+
+We believe that the best adventures come from combining professional expertise with genuine passion for the outdoors. Our guides are not just employees – they are adventurers, conservationists, and storytellers who love what they do and are excited to share their knowledge with you.',
+      '/assets/about-team.jpg'
+    )
+    ON CONFLICT (section) DO NOTHING
+  `);
+
+  // Create contact_page table
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS contact_page (
+      id SERIAL PRIMARY KEY,
+      section VARCHAR(50) UNIQUE NOT NULL,
+      title VARCHAR(255) NOT NULL,
+      content TEXT,
+      contact_info JSONB,
+      image_url VARCHAR(500),
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  // Insert default content for contact page sections
+  await client.query(`
+    INSERT INTO contact_page (section, title, content, contact_info, image_url) VALUES 
+    (
+      'hero',
+      'Get in Touch',
+      'Ready to start your adventure? We''d love to hear from you! Whether you have questions about our tours, need help planning your trip, or want to share your experience with us, our team is here to help.',
+      '{"phone": "+994 50 123 45 67", "email": "info@outtour.az", "address": "Baku, Azerbaijan", "working_hours": "Mon-Fri: 9:00-18:00, Sat: 10:00-16:00"}',
+      '/assets/contact-hero.jpg'
+    ),
+    (
+      'office_info',
+      'Our Office',
+      'Visit our main office in Baku for personalized tour planning and consultation. Our experienced team is ready to help you create the perfect adventure itinerary.',
+      '{"address": "123 Adventure Street, Baku, Azerbaijan", "phone": "+994 50 123 45 67", "email": "office@outtour.az", "working_hours": "Monday - Friday: 9:00 AM - 6:00 PM\\nSaturday: 10:00 AM - 4:00 PM\\nSunday: Closed"}',
+      '/assets/office-image.jpg'
+    ),
+    (
+      'emergency_contact',
+      'Emergency Contact',
+      'For urgent matters during your tour or immediate assistance, please use our emergency contact information.',
+      '{"emergency_phone": "+994 50 999 88 77", "emergency_email": "emergency@outtour.az", "available": "24/7"}',
+      null
+    )
+    ON CONFLICT (section) DO NOTHING
+  `);
+
     client.release();
     console.log('Database tables initialized successfully');
     return true;

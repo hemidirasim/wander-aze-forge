@@ -1,12 +1,50 @@
+import React, { useState, useEffect } from 'react';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Link } from 'react-router-dom';
-import { Award, Users, Globe, Heart, Target, Leaf, Mountain, Calendar } from 'lucide-react';
+import { Users, Mountain, Calendar, Globe } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
+
+interface AboutSection {
+  id: number;
+  section: string;
+  title: string;
+  content: string;
+  image_url?: string;
+  created_at: string;
+  updated_at: string;
+}
 
 const About = () => {
+  const [aboutData, setAboutData] = useState<AboutSection[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchAboutData();
+  }, []);
+
+  const fetchAboutData = async () => {
+    try {
+      const response = await fetch('/api/about');
+      const data = await response.json();
+      
+      if (data.success) {
+        setAboutData(data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching about data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getSectionData = (section: string) => {
+    return aboutData.find(item => item.section === section);
+  };
+
   const stats = [
     { icon: Calendar, label: "Years of Experience", value: "10+" },
     { icon: Users, label: "Happy Travelers", value: "2,500+" },
@@ -14,49 +52,34 @@ const About = () => {
     { icon: Globe, label: "Trails Explored", value: "30+" },
   ];
 
-  const values = [
-    {
-      icon: Leaf,
-      title: "Environmental Responsibility",
-      description: "We are committed to sustainable tourism practices that protect Azerbaijan's pristine wilderness for future generations."
-    },
-    {
-      icon: Heart,
-      title: "Community Support",
-      description: "Our tours provide sustainable income to local communities, preserving traditional lifestyles and cultural heritage."
-    },
-    {
-      icon: Target,
-      title: "Authentic Experiences",
-      description: "We offer genuine, immersive experiences that showcase the true beauty and culture of Azerbaijan's mountain regions."
-    },
-    {
-      icon: Award,
-      title: "Expert Guidance",
-      description: "Our certified local guides provide safe, educational, and memorable adventures backed by years of experience."
-    }
-  ];
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navigation />
+        <div className="pt-20">
+          <div className="container mx-auto px-4 py-20">
+            <div className="text-center mb-16">
+              <Skeleton className="h-16 w-96 mx-auto mb-6" />
+              <Skeleton className="h-6 w-2/3 mx-auto" />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+              <div className="space-y-4">
+                <Skeleton className="h-8 w-48" />
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-3/4" />
+              </div>
+              <Skeleton className="h-80 w-full rounded-2xl" />
+            </div>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
-  const team = [
-    {
-      name: "Rashad Mammadov",
-      role: "Founder & Lead Guide",
-      bio: "With over 10 years of experience exploring Azerbaijan's wilderness, Rashad founded Camping Azerbaijan to share his passion for the country's natural beauty.",
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop"
-    },
-    {
-      name: "Leyla Gasimova", 
-      role: "Cultural & Environmental Specialist",
-      bio: "Leyla ensures our tours respect local traditions while promoting environmental conservation in the communities we visit.",
-      image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=300&h=300&fit=crop"
-    },
-    {
-      name: "Elvin Huseynov",
-      role: "Mountain Safety Expert",
-      bio: "Elvin brings extensive mountaineering experience and ensures the highest safety standards on all our adventures.",
-      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop"
-    }
-  ];
+  const ourStoryData = getSectionData('our_story');
+  const ourTeamData = getSectionData('our_team');
 
   return (
     <div className="min-h-screen bg-background">
@@ -72,7 +95,7 @@ const About = () => {
         <div className="relative z-10 text-center text-white max-w-4xl px-4">
           <h1 className="text-5xl md:text-7xl font-bold mb-6">About Us</h1>
           <p className="text-xl md:text-2xl mb-8 text-white/90">
-            Azerbaijan's first ecotour company, pioneering sustainable adventure tourism since 2014
+            Azerbaijan's leading adventure tourism company, creating unforgettable experiences since 2020
           </p>
         </div>
       </section>
@@ -81,37 +104,23 @@ const About = () => {
       <section className="py-20 px-4">
         <div className="container mx-auto max-w-4xl">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">Our Story</h2>
-            <p className="text-xl text-muted-foreground leading-relaxed">
-              Founded in 2014, Camping Azerbaijan began as a passion project to showcase the incredible natural beauty 
-              and rich cultural heritage of our homeland. We started with a simple mission: to create authentic, 
-              responsible travel experiences that benefit both visitors and local communities.
-            </p>
+            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
+              {ourStoryData?.title || 'Our Story'}
+            </h2>
+            <div className="text-xl text-muted-foreground leading-relaxed whitespace-pre-line">
+              {ourStoryData?.content || 'Loading...'}
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6">
-              <h3 className="text-2xl font-bold text-foreground">Our Mission</h3>
-              <p className="text-muted-foreground leading-relaxed">
-                We believe that tourism should be a force for good. Every tour we organize supports local 
-                communities, preserves traditional cultures, and promotes environmental conservation. 
-                We're not just showing you Azerbaijan – we're helping to protect it.
-              </p>
-              
-              <h3 className="text-2xl font-bold text-foreground">Our Vision</h3>
-              <p className="text-muted-foreground leading-relaxed">
-                To be the leading sustainable tourism company in the Caucasus region, setting the standard 
-                for responsible travel that creates lasting positive impact on communities and environments.
-              </p>
-            </div>
+          {ourStoryData?.image_url && (
             <div className="relative h-80 rounded-2xl overflow-hidden">
               <img 
-                src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=400&fit=crop"
-                alt="Mountain landscape"
+                src={ourStoryData.image_url}
+                alt="Our Story"
                 className="w-full h-full object-cover"
               />
             </div>
-          </div>
+          )}
         </div>
       </section>
 
@@ -120,7 +129,7 @@ const About = () => {
         <div className="container mx-auto">
           <div className="text-center text-white mb-12">
             <h2 className="text-4xl font-bold mb-4">Our Impact in Numbers</h2>
-            <p className="text-xl text-white/90">A decade of meaningful adventures</p>
+            <p className="text-xl text-white/90">Years of meaningful adventures</p>
           </div>
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
@@ -135,104 +144,27 @@ const About = () => {
         </div>
       </section>
 
-      {/* Values Section */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-foreground mb-6">Our Values</h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              These core principles guide everything we do, from planning tours to building relationships with communities
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {values.map((value, index) => (
-              <Card key={index} className="group hover:shadow-elevated transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
-                <CardHeader>
-                  <div className="flex items-center space-x-4">
-                    <div className="p-3 bg-primary/10 rounded-lg group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                      <value.icon className="w-6 h-6 text-primary group-hover:text-primary-foreground" />
-                    </div>
-                    <CardTitle className="text-xl text-foreground">{value.title}</CardTitle>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground leading-relaxed">{value.description}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Team Section */}
+      {/* Our Team */}
       <section className="py-20 px-4 bg-muted/20">
         <div className="container mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-foreground mb-6">Meet Our Team</h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Passionate locals dedicated to sharing the beauty of Azerbaijan with the world
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {team.map((member, index) => (
-              <Card key={index} className="text-center hover:shadow-elevated transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
-                <CardHeader>
-                  <div className="relative w-32 h-32 mx-auto mb-4">
-                    <img 
-                      src={member.image}
-                      alt={member.name}
-                      className="w-full h-full object-cover rounded-full"
-                    />
-                  </div>
-                  <CardTitle className="text-xl text-foreground">{member.name}</CardTitle>
-                  <Badge variant="secondary" className="w-fit mx-auto">
-                    {member.role}
-                  </Badge>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground text-sm leading-relaxed">{member.bio}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Certifications & Partners */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto text-center">
-          <h2 className="text-4xl font-bold text-foreground mb-12">Certifications & Recognition</h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-            {[
-              "Certified Ecotourism Operator",
-              "Ministry of Tourism Licensed",
-              "International Mountain Guide Certified", 
-              "Sustainable Tourism Award 2023"
-            ].map((cert, index) => (
-              <Card key={index} className="p-6 text-center hover:shadow-elevated transition-all duration-300">
-                <Award className="w-12 h-12 mx-auto mb-4 text-primary" />
-                <h3 className="font-semibold text-foreground">{cert}</h3>
-              </Card>
-            ))}
-          </div>
-
-          <div className="max-w-2xl mx-auto">
-            <h3 className="text-2xl font-bold text-foreground mb-6">Our Partners</h3>
-            <p className="text-muted-foreground mb-8">
-              We work closely with government agencies, environmental organizations, and local communities 
-              to ensure our tours meet the highest standards of safety and sustainability.
-            </p>
-            <div className="flex flex-wrap justify-center gap-4 text-sm text-muted-foreground">
-              <Badge variant="outline">Ministry of Tourism</Badge>
-              <Badge variant="outline">Environmental Protection Agency</Badge>
-              <Badge variant="outline">Local Village Councils</Badge>
-              <Badge variant="outline">Mountain Rescue Service</Badge>
-              <Badge variant="outline">Cultural Heritage Foundation</Badge>
+            <h2 className="text-4xl font-bold text-foreground mb-6">
+              {ourTeamData?.title || 'Our Team'}
+            </h2>
+            <div className="text-xl text-muted-foreground max-w-2xl mx-auto whitespace-pre-line">
+              {ourTeamData?.content || 'Loading...'}
             </div>
           </div>
+
+          {ourTeamData?.image_url && (
+            <div className="relative h-80 rounded-2xl overflow-hidden max-w-4xl mx-auto">
+              <img 
+                src={ourTeamData.image_url}
+                alt="Our Team"
+                className="w-full h-full object-cover"
+              />
+            </div>
+          )}
         </div>
       </section>
 

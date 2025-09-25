@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
@@ -6,34 +7,49 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { MapPin, Phone, Mail, Clock, Facebook, Instagram, Linkedin, Twitter } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
+
+interface ContactSection {
+  id: number;
+  section: string;
+  title: string;
+  content?: string;
+  contact_info: any;
+  image_url?: string;
+  created_at: string;
+  updated_at: string;
+}
 
 const Contact = () => {
-  const contactInfo = [
-    {
-      icon: Phone,
-      title: "Phone",
-      detail: "(+994) 51 400 90 91",
-      description: "Available 9 AM - 6 PM (GMT+4)"
-    },
-    {
-      icon: Mail,
-      title: "Email", 
-      detail: "campingazerbaijan@gmail.com",
-      description: "We'll respond within 24 hours"
-    },
-    {
-      icon: MapPin,
-      title: "Location",
-      detail: "Baku, Azerbaijan",
-      description: "Tours depart from various locations"
-    },
-    {
-      icon: Clock,
-      title: "Office Hours",
-      detail: "Mon - Sat: 9AM - 6PM",
-      description: "Emergency contact available 24/7"
+  const [contactData, setContactData] = useState<ContactSection[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchContactData();
+  }, []);
+
+  const fetchContactData = async () => {
+    try {
+      const response = await fetch('/api/contact-page');
+      const data = await response.json();
+      
+      if (data.success) {
+        setContactData(data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching contact data:', error);
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
+
+  const getSectionData = (section: string) => {
+    return contactData.find(item => item.section === section);
+  };
+
+  const heroData = getSectionData('hero');
+  const officeData = getSectionData('office_info');
+  const emergencyData = getSectionData('emergency_contact');
 
   const socialLinks = [
     { icon: Facebook, url: "https://www.facebook.com/campingazerbaijan2014", name: "Facebook" },
@@ -41,6 +57,37 @@ const Contact = () => {
     { icon: Linkedin, url: "https://www.linkedin.com/company/campingazerbaijan/", name: "LinkedIn" },
     { icon: Twitter, url: "https://x.com/CampingAze", name: "Twitter" }
   ];
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navigation />
+        <div className="pt-20">
+          <div className="container mx-auto px-4 py-20">
+            <div className="text-center mb-16">
+              <Skeleton className="h-16 w-96 mx-auto mb-6" />
+              <Skeleton className="h-6 w-2/3 mx-auto" />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {[...Array(4)].map((_, i) => (
+                <Card key={i} className="text-center">
+                  <CardHeader>
+                    <Skeleton className="w-16 h-16 mx-auto mb-4" />
+                    <Skeleton className="h-6 w-24 mx-auto" />
+                  </CardHeader>
+                  <CardContent>
+                    <Skeleton className="h-6 w-32 mx-auto mb-2" />
+                    <Skeleton className="h-4 w-full" />
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -50,13 +97,19 @@ const Contact = () => {
       <section className="relative h-[60vh] flex items-center justify-center">
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1445308394109-4ec2920981b1?w=1920&h=1080&fit=crop)' }}
+          style={{ 
+            backgroundImage: heroData?.image_url 
+              ? `url(${heroData.image_url})` 
+              : 'url(https://images.unsplash.com/photo-1445308394109-4ec2920981b1?w=1920&h=1080&fit=crop)' 
+          }}
         />
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-transparent" />
         <div className="relative z-10 text-center text-white max-w-4xl px-4">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6">Contact Us</h1>
+          <h1 className="text-5xl md:text-7xl font-bold mb-6">
+            {heroData?.title || 'Contact Us'}
+          </h1>
           <p className="text-xl md:text-2xl mb-8 text-white/90">
-            Ready to start your Azerbaijan adventure? Get in touch with our team
+            {heroData?.content || 'Ready to start your Azerbaijan adventure? Get in touch with our team'}
           </p>
         </div>
       </section>
@@ -65,20 +118,71 @@ const Contact = () => {
       <section className="py-20 px-4">
         <div className="container mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-            {contactInfo.map((info, index) => (
-              <Card key={index} className="text-center hover:shadow-elevated transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
-                <CardHeader>
-                  <div className="mx-auto w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                    <info.icon className="w-8 h-8 text-primary" />
-                  </div>
-                  <CardTitle className="text-xl text-foreground">{info.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-lg font-semibold text-foreground mb-2">{info.detail}</div>
-                  <p className="text-sm text-muted-foreground">{info.description}</p>
-                </CardContent>
-              </Card>
-            ))}
+            {/* Phone */}
+            <Card className="text-center hover:shadow-elevated transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
+              <CardHeader>
+                <div className="mx-auto w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                  <Phone className="w-8 h-8 text-primary" />
+                </div>
+                <CardTitle className="text-xl text-foreground">Phone</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-lg font-semibold text-foreground mb-2">
+                  {heroData?.contact_info?.phone || officeData?.contact_info?.phone || '(+994) 50 123 45 67'}
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  {heroData?.contact_info?.working_hours || 'Available 9 AM - 6 PM (GMT+4)'}
+                </p>
+              </CardContent>
+            </Card>
+
+            {/* Email */}
+            <Card className="text-center hover:shadow-elevated transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
+              <CardHeader>
+                <div className="mx-auto w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                  <Mail className="w-8 h-8 text-primary" />
+                </div>
+                <CardTitle className="text-xl text-foreground">Email</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-lg font-semibold text-foreground mb-2">
+                  {heroData?.contact_info?.email || officeData?.contact_info?.email || 'info@outtour.az'}
+                </div>
+                <p className="text-sm text-muted-foreground">We'll respond within 24 hours</p>
+              </CardContent>
+            </Card>
+
+            {/* Location */}
+            <Card className="text-center hover:shadow-elevated transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
+              <CardHeader>
+                <div className="mx-auto w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                  <MapPin className="w-8 h-8 text-primary" />
+                </div>
+                <CardTitle className="text-xl text-foreground">Location</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-lg font-semibold text-foreground mb-2">
+                  {officeData?.contact_info?.address || heroData?.contact_info?.address || 'Baku, Azerbaijan'}
+                </div>
+                <p className="text-sm text-muted-foreground">Tours depart from various locations</p>
+              </CardContent>
+            </Card>
+
+            {/* Office Hours */}
+            <Card className="text-center hover:shadow-elevated transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
+              <CardHeader>
+                <div className="mx-auto w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                  <Clock className="w-8 h-8 text-primary" />
+                </div>
+                <CardTitle className="text-xl text-foreground">Office Hours</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-lg font-semibold text-foreground mb-2">
+                  {officeData?.contact_info?.working_hours || 'Mon - Sat: 9AM - 6PM'}
+                </div>
+                <p className="text-sm text-muted-foreground">Emergency contact available 24/7</p>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
@@ -246,15 +350,15 @@ const Contact = () => {
       <section className="py-16 px-4 bg-gradient-mountain">
         <div className="container mx-auto text-center">
           <h2 className="text-3xl font-bold text-white mb-6">
-            Emergency Contact
+            {emergencyData?.title || 'Emergency Contact'}
           </h2>
           <p className="text-lg text-white/90 mb-8 max-w-2xl mx-auto">
-            For urgent matters during tours or emergencies, our team is available 24/7
+            {emergencyData?.content || 'For urgent matters during tours or emergencies, our team is available 24/7'}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" variant="outline" className="bg-white text-mountain hover:bg-white/90">
               <Phone className="w-5 h-5 mr-2" />
-              Emergency: (+994) 51 400 90 91
+              Emergency: {emergencyData?.contact_info?.emergency_phone || '(+994) 50 999 88 77'}
             </Button>
           </div>
         </div>

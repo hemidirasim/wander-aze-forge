@@ -1,14 +1,29 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Mountain, Menu, X, Binoculars, Users, Wrench, ChevronDown } from 'lucide-react';
-import { useState } from 'react';
+import { Mountain, Menu, X, Binoculars, Users, Wrench, ChevronDown, Search } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import { tourCategories } from '@/data/tourCategories';
 import { scrollToTopInstant } from '@/hooks/useScrollToTop';
+import SearchModal from '@/components/SearchModal';
 
 const Navigation = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isToursOpen, setIsToursOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+
+  // Keyboard shortcut for search (Ctrl+K or Cmd+K)
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if ((event.ctrlKey || event.metaKey) && event.key === 'k') {
+        event.preventDefault();
+        setIsSearchOpen(true);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   const categoryIcons = {
     hiking: Mountain,
@@ -114,6 +129,21 @@ const Navigation = () => {
                 {item.label}
               </Link>
             ))}
+            
+            {/* Search Button */}
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={() => setIsSearchOpen(true)}
+              className="flex items-center gap-2"
+            >
+              <Search className="w-4 h-4" />
+              <span className="hidden lg:inline">Search</span>
+              <span className="hidden xl:inline text-xs text-muted-foreground ml-1">
+                (⌘K)
+              </span>
+            </Button>
+            
             <Button variant="adventure" asChild>
               <Link to="/contact" onClick={scrollToTopInstant}>Book Now</Link>
             </Button>
@@ -180,6 +210,20 @@ const Navigation = () => {
                   {item.label}
                 </Link>
               ))}
+              
+              {/* Mobile Search Button */}
+              <Button 
+                variant="ghost" 
+                className="w-fit flex items-center gap-2"
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  setIsSearchOpen(true);
+                }}
+              >
+                <Search className="w-4 h-4" />
+                Search
+              </Button>
+              
               <Button variant="adventure" className="w-fit mt-4" asChild>
                 <Link to="/contact" onClick={() => {
                   setIsMenuOpen(false);
@@ -190,6 +234,12 @@ const Navigation = () => {
           </div>
         )}
       </div>
+      
+      {/* Search Modal */}
+      <SearchModal 
+        isOpen={isSearchOpen} 
+        onClose={() => setIsSearchOpen(false)} 
+      />
     </nav>
   );
 };

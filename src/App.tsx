@@ -33,6 +33,8 @@ import AdminBlogs from "./pages/AdminBlogs";
 import AdminBlogForm from "./pages/AdminBlogForm";
 import AdminPartners from "./pages/AdminPartners";
 import AdminPartnerForm from "./pages/AdminPartnerForm";
+import AdminAbout from "./pages/AdminAbout";
+import AdminContact from "./pages/AdminContact";
 import SimpleAdminLayout from "./components/SimpleAdminLayout";
 import NotFound from "./pages/NotFound";
 
@@ -77,6 +79,8 @@ const App = () => (
             <Route path="partners/new" element={<AdminPartnerForm />} />
             <Route path="partner-form" element={<AdminPartnerForm />} />
             <Route path="partner-form/:id" element={<AdminPartnerForm />} />
+            <Route path="about" element={<AdminAbout />} />
+            <Route path="contact" element={<AdminContact />} />
           </Route>
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
