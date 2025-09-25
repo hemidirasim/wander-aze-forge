@@ -103,6 +103,25 @@ const Navigation = () => {
                   {/* Dropdown Menu */}
                   <div className="absolute top-full left-0 mt-2 w-64 bg-background border border-border rounded-lg shadow-elevated z-40 overflow-hidden">
                     <div className="py-2">
+                      {/* All Tours Link */}
+                      <Link
+                        to="/tours"
+                        className={`flex items-center px-4 py-3 text-sm hover:bg-accent hover:text-accent-foreground transition-colors border-b border-border ${
+                          location.pathname === '/tours' ? 'bg-accent text-accent-foreground' : 'text-foreground'
+                        }`}
+                        onClick={() => {
+                          setIsToursOpen(false);
+                          scrollToTopInstant();
+                        }}
+                      >
+                        <Mountain className="w-4 h-4 mr-3 text-primary" />
+                        <div>
+                          <div className="font-medium">All Tours</div>
+                          <div className="text-xs text-muted-foreground">
+                            Browse all our adventure tours
+                          </div>
+                        </div>
+                      </Link>
 
                       {/* Category Links */}
                       {tourCategories.map((category) => {
@@ -187,6 +206,20 @@ const Navigation = () => {
                 
                 {isToursOpen && (
                   <div className="ml-4 mt-2 space-y-2">
+                    {/* All Tours Link */}
+                    <Link
+                      to="/tours"
+                      className={`block py-2 text-sm text-foreground hover:text-primary transition-smooth ${
+                        location.pathname === '/tours' ? 'text-primary' : ''
+                      }`}
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                        scrollToTopInstant();
+                      }}
+                    >
+                      All Tours
+                    </Link>
+                    
                     {tourCategories.map((category) => (
                       <Link
                         key={category.id}
