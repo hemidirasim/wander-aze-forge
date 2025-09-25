@@ -9,13 +9,6 @@ import { Clock, Users, MapPin, Star, ArrowRight } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import toursHero from '@/assets/tours-hero.jpg';
 
-// Declare Fancybox for TypeScript
-declare global {
-  interface Window {
-    Fancybox: any;
-  }
-}
-
 interface Tour {
   id: number;
   title: string;
@@ -57,30 +50,6 @@ const Tours = () => {
     fetchTours();
   }, []);
 
-  // Initialize Fancybox when component mounts
-  useEffect(() => {
-    if (window.Fancybox) {
-      window.Fancybox.bind('[data-fancybox="tours-gallery"]', {
-        Thumbs: {
-          autoStart: false,
-        },
-        Toolbar: {
-          display: {
-            left: ["infobar"],
-            middle: ["zoomIn", "zoomOut", "toggle1to1", "rotateCCW", "rotateCW", "flipX", "flipY"],
-            right: ["slideshow", "thumbs", "close"]
-          }
-        }
-      });
-    }
-
-    // Cleanup Fancybox when component unmounts
-    return () => {
-      if (window.Fancybox) {
-        window.Fancybox.destroy();
-      }
-    };
-  }, [tours]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -146,25 +115,18 @@ const Tours = () => {
               {tours.map((tour) => (
                 <Card key={tour.id} className="group hover:shadow-elevated transition-all duration-300 overflow-hidden border-0 bg-card/80 backdrop-blur-sm hover:scale-105 cursor-pointer">
                   <div className="relative h-48 overflow-hidden">
-                    <a
-                      href={tour.image_url || 'https://images.unsplash.com/photo-1551632811-561732d1e306?w=600&h=400&fit=crop'}
-                      data-fancybox="tours-gallery"
-                      data-caption={tour.title}
-                      className="block w-full h-full"
-                    >
-                      <img 
-                        src={tour.image_url || 'https://images.unsplash.com/photo-1551632811-561732d1e306?w=600&h=400&fit=crop'} 
-                        alt={tour.title}
-                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 cursor-pointer"
-                      />
-                    </a>
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
-                    <div className="absolute top-4 left-4 pointer-events-none">
+                    <img 
+                      src={tour.image_url || 'https://images.unsplash.com/photo-1551632811-561732d1e306?w=600&h=400&fit=crop'} 
+                      alt={tour.title}
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                    <div className="absolute top-4 left-4">
                       <Badge variant="secondary" className="bg-background/90">
                         {tour.difficulty}
                       </Badge>
                     </div>
-                    <div className="absolute top-4 right-4 pointer-events-none">
+                    <div className="absolute top-4 right-4">
                       <Badge variant="secondary" className="bg-background/90">
                         {tour.duration}
                       </Badge>
