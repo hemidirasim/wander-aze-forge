@@ -65,7 +65,7 @@ const Navigation = () => {
               <Search className="w-4 h-4" />
               <span className="text-sm">Search tours, projects, blogs...</span>
               <div className="flex items-center gap-1 ml-auto">
-                <kbd className="hidden lg:inline-flex items-center gap-1 px-1.5 py-0.5 text-xs font-medium text-muted-foreground bg-muted border border-border rounded">
+                <kbd className="hidden lg:inline-flex items-center gap-0.5 px-1 py-0.5 text-xs font-medium text-muted-foreground bg-muted border border-border rounded">
                   <span className="text-xs">⌘</span>
                   <span className="text-xs">K</span>
                 </kbd>
@@ -235,7 +235,7 @@ const Navigation = () => {
               >
                 <Search className="w-4 h-4" />
                 <span>Search</span>
-                <kbd className="flex items-center gap-1 px-1.5 py-0.5 text-xs font-medium text-muted-foreground bg-muted border border-border rounded">
+                <kbd className="flex items-center gap-0.5 px-1 py-0.5 text-xs font-medium text-muted-foreground bg-muted border border-border rounded">
                   <span className="text-xs">⌘</span>
                   <span className="text-xs">K</span>
                 </kbd>
