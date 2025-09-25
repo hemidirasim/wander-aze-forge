@@ -41,10 +41,7 @@ const AdminContact = () => {
       phone: '',
       email: '',
       address: '',
-      working_hours: '',
-      emergency_phone: '',
-      emergency_email: '',
-      available: ''
+      working_hours: ''
     },
     image_url: '',
     galleryImages: [] as UploadedImage[]
@@ -211,10 +208,10 @@ const AdminContact = () => {
         <h1 className="text-3xl font-bold">Contact Page Management</h1>
       </div>
 
-      <div className="space-y-6">
-        {contactData
-          .filter(section => ['hero', 'office_info', 'emergency_contact'].includes(section.section))
-          .map((section) => (
+        <div className="space-y-6">
+          {contactData
+            .filter(section => ['hero', 'office_info'].includes(section.section))
+            .map((section) => (
           <Card key={section.id}>
             <CardHeader>
               <div className="flex items-center justify-between">
@@ -290,24 +287,6 @@ const AdminContact = () => {
                         value={formData.contact_info.working_hours}
                         onChange={(e) => handleContactInfoChange('working_hours', e.target.value)}
                         placeholder="Working hours"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="emergency_phone">Emergency Phone</Label>
-                      <Input
-                        id="emergency_phone"
-                        value={formData.contact_info.emergency_phone}
-                        onChange={(e) => handleContactInfoChange('emergency_phone', e.target.value)}
-                        placeholder="Emergency phone number"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="emergency_email">Emergency Email</Label>
-                      <Input
-                        id="emergency_email"
-                        value={formData.contact_info.emergency_email}
-                        onChange={(e) => handleContactInfoChange('emergency_email', e.target.value)}
-                        placeholder="Emergency email"
                       />
                     </div>
                   </div>
