@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { GalleryUpload } from '@/components/GalleryUpload';
+import GalleryUpload from '@/components/GalleryUpload';
 import { 
   Plus, 
   Edit, 
