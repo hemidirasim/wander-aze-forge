@@ -36,74 +36,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
 async function handleGet(req: VercelRequest, res: VercelResponse) {
   try {
-    console.log('Fetching tour categories...');
-    
-    // Return static data for now to test the API
-    const staticCategories = [
-      {
-        id: 1,
-        name: 'Trekking',
-        slug: 'trekking',
-        description: 'Multi-day hiking adventures through Azerbaijan\'s stunning mountain landscapes',
-        image_url: '/tours-hero.jpg',
-        is_active: true,
-        sort_order: 1,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-      },
-      {
-        id: 2,
-        name: 'Hiking',
-        slug: 'hiking',
-        description: 'Day hikes and short trails perfect for all skill levels',
-        image_url: '/tours-hero.jpg',
-        is_active: true,
-        sort_order: 2,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-      },
-      {
-        id: 3,
-        name: 'Cultural Tours',
-        slug: 'cultural',
-        description: 'Explore Azerbaijan\'s rich history, traditions, and cultural heritage',
-        image_url: '/tours-hero.jpg',
-        is_active: true,
-        sort_order: 3,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-      },
-      {
-        id: 4,
-        name: 'Adventure Tours',
-        slug: 'adventure',
-        description: 'Thrilling outdoor activities and extreme sports experiences',
-        image_url: '/tours-hero.jpg',
-        is_active: true,
-        sort_order: 4,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-      },
-      {
-        id: 5,
-        name: 'Tailor-Made',
-        slug: 'tailor-made',
-        description: 'Custom tours designed specifically for your interests and schedule',
-        image_url: '/tours-hero.jpg',
-        is_active: true,
-        sort_order: 5,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-      }
-    ];
+    console.log('Fetching tour categories from database...');
     
     const { id } = req.query;
     
     if (id) {
       // Get single category
-      const category = staticCategories.find(cat => cat.id === parseInt(id as string));
+      const result = await pool.query('SELECT * FROM tour_categories WHERE id = $1', [id]);
       
-      if (!category) {
+      if (result.rows.length === 0) {
         return res.status(404).json({
           success: false,
           error: 'Category not found'
@@ -112,15 +53,17 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
       
       return res.status(200).json({
         success: true,
-        data: category
+        data: result.rows[0]
       });
     } else {
       // Get all categories
-      console.log(`Returning ${staticCategories.length} static categories`);
+      const result = await pool.query('SELECT * FROM tour_categories ORDER BY sort_order ASC, created_at ASC');
+      
+      console.log(`Found ${result.rows.length} categories in database`);
       
       return res.status(200).json({
         success: true,
-        data: staticCategories
+        data: result.rows
       });
     }
   } catch (error) {
