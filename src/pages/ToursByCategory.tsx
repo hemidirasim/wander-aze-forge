@@ -1,6 +1,7 @@
 import { useParams, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import Navigation from '@/components/Navigation';
+import Footer from '@/components/Footer';
 import TourCategoryDropdown from '@/components/TourCategoryDropdown';
 import TailorMadeForm from '@/components/TailorMadeForm';
 import { Button } from '@/components/ui/button';
