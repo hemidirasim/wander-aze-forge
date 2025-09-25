@@ -144,12 +144,17 @@ const Navigation = () => {
                   location.pathname === item.path ? 'text-primary' : ''
                 }`}
                 onClick={scrollToTopInstant}
+                onMouseEnter={() => setIsToursOpen(false)}
               >
                 {item.label}
               </Link>
             ))}
             
-            <Button variant="adventure" asChild>
+            <Button 
+              variant="adventure" 
+              asChild
+              onMouseEnter={() => setIsToursOpen(false)}
+            >
               <Link to="/contact" onClick={scrollToTopInstant}>Book Now</Link>
             </Button>
           </div>
