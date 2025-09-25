@@ -185,6 +185,34 @@ const AdminTourCategories = () => {
         image_url: galleryImages.length > 0 ? galleryImages[0].url : formData.image_url
       };
 
+      // Try to save to database first
+      try {
+        const url = editingId ? `/api/tour-categories?id=${editingId}` : '/api/tour-categories';
+        const method = editingId ? 'PUT' : 'POST';
+
+        const response = await fetch(url, {
+          method,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+          body: JSON.stringify(submitData),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success) {
+            console.log('Category saved to database successfully');
+            // Refresh from database
+            await fetchCategories();
+            handleCancel();
+            return;
+          }
+        }
+      } catch (apiError) {
+        console.warn('API call failed, using local state:', apiError);
+      }
+
+      // Fallback to local state if API fails
       if (editingId) {
         // Update existing category
         const updatedCategories = categories.map(cat => 
@@ -193,7 +221,7 @@ const AdminTourCategories = () => {
             : cat
         );
         setCategories(updatedCategories);
-        console.log('Category updated successfully');
+        console.log('Category updated in local state');
       } else {
         // Create new category
         const newCategory = {
@@ -203,7 +231,7 @@ const AdminTourCategories = () => {
           updated_at: new Date().toISOString()
         };
         setCategories([...categories, newCategory]);
-        console.log('Category created successfully');
+        console.log('Category created in local state');
       }
 
       handleCancel();
@@ -219,9 +247,28 @@ const AdminTourCategories = () => {
     }
 
     try {
+      // Try to delete from database first
+      try {
+        const response = await fetch(`/api/tour-categories?id=${id}`, {
+          method: 'DELETE',
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success) {
+            console.log('Category deleted from database successfully');
+            await fetchCategories();
+            return;
+          }
+        }
+      } catch (apiError) {
+        console.warn('API call failed, using local state:', apiError);
+      }
+
+      // Fallback to local state if API fails
       const updatedCategories = categories.filter(cat => cat.id !== id);
       setCategories(updatedCategories);
-      console.log('Category deleted successfully');
+      console.log('Category deleted from local state');
     } catch (err) {
       console.error('Error deleting category:', err);
       setError('Failed to delete category');
@@ -230,13 +277,42 @@ const AdminTourCategories = () => {
 
   const toggleActive = async (id: number, currentStatus: boolean) => {
     try {
+      const category = categories.find(c => c.id === id);
+      if (!category) return;
+
+      // Try to update in database first
+      try {
+        const response = await fetch(`/api/tour-categories?id=${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            ...category,
+            is_active: !currentStatus
+          }),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success) {
+            console.log('Category status updated in database successfully');
+            await fetchCategories();
+            return;
+          }
+        }
+      } catch (apiError) {
+        console.warn('API call failed, using local state:', apiError);
+      }
+
+      // Fallback to local state if API fails
       const updatedCategories = categories.map(cat => 
         cat.id === id 
           ? { ...cat, is_active: !currentStatus, updated_at: new Date().toISOString() }
           : cat
       );
       setCategories(updatedCategories);
-      console.log('Category status updated successfully');
+      console.log('Category status updated in local state');
     } catch (err) {
       console.error('Error updating category:', err);
       setError('Failed to update category');
@@ -360,7 +436,7 @@ const AdminTourCategories = () => {
                     className="rounded"
                   />
                   <Label htmlFor="is_active">Active</Label>
-                </div>
+                    </div>
                 </div>
 
               <div className="flex gap-4">
