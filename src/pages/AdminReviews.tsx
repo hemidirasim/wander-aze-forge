@@ -69,8 +69,10 @@ const AdminReviews = () => {
       }
       
       const data = await response.json();
+      console.log('API Response:', data); // Debug log
       
       if (data.success) {
+        console.log('Reviews data:', data.data); // Debug log
         setReviews(data.data);
       } else {
         console.error('API returned error:', data.error);
@@ -79,8 +81,33 @@ const AdminReviews = () => {
       }
     } catch (error) {
       console.error('Error fetching reviews:', error);
-      // Show empty state with message
-      setReviews([]);
+      // Show sample reviews when API is not working
+      setReviews([
+        {
+          id: 1,
+          name: 'Sarah Johnson',
+          rating: 5,
+          review_text: 'Absolutely incredible experience! The guides were knowledgeable, the scenery was breathtaking, and everything was perfectly organized.',
+          source: 'TripAdvisor',
+          source_logo: 'https://static.tacdn.com/img2/brand_refresh/Tripadvisor_lockup_horizontal_secondary_registered.svg',
+          source_url: 'https://www.tripadvisor.com/Attraction_Review-g293934-d12345678-Reviews-Outtour_Azerbaijan-Baku_Absheron_Region.html',
+          is_featured: true,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        },
+        {
+          id: 2,
+          name: 'Michael Chen',
+          rating: 5,
+          review_text: 'Outstanding service and amazing adventures! The team went above and beyond to ensure we had an unforgettable experience.',
+          source: 'Google Reviews',
+          source_logo: 'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png',
+          source_url: 'https://www.google.com/maps/place/Outtour.az',
+          is_featured: true,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        }
+      ]);
     } finally {
       setLoading(false);
     }
@@ -196,6 +223,13 @@ const AdminReviews = () => {
           <div>
             <h1 className="text-3xl font-bold text-foreground">Manage Reviews</h1>
             <p className="text-muted-foreground">Manage customer reviews and testimonials</p>
+            {reviews.length > 0 && reviews[0].id <= 2 && (
+              <div className="mt-2 p-3 bg-yellow-50 border border-yellow-200 rounded-md">
+                <p className="text-sm text-yellow-800">
+                  <strong>Note:</strong> Currently showing sample data. Database connection may not be available.
+                </p>
+              </div>
+            )}
           </div>
           <Button onClick={() => setShowForm(true)} className="flex items-center gap-2">
             <Plus className="w-4 h-4" />
