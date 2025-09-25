@@ -222,14 +222,6 @@ const ToursByCategory = () => {
               <TourCategoryDropdown />
             </div>
             
-            <div className="flex items-center space-x-4 text-sm text-muted-foreground">
-              <span>{tours.length} tour{tours.length !== 1 ? 's' : ''} available</span>
-              {tours.length > 0 && (
-                <span className="text-yellow-600 text-xs">
-                  📊 Live data from database
-                </span>
-              )}
-            </div>
           </div>
         </div>
       </section>
