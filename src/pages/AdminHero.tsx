@@ -44,7 +44,11 @@ const AdminHero: React.FC = () => {
     // Color customization
     title_color: '#ffffff',
     subtitle_color: '#d46e39',
-    description_color: '#ffffff'
+    description_color: '#ffffff',
+    // Size customization
+    title_size: '6xl',
+    subtitle_size: '4xl',
+    description_size: 'xl'
   });
 
   useEffect(() => {
@@ -87,7 +91,11 @@ const AdminHero: React.FC = () => {
           // Color customization
           title_color: data.data.title_color || '#ffffff',
           subtitle_color: data.data.subtitle_color || '#d46e39',
-          description_color: data.data.description_color || '#ffffff'
+          description_color: data.data.description_color || '#ffffff',
+          // Size customization
+          title_size: data.data.title_size || '6xl',
+          subtitle_size: data.data.subtitle_size || '4xl',
+          description_size: data.data.description_size || 'xl'
         });
       }
     } catch (error) {
@@ -290,23 +298,78 @@ const AdminHero: React.FC = () => {
                   <Label className="text-sm font-medium text-gray-600 mb-2 block">Preview</Label>
                   <div className="space-y-2">
                     <div 
-                      className="text-2xl font-bold"
+                      className={`text-${formData.title_size} font-bold`}
                       style={{ color: formData.title_color }}
                     >
                       {formData.title || 'Title Preview'}
                     </div>
                     <div 
-                      className="text-xl font-semibold"
+                      className={`text-${formData.subtitle_size} font-semibold`}
                       style={{ color: formData.subtitle_color }}
                     >
                       {formData.subtitle || 'Subtitle Preview'}
                     </div>
                     <div 
-                      className="text-base"
+                      className={`text-${formData.description_size}`}
                       style={{ color: formData.description_color }}
                     >
                       {formData.description || 'Description preview text...'}
                     </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Size Customization */}
+              <div className="space-y-4">
+                <Label className="text-lg font-semibold">Text Sizes</Label>
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="title_size">Title Size</Label>
+                    <select
+                      id="title_size"
+                      value={formData.title_size}
+                      onChange={(e) => handleInputChange('title_size', e.target.value)}
+                      className="w-full p-3 border border-gray-300 rounded-md bg-white text-gray-900"
+                    >
+                      <option value="4xl">4xl (Very Large)</option>
+                      <option value="5xl">5xl (Extra Large)</option>
+                      <option value="6xl">6xl (Huge)</option>
+                      <option value="7xl">7xl (Giant)</option>
+                      <option value="8xl">8xl (Massive)</option>
+                    </select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="subtitle_size">Subtitle Size</Label>
+                    <select
+                      id="subtitle_size"
+                      value={formData.subtitle_size}
+                      onChange={(e) => handleInputChange('subtitle_size', e.target.value)}
+                      className="w-full p-3 border border-gray-300 rounded-md bg-white text-gray-900"
+                    >
+                      <option value="2xl">2xl (Large)</option>
+                      <option value="3xl">3xl (Extra Large)</option>
+                      <option value="4xl">4xl (Very Large)</option>
+                      <option value="5xl">5xl (Huge)</option>
+                      <option value="6xl">6xl (Giant)</option>
+                    </select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="description_size">Description Size</Label>
+                    <select
+                      id="description_size"
+                      value={formData.description_size}
+                      onChange={(e) => handleInputChange('description_size', e.target.value)}
+                      className="w-full p-3 border border-gray-300 rounded-md bg-white text-gray-900"
+                    >
+                      <option value="lg">lg (Large)</option>
+                      <option value="xl">xl (Extra Large)</option>
+                      <option value="2xl">2xl (Very Large)</option>
+                      <option value="3xl">3xl (Huge)</option>
+                      <option value="4xl">4xl (Giant)</option>
+                    </select>
                   </div>
                 </div>
               </div>

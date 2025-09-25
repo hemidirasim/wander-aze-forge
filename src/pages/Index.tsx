@@ -108,19 +108,19 @@ const Index = () => {
           ) : (
             // Actual content
             <>
-              <h1 className="text-6xl md:text-8xl font-bold mb-8 leading-tight">
+              <h1 className={`text-${heroData?.title_size || '6xl'} md:text-${heroData?.title_size || '8xl'} font-bold mb-8 leading-tight`}>
                 <span style={{ color: heroData?.title_color || '#ffffff' }}>
                   {heroData?.title || 'Discover'}
                 </span>
                 <span 
-                  className="block"
+                  className={`block text-${heroData?.subtitle_size || '4xl'}`}
                   style={{ color: heroData?.subtitle_color || '#d46e39' }}
                 >
                   {heroData?.subtitle || 'Azerbaijan'}
                 </span>
               </h1>
               <p 
-                className="text-xl md:text-3xl mb-12 leading-relaxed"
+                className={`text-${heroData?.description_size || 'xl'} md:text-${heroData?.description_size || '3xl'} mb-12 leading-relaxed`}
                 style={{ color: heroData?.description_color || '#ffffff' }}
               >
                 {heroData?.description || 'Authentic mountain adventures • Sustainable tourism • Cultural immersion'}

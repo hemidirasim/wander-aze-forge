@@ -84,7 +84,10 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
       is_active,
       title_color,
       subtitle_color,
-      description_color
+      description_color,
+      title_size,
+      subtitle_size,
+      description_size
     } = req.body;
 
     console.log('Hero section POST request:', {
@@ -99,7 +102,10 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
       is_active,
       title_color,
       subtitle_color,
-      description_color
+      description_color,
+      title_size,
+      subtitle_size,
+      description_size
     });
 
     // Validate required fields
@@ -126,6 +132,9 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
         title_color VARCHAR(7) DEFAULT '#ffffff',
         subtitle_color VARCHAR(7) DEFAULT '#d46e39',
         description_color VARCHAR(7) DEFAULT '#ffffff',
+        title_size VARCHAR(10) DEFAULT '6xl',
+        subtitle_size VARCHAR(10) DEFAULT '4xl',
+        description_size VARCHAR(10) DEFAULT 'xl',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
@@ -136,7 +145,10 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
       ALTER TABLE hero_section 
       ADD COLUMN IF NOT EXISTS title_color VARCHAR(7) DEFAULT '#ffffff',
       ADD COLUMN IF NOT EXISTS subtitle_color VARCHAR(7) DEFAULT '#d46e39',
-      ADD COLUMN IF NOT EXISTS description_color VARCHAR(7) DEFAULT '#ffffff'
+      ADD COLUMN IF NOT EXISTS description_color VARCHAR(7) DEFAULT '#ffffff',
+      ADD COLUMN IF NOT EXISTS title_size VARCHAR(10) DEFAULT '6xl',
+      ADD COLUMN IF NOT EXISTS subtitle_size VARCHAR(10) DEFAULT '4xl',
+      ADD COLUMN IF NOT EXISTS description_size VARCHAR(10) DEFAULT 'xl'
     `);
 
     // Deactivate all existing hero sections
@@ -147,8 +159,9 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
       INSERT INTO hero_section (
         title, subtitle, description, image_url, 
         button1_text, button1_link, button2_text, button2_link, is_active,
-        title_color, subtitle_color, description_color
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+        title_color, subtitle_color, description_color,
+        title_size, subtitle_size, description_size
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
       RETURNING *
     `, [
       title.trim(),
@@ -162,7 +175,10 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
       is_active !== false,
       title_color?.trim() || '#ffffff',
       subtitle_color?.trim() || '#d46e39',
-      description_color?.trim() || '#ffffff'
+      description_color?.trim() || '#ffffff',
+      title_size?.trim() || '6xl',
+      subtitle_size?.trim() || '4xl',
+      description_size?.trim() || 'xl'
     ]);
 
     console.log('Hero section created successfully:', result.rows[0]);
