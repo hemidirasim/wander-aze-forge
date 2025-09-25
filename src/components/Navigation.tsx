@@ -75,13 +75,15 @@ const Navigation = () => {
           <div 
             className="hidden md:flex items-center space-x-8"
             onMouseEnter={() => setIsToursOpen(false)}
-            onMouseLeave={() => setIsToursOpen(false)}
           >
             {/* Tours Dropdown */}
             <div 
               className="relative"
               onMouseEnter={() => setIsToursOpen(true)}
-              onMouseLeave={() => setIsToursOpen(false)}
+              onMouseLeave={() => {
+                // Close dropdown when mouse leaves the tours area
+                setTimeout(() => setIsToursOpen(false), 150);
+              }}
             >
               <button
                 className={`flex items-center space-x-1 text-foreground hover:text-primary transition-smooth font-medium ${
@@ -164,7 +166,10 @@ const Navigation = () => {
                 className={`text-foreground hover:text-primary transition-smooth font-medium ${
                   location.pathname === item.path ? 'text-primary' : ''
                 }`}
-                onClick={scrollToTopInstant}
+                onClick={() => {
+                  scrollToTopInstant();
+                  setIsToursOpen(false);
+                }}
                 onMouseEnter={() => setIsToursOpen(false)}
               >
                 {item.label}
@@ -176,7 +181,10 @@ const Navigation = () => {
               asChild
               onMouseEnter={() => setIsToursOpen(false)}
             >
-              <Link to="/contact" onClick={scrollToTopInstant}>Book Now</Link>
+              <Link to="/contact" onClick={() => {
+                scrollToTopInstant();
+                setIsToursOpen(false);
+              }}>Book Now</Link>
             </Button>
           </div>
 
