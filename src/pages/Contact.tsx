@@ -49,7 +49,6 @@ const Contact = () => {
 
   const heroData = getSectionData('hero');
   const officeData = getSectionData('office_info');
-  const emergencyData = getSectionData('emergency_contact');
 
   const socialLinks = [
     { icon: Facebook, url: "https://www.facebook.com/campingazerbaijan2014", name: "Facebook" },
@@ -334,23 +333,6 @@ const Contact = () => {
         </div>
       </section>
 
-      {/* Emergency Contact */}
-      <section className="py-16 px-4 bg-gradient-mountain">
-        <div className="container mx-auto text-center">
-          <h2 className="text-3xl font-bold text-white mb-6">
-            {emergencyData?.title || 'Emergency Contact'}
-          </h2>
-          <p className="text-lg text-white/90 mb-8 max-w-2xl mx-auto">
-            {emergencyData?.content || 'For urgent matters during tours or emergencies, our team is available 24/7'}
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" variant="outline" className="bg-white text-mountain hover:bg-white/90">
-              <Phone className="w-5 h-5 mr-2" />
-              Emergency: {emergencyData?.contact_info?.emergency_phone || '(+994) 50 999 88 77'}
-            </Button>
-          </div>
-        </div>
-      </section>
       
       <Footer />
     </div>
