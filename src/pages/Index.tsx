@@ -109,12 +109,20 @@ const Index = () => {
             // Actual content
             <>
               <h1 className="text-6xl md:text-8xl font-bold mb-8 leading-tight">
-                {heroData?.title || 'Discover'}
-                <span className="block text-transparent bg-gradient-sunset bg-clip-text">
+                <span style={{ color: heroData?.title_color || '#ffffff' }}>
+                  {heroData?.title || 'Discover'}
+                </span>
+                <span 
+                  className="block"
+                  style={{ color: heroData?.subtitle_color || '#d46e39' }}
+                >
                   {heroData?.subtitle || 'Azerbaijan'}
                 </span>
               </h1>
-              <p className="text-xl md:text-3xl mb-12 text-white/90 leading-relaxed">
+              <p 
+                className="text-xl md:text-3xl mb-12 leading-relaxed"
+                style={{ color: heroData?.description_color || '#ffffff' }}
+              >
                 {heroData?.description || 'Authentic mountain adventures • Sustainable tourism • Cultural immersion'}
               </p>
               

@@ -40,7 +40,11 @@ const AdminHero: React.FC = () => {
     button2_text: '',
     button2_link: '',
     is_active: true,
-    galleryImages: [] as any[]
+    galleryImages: [] as any[],
+    // Color customization
+    title_color: '#ffffff',
+    subtitle_color: '#d46e39',
+    description_color: '#ffffff'
   });
 
   useEffect(() => {
@@ -79,7 +83,11 @@ const AdminHero: React.FC = () => {
             size: 0,
             uploadedAt: new Date().toISOString(),
             isMain: true
-          }] : []
+          }] : [],
+          // Color customization
+          title_color: data.data.title_color || '#ffffff',
+          subtitle_color: data.data.subtitle_color || '#d46e39',
+          description_color: data.data.description_color || '#ffffff'
         });
       }
     } catch (error) {
@@ -212,6 +220,95 @@ const AdminHero: React.FC = () => {
                   placeholder="Detailed description of your company and services..."
                   rows={4}
                 />
+              </div>
+
+              {/* Color Customization */}
+              <div className="space-y-4">
+                <Label className="text-lg font-semibold">Text Colors</Label>
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="title_color">Title Color</Label>
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="color"
+                        id="title_color"
+                        value={formData.title_color}
+                        onChange={(e) => handleInputChange('title_color', e.target.value)}
+                        className="w-12 h-10 rounded border border-gray-300 cursor-pointer"
+                      />
+                      <Input
+                        value={formData.title_color}
+                        onChange={(e) => handleInputChange('title_color', e.target.value)}
+                        placeholder="#ffffff"
+                        className="flex-1"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="subtitle_color">Subtitle Color</Label>
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="color"
+                        id="subtitle_color"
+                        value={formData.subtitle_color}
+                        onChange={(e) => handleInputChange('subtitle_color', e.target.value)}
+                        className="w-12 h-10 rounded border border-gray-300 cursor-pointer"
+                      />
+                      <Input
+                        value={formData.subtitle_color}
+                        onChange={(e) => handleInputChange('subtitle_color', e.target.value)}
+                        placeholder="#d46e39"
+                        className="flex-1"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="description_color">Description Color</Label>
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="color"
+                        id="description_color"
+                        value={formData.description_color}
+                        onChange={(e) => handleInputChange('description_color', e.target.value)}
+                        className="w-12 h-10 rounded border border-gray-300 cursor-pointer"
+                      />
+                      <Input
+                        value={formData.description_color}
+                        onChange={(e) => handleInputChange('description_color', e.target.value)}
+                        placeholder="#ffffff"
+                        className="flex-1"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Color Preview */}
+                <div className="p-4 bg-gray-100 rounded-lg">
+                  <Label className="text-sm font-medium text-gray-600 mb-2 block">Preview</Label>
+                  <div className="space-y-2">
+                    <div 
+                      className="text-2xl font-bold"
+                      style={{ color: formData.title_color }}
+                    >
+                      {formData.title || 'Title Preview'}
+                    </div>
+                    <div 
+                      className="text-xl font-semibold"
+                      style={{ color: formData.subtitle_color }}
+                    >
+                      {formData.subtitle || 'Subtitle Preview'}
+                    </div>
+                    <div 
+                      className="text-base"
+                      style={{ color: formData.description_color }}
+                    >
+                      {formData.description || 'Description preview text...'}
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <div className="space-y-4">

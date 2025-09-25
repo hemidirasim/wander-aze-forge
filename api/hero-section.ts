@@ -81,7 +81,10 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
       button1_link,
       button2_text,
       button2_link,
-      is_active
+      is_active,
+      title_color,
+      subtitle_color,
+      description_color
     } = req.body;
 
     console.log('Hero section POST request:', {
@@ -93,7 +96,10 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
       button1_link,
       button2_text,
       button2_link,
-      is_active
+      is_active,
+      title_color,
+      subtitle_color,
+      description_color
     });
 
     // Validate required fields
@@ -117,9 +123,20 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
         button2_text VARCHAR(100),
         button2_link VARCHAR(255),
         is_active BOOLEAN DEFAULT true,
+        title_color VARCHAR(7) DEFAULT '#ffffff',
+        subtitle_color VARCHAR(7) DEFAULT '#d46e39',
+        description_color VARCHAR(7) DEFAULT '#ffffff',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
+    `);
+
+    // Add color columns if they don't exist
+    await pool.query(`
+      ALTER TABLE hero_section 
+      ADD COLUMN IF NOT EXISTS title_color VARCHAR(7) DEFAULT '#ffffff',
+      ADD COLUMN IF NOT EXISTS subtitle_color VARCHAR(7) DEFAULT '#d46e39',
+      ADD COLUMN IF NOT EXISTS description_color VARCHAR(7) DEFAULT '#ffffff'
     `);
 
     // Deactivate all existing hero sections
@@ -129,8 +146,9 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
     const result = await pool.query(`
       INSERT INTO hero_section (
         title, subtitle, description, image_url, 
-        button1_text, button1_link, button2_text, button2_link, is_active
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+        button1_text, button1_link, button2_text, button2_link, is_active,
+        title_color, subtitle_color, description_color
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
       RETURNING *
     `, [
       title.trim(),
@@ -141,7 +159,10 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
       button1_link?.trim() || '',
       button2_text?.trim() || '',
       button2_link?.trim() || '',
-      is_active !== false
+      is_active !== false,
+      title_color?.trim() || '#ffffff',
+      subtitle_color?.trim() || '#d46e39',
+      description_color?.trim() || '#ffffff'
     ]);
 
     console.log('Hero section created successfully:', result.rows[0]);
