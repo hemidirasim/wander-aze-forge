@@ -1,6 +1,5 @@
 import Navigation from '@/components/Navigation';
 import TourCategoryGallery from '@/components/TourCategoryGallery';
-import RecommendationsSection from '@/components/RecommendationsSection';
 import JourneyContactForm from '@/components/JourneyContactForm';
 import DatabasePartners from '@/components/DatabasePartners';
 import DatabaseBlog from '@/components/DatabaseBlog';
@@ -224,8 +223,6 @@ const Index = () => {
       {/* Tour Category Gallery - 5 Photos Layout */}
       <TourCategoryGallery />
 
-      {/* Recommendations */}
-      <RecommendationsSection />
 
       {/* Plan Your Journey Contact Form */}
       <JourneyContactForm />
