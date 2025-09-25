@@ -169,7 +169,7 @@ const Contact = () => {
               </CardHeader>
               <CardContent>
                 <div className="text-lg font-semibold text-foreground mb-2">
-                  {officeData?.contact_info?.working_hours || 'Mon - Sat: 9AM - 6PM'}
+                  {heroData?.contact_info?.working_hours || 'Mon - Sat: 9AM - 6PM'}
                 </div>
                 <p className="text-sm text-muted-foreground">Emergency contact available 24/7</p>
               </CardContent>
