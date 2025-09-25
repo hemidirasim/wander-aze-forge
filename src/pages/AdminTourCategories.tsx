@@ -1,551 +1,422 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
+import { GalleryUpload } from '@/components/GalleryUpload';
 import { 
-  Mountain, 
-  Camera, 
-  Users, 
-  Heart,
-  MapPin,
-  Clock,
-  DollarSign,
-  Star,
-  Plus,
-  ArrowLeft,
-  Save,
-  X
+  Plus, 
+  Edit, 
+  Trash2, 
+  Save, 
+  X, 
+  Image as ImageIcon,
+  Eye,
+  EyeOff
 } from 'lucide-react';
 
-interface TourForm {
-  title: string;
+interface TourCategory {
+  id: number;
+  name: string;
+  slug: string;
   description: string;
-  duration: string;
-  difficulty: string;
-  price: string;
-  maxParticipants: string;
-  highlights: string[];
-  includes: string[];
-  excludes: string[];
-  itinerary: string;
-  requirements: string;
-  category: string;
+  image_url: string;
+  is_active: boolean;
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
 }
 
-const AdminTourCategories: React.FC = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [showAddForm, setShowAddForm] = useState(false);
-  const [formData, setFormData] = useState<TourForm>({
-    title: '',
+interface UploadedImage {
+  url: string;
+  name: string;
+}
+
+const AdminTourCategories = () => {
+  const [categories, setCategories] = useState<TourCategory[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [isCreating, setIsCreating] = useState(false);
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [formData, setFormData] = useState({
+    name: '',
+    slug: '',
     description: '',
-    duration: '',
-    difficulty: '',
-    price: '',
-    maxParticipants: '',
-    highlights: [''],
-    includes: [''],
-    excludes: [''],
-    itinerary: '',
-    requirements: '',
-    category: ''
+    image_url: '',
+    is_active: true,
+    sort_order: 0
   });
+  const [galleryImages, setGalleryImages] = useState<UploadedImage[]>([]);
 
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
-  const tourCategories = [
-    {
-      id: 'hiking',
-      title: 'Hiking Tours',
-      icon: Mountain,
-      color: 'bg-gradient-to-r from-yellow-500 to-orange-500',
-      description: 'Nature hiking adventures',
-      count: 8,
-      difficultyOptions: ['Easy', 'Moderate', 'Challenging'],
-      durationOptions: ['Half Day', 'Full Day', '2 Days', '3 Days'],
-      specialFields: {
-        terrain: 'Forest trails, mountain paths',
-        equipment: 'Hiking boots, backpack, water bottle'
+  const fetchCategories = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('/api/tour-categories');
+      const data = await response.json();
+      
+      if (data.success) {
+        setCategories(data.data);
+      } else {
+        setError('Failed to fetch categories');
       }
-    },
-    {
-      id: 'trekking',
-      title: 'Trekking Tours',
-      icon: Mountain,
-      color: 'bg-gradient-to-r from-orange-500 to-orange-600',
-      description: 'Mountain trekking experiences',
-      count: 6,
-      difficultyOptions: ['Moderate', 'Challenging', 'Extreme'],
-      durationOptions: ['2 Days', '3 Days', '5 Days', '7 Days', '10 Days'],
-      specialFields: {
-        altitude: 'High altitude trekking',
-        equipment: 'Trekking poles, warm clothing, sleeping bag'
-      }
-    },
-    {
-      id: 'wildlife',
-      title: 'Wildlife Tours',
-      icon: Camera,
-      color: 'bg-gradient-to-r from-purple-500 to-purple-600',
-      description: 'Wildlife photography tours',
-      count: 5,
-      difficultyOptions: ['Easy', 'Moderate'],
-      durationOptions: ['Half Day', 'Full Day', '2 Days', '3 Days'],
-      specialFields: {
-        bestSeason: 'Best viewing seasons',
-        equipment: 'Camera, binoculars, camouflage clothing'
-      }
-    },
-    {
-      id: 'group-tours',
-      title: 'Group Tours',
-      icon: Users,
-      color: 'bg-gradient-to-r from-indigo-500 to-indigo-600',
-      description: 'Group adventure packages',
-      count: 7,
-      difficultyOptions: ['Easy', 'Moderate', 'Challenging'],
-      durationOptions: ['1 Day', '2 Days', '3 Days', '5 Days', '7 Days'],
-      specialFields: {
-        groupSize: 'Minimum and maximum group size',
-        equipment: 'Group equipment provided'
-      }
-    },
-    {
-      id: 'tailor-made',
-      title: 'Tailor Made Tours',
-      icon: Heart,
-      color: 'bg-gradient-to-r from-pink-500 to-pink-600',
-      description: 'Custom tour packages',
-      count: 6,
-      difficultyOptions: ['Any Level'],
-      durationOptions: ['Flexible'],
-      specialFields: {
-        customization: 'Fully customizable itinerary',
-        equipment: 'Based on selected activities'
-      }
+    } catch (err) {
+      console.error('Error fetching categories:', err);
+      setError('Failed to fetch categories');
+    } finally {
+      setLoading(false);
     }
-  ];
-
-  const handleCategorySelect = (categoryId: string) => {
-    setSelectedCategory(categoryId);
-    setFormData(prev => ({ ...prev, category: categoryId }));
   };
 
-  const handleInputChange = (field: keyof TourForm, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
-
-  const handleArrayFieldChange = (field: 'highlights' | 'includes' | 'excludes', index: number, value: string) => {
+  const handleInputChange = (field: string, value: any) => {
     setFormData(prev => ({
       ...prev,
-      [field]: prev[field].map((item, i) => i === index ? value : item)
+      [field]: value
     }));
   };
 
-  const addArrayField = (field: 'highlights' | 'includes' | 'excludes') => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: [...prev[field], '']
-    }));
+  const handleEdit = (category: TourCategory) => {
+    setFormData({
+      name: category.name,
+      slug: category.slug,
+      description: category.description,
+      image_url: category.image_url,
+      is_active: category.is_active,
+      sort_order: category.sort_order
+    });
+    setGalleryImages(category.image_url ? [{ url: category.image_url, name: 'Current Image' }] : []);
+    setEditingId(category.id);
+    setIsCreating(false);
   };
 
-  const removeArrayField = (field: 'highlights' | 'includes' | 'excludes', index: number) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: prev[field].filter((_, i) => i !== index)
-    }));
+  const handleCreate = () => {
+    setFormData({
+      name: '',
+      slug: '',
+      description: '',
+      image_url: '',
+      is_active: true,
+      sort_order: 0
+    });
+    setGalleryImages([]);
+    setEditingId(null);
+    setIsCreating(true);
   };
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const handleCancel = () => {
+    setFormData({
+      name: '',
+      slug: '',
+      description: '',
+      image_url: '',
+      is_active: true,
+      sort_order: 0
+    });
+    setGalleryImages([]);
+    setEditingId(null);
+    setIsCreating(false);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
-
+    
     try {
-      // Prepare form data
-      const tourData = {
-        title: formData.title.trim(),
-        description: formData.description.trim(),
-        category: formData.category,
-        duration: formData.duration,
-        difficulty: formData.difficulty,
-        price: parseFloat(formData.price),
-        maxParticipants: parseInt(formData.maxParticipants),
-        highlights: formData.highlights.filter(h => h.trim() !== ''),
-        includes: formData.includes.filter(i => i.trim() !== ''),
-        excludes: formData.excludes.filter(e => e.trim() !== ''),
-        itinerary: formData.itinerary.trim(),
-        requirements: formData.requirements.trim(),
-        specialFields: selectedCategoryData?.specialFields || {}
+      const submitData = {
+        ...formData,
+        image_url: galleryImages.length > 0 ? galleryImages[0].url : formData.image_url
       };
 
-      // Send to API
-      const response = await fetch('/api/tours', {
-        method: 'POST',
+      const url = editingId ? `/api/tour-categories?id=${editingId}` : '/api/tour-categories';
+      const method = editingId ? 'PUT' : 'POST';
+
+      const response = await fetch(url, {
+        method,
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(tourData),
+        body: JSON.stringify(submitData),
       });
 
-      const result = await response.json();
+      const data = await response.json();
 
-      if (result.success) {
-        alert('Tour added successfully!');
-        setShowAddForm(false);
-        setFormData({
-          title: '',
-          description: '',
-          duration: '',
-          difficulty: '',
-          price: '',
-          maxParticipants: '',
-          highlights: [''],
-          includes: [''],
-          excludes: [''],
-          itinerary: '',
-          requirements: '',
-          category: ''
-        });
+      if (data.success) {
+        await fetchCategories();
+        handleCancel();
       } else {
-        throw new Error(result.error || 'Failed to create tour');
+        setError(data.error || 'Failed to save category');
       }
-    } catch (error) {
-      console.error('Error creating tour:', error);
-      alert(`Error creating tour: ${error instanceof Error ? error.message : 'Unknown error'}`);
-    } finally {
-      setIsSubmitting(false);
+    } catch (err) {
+      console.error('Error saving category:', err);
+      setError('Failed to save category');
     }
   };
 
-  const selectedCategoryData = tourCategories.find(cat => cat.id === selectedCategory);
+  const handleDelete = async (id: number) => {
+    if (!confirm('Are you sure you want to delete this category?')) {
+      return;
+    }
 
-  if (showAddForm && selectedCategoryData) {
+    try {
+      const response = await fetch(`/api/tour-categories?id=${id}`, {
+        method: 'DELETE',
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        await fetchCategories();
+      } else {
+        setError(data.error || 'Failed to delete category');
+      }
+    } catch (err) {
+      console.error('Error deleting category:', err);
+      setError('Failed to delete category');
+    }
+  };
+
+  const toggleActive = async (id: number, currentStatus: boolean) => {
+    try {
+      const category = categories.find(c => c.id === id);
+      if (!category) return;
+
+      const response = await fetch(`/api/tour-categories?id=${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...category,
+          is_active: !currentStatus
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        await fetchCategories();
+      } else {
+        setError(data.error || 'Failed to update category');
+      }
+    } catch (err) {
+      console.error('Error updating category:', err);
+      setError('Failed to update category');
+    }
+  };
+
+  if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-6">
-        <div className="max-w-4xl mx-auto">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center space-x-4">
-              <Button
-                variant="outline"
-                onClick={() => setShowAddForm(false)}
-                className="flex items-center space-x-2"
-              >
-                <ArrowLeft className="w-4 h-4" />
-                <span>Back</span>
-              </Button>
-              <div className={`w-12 h-12 ${selectedCategoryData.color} rounded-xl flex items-center justify-center shadow-lg`}>
-                <selectedCategoryData.icon className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">Add New {selectedCategoryData.title}</h1>
-                <p className="text-gray-600">{selectedCategoryData.description}</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Form */}
-          <Card className="shadow-lg border-0">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Plus className="w-5 h-5 text-blue-500" />
-                <span>Tour Information</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Basic Information */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="title">Tour Title</Label>
-                    <Input
-                      id="title"
-                      value={formData.title}
-                      onChange={(e) => handleInputChange('title', e.target.value)}
-                      placeholder="Enter tour title"
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="duration">Duration</Label>
-                    <Select value={formData.duration} onValueChange={(value) => handleInputChange('duration', value)}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select duration" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {selectedCategoryData.durationOptions.map((duration) => (
-                          <SelectItem key={duration} value={duration}>{duration}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="difficulty">Difficulty Level</Label>
-                    <Select value={formData.difficulty} onValueChange={(value) => handleInputChange('difficulty', value)}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select difficulty" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {selectedCategoryData.difficultyOptions.map((difficulty) => (
-                          <SelectItem key={difficulty} value={difficulty}>{difficulty}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="price">Price (USD)</Label>
-                    <Input
-                      id="price"
-                      type="number"
-                      value={formData.price}
-                      onChange={(e) => handleInputChange('price', e.target.value)}
-                      placeholder="Enter price"
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="maxParticipants">Max Participants</Label>
-                    <Input
-                      id="maxParticipants"
-                      type="number"
-                      value={formData.maxParticipants}
-                      onChange={(e) => handleInputChange('maxParticipants', e.target.value)}
-                      placeholder="Enter max participants"
-                      required
-                    />
-                  </div>
-                </div>
-
-                {/* Description */}
-                <div className="space-y-2">
-                  <Label htmlFor="description">Description</Label>
-                  <Textarea
-                    id="description"
-                    value={formData.description}
-                    onChange={(e) => handleInputChange('description', e.target.value)}
-                    placeholder="Enter tour description"
-                    rows={4}
-                    required
-                  />
-                </div>
-
-                {/* Special Fields */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {Object.entries(selectedCategoryData.specialFields).map(([key, value]) => (
-                    <div key={key} className="space-y-2">
-                      <Label htmlFor={key}>{key.charAt(0).toUpperCase() + key.slice(1)}</Label>
-                      <Input
-                        id={key}
-                        placeholder={value}
-                        className="bg-gray-50"
-                      />
-                    </div>
-                  ))}
-                </div>
-
-                {/* Highlights */}
-                <div className="space-y-2">
-                  <Label>Highlights</Label>
-                  {formData.highlights.map((highlight, index) => (
-                    <div key={index} className="flex space-x-2">
-                      <Input
-                        value={highlight}
-                        onChange={(e) => handleArrayFieldChange('highlights', index, e.target.value)}
-                        placeholder="Enter highlight"
-                      />
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => removeArrayField('highlights', index)}
-                      >
-                        <X className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  ))}
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => addArrayField('highlights')}
-                    className="w-full"
-                  >
-                    <Plus className="w-4 h-4 mr-2" />
-                    Add Highlight
-                  </Button>
-                </div>
-
-                {/* Includes */}
-                <div className="space-y-2">
-                  <Label>What's Included</Label>
-                  {formData.includes.map((include, index) => (
-                    <div key={index} className="flex space-x-2">
-                      <Input
-                        value={include}
-                        onChange={(e) => handleArrayFieldChange('includes', index, e.target.value)}
-                        placeholder="Enter inclusion"
-                      />
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => removeArrayField('includes', index)}
-                      >
-                        <X className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  ))}
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => addArrayField('includes')}
-                    className="w-full"
-                  >
-                    <Plus className="w-4 h-4 mr-2" />
-                    Add Inclusion
-                  </Button>
-                </div>
-
-                {/* Excludes */}
-                <div className="space-y-2">
-                  <Label>What's Not Included</Label>
-                  {formData.excludes.map((exclude, index) => (
-                    <div key={index} className="flex space-x-2">
-                      <Input
-                        value={exclude}
-                        onChange={(e) => handleArrayFieldChange('excludes', index, e.target.value)}
-                        placeholder="Enter exclusion"
-                      />
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => removeArrayField('excludes', index)}
-                      >
-                        <X className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  ))}
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => addArrayField('excludes')}
-                    className="w-full"
-                  >
-                    <Plus className="w-4 h-4 mr-2" />
-                    Add Exclusion
-                  </Button>
-                </div>
-
-                {/* Itinerary */}
-                <div className="space-y-2">
-                  <Label htmlFor="itinerary">Detailed Itinerary</Label>
-                  <Textarea
-                    id="itinerary"
-                    value={formData.itinerary}
-                    onChange={(e) => handleInputChange('itinerary', e.target.value)}
-                    placeholder="Enter detailed itinerary"
-                    rows={6}
-                    required
-                  />
-                </div>
-
-                {/* Requirements */}
-                <div className="space-y-2">
-                  <Label htmlFor="requirements">Requirements & Recommendations</Label>
-                  <Textarea
-                    id="requirements"
-                    value={formData.requirements}
-                    onChange={(e) => handleInputChange('requirements', e.target.value)}
-                    placeholder="Enter requirements and recommendations"
-                    rows={4}
-                  />
-                </div>
-
-                {/* Submit Buttons */}
-                <div className="flex justify-end space-x-4 pt-6">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => setShowAddForm(false)}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 disabled:opacity-50"
-                  >
-                    <Save className="w-4 h-4 mr-2" />
-                    {isSubmitting ? 'Saving...' : 'Save Tour'}
-                  </Button>
-                </div>
-              </form>
-            </CardContent>
-          </Card>
+      <div className="container mx-auto p-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[...Array(6)].map((_, i) => (
+            <Card key={i}>
+              <CardHeader>
+                <Skeleton className="h-6 w-3/4" />
+                <Skeleton className="h-4 w-1/2" />
+              </CardHeader>
+              <CardContent>
+                <Skeleton className="h-32 w-full mb-4" />
+                <Skeleton className="h-4 w-full" />
+              </CardContent>
+            </Card>
+          ))}
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Tour Categories</h1>
-            <p className="text-gray-600">Select a category to add new tours</p>
-          </div>
+    <div className="container mx-auto p-6">
+      <div className="flex justify-between items-center mb-8">
+        <div>
+          <h1 className="text-3xl font-bold text-foreground">Tour Categories</h1>
+          <p className="text-muted-foreground mt-2">
+            Manage tour categories and their settings
+          </p>
         </div>
+        <Button onClick={handleCreate} className="flex items-center gap-2">
+          <Plus className="w-4 h-4" />
+          Add Category
+        </Button>
+      </div>
 
-        {/* Categories Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {tourCategories.map((category) => (
-            <Card
-              key={category.id}
-              className="hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer border-0 shadow-lg"
-              onClick={() => {
-                handleCategorySelect(category.id);
-                setShowAddForm(true);
-              }}
-            >
-              <CardContent className="p-8">
-                <div className="text-center">
-                  <div className={`w-20 h-20 ${category.color} rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg`}>
-                    <category.icon className="w-10 h-10 text-white" />
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">{category.title}</h3>
-                  <p className="text-gray-600 mb-4">{category.description}</p>
-                  <div className="flex items-center justify-between mb-6">
-                    <Badge variant="outline" className="bg-gray-50">
-                      {category.count} tours
-                    </Badge>
-                    <div className="flex items-center text-sm text-gray-500">
-                      <Clock className="w-4 h-4 mr-1" />
-                      <span>{category.durationOptions.length} durations</span>
-                    </div>
-                  </div>
+      {error && (
+        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-md">
+          <p className="text-red-600">{error}</p>
+        </div>
+      )}
+
+      {/* Create/Edit Form */}
+      {(isCreating || editingId) && (
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              {editingId ? <Edit className="w-5 h-5" /> : <Plus className="w-5 h-5" />}
+              {editingId ? 'Edit Category' : 'Create New Category'}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="name">Category Name *</Label>
+                  <Input
+                    id="name"
+                    value={formData.name}
+                    onChange={(e) => handleInputChange('name', e.target.value)}
+                    placeholder="e.g., Trekking"
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="slug">Slug *</Label>
+                  <Input
+                    id="slug"
+                    value={formData.slug}
+                    onChange={(e) => handleInputChange('slug', e.target.value)}
+                    placeholder="e.g., trekking"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="description">Description</Label>
+                <Textarea
+                  id="description"
+                  value={formData.description}
+                  onChange={(e) => handleInputChange('description', e.target.value)}
+                  placeholder="Describe this tour category..."
+                  rows={3}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label>Cover Image</Label>
+                <GalleryUpload
+                  images={galleryImages}
+                  onImagesChange={setGalleryImages}
+                  maxImages={1}
+                  className="w-full"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="sort_order">Sort Order</Label>
+                  <Input
+                    id="sort_order"
+                    type="number"
+                    value={formData.sort_order}
+                    onChange={(e) => handleInputChange('sort_order', parseInt(e.target.value) || 0)}
+                    placeholder="0"
+                  />
+                </div>
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    id="is_active"
+                    checked={formData.is_active}
+                    onChange={(e) => handleInputChange('is_active', e.target.checked)}
+                    className="rounded"
+                  />
+                  <Label htmlFor="is_active">Active</Label>
+                </div>
+              </div>
+
+              <div className="flex gap-4">
+                <Button type="submit" className="flex items-center gap-2">
+                  <Save className="w-4 h-4" />
+                  {editingId ? 'Update' : 'Create'}
+                </Button>
+                <Button type="button" variant="outline" onClick={handleCancel}>
+                  <X className="w-4 h-4 mr-2" />
+                  Cancel
+                </Button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Categories List */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {categories.map((category) => (
+          <Card key={category.id} className="group hover:shadow-lg transition-shadow">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-lg">{category.name}</CardTitle>
+                <div className="flex items-center gap-2">
+                  <Badge variant={category.is_active ? "default" : "secondary"}>
+                    {category.is_active ? "Active" : "Inactive"}
+                  </Badge>
+                  <span className="text-sm text-muted-foreground">
+                    Order: {category.sort_order}
+                  </span>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              {category.image_url && (
+                <div className="mb-4">
+                  <img
+                    src={category.image_url}
+                    alt={category.name}
+                    className="w-full h-32 object-cover rounded-md"
+                  />
+                </div>
+              )}
+              <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                {category.description || 'No description provided'}
+              </p>
+              <div className="flex items-center justify-between">
+                <div className="flex gap-2">
                   <Button
-                    className={`w-full ${category.color} hover:opacity-90 text-white`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleCategorySelect(category.id);
-                      setShowAddForm(true);
-                    }}
+                    size="sm"
+                    variant="outline"
+                    onClick={() => handleEdit(category)}
                   >
-                    <Plus className="w-4 h-4 mr-2" />
-                    Add New Tour
+                    <Edit className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => toggleActive(category.id, category.is_active)}
+                  >
+                    {category.is_active ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    onClick={() => handleDelete(category.id)}
+                  >
+                    <Trash2 className="w-4 h-4" />
                   </Button>
                 </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
       </div>
+
+      {categories.length === 0 && !loading && (
+        <div className="text-center py-12">
+          <ImageIcon className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+          <h3 className="text-lg font-semibold text-foreground mb-2">No Categories Found</h3>
+          <p className="text-muted-foreground mb-4">
+            Get started by creating your first tour category
+          </p>
+          <Button onClick={handleCreate}>
+            <Plus className="w-4 h-4 mr-2" />
+            Create Category
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
