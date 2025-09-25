@@ -191,7 +191,7 @@ const AdminContact = () => {
 
         <div className="space-y-6">
           {contactData
-            .filter(section => ['hero'].includes(section.section))
+            .filter(section => ['hero', 'faq_section', 'social_media'].includes(section.section))
             .map((section) => (
           <Card key={section.id}>
             <CardHeader>

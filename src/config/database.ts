@@ -268,6 +268,20 @@ We believe that the best adventures come from combining professional expertise w
       'Ready to start your adventure? We''d love to hear from you! Whether you have questions about our tours, need help planning your trip, or want to share your experience with us, our team is here to help.',
       '{"phone": "+994 50 123 45 67", "email": "info@outtour.az", "address": "Baku, Azerbaijan", "working_hours": "Mon-Fri: 9:00-18:00, Sat: 10:00-16:00"}',
       '/assets/contact-hero.jpg'
+    ),
+    (
+      'faq_section',
+      'Quick Answers',
+      'Find quick answers to common questions about our tours, booking process, and what to expect.',
+      '{"faqs": [{"question": "How far in advance should I book?", "answer": "We recommend booking 2-4 weeks in advance, especially for popular tours during peak season (June-September)."}, {"question": "What''s included in the price?", "answer": "All tours include professional guides, safety equipment, accommodation (where applicable), and transportation from designated meeting points."}, {"question": "Do you offer private tours?", "answer": "Yes! We can customize any tour for private groups. Contact us for personalized itineraries and pricing."}]}',
+      null
+    ),
+    (
+      'social_media',
+      'Follow Our Adventures',
+      'Stay updated with our latest tours and tips on social media. Follow us for daily inspiration and behind-the-scenes content from our adventures.',
+      '{"facebook": "https://www.facebook.com/campingazerbaijan2014", "instagram": "https://www.instagram.com/camping_azerbaijan/", "linkedin": "https://www.linkedin.com/company/campingazerbaijan/", "twitter": "https://x.com/CampingAze", "description": "Stay updated with our latest tours and tips on social media"}',
+      null
     )
     ON CONFLICT (section) DO NOTHING
   `);
