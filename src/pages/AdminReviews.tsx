@@ -62,6 +62,20 @@ const AdminReviews = () => {
 
   const fetchReviews = async () => {
     try {
+      // First try the test endpoint to check database connection
+      console.log('Testing database connection...');
+      const testResponse = await fetch('/api/test-db-connection');
+      const testData = await testResponse.json();
+      console.log('Database test result:', testData);
+      
+      if (testData.success && testData.reviews && testData.reviews.length > 0) {
+        console.log('Found real reviews from database:', testData.reviews);
+        setReviews(testData.reviews);
+        return;
+      }
+      
+      // If test endpoint doesn't work, try the main reviews API
+      console.log('Trying main reviews API...');
       const response = await fetch('/api/reviews');
       
       if (!response.ok) {
