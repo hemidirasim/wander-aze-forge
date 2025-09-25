@@ -93,24 +93,12 @@ const Contact = () => {
     <div className="min-h-screen bg-background">
       <Navigation />
       
-      {/* Hero Section */}
-      <section className="relative h-[60vh] flex items-center justify-center">
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ 
-            backgroundImage: heroData?.image_url 
-              ? `url(${heroData.image_url})` 
-              : 'url(https://images.unsplash.com/photo-1445308394109-4ec2920981b1?w=1920&h=1080&fit=crop)' 
-          }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-transparent" />
-        <div className="relative z-10 text-center text-white max-w-4xl px-4">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6">
-            {heroData?.title || 'Contact Us'}
+      {/* Simple Title */}
+      <section className="pt-32 pb-8 px-4">
+        <div className="container mx-auto text-center">
+          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+            Contact Us
           </h1>
-          <p className="text-xl md:text-2xl mb-8 text-white/90">
-            {heroData?.content || 'Ready to start your Azerbaijan adventure? Get in touch with our team'}
-          </p>
         </div>
       </section>
 
