@@ -48,7 +48,6 @@ const Contact = () => {
   };
 
   const heroData = getSectionData('hero');
-  const officeData = getSectionData('office_info');
 
   const socialLinks = [
     { icon: Facebook, url: "https://www.facebook.com/campingazerbaijan2014", name: "Facebook" },
@@ -92,12 +91,17 @@ const Contact = () => {
     <div className="min-h-screen bg-background">
       <Navigation />
       
-      {/* Simple Title */}
+      {/* Hero Section from Database */}
       <section className="pt-32 pb-8 px-4">
         <div className="container mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Contact Us
+            {heroData?.title || 'Contact Us'}
           </h1>
+          {heroData?.content && (
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              {heroData.content}
+            </p>
+          )}
         </div>
       </section>
 
@@ -115,7 +119,7 @@ const Contact = () => {
               </CardHeader>
               <CardContent>
                 <div className="text-lg font-semibold text-foreground mb-2">
-                  {heroData?.contact_info?.phone || officeData?.contact_info?.phone || '(+994) 50 123 45 67'}
+                  {heroData?.contact_info?.phone || '(+994) 50 123 45 67'}
                 </div>
                 <p className="text-sm text-muted-foreground">
                   {heroData?.contact_info?.working_hours || 'Available 9 AM - 6 PM (GMT+4)'}
@@ -133,7 +137,7 @@ const Contact = () => {
               </CardHeader>
               <CardContent>
                 <div className="text-lg font-semibold text-foreground mb-2">
-                  {heroData?.contact_info?.email || officeData?.contact_info?.email || 'info@outtour.az'}
+                  {heroData?.contact_info?.email || 'info@outtour.az'}
                 </div>
                 <p className="text-sm text-muted-foreground">We'll respond within 24 hours</p>
               </CardContent>
@@ -149,7 +153,7 @@ const Contact = () => {
               </CardHeader>
               <CardContent>
                 <div className="text-lg font-semibold text-foreground mb-2">
-                  {officeData?.contact_info?.address || heroData?.contact_info?.address || 'Baku, Azerbaijan'}
+                  {heroData?.contact_info?.address || 'Baku, Azerbaijan'}
                 </div>
                 <p className="text-sm text-muted-foreground">Tours depart from various locations</p>
               </CardContent>
