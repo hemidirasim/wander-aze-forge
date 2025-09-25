@@ -7,11 +7,36 @@ import DatabaseBlog from '@/components/DatabaseBlog';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Link } from 'react-router-dom';
 import { Award, Leaf, Heart, ArrowRight } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import heroImage from '@/assets/hero-mountain.jpg';
 
 const Index = () => {
+  const [featuredTours, setFeaturedTours] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchFeaturedTours();
+  }, []);
+
+  const fetchFeaturedTours = async () => {
+    try {
+      const response = await fetch('/api/tours');
+      const data = await response.json();
+      
+      if (data.success) {
+        // Filter tours that are marked as featured
+        const featured = data.data.filter(tour => tour.featured === true).slice(0, 6);
+        setFeaturedTours(featured);
+      }
+    } catch (error) {
+      console.error('Error fetching featured tours:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const highlights = [
     {
@@ -31,62 +56,6 @@ const Index = () => {
     }
   ];
 
-  const popularTours = [
-    {
-      id: 1,
-      title: "Khinalig-Laza Homestay Hike",
-      duration: "3 Days",
-      difficulty: "Moderate",
-      price: "From $180",
-      image: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=600&h=400&fit=crop",
-      description: "Experience authentic mountain life in Azerbaijan's highest village"
-    },
-    {
-      id: 2,
-      title: "3 Peaks Gizilgaya Plateau",
-      duration: "2 Days",
-      difficulty: "Challenging",
-      price: "From $150",
-      image: "https://images.unsplash.com/photo-1464822759844-d150356c4f2e?w=600&h=400&fit=crop",
-      description: "Conquer three majestic peaks in the heart of the Caucasus"
-    },
-    {
-      id: 3,
-      title: "Caucasus Wildlife Safari",
-      duration: "4 Days",
-      difficulty: "Easy",
-      price: "From $220",
-      image: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600&h=400&fit=crop",
-      description: "Discover rare wildlife and pristine nature reserves"
-    },
-    {
-      id: 4,
-      title: "Shahdag Mountain Adventure",
-      duration: "5 Days",
-      difficulty: "Challenging",
-      price: "From $280",
-      image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=600&h=400&fit=crop",
-      description: "Multi-day expedition through Azerbaijan's highest mountains"
-    },
-    {
-      id: 5,
-      title: "Gobustan Rock Art & Nature",
-      duration: "1 Day",
-      difficulty: "Easy",
-      price: "From $80",
-      image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=400&fit=crop",
-      description: "Explore ancient petroglyphs and unique mud volcanoes"
-    },
-    {
-      id: 6,
-      title: "Lahij Village Cultural Tour",
-      duration: "2 Days",
-      difficulty: "Easy",
-      price: "From $120",
-      image: "https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=600&h=400&fit=crop",
-      description: "Immerse yourself in traditional crafts and mountain culture"
-    }
-  ];
 
   return (
     <div className="min-h-screen bg-background">
@@ -173,61 +142,80 @@ const Index = () => {
               Our Most Popular Tours
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Discover our top-rated adventures that showcase the best of Azerbaijan's natural beauty
+              Discover our featured adventures that showcase the best of Azerbaijan's natural beauty
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {popularTours.map((tour) => (
-              <Card key={tour.id} className="group hover:shadow-elevated transition-all duration-300 overflow-hidden border-0 bg-card/80 backdrop-blur-sm hover:scale-105">
-                <div className="relative h-48 overflow-hidden">
-                  <img 
-                    src={tour.image} 
-                    alt={tour.title}
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                  <div className="absolute top-4 left-4">
-                    <span className="px-3 py-1 bg-primary text-primary-foreground text-sm font-medium rounded-full">
-                      {tour.difficulty}
-                    </span>
+          {loading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[...Array(6)].map((_, i) => (
+                <Card key={i} className="overflow-hidden border-0 bg-card/80 backdrop-blur-sm">
+                  <Skeleton className="h-48 w-full" />
+                  <CardHeader>
+                    <Skeleton className="h-6 w-3/4 mb-2" />
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-2/3" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex items-center justify-between">
+                      <Skeleton className="h-6 w-20" />
+                      <Skeleton className="h-8 w-24" />
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          ) : featuredTours.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {featuredTours.map((tour) => (
+                <Card key={tour.id} className="group hover:shadow-elevated transition-all duration-300 overflow-hidden border-0 bg-card/80 backdrop-blur-sm hover:scale-105">
+                  <div className="relative h-48 overflow-hidden">
+                    <img 
+                      src={tour.image_url || 'https://images.unsplash.com/photo-1551632811-561732d1e306?w=600&h=400&fit=crop'} 
+                      alt={tour.title}
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                    <div className="absolute top-4 left-4">
+                      <span className="px-3 py-1 bg-primary text-primary-foreground text-sm font-medium rounded-full">
+                        {tour.difficulty}
+                      </span>
+                    </div>
+                    <div className="absolute top-4 right-4">
+                      <span className="px-3 py-1 bg-background/90 text-foreground text-sm font-medium rounded-full">
+                        {tour.duration}
+                      </span>
+                    </div>
                   </div>
-                  <div className="absolute top-4 right-4">
-                    <span className="px-3 py-1 bg-background/90 text-foreground text-sm font-medium rounded-full">
-                      {tour.duration}
-                    </span>
-                  </div>
-                </div>
-                
-                <CardHeader>
-                  <CardTitle className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
-                    {tour.title}
-                  </CardTitle>
-                  <p className="text-muted-foreground text-sm leading-relaxed">
-                    {tour.description}
-                  </p>
-                </CardHeader>
-                
-                <CardContent className="pt-0">
-                  <div className="flex items-center justify-between">
-                    <span className="text-2xl font-bold text-primary">{tour.price}</span>
-                    <Button variant="adventure" size="sm" asChild>
-                      <Link to="/tours" className="flex items-center gap-2">
-                        Learn More
-                        <ArrowRight className="w-4 h-4" />
-                      </Link>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-
-          <div className="text-center mt-12">
-            <Button size="lg" variant="adventure" asChild>
-              <Link to="/tours">View All Tours</Link>
-            </Button>
-          </div>
+                  
+                  <CardHeader>
+                    <CardTitle className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
+                      {tour.title}
+                    </CardTitle>
+                    <p className="text-muted-foreground text-sm leading-relaxed">
+                      {tour.description}
+                    </p>
+                  </CardHeader>
+                  
+                  <CardContent className="pt-0">
+                    <div className="flex items-center justify-between">
+                      <span className="text-2xl font-bold text-primary">{tour.price}</span>
+                      <Button variant="adventure" size="sm" asChild>
+                        <Link to={`/tours/${tour.id}`} className="flex items-center gap-2">
+                          Learn More
+                          <ArrowRight className="w-4 h-4" />
+                        </Link>
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-muted-foreground text-lg">No featured tours available at the moment.</p>
+            </div>
+          )}
         </div>
       </section>
 

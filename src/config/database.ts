@@ -51,9 +51,15 @@ export const initializeDatabase = async () => {
         itinerary TEXT,
         requirements TEXT,
         special_fields JSONB,
+        featured BOOLEAN DEFAULT false,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
+    `);
+
+    // Add featured column if it doesn't exist (for existing databases)
+    await client.query(`
+      ALTER TABLE tours ADD COLUMN IF NOT EXISTS featured BOOLEAN DEFAULT false
     `);
 
     // Create bookings table

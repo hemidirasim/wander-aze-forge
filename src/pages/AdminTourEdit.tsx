@@ -1205,6 +1205,47 @@ Day 3: Cultural visits..."
             </CardContent>
           </Card>
 
+          {/* Status & Featured */}
+          <Card className="shadow-lg">
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Star className="w-5 h-5 text-yellow-500" />
+                <span>Status & Featured</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="flex items-center space-x-6">
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    id="isActive"
+                    checked={formData.isActive}
+                    onChange={(e) => handleInputChange('isActive', e.target.checked)}
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                  />
+                  <Label htmlFor="isActive" className="text-sm font-medium">
+                    Active Tour
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    id="featured"
+                    checked={formData.featured}
+                    onChange={(e) => handleInputChange('featured', e.target.checked)}
+                    className="w-4 h-4 text-yellow-600 bg-gray-100 border-gray-300 rounded focus:ring-yellow-500"
+                  />
+                  <Label htmlFor="featured" className="text-sm font-medium">
+                    Featured Tour (Show on Homepage)
+                  </Label>
+                </div>
+              </div>
+              <p className="text-sm text-gray-600">
+                Featured tours will be displayed in the "Our Most Popular Tours" section on the homepage.
+              </p>
+            </CardContent>
+          </Card>
+
           {/* Submit Button */}
           <div className="flex justify-end space-x-4">
             <Button
