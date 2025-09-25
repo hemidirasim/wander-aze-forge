@@ -276,6 +276,34 @@ We believe that the best adventures come from combining professional expertise w
       'For urgent matters during your tour or immediate assistance, please use our emergency contact information.',
       '{"emergency_phone": "+994 50 999 88 77", "emergency_email": "emergency@outtour.az", "available": "24/7"}',
       null
+    ),
+    (
+      'contact_form',
+      'Contact Form',
+      'Planning a custom tour or have questions? We''d love to hear from you. Fill out the form below and we''ll get back to you within 24 hours.',
+      '{"form_title": "Send us a Message", "form_description": "Planning a custom tour or have questions? We''d love to hear from you.", "response_time": "We''ll respond within 24 hours", "privacy_note": "We respect your privacy. Your information will only be used to respond to your inquiry."}',
+      null
+    ),
+    (
+      'social_media',
+      'Follow Our Adventures',
+      'Stay updated with our latest tours and tips on social media. Follow us for daily inspiration and behind-the-scenes content from our adventures.',
+      '{"facebook": "https://www.facebook.com/campingazerbaijan2014", "instagram": "https://www.instagram.com/camping_azerbaijan/", "linkedin": "https://www.linkedin.com/company/campingazerbaijan/", "twitter": "https://x.com/CampingAze", "description": "Stay updated with our latest tours and tips on social media"}',
+      null
+    ),
+    (
+      'faq_section',
+      'Quick Answers',
+      'Find quick answers to common questions about our tours, booking process, and what to expect.',
+      '{"faq_title": "Quick Answers", "faqs": [{"question": "How far in advance should I book?", "answer": "We recommend booking 2-4 weeks in advance, especially for popular tours during peak season (June-September)."}, {"question": "What''s included in the price?", "answer": "All tours include professional guides, safety equipment, accommodation (where applicable), and transportation from designated meeting points."}, {"question": "Do you offer private tours?", "answer": "Yes! We can customize any tour for private groups. Contact us for personalized itineraries and pricing."}]}',
+      null
+    ),
+    (
+      'map_section',
+      'Our Location',
+      'Based in Baku, we operate tours throughout Azerbaijan. Our main office is located in the heart of the city, easily accessible by public transportation.',
+      '{"location_title": "Based in Baku", "location_description": "Tours operate throughout Azerbaijan", "map_image": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=600&h=400&fit=crop"}',
+      null
     )
     ON CONFLICT (section) DO NOTHING
   `);
