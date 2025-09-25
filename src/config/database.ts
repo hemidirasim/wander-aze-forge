@@ -221,7 +221,7 @@ export const initializeDatabase = async () => {
     (
       'our_story',
       'Our Story',
-      'Founded in 2020, OutTour.az has been at the forefront of adventure tourism in Azerbaijan. We started with a simple mission: to showcase the breathtaking natural beauty of our country and provide unforgettable experiences for travelers from around the world.
+      'Founded in 2020, Outtour.az has been at the forefront of adventure tourism in Azerbaijan. We started with a simple mission: to showcase the breathtaking natural beauty of our country and provide unforgettable experiences for travelers from around the world.
 
 Our journey began when our founders, a group of passionate hikers and nature enthusiasts, realized that Azerbaijan''s incredible landscapes were largely unknown to international travelers. From the majestic peaks of the Greater Caucasus to the pristine shores of the Caspian Sea, we saw an opportunity to share these hidden gems with the world.
 
@@ -332,7 +332,7 @@ We believe that the best adventures come from combining professional expertise w
     (
       'Rashad Mammadov',
       'Founder & Lead Guide',
-      'With over 10 years of experience exploring Azerbaijan''s wilderness, Rashad founded OutTour.az to share his passion for the country''s natural beauty. He has led hundreds of successful expeditions and is certified in mountain safety and wilderness first aid.',
+      'With over 10 years of experience exploring Azerbaijan''s wilderness, Rashad founded Outtour.az to share his passion for the country''s natural beauty. He has led hundreds of successful expeditions and is certified in mountain safety and wilderness first aid.',
       '/assets/team/rashad-mammadov.jpg',
       'rashad@outtour.az',
       '+994 50 123 45 67',

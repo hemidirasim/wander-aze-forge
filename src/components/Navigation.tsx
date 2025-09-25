@@ -51,7 +51,7 @@ const Navigation = () => {
             onClick={scrollToTopInstant}
           >
             <Mountain className="w-8 h-8 text-primary" />
-            <span className="text-xl font-bold">OutTour.az</span>
+            <span className="text-xl font-bold">Outtour.az</span>
           </Link>
 
           {/* Search Button - Center */}
