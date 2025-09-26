@@ -303,6 +303,9 @@ const AdminTourFormExtended: React.FC = () => {
         tour_programs: formData.tourPrograms
       };
 
+      console.log('Sending tour data:', JSON.stringify(tourData, null, 2));
+      console.log('tour_programs being sent:', formData.tourPrograms);
+
       // Send to API
       const response = await fetch('/api/create-tour', {
         method: 'POST',

@@ -31,6 +31,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     console.log('=== CREATE TOUR API CALLED ===');
     console.log('Request body:', JSON.stringify(req.body, null, 2));
+    console.log('tour_programs from request:', req.body.tour_programs);
 
     // Validate required fields
     const requiredFields = ['title', 'description', 'category', 'duration', 'difficulty', 'price', 'maxParticipants'];
