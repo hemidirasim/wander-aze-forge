@@ -33,29 +33,103 @@ export const initializeDatabase = async () => {
   try {
     const client = await pool.connect();
     
-    // Create tours table
-    await client.query(`
-      CREATE TABLE IF NOT EXISTS tours (
-        id SERIAL PRIMARY KEY,
-        title VARCHAR(255) NOT NULL,
-        description TEXT,
-        category VARCHAR(100),
-        duration VARCHAR(50),
-        difficulty VARCHAR(50),
-        price DECIMAL(10,2),
-        max_participants INTEGER,
-        image_url VARCHAR(500),
-        highlights JSONB,
-        includes JSONB,
-        excludes JSONB,
-        itinerary TEXT,
-        requirements TEXT,
-        special_fields JSONB,
-        featured BOOLEAN DEFAULT false,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
+  // Create tours table
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS tours (
+      id SERIAL PRIMARY KEY,
+      title VARCHAR(255) NOT NULL,
+      description TEXT,
+      category VARCHAR(100),
+      duration VARCHAR(50),
+      difficulty VARCHAR(50),
+      price DECIMAL(10,2),
+      max_participants INTEGER,
+      image_url VARCHAR(500),
+      highlights JSONB,
+      includes JSONB,
+      excludes JSONB,
+      itinerary TEXT,
+      requirements TEXT,
+      special_fields JSONB,
+      featured BOOLEAN DEFAULT false,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  // Add missing columns to tours table
+  await client.query(`
+    ALTER TABLE tours ADD COLUMN IF NOT EXISTS rating DECIMAL(3,2) DEFAULT 4.5
+  `);
+  await client.query(`
+    ALTER TABLE tours ADD COLUMN IF NOT EXISTS reviews_count INTEGER DEFAULT 0
+  `);
+  await client.query(`
+    ALTER TABLE tours ADD COLUMN IF NOT EXISTS group_size VARCHAR(100)
+  `);
+  await client.query(`
+    ALTER TABLE tours ADD COLUMN IF NOT EXISTS location VARCHAR(255)
+  `);
+  await client.query(`
+    ALTER TABLE tours ADD COLUMN IF NOT EXISTS overview TEXT
+  `);
+  await client.query(`
+    ALTER TABLE tours ADD COLUMN IF NOT EXISTS best_season VARCHAR(100)
+  `);
+  await client.query(`
+    ALTER TABLE tours ADD COLUMN IF NOT EXISTS meeting_point VARCHAR(255)
+  `);
+  await client.query(`
+    ALTER TABLE tours ADD COLUMN IF NOT EXISTS languages VARCHAR(255)
+  `);
+  await client.query(`
+    ALTER TABLE tours ADD COLUMN IF NOT EXISTS accommodation_details TEXT
+  `);
+  await client.query(`
+    ALTER TABLE tours ADD COLUMN IF NOT EXISTS meals_details TEXT
+  `);
+  await client.query(`
+    ALTER TABLE tours ADD COLUMN IF NOT EXISTS water_snacks_details TEXT
+  `);
+  await client.query(`
+    ALTER TABLE tours ADD COLUMN IF NOT EXISTS provided_equipment JSONB
+  `);
+  await client.query(`
+    ALTER TABLE tours ADD COLUMN IF NOT EXISTS what_to_bring JSONB
+  `);
+  await client.query(`
+    ALTER TABLE tours ADD COLUMN IF NOT EXISTS transport_details TEXT
+  `);
+  await client.query(`
+    ALTER TABLE tours ADD COLUMN IF NOT EXISTS pickup_service VARCHAR(255)
+  `);
+  await client.query(`
+    ALTER TABLE tours ADD COLUMN IF NOT EXISTS gallery_images JSONB
+  `);
+  await client.query(`
+    ALTER TABLE tours ADD COLUMN IF NOT EXISTS photography_service TEXT
+  `);
+  await client.query(`
+    ALTER TABLE tours ADD COLUMN IF NOT EXISTS price_includes JSONB
+  `);
+  await client.query(`
+    ALTER TABLE tours ADD COLUMN IF NOT EXISTS group_discounts VARCHAR(255)
+  `);
+  await client.query(`
+    ALTER TABLE tours ADD COLUMN IF NOT EXISTS early_bird_discount VARCHAR(255)
+  `);
+  await client.query(`
+    ALTER TABLE tours ADD COLUMN IF NOT EXISTS contact_phone VARCHAR(50)
+  `);
+  await client.query(`
+    ALTER TABLE tours ADD COLUMN IF NOT EXISTS booking_terms TEXT
+  `);
+  await client.query(`
+    ALTER TABLE tours ADD COLUMN IF NOT EXISTS is_active BOOLEAN DEFAULT true
+  `);
+  await client.query(`
+    ALTER TABLE tours ADD COLUMN IF NOT EXISTS tour_programs JSONB DEFAULT '[]'
+  `);
 
     // Add featured column if it doesn't exist (for existing databases)
     await client.query(`
