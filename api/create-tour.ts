@@ -139,7 +139,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       result = await pool.query(query, values);
       console.log('Tour created successfully:', result.rows[0]);
       
-      // Update with additional fields - only basic fields first
+      // Update with additional fields - including array fields
       const updateQuery = `
         UPDATE tours SET
           image_url = $1,
@@ -154,18 +154,27 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           accommodation_details = $10,
           meals_details = $11,
           water_snacks_details = $12,
-          transport_details = $13,
-          pickup_service = $14,
-          photography_service = $15,
-          group_discounts = $16,
-          early_bird_discount = $17,
-          contact_phone = $18,
-          booking_terms = $19,
-          itinerary = $20,
-          requirements = $21,
-          is_active = $22,
-          featured = $23
-        WHERE id = $24
+          provided_equipment = $13,
+          what_to_bring = $14,
+          transport_details = $15,
+          pickup_service = $16,
+          gallery_images = $17,
+          photography_service = $18,
+          price_includes = $19,
+          group_discounts = $20,
+          early_bird_discount = $21,
+          contact_phone = $22,
+          booking_terms = $23,
+          highlights = $24,
+          includes = $25,
+          excludes = $26,
+          itinerary = $27,
+          requirements = $28,
+          special_fields = $29,
+          tour_programs = $30,
+          is_active = $31,
+          featured = $32
+        WHERE id = $33
         RETURNING *
       `;
       
@@ -182,15 +191,24 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         tourData.accommodationDetails,
         tourData.mealsDetails,
         tourData.waterSnacksDetails,
+        JSON.stringify(tourData.providedEquipment || []),
+        JSON.stringify(tourData.whatToBring || []),
         tourData.transportDetails,
         tourData.pickupService,
+        JSON.stringify(tourData.galleryImages || []),
         tourData.photographyService,
+        JSON.stringify(tourData.priceIncludes || []),
         tourData.groupDiscounts,
         tourData.earlyBirdDiscount,
         tourData.contactPhone,
         tourData.bookingTerms,
+        JSON.stringify(tourData.highlights || []),
+        JSON.stringify(tourData.includes || []),
+        JSON.stringify(tourData.excludes || []),
         tourData.itinerary,
         tourData.requirements,
+        JSON.stringify(tourData.specialFields || {}),
+        JSON.stringify(tourData.tour_programs || []),
         tourData.isActive,
         tourData.featured,
         result.rows[0].id
