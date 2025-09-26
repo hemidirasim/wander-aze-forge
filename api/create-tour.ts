@@ -111,12 +111,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const mainImageUrl = tourData.imageUrl || (tourData.galleryImages.length > 0 ? tourData.galleryImages[0] : '');
     console.log('Main image URL:', mainImageUrl);
 
-    // Create tour in database - basic fields first
+    // Create tour in database - minimal fields first
     const query = `
       INSERT INTO tours (
-        title, description, category, duration, difficulty, price, max_participants, image_url
+        title, description, category, duration, difficulty, price, max_participants
       )
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+      VALUES ($1, $2, $3, $4, $5, $6, $7)
       RETURNING *
     `;
 
@@ -127,8 +127,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       tourData.duration,
       tourData.difficulty,
       tourData.price,
-      tourData.maxParticipants,
-      mainImageUrl || null
+      tourData.maxParticipants
     ];
 
     console.log('Executing database query with', values.length, 'parameters');
@@ -143,42 +142,44 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       // Update with additional fields
       const updateQuery = `
         UPDATE tours SET
-          rating = $1,
-          reviews_count = $2,
-          group_size = $3,
-          location = $4,
-          overview = $5,
-          best_season = $6,
-          meeting_point = $7,
-          languages = $8,
-          accommodation_details = $9,
-          meals_details = $10,
-          water_snacks_details = $11,
-          provided_equipment = $12,
-          what_to_bring = $13,
-          transport_details = $14,
-          pickup_service = $15,
-          gallery_images = $16,
-          photography_service = $17,
-          price_includes = $18,
-          group_discounts = $19,
-          early_bird_discount = $20,
-          contact_phone = $21,
-          booking_terms = $22,
-          highlights = $23,
-          includes = $24,
-          excludes = $25,
-          itinerary = $26,
-          requirements = $27,
-          special_fields = $28,
-          tour_programs = $29,
-          is_active = $30,
-          featured = $31
-        WHERE id = $32
+          image_url = $1,
+          rating = $2,
+          reviews_count = $3,
+          group_size = $4,
+          location = $5,
+          overview = $6,
+          best_season = $7,
+          meeting_point = $8,
+          languages = $9,
+          accommodation_details = $10,
+          meals_details = $11,
+          water_snacks_details = $12,
+          provided_equipment = $13,
+          what_to_bring = $14,
+          transport_details = $15,
+          pickup_service = $16,
+          gallery_images = $17,
+          photography_service = $18,
+          price_includes = $19,
+          group_discounts = $20,
+          early_bird_discount = $21,
+          contact_phone = $22,
+          booking_terms = $23,
+          highlights = $24,
+          includes = $25,
+          excludes = $26,
+          itinerary = $27,
+          requirements = $28,
+          special_fields = $29,
+          tour_programs = $30,
+          is_active = $31,
+          featured = $32
+        WHERE id = $33
         RETURNING *
       `;
       
       const updateValues = [
+        mainImageUrl || null,
         tourData.rating,
         tourData.reviewsCount,
         tourData.groupSize,
