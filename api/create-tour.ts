@@ -33,6 +33,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     console.log('Request body:', JSON.stringify(req.body, null, 2));
     console.log('tour_programs from request:', req.body.tour_programs);
 
+    // Ensure tour_programs column exists
+    try {
+      await pool.query(`
+        ALTER TABLE tours ADD COLUMN IF NOT EXISTS tour_programs JSONB DEFAULT '[]'
+      `);
+      console.log('tour_programs column ensured');
+    } catch (columnError) {
+      console.log('Column might already exist or error adding:', columnError);
+    }
+
     // Validate required fields
     const requiredFields = ['title', 'description', 'category', 'duration', 'difficulty', 'price', 'maxParticipants'];
     const missingFields = requiredFields.filter(field => !req.body[field]);
