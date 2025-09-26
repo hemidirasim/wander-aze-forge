@@ -366,7 +366,7 @@ const AdminTourFormExtended: React.FC = () => {
                     </SelectTrigger>
                     <SelectContent>
                       {categoriesLoading ? (
-                        <SelectItem value="" disabled>Loading categories...</SelectItem>
+                        <SelectItem value="loading" disabled>Loading categories...</SelectItem>
                       ) : (
                         categories.map((category) => (
                           <SelectItem key={category.id} value={category.slug}>
