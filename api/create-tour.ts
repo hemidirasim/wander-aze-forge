@@ -233,8 +233,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           tourData.highlights || [],
           tourData.includes || [],
           tourData.excludes || [],
-          tourData.tour_programs || [],
-          tourData.specialFields || {},
+          JSON.stringify(tourData.tour_programs || []),
+          JSON.stringify(tourData.specialFields || {}),
           result.rows[0].id
         ];
         
