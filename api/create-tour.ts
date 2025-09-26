@@ -167,9 +167,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     console.log('Query:', query);
     console.log('Values:', values);
 
-    const result = await pool.query(query, values);
-
-    console.log('Tour created successfully:', result.rows[0]);
+    let result;
+    try {
+      result = await pool.query(query, values);
+      console.log('Tour created successfully:', result.rows[0]);
+    } catch (dbError) {
+      console.error('Database error:', dbError);
+      console.error('Database error message:', dbError.message);
+      console.error('Database error code:', dbError.code);
+      throw dbError;
+    }
 
     return res.status(201).json({
       success: true,
