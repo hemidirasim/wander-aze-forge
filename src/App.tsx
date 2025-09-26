@@ -38,7 +38,6 @@ import AdminContact from "./pages/AdminContact";
 import AdminTeamMembers from "./pages/AdminTeamMembers";
 import AdminReviews from "./pages/AdminReviews";
 import AdminHero from "./pages/AdminHero";
-import AdminTourCategories from "./pages/AdminTourCategories";
 import SimpleAdminLayout from "./components/SimpleAdminLayout";
 import NotFound from "./pages/NotFound";
 
@@ -88,7 +87,6 @@ const App = () => (
             <Route path="team-members" element={<AdminTeamMembers />} />
             <Route path="reviews" element={<AdminReviews />} />
         <Route path="hero" element={<AdminHero />} />
-        <Route path="tour-categories" element={<AdminTourCategories />} />
       </Route>
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
