@@ -215,6 +215,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       ];
       
       console.log('Updating tour with additional fields...');
+      console.log('Update query:', updateQuery);
+      console.log('Update values count:', updateValues.length);
+      console.log('Update values:', updateValues);
+      
       const updateResult = await pool.query(updateQuery, updateValues);
       console.log('Tour updated successfully:', updateResult.rows[0]);
       result = updateResult;
