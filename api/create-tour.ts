@@ -212,29 +212,29 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         console.log('Updating array fields...');
         const arrayUpdateQuery = `
           UPDATE tours SET
-            provided_equipment = $1::jsonb,
-            what_to_bring = $2::jsonb,
-            gallery_images = $3::jsonb,
-            price_includes = $4::jsonb,
-            highlights = $5::jsonb,
-            includes = $6::jsonb,
-            excludes = $7::jsonb,
-            tour_programs = $8::jsonb,
-            special_fields = $9::jsonb
+            provided_equipment = $1,
+            what_to_bring = $2,
+            gallery_images = $3,
+            price_includes = $4,
+            highlights = $5,
+            includes = $6,
+            excludes = $7,
+            tour_programs = $8,
+            special_fields = $9
           WHERE id = $10
           RETURNING *
         `;
         
         const arrayUpdateValues = [
-          JSON.stringify(tourData.providedEquipment || []),
-          JSON.stringify(tourData.whatToBring || []),
-          JSON.stringify(tourData.galleryImages || []),
-          JSON.stringify(tourData.priceIncludes || []),
-          JSON.stringify(tourData.highlights || []),
-          JSON.stringify(tourData.includes || []),
-          JSON.stringify(tourData.excludes || []),
-          JSON.stringify(tourData.tour_programs || []),
-          JSON.stringify(tourData.specialFields || {}),
+          tourData.providedEquipment || [],
+          tourData.whatToBring || [],
+          tourData.galleryImages || [],
+          tourData.priceIncludes || [],
+          tourData.highlights || [],
+          tourData.includes || [],
+          tourData.excludes || [],
+          tourData.tour_programs || [],
+          tourData.specialFields || {},
           result.rows[0].id
         ];
         
