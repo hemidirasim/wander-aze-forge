@@ -111,7 +111,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const mainImageUrl = tourData.imageUrl || (tourData.galleryImages.length > 0 ? tourData.galleryImages[0] : '');
     console.log('Main image URL:', mainImageUrl);
 
-    // Create tour in database - simplified query
+    // Create tour in database - without tour_programs first
     const query = `
       INSERT INTO tours (
         title, description, category, duration, difficulty, price, max_participants, image_url, 
@@ -120,9 +120,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         accommodation_details, meals_details, water_snacks_details, provided_equipment, what_to_bring,
         transport_details, pickup_service, gallery_images, photography_service,
         price_includes, group_discounts, early_bird_discount, contact_phone, booking_terms,
-        is_active, featured, tour_programs
+        is_active, featured
       )
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34, $35, $36, $37, $38, $39, $40)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34, $35, $36, $37, $38, $39)
       RETURNING *
     `;
 
@@ -169,8 +169,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       tourData.bookingTerms || null,
       
       tourData.isActive,
-      tourData.featured,
-      JSON.stringify(tourData.tour_programs || [])
+      tourData.featured
     ];
 
     console.log('Executing database query with', values.length, 'parameters');
