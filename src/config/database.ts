@@ -62,6 +62,11 @@ export const initializeDatabase = async () => {
       ALTER TABLE tours ADD COLUMN IF NOT EXISTS featured BOOLEAN DEFAULT false
     `);
 
+    // Add tour_programs column if it doesn't exist (for existing databases)
+    await client.query(`
+      ALTER TABLE tours ADD COLUMN IF NOT EXISTS tour_programs JSONB DEFAULT '[]'
+    `);
+
     // Create bookings table
     await client.query(`
       CREATE TABLE IF NOT EXISTS bookings (
