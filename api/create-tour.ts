@@ -164,6 +164,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     ];
 
     console.log('Executing database query with', values.length, 'parameters');
+    console.log('Query:', query);
+    console.log('Values:', values);
 
     const result = await pool.query(query, values);
 
