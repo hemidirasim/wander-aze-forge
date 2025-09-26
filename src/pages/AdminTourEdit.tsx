@@ -421,7 +421,7 @@ const AdminTourEdit: React.FC = () => {
       };
 
       // Send to API - Use PUT for update
-      const response = await fetch(`/api/tours/${id}`, {
+      const response = await fetch(`/api/tours?id=${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
