@@ -203,7 +203,48 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       
       const updateResult = await pool.query(updateQuery, updateValues);
       console.log('Tour updated successfully:', updateResult.rows[0]);
-      result = updateResult;
+      
+      // Update array fields separately
+      if (tourData.providedEquipment || tourData.whatToBring || tourData.galleryImages || 
+          tourData.priceIncludes || tourData.highlights || tourData.includes || 
+          tourData.excludes || tourData.tour_programs || tourData.specialFields) {
+        
+        console.log('Updating array fields...');
+        const arrayUpdateQuery = `
+          UPDATE tours SET
+            provided_equipment = $1,
+            what_to_bring = $2,
+            gallery_images = $3,
+            price_includes = $4,
+            highlights = $5,
+            includes = $6,
+            excludes = $7,
+            tour_programs = $8,
+            special_fields = $9
+          WHERE id = $10
+          RETURNING *
+        `;
+        
+        const arrayUpdateValues = [
+          JSON.stringify(tourData.providedEquipment || []),
+          JSON.stringify(tourData.whatToBring || []),
+          JSON.stringify(tourData.galleryImages || []),
+          JSON.stringify(tourData.priceIncludes || []),
+          JSON.stringify(tourData.highlights || []),
+          JSON.stringify(tourData.includes || []),
+          JSON.stringify(tourData.excludes || []),
+          JSON.stringify(tourData.tour_programs || []),
+          JSON.stringify(tourData.specialFields || {}),
+          result.rows[0].id
+        ];
+        
+        console.log('Array update query:', arrayUpdateQuery);
+        console.log('Array update values:', arrayUpdateValues);
+        
+        const arrayUpdateResult = await pool.query(arrayUpdateQuery, arrayUpdateValues);
+        console.log('Array fields updated successfully:', arrayUpdateResult.rows[0]);
+        result = arrayUpdateResult;
+      }
       
     } catch (dbError) {
       console.error('Database error:', dbError);
