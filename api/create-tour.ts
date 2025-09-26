@@ -111,17 +111,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const mainImageUrl = tourData.imageUrl || (tourData.galleryImages.length > 0 ? tourData.galleryImages[0] : '');
     console.log('Main image URL:', mainImageUrl);
 
-    // Create tour in database - all fields
+    // Create tour in database - basic fields first
     const query = `
       INSERT INTO tours (
-        title, description, category, duration, difficulty, price, max_participants, image_url,
-        rating, reviews_count, group_size, location, overview, best_season, meeting_point, languages,
-        accommodation_details, meals_details, water_snacks_details, provided_equipment, what_to_bring,
-        transport_details, pickup_service, gallery_images, photography_service, price_includes,
-        group_discounts, early_bird_discount, contact_phone, booking_terms, highlights, includes, excludes,
-        itinerary, requirements, special_fields, tour_programs, is_active, featured
+        title, description, category, duration, difficulty, price, max_participants, image_url
       )
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34, $35, $36, $37, $38, $39, $40, $41, $42)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
       RETURNING *
     `;
 
@@ -133,38 +128,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       tourData.difficulty,
       tourData.price,
       tourData.maxParticipants,
-      mainImageUrl || null,
-      tourData.rating,
-      tourData.reviewsCount,
-      tourData.groupSize,
-      tourData.location,
-      tourData.overview,
-      tourData.bestSeason,
-      tourData.meetingPoint,
-      tourData.languages,
-      tourData.accommodationDetails,
-      tourData.mealsDetails,
-      tourData.waterSnacksDetails,
-      JSON.stringify(tourData.providedEquipment),
-      JSON.stringify(tourData.whatToBring),
-      tourData.transportDetails,
-      tourData.pickupService,
-      JSON.stringify(tourData.galleryImages),
-      tourData.photographyService,
-      JSON.stringify(tourData.priceIncludes),
-      tourData.groupDiscounts,
-      tourData.earlyBirdDiscount,
-      tourData.contactPhone,
-      tourData.bookingTerms,
-      JSON.stringify(tourData.highlights),
-      JSON.stringify(tourData.includes),
-      JSON.stringify(tourData.excludes),
-      tourData.itinerary,
-      tourData.requirements,
-      JSON.stringify(tourData.specialFields),
-      JSON.stringify(tourData.tour_programs),
-      tourData.isActive,
-      tourData.featured
+      mainImageUrl || null
     ];
 
     console.log('Executing database query with', values.length, 'parameters');
@@ -175,6 +139,85 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     try {
       result = await pool.query(query, values);
       console.log('Tour created successfully:', result.rows[0]);
+      
+      // Update with additional fields
+      const updateQuery = `
+        UPDATE tours SET
+          rating = $1,
+          reviews_count = $2,
+          group_size = $3,
+          location = $4,
+          overview = $5,
+          best_season = $6,
+          meeting_point = $7,
+          languages = $8,
+          accommodation_details = $9,
+          meals_details = $10,
+          water_snacks_details = $11,
+          provided_equipment = $12,
+          what_to_bring = $13,
+          transport_details = $14,
+          pickup_service = $15,
+          gallery_images = $16,
+          photography_service = $17,
+          price_includes = $18,
+          group_discounts = $19,
+          early_bird_discount = $20,
+          contact_phone = $21,
+          booking_terms = $22,
+          highlights = $23,
+          includes = $24,
+          excludes = $25,
+          itinerary = $26,
+          requirements = $27,
+          special_fields = $28,
+          tour_programs = $29,
+          is_active = $30,
+          featured = $31
+        WHERE id = $32
+        RETURNING *
+      `;
+      
+      const updateValues = [
+        tourData.rating,
+        tourData.reviewsCount,
+        tourData.groupSize,
+        tourData.location,
+        tourData.overview,
+        tourData.bestSeason,
+        tourData.meetingPoint,
+        tourData.languages,
+        tourData.accommodationDetails,
+        tourData.mealsDetails,
+        tourData.waterSnacksDetails,
+        JSON.stringify(tourData.providedEquipment),
+        JSON.stringify(tourData.whatToBring),
+        tourData.transportDetails,
+        tourData.pickupService,
+        JSON.stringify(tourData.galleryImages),
+        tourData.photographyService,
+        JSON.stringify(tourData.priceIncludes),
+        tourData.groupDiscounts,
+        tourData.earlyBirdDiscount,
+        tourData.contactPhone,
+        tourData.bookingTerms,
+        JSON.stringify(tourData.highlights),
+        JSON.stringify(tourData.includes),
+        JSON.stringify(tourData.excludes),
+        tourData.itinerary,
+        tourData.requirements,
+        JSON.stringify(tourData.specialFields),
+        JSON.stringify(tourData.tour_programs),
+        tourData.isActive,
+        tourData.featured,
+        result.rows[0].id
+      ];
+      
+      console.log('Updating tour with additional fields...');
+      const updateResult = await pool.query(updateQuery, updateValues);
+      console.log('Tour updated successfully:', updateResult.rows[0]);
+      result = updateResult;
+      
     } catch (dbError) {
       console.error('Database error:', dbError);
       console.error('Database error message:', dbError.message);
