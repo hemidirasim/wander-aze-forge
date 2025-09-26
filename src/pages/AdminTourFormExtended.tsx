@@ -299,7 +299,8 @@ const AdminTourFormExtended: React.FC = () => {
         requirements: formData.requirements.trim(),
         
         isActive: formData.isActive,
-        featured: formData.featured
+        featured: formData.featured,
+        tour_programs: formData.tourPrograms
       };
 
       // Send to API

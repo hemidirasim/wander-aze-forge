@@ -90,7 +90,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       bookingTerms: req.body.bookingTerms?.trim() || '',
       
       isActive: req.body.isActive !== false,
-      featured: req.body.featured === true
+      featured: req.body.featured === true,
+      tour_programs: req.body.tour_programs || []
     };
 
     console.log('Processed tour data:', JSON.stringify(tourData, null, 2));
@@ -107,10 +108,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         rating, reviews_count, group_size, location, overview, best_season, meeting_point, languages,
         accommodation_details, meals_details, water_snacks_details, provided_equipment, what_to_bring,
         transport_details, pickup_service, gallery_images, photography_service,
-        price_includes, group_discounts, early_bird_discount, contact_phone, booking_terms,
-        is_active, featured
+      price_includes, group_discounts, early_bird_discount, contact_phone, booking_terms,
+      is_active, featured, tour_programs
       )
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34, $35, $36, $37, $38)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34, $35, $36, $37, $38, $39)
       RETURNING *
     `;
 
@@ -157,7 +158,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       tourData.bookingTerms || null,
       
       tourData.isActive,
-      tourData.featured
+      tourData.featured,
+      JSON.stringify(tourData.tour_programs || [])
     ];
 
     console.log('Executing database query with', values.length, 'parameters');
