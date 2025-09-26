@@ -139,7 +139,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       result = await pool.query(query, values);
       console.log('Tour created successfully:', result.rows[0]);
       
-      // Update with additional fields
+      // Update with additional fields - only basic fields first
       const updateQuery = `
         UPDATE tours SET
           image_url = $1,
@@ -154,27 +154,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           accommodation_details = $10,
           meals_details = $11,
           water_snacks_details = $12,
-          provided_equipment = $13,
-          what_to_bring = $14,
-          transport_details = $15,
-          pickup_service = $16,
-          gallery_images = $17,
-          photography_service = $18,
-          price_includes = $19,
-          group_discounts = $20,
-          early_bird_discount = $21,
-          contact_phone = $22,
-          booking_terms = $23,
-          highlights = $24,
-          includes = $25,
-          excludes = $26,
-          itinerary = $27,
-          requirements = $28,
-          special_fields = $29,
-          tour_programs = $30,
-          is_active = $31,
-          featured = $32
-        WHERE id = $33
+          transport_details = $13,
+          pickup_service = $14,
+          photography_service = $15,
+          group_discounts = $16,
+          early_bird_discount = $17,
+          contact_phone = $18,
+          booking_terms = $19,
+          itinerary = $20,
+          requirements = $21,
+          is_active = $22,
+          featured = $23
+        WHERE id = $24
         RETURNING *
       `;
       
@@ -191,24 +182,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         tourData.accommodationDetails,
         tourData.mealsDetails,
         tourData.waterSnacksDetails,
-        tourData.providedEquipment || [],
-        tourData.whatToBring || [],
         tourData.transportDetails,
         tourData.pickupService,
-        tourData.galleryImages || [],
         tourData.photographyService,
-        tourData.priceIncludes || [],
         tourData.groupDiscounts,
         tourData.earlyBirdDiscount,
         tourData.contactPhone,
         tourData.bookingTerms,
-        tourData.highlights || [],
-        tourData.includes || [],
-        tourData.excludes || [],
         tourData.itinerary,
         tourData.requirements,
-        tourData.specialFields || {},
-        tourData.tour_programs || [],
         tourData.isActive,
         tourData.featured,
         result.rows[0].id
