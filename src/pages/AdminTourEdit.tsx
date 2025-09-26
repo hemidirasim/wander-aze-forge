@@ -111,11 +111,25 @@ interface ExtendedTourForm {
   featured: boolean;
 }
 
+interface TourCategory {
+  id: number;
+  name: string;
+  slug: string;
+  description: string;
+  image_url?: string;
+  is_active: boolean;
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
+}
+
 const AdminTourEdit: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [categories, setCategories] = useState<TourCategory[]>([]);
+  const [categoriesLoading, setCategoriesLoading] = useState(true);
 
   const [formData, setFormData] = useState<ExtendedTourForm>({
     // Basic Info
@@ -186,12 +200,32 @@ const AdminTourEdit: React.FC = () => {
       return;
     }
 
+    fetchCategories();
+
     if (id) {
       fetchTourData();
     } else {
       setLoading(false);
     }
   }, [id, navigate]);
+
+  const fetchCategories = async () => {
+    try {
+      setCategoriesLoading(true);
+      const response = await fetch('/api/tour-categories');
+      const data = await response.json();
+      
+      if (data.success) {
+        setCategories(data.data);
+      } else {
+        console.error('Failed to fetch categories:', data.error);
+      }
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    } finally {
+      setCategoriesLoading(false);
+    }
+  };
 
   const fetchTourData = async () => {
     try {
@@ -466,11 +500,15 @@ const AdminTourEdit: React.FC = () => {
                       <SelectValue placeholder="Select category" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="hiking">Hiking</SelectItem>
-                      <SelectItem value="trekking">Trekking</SelectItem>
-                      <SelectItem value="wildlife">Wildlife</SelectItem>
-                      <SelectItem value="cultural">Cultural</SelectItem>
-                      <SelectItem value="adventure">Adventure</SelectItem>
+                      {categoriesLoading ? (
+                        <SelectItem value="" disabled>Loading categories...</SelectItem>
+                      ) : (
+                        categories.map((category) => (
+                          <SelectItem key={category.id} value={category.slug}>
+                            {category.name}
+                          </SelectItem>
+                        ))
+                      )}
                     </SelectContent>
                   </Select>
                 </div>
