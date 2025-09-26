@@ -176,6 +176,7 @@ const AdminTourFormExtended: React.FC = () => {
     excludes: ['Personal items', 'Insurance', 'Tips'],
     itinerary: 'Day 1: Arrival and short hike. Day 2: Main trekking and return.',
     requirements: 'Basic fitness level required. Age 12+.',
+    specialFields: 'Test special fields content for debugging purposes.',
     
     // Tour Programs
     tourPrograms: [
