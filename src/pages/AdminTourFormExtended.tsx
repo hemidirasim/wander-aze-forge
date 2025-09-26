@@ -126,103 +126,63 @@ const AdminTourFormExtended: React.FC = () => {
   const [categoriesLoading, setCategoriesLoading] = useState(true);
   const [formData, setFormData] = useState<ExtendedTourForm>({
     // Basic Info
-    title: 'Demo Mountain Trekking Tour',
-    description: 'Experience the breathtaking beauty of Azerbaijan\'s mountains with our guided trekking adventure. This 3-day journey takes you through pristine landscapes, ancient villages, and offers stunning panoramic views.',
-    category: 'trekking',
-    duration: '3 days',
-    difficulty: 'Moderate',
-    price: '299',
-    maxParticipants: '12',
-    rating: '4.8',
-    reviewsCount: '25',
-    groupSize: '6-12 people',
-    location: 'Shahdag National Park, Azerbaijan',
+    title: '',
+    description: '',
+    category: '',
+    duration: '',
+    difficulty: '',
+    price: '',
+    maxParticipants: '',
+    rating: '4.5',
+    reviewsCount: '0',
+    groupSize: '',
+    location: '',
     
     // Overview
-    overview: 'Join us for an unforgettable mountain trekking experience in the heart of Azerbaijan. Our expert guides will lead you through diverse terrain, from lush valleys to rocky peaks, while sharing local knowledge and ensuring your safety.',
+    overview: '',
     bestSeason: 'May to October',
-    meetingPoint: 'Baku Central Station, 8:00 AM',
+    meetingPoint: '',
     languages: 'English, Azerbaijani, Russian',
     
     // Accommodation & Food
-    accommodationDetails: 'Comfortable mountain huts and guesthouses with shared facilities. All accommodation is pre-arranged and includes bedding.',
-    mealsDetails: 'All meals included: breakfast, lunch, and dinner. Local cuisine with fresh ingredients. Special dietary requirements can be accommodated with advance notice.',
-    waterSnacksDetails: 'Unlimited drinking water provided throughout the trek. Energy bars, fruits, and local snacks available.',
+    accommodationDetails: '',
+    mealsDetails: '',
+    waterSnacksDetails: '',
     
     // Equipment
-    providedEquipment: ['Trekking poles', 'Safety helmet', 'First aid kit', 'Group shelter'],
-    whatToBring: ['Hiking boots', 'Warm clothing', 'Rain jacket', 'Personal items'],
+    providedEquipment: [''],
+    whatToBring: [''],
     
     // Transport
-    transportDetails: 'Private minibus transport from Baku to trailhead and return. All transfers included.',
-    pickupService: 'Free pickup from major hotels in Baku city center',
+    transportDetails: '',
+    pickupService: '',
     
     // Media
     galleryImages: [],
-    photographyService: 'Professional photography service available. Photos will be shared via cloud storage after the tour.',
+    photographyService: '',
     
     // Price
-    priceIncludes: ['All meals', 'Accommodation', 'Transport', 'Guide services', 'Equipment'],
-    groupDiscounts: '10% discount for groups of 8+ people',
-    earlyBirdDiscount: '15% discount for bookings made 30+ days in advance',
+    priceIncludes: [''],
+    groupDiscounts: '',
+    earlyBirdDiscount: '',
     
     // Contact & Booking
     contactPhone: '+994 51 400 90 91',
-    bookingTerms: 'Full payment required 7 days before departure. Cancellation policy: 50% refund if cancelled 48+ hours before, no refund within 48 hours.',
+    bookingTerms: '',
     
     // Highlights, Includes, Excludes
-    highlights: ['Panoramic mountain views', 'Traditional village visits', 'Local cuisine experience', 'Expert local guide'],
-    includes: ['Professional guide', 'All meals', 'Accommodation', 'Transport', 'Safety equipment'],
-    excludes: ['Personal items', 'Travel insurance', 'Alcoholic beverages', 'Tips for guide'],
-    itinerary: 'Day 1: Arrival and orientation. Day 2: Full day trekking. Day 3: Return journey with cultural stops.',
-    requirements: 'Good physical condition required. Minimum age 16. No previous trekking experience necessary.',
+    highlights: [''],
+    includes: [''],
+    excludes: [''],
+    itinerary: '',
+    requirements: '',
     
     // Tour Programs
-    tourPrograms: [
-      {
-        id: 'day-1',
-        dayNumber: 1,
-        title: 'Arrival and Orientation',
-        description: 'Arrive at the meeting point and get acquainted with your fellow trekkers. Brief orientation about the trek and safety guidelines.',
-        activities: ['Welcome meeting', 'Equipment check', 'Route briefing', 'Group dinner'],
-        accommodation: 'Mountain guesthouse',
-        meals: ['Dinner'],
-        transportation: 'Private transfer from Baku',
-        highlights: ['Group introduction', 'Equipment familiarization'],
-        difficultyLevel: 'Easy',
-        durationHours: 4
-      },
-      {
-        id: 'day-2',
-        dayNumber: 2,
-        title: 'Main Trekking Day',
-        description: 'The highlight of your adventure! Trek through diverse landscapes including forests, meadows, and rocky terrain.',
-        activities: ['Morning briefing', 'Full day trekking', 'Lunch break', 'Summit attempt', 'Descent'],
-        accommodation: 'Mountain hut',
-        meals: ['Breakfast', 'Lunch', 'Dinner'],
-        transportation: 'On foot',
-        highlights: ['Summit views', 'Wildlife spotting', 'Photography opportunities'],
-        difficultyLevel: 'Moderate',
-        durationHours: 8
-      },
-      {
-        id: 'day-3',
-        dayNumber: 3,
-        title: 'Return and Cultural Visit',
-        description: 'Gentle descent with cultural stops at local villages. Learn about traditional mountain life and local customs.',
-        activities: ['Morning trek', 'Village visit', 'Local lunch', 'Return to Baku'],
-        accommodation: 'Not applicable',
-        meals: ['Breakfast', 'Lunch'],
-        transportation: 'Private transfer to Baku',
-        highlights: ['Cultural immersion', 'Local interactions', 'Traditional crafts'],
-        difficultyLevel: 'Easy',
-        durationHours: 6
-      }
-    ],
+    tourPrograms: [],
     
     // Status
     isActive: true,
-    featured: true
+    featured: false
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
