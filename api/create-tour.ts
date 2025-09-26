@@ -111,24 +111,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const mainImageUrl = tourData.imageUrl || (tourData.galleryImages.length > 0 ? tourData.galleryImages[0] : '');
     console.log('Main image URL:', mainImageUrl);
 
-    // Create tour in database - minimal columns only
+    // Create tour in database - only basic columns
     const query = `
       INSERT INTO tours (
-        title, description, category, duration, difficulty, price, max_participants, image_url
+        title, description, category
       )
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+      VALUES ($1, $2, $3)
       RETURNING *
     `;
 
     const values = [
       tourData.title,
       tourData.description,
-      tourData.category,
-      tourData.duration,
-      tourData.difficulty,
-      tourData.price,
-      tourData.maxParticipants,
-      mainImageUrl || null
+      tourData.category
     ];
 
     console.log('Executing database query with', values.length, 'parameters');
