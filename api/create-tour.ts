@@ -226,15 +226,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         `;
         
         const arrayUpdateValues = [
-          JSON.stringify(tourData.providedEquipment || []),
-          JSON.stringify(tourData.whatToBring || []),
-          JSON.stringify(tourData.galleryImages || []),
-          JSON.stringify(tourData.priceIncludes || []),
-          JSON.stringify(tourData.highlights || []),
-          JSON.stringify(tourData.includes || []),
-          JSON.stringify(tourData.excludes || []),
-          JSON.stringify(tourData.tour_programs || []),
-          JSON.stringify(tourData.specialFields || {}),
+          tourData.providedEquipment || [],
+          tourData.whatToBring || [],
+          tourData.galleryImages || [],
+          tourData.priceIncludes || [],
+          tourData.highlights || [],
+          tourData.includes || [],
+          tourData.excludes || [],
+          tourData.tour_programs || [],
+          tourData.specialFields || {},
           result.rows[0].id
         ];
         
