@@ -111,18 +111,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const mainImageUrl = tourData.imageUrl || (tourData.galleryImages.length > 0 ? tourData.galleryImages[0] : '');
     console.log('Main image URL:', mainImageUrl);
 
-    // Create tour in database - without tour_programs (will update separately)
+    // Create tour in database - basic columns only
     const query = `
       INSERT INTO tours (
-        title, description, category, duration, difficulty, price, max_participants, image_url, 
-        highlights, includes, excludes, itinerary, requirements, special_fields,
-        rating, reviews_count, group_size, location, overview, best_season, meeting_point, languages,
-        accommodation_details, meals_details, water_snacks_details, provided_equipment, what_to_bring,
-        transport_details, pickup_service, gallery_images, photography_service,
-        price_includes, group_discounts, early_bird_discount, contact_phone, booking_terms,
-        is_active, featured
+        title, description, category, duration, difficulty, price, max_participants, image_url
       )
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34, $35, $36, $37, $38, $39)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
       RETURNING *
     `;
 
@@ -134,42 +128,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       tourData.difficulty,
       tourData.price,
       tourData.maxParticipants,
-      mainImageUrl || null,
-      JSON.stringify(tourData.highlights),
-      JSON.stringify(tourData.includes),
-      JSON.stringify(tourData.excludes),
-      tourData.itinerary,
-      tourData.requirements,
-      tourData.specialFields,
-      
-      tourData.rating,
-      tourData.reviewsCount,
-      tourData.groupSize || null,
-      tourData.location || null,
-      tourData.overview || null,
-      tourData.bestSeason,
-      tourData.meetingPoint || null,
-      tourData.languages,
-      
-      tourData.accommodationDetails || null,
-      tourData.mealsDetails || null,
-      tourData.waterSnacksDetails || null,
-      tourData.providedEquipment,
-      tourData.whatToBring,
-      
-      tourData.transportDetails || null,
-      tourData.pickupService || null,
-      tourData.galleryImages,
-      tourData.photographyService || null,
-      
-      tourData.priceIncludes,
-      tourData.groupDiscounts || null,
-      tourData.earlyBirdDiscount || null,
-      tourData.contactPhone,
-      tourData.bookingTerms || null,
-      
-      tourData.isActive,
-      tourData.featured
+      mainImageUrl || null
     ];
 
     console.log('Executing database query with', values.length, 'parameters');
