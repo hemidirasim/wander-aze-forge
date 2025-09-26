@@ -48,19 +48,59 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
   const { category } = req.query;
 
   try {
-    let query = 'SELECT * FROM tours ORDER BY created_at DESC';
+    let query = `
+      SELECT 
+        id, title, description, price, duration, difficulty, rating, 
+        reviews_count, group_size, location, image_url, category,
+        highlights, includes, excludes, is_active, featured,
+        tour_programs, overview, best_season, meeting_point, languages,
+        accommodation_details, meals_details, water_snacks_details,
+        provided_equipment, what_to_bring, transport_details, pickup_service,
+        gallery_images, photography_service, price_includes, group_discounts,
+        early_bird_discount, contact_phone, booking_terms, itinerary,
+        requirements, special_fields, max_participants, created_at, updated_at
+      FROM tours 
+      ORDER BY created_at DESC
+    `;
     let params: any[] = [];
 
     if (category && typeof category === 'string') {
-      query = 'SELECT * FROM tours WHERE category = $1 ORDER BY created_at DESC';
+      query = `
+        SELECT 
+          id, title, description, price, duration, difficulty, rating, 
+          reviews_count, group_size, location, image_url, category,
+          highlights, includes, excludes, is_active, featured,
+          tour_programs, overview, best_season, meeting_point, languages,
+          accommodation_details, meals_details, water_snacks_details,
+          provided_equipment, what_to_bring, transport_details, pickup_service,
+          gallery_images, photography_service, price_includes, group_discounts,
+          early_bird_discount, contact_phone, booking_terms, itinerary,
+          requirements, special_fields, max_participants, created_at, updated_at
+        FROM tours 
+        WHERE category = $1 
+        ORDER BY created_at DESC
+      `;
       params = [category];
     }
 
     const result = await pool.query(query, params);
     
+    // Parse JSON fields for each tour
+    const parsedTours = result.rows.map(tour => ({
+      ...tour,
+      highlights: tour.highlights ? (typeof tour.highlights === 'string' ? JSON.parse(tour.highlights) : tour.highlights) : [],
+      includes: tour.includes ? (typeof tour.includes === 'string' ? JSON.parse(tour.includes) : tour.includes) : [],
+      excludes: tour.excludes ? (typeof tour.excludes === 'string' ? JSON.parse(tour.excludes) : tour.excludes) : [],
+      tour_programs: tour.tour_programs ? (typeof tour.tour_programs === 'string' ? JSON.parse(tour.tour_programs) : tour.tour_programs) : [],
+      provided_equipment: tour.provided_equipment ? (typeof tour.provided_equipment === 'string' ? JSON.parse(tour.provided_equipment) : tour.provided_equipment) : [],
+      what_to_bring: tour.what_to_bring ? (typeof tour.what_to_bring === 'string' ? JSON.parse(tour.what_to_bring) : tour.what_to_bring) : [],
+      gallery_images: tour.gallery_images ? (typeof tour.gallery_images === 'string' ? JSON.parse(tour.gallery_images) : tour.gallery_images) : [],
+      price_includes: tour.price_includes ? (typeof tour.price_includes === 'string' ? JSON.parse(tour.price_includes) : tour.price_includes) : []
+    }));
+    
     return res.status(200).json({
       success: true,
-      data: result.rows
+      data: parsedTours
     });
   } catch (error) {
     console.error('Error fetching tours:', error);
