@@ -126,63 +126,90 @@ const AdminTourFormExtended: React.FC = () => {
   const [categoriesLoading, setCategoriesLoading] = useState(true);
   const [formData, setFormData] = useState<ExtendedTourForm>({
     // Basic Info
-    title: '',
-    description: '',
-    category: '',
-    duration: '',
-    difficulty: '',
-    price: '',
-    maxParticipants: '',
+    title: 'Test Mountain Tour',
+    description: 'A beautiful test tour through the mountains of Azerbaijan. Perfect for testing the system.',
+    category: 'trekking',
+    duration: '2 days',
+    difficulty: 'Easy',
+    price: '150',
+    maxParticipants: '8',
     rating: '4.5',
-    reviewsCount: '0',
-    groupSize: '',
-    location: '',
+    reviewsCount: '10',
+    groupSize: '4-8 people',
+    location: 'Gabala, Azerbaijan',
     
     // Overview
-    overview: '',
+    overview: 'Join us for a wonderful test tour through the beautiful mountains of Azerbaijan. This is a perfect opportunity to test our system.',
     bestSeason: 'May to October',
-    meetingPoint: '',
+    meetingPoint: 'Gabala City Center',
     languages: 'English, Azerbaijani, Russian',
     
     // Accommodation & Food
-    accommodationDetails: '',
-    mealsDetails: '',
-    waterSnacksDetails: '',
+    accommodationDetails: 'Comfortable hotel accommodation with all amenities.',
+    mealsDetails: 'All meals included: breakfast, lunch, and dinner.',
+    waterSnacksDetails: 'Water and snacks provided throughout the tour.',
     
     // Equipment
-    providedEquipment: [''],
-    whatToBring: [''],
+    providedEquipment: ['Hiking boots', 'Safety equipment', 'First aid kit'],
+    whatToBring: ['Warm clothing', 'Personal items', 'Camera'],
     
     // Transport
-    transportDetails: '',
-    pickupService: '',
+    transportDetails: 'Private vehicle transport included.',
+    pickupService: 'Free pickup from Gabala hotels',
     
     // Media
     galleryImages: [],
-    photographyService: '',
+    photographyService: 'Professional photos will be provided.',
     
     // Price
-    priceIncludes: [''],
-    groupDiscounts: '',
-    earlyBirdDiscount: '',
+    priceIncludes: ['Transport', 'Meals', 'Guide', 'Equipment'],
+    groupDiscounts: '10% for groups of 6+',
+    earlyBirdDiscount: '15% for early bookings',
     
     // Contact & Booking
     contactPhone: '+994 51 400 90 91',
-    bookingTerms: '',
+    bookingTerms: 'Full payment required before departure.',
     
     // Highlights, Includes, Excludes
-    highlights: [''],
-    includes: [''],
-    excludes: [''],
-    itinerary: '',
-    requirements: '',
+    highlights: ['Mountain views', 'Fresh air', 'Nature experience'],
+    includes: ['Guide', 'Transport', 'Meals', 'Equipment'],
+    excludes: ['Personal items', 'Insurance', 'Tips'],
+    itinerary: 'Day 1: Arrival and short hike. Day 2: Main trekking and return.',
+    requirements: 'Basic fitness level required. Age 12+.',
     
     // Tour Programs
-    tourPrograms: [],
+    tourPrograms: [
+      {
+        id: 'test-day-1',
+        dayNumber: 1,
+        title: 'Arrival and Short Hike',
+        description: 'Arrive at the meeting point and take a short introductory hike.',
+        activities: ['Welcome meeting', 'Equipment check', 'Short hike', 'Dinner'],
+        accommodation: 'Test hotel',
+        meals: ['Dinner'],
+        transportation: 'Walking',
+        highlights: ['First views', 'Group bonding'],
+        difficultyLevel: 'Easy',
+        durationHours: 4
+      },
+      {
+        id: 'test-day-2',
+        dayNumber: 2,
+        title: 'Main Trekking Day',
+        description: 'The main day of our test tour with beautiful mountain views.',
+        activities: ['Morning briefing', 'Full day hike', 'Lunch break', 'Return'],
+        accommodation: 'Test hotel',
+        meals: ['Breakfast', 'Lunch', 'Dinner'],
+        transportation: 'Walking',
+        highlights: ['Mountain summit', 'Panoramic views', 'Nature photos'],
+        difficultyLevel: 'Moderate',
+        durationHours: 6
+      }
+    ],
     
     // Status
     isActive: true,
-    featured: false
+    featured: true
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
