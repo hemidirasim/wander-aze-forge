@@ -43,7 +43,13 @@ export async function GET(request: Request) {
       SELECT 
         id, title, description, price, duration, difficulty, rating, 
         reviews_count, group_size, location, image_url, category,
-        highlights, includes, excludes, is_active, featured
+        highlights, includes, excludes, is_active, featured,
+        tour_programs, overview, best_season, meeting_point, languages,
+        accommodation_details, meals_details, water_snacks_details,
+        provided_equipment, what_to_bring, transport_details, pickup_service,
+        gallery_images, photography_service, price_includes, group_discounts,
+        early_bird_discount, contact_phone, booking_terms, itinerary,
+        requirements, special_fields
       FROM tours 
       WHERE id = $1
     `;
@@ -68,35 +74,36 @@ export async function GET(request: Request) {
       highlights: tour.highlights ? (typeof tour.highlights === 'string' ? JSON.parse(tour.highlights) : tour.highlights) : [],
       includes: tour.includes ? (typeof tour.includes === 'string' ? JSON.parse(tour.includes) : tour.includes) : [],
       excludes: tour.excludes ? (typeof tour.excludes === 'string' ? JSON.parse(tour.excludes) : tour.excludes) : [],
-      // Add default values for missing fields
-      overview: tour.description,
-      best_season: 'All year round',
-      meeting_point: 'TBD',
-      languages: 'English, Azerbaijani',
-      accommodation_details: 'Accommodation details will be provided',
-      meals_details: 'Meal details will be provided',
-      water_snacks_details: 'Water and snacks provided',
-      provided_equipment: ['All necessary equipment provided'],
-      what_to_bring: ['Personal items', 'Comfortable clothing'],
-      transport_details: 'Transportation details will be provided',
-      pickup_service: 'Pickup service available',
-      gallery_images: [tour.image_url || '/placeholder-tour.jpg'],
-      photography_service: 'Photography service available',
-      price_includes: tour.includes || ['Professional guide', 'All equipment'],
-      group_discounts: 'Group discounts available for 6+ people',
-      early_bird_discount: 'Early bird discounts available',
-      contact_phone: '+994 XX XXX XX XX',
-      booking_terms: 'Booking terms will be provided',
-      itinerary: 'Detailed itinerary will be provided',
-      requirements: 'Basic fitness level required',
-      special_fields: {}
+      tour_programs: tour.tour_programs ? (typeof tour.tour_programs === 'string' ? JSON.parse(tour.tour_programs) : tour.tour_programs) : [],
+      provided_equipment: tour.provided_equipment ? (typeof tour.provided_equipment === 'string' ? JSON.parse(tour.provided_equipment) : tour.provided_equipment) : [],
+      what_to_bring: tour.what_to_bring ? (typeof tour.what_to_bring === 'string' ? JSON.parse(tour.what_to_bring) : tour.what_to_bring) : [],
+      gallery_images: tour.gallery_images ? (typeof tour.gallery_images === 'string' ? JSON.parse(tour.gallery_images) : tour.gallery_images) : [tour.image_url || '/placeholder-tour.jpg'],
+      price_includes: tour.price_includes ? (typeof tour.price_includes === 'string' ? JSON.parse(tour.price_includes) : tour.price_includes) : [],
+      // Use actual database values or defaults
+      overview: tour.overview || tour.description,
+      best_season: tour.best_season || 'All year round',
+      meeting_point: tour.meeting_point || 'TBD',
+      languages: tour.languages || 'English, Azerbaijani',
+      accommodation_details: tour.accommodation_details || 'Accommodation details will be provided',
+      meals_details: tour.meals_details || 'Meal details will be provided',
+      water_snacks_details: tour.water_snacks_details || 'Water and snacks provided',
+      transport_details: tour.transport_details || 'Transportation details will be provided',
+      pickup_service: tour.pickup_service || 'Pickup service available',
+      photography_service: tour.photography_service || 'Photography service available',
+      group_discounts: tour.group_discounts || 'Group discounts available for 6+ people',
+      early_bird_discount: tour.early_bird_discount || 'Early bird discounts available',
+      contact_phone: tour.contact_phone || '+994 XX XXX XX XX',
+      booking_terms: tour.booking_terms || 'Booking terms will be provided',
+      itinerary: tour.itinerary || 'Detailed itinerary will be provided',
+      requirements: tour.requirements || 'Basic fitness level required',
+      special_fields: tour.special_fields || {}
     };
 
     return new Response(JSON.stringify({
       success: true,
       data: {
         tour: parsedTour,
-        programs: [] // Empty programs array for now
+        programs: parsedTour.tour_programs || [] // Use tour_programs from database
       }
     }), {
       status: 200,

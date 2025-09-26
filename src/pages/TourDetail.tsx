@@ -55,6 +55,7 @@ interface TourData {
   requirements: string;
   special_fields: any;
   category: string;
+  tour_programs: any[];
 }
 
 interface ProgramData {
@@ -90,7 +91,9 @@ const TourDetail = () => {
 
         if (result.success) {
           setTour(result.data.tour);
-          setPrograms(result.data.programs || []);
+          // Use tour_programs from tour data if programs array is empty
+          const tourPrograms = result.data.programs || result.data.tour.tour_programs || [];
+          setPrograms(tourPrograms);
         } else {
           setError(result.error || 'Failed to load tour');
         }
@@ -265,7 +268,7 @@ const TourDetail = () => {
                   <h2 className="text-3xl font-bold text-foreground mb-2">Detailed Tour Program</h2>
                   <p className="text-muted-foreground">
                     Comprehensive daily schedule with activities, timings, and highlights
-                    {programs.length > 0 && (
+                    {(programs.length > 0 || (tour && tour.tour_programs && tour.tour_programs.length > 0)) && (
                       <span className="block mt-2 text-sm text-yellow-600">
                         📊 Live data from database
                       </span>
@@ -276,6 +279,11 @@ const TourDetail = () => {
                 {programs.length > 0 ? (
                   <DatabaseTourProgramAccordion 
                     programs={programs} 
+                    category={tour.category}
+                  />
+                ) : tour.tour_programs && tour.tour_programs.length > 0 ? (
+                  <DatabaseTourProgramAccordion 
+                    programs={tour.tour_programs} 
                     category={tour.category}
                   />
                 ) : tour.itinerary ? (
