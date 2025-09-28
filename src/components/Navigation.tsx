@@ -52,10 +52,6 @@ const Navigation = () => {
             >
               <Search className="w-3.5 h-3.5" />
               <span className="text-xs text-muted-foreground">Search...</span>
-              <kbd className="hidden lg:inline-flex items-center gap-0.5 px-0.5 py-0.5 text-xs font-medium text-muted-foreground bg-muted border border-border rounded ml-auto">
-                <span className="text-xs">⌘</span>
-                <span className="text-xs">K</span>
-              </kbd>
             </Button>
           </div>
 
@@ -263,10 +259,6 @@ const Navigation = () => {
               >
                 <Search className="w-3.5 h-3.5" />
                 <span className="text-sm">Search</span>
-                <kbd className="flex items-center gap-0.5 px-0.5 py-0.5 text-xs font-medium text-muted-foreground bg-muted border border-border rounded">
-                  <span className="text-xs">⌘</span>
-                  <span className="text-xs">K</span>
-                </kbd>
               </Button>
               
               <Button variant="adventure" className="w-fit mt-4" asChild>
