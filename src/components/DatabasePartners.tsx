@@ -121,40 +121,69 @@ const DatabasePartners: React.FC = () => {
         {!loading && !error && partners && partners.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-4xl mx-auto">
             {partners.map((partner, index) => (
-              <div 
-                key={partner.id} 
-                className="flex items-center space-x-6 p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100"
-              >
-                <div className="flex-shrink-0 w-20 h-20 bg-gray-50 rounded-lg flex items-center justify-center">
-                  {partner.logo_url ? (
-                    <img 
-                      src={partner.logo_url} 
-                      alt={partner.name}
-                      className="w-16 h-16 object-contain"
-                    />
-                  ) : (
-                    <Building2 className="w-8 h-8 text-primary" />
-                  )}
+              partner.website_url ? (
+                <a
+                  key={partner.id}
+                  href={partner.website_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center space-x-6 p-6 bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 hover:border-primary/20 hover:scale-105 cursor-pointer group"
+                >
+                  <div className="flex-shrink-0 w-20 h-20 bg-gray-50 rounded-lg flex items-center justify-center group-hover:bg-primary/5 transition-colors duration-300">
+                    {partner.logo_url ? (
+                      <img 
+                        src={partner.logo_url} 
+                        alt={partner.name}
+                        className="w-16 h-16 object-contain"
+                      />
+                    ) : (
+                      <Building2 className="w-8 h-8 text-primary" />
+                    )}
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-foreground mb-2 text-lg group-hover:text-primary transition-colors duration-300">
+                      {partner.name}
+                    </h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      {partner.description}
+                    </p>
+                    <div className="text-primary hover:text-primary/80 text-sm font-medium mt-2 inline-flex items-center gap-1">
+                      Visit Website 
+                      <svg className="w-3 h-3 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      </svg>
+                    </div>
+                  </div>
+                </a>
+              ) : (
+                <div 
+                  key={partner.id} 
+                  className="flex items-center space-x-6 p-6 bg-white rounded-xl shadow-sm border border-gray-100"
+                >
+                  <div className="flex-shrink-0 w-20 h-20 bg-gray-50 rounded-lg flex items-center justify-center">
+                    {partner.logo_url ? (
+                      <img 
+                        src={partner.logo_url} 
+                        alt={partner.name}
+                        className="w-16 h-16 object-contain"
+                      />
+                    ) : (
+                      <Building2 className="w-8 h-8 text-primary" />
+                    )}
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-foreground mb-2 text-lg">
+                      {partner.name}
+                    </h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      {partner.description}
+                    </p>
+                    <p className="text-sm text-gray-400 mt-2">
+                      Website not available
+                    </p>
+                  </div>
                 </div>
-                <div className="flex-1">
-                  <h3 className="font-semibold text-foreground mb-2 text-lg">
-                    {partner.name}
-                  </h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    {partner.description}
-                  </p>
-                  {partner.website_url && (
-                    <a 
-                      href={partner.website_url} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="text-primary hover:text-primary/80 text-sm font-medium mt-2 inline-block"
-                    >
-                      Visit Website →
-                    </a>
-                  )}
-                </div>
-              </div>
+              )
             ))}
           </div>
         )}
