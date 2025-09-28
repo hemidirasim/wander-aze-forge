@@ -1,9 +1,47 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Phone, Mail, Facebook, Instagram, Linkedin, Twitter, Heart, Leaf } from 'lucide-react';
 
+interface DatabaseTourCategory {
+  id: number;
+  name: string;
+  slug: string;
+  description: string;
+  image_url: string;
+  is_active: boolean;
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
+}
+
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const [tourCategories, setTourCategories] = useState<DatabaseTourCategory[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchTourCategories();
+  }, []);
+
+  const fetchTourCategories = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('/api/tour-categories');
+      const data = await response.json();
+      
+      if (data.success) {
+        // Filter only active categories and sort by sort_order
+        const activeCategories = data.data
+          .filter((cat: DatabaseTourCategory) => cat.is_active)
+          .sort((a: DatabaseTourCategory, b: DatabaseTourCategory) => a.sort_order - b.sort_order);
+        setTourCategories(activeCategories);
+      }
+    } catch (err) {
+      console.error('Error fetching tour categories:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const quickLinks = [
     { name: 'Home', href: '/' },
@@ -12,14 +50,6 @@ const Footer = () => {
     { name: 'Blog', href: '/blog' },
     { name: 'About', href: '/about' },
     { name: 'Contact', href: '/contact' }
-  ];
-
-  const tourCategories = [
-    { name: 'Hiking Tours', href: '/tours/hiking' },
-    { name: 'Cultural Tours', href: '/tours/cultural' },
-    { name: 'Wildlife Tours', href: '/tours/wildlife' },
-    { name: 'Photography Tours', href: '/tours/photography' },
-    { name: 'Tailor Made', href: '/tours/tailor-made' }
   ];
 
   const socialLinks = [
@@ -72,18 +102,28 @@ const Footer = () => {
           {/* Tour Categories */}
           <div className="space-y-4">
             <h4 className="text-lg font-semibold">Tour Categories</h4>
-            <ul className="space-y-2">
-              {tourCategories.map((category, index) => (
-                <li key={index}>
-                  <Link 
-                    to={category.href} 
-                    className="text-gray-300 hover:text-primary transition-colors text-sm"
-                  >
-                    {category.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            {loading ? (
+              <div className="space-y-2">
+                <div className="h-4 bg-gray-700 rounded animate-pulse"></div>
+                <div className="h-4 bg-gray-700 rounded animate-pulse"></div>
+                <div className="h-4 bg-gray-700 rounded animate-pulse"></div>
+              </div>
+            ) : tourCategories.length > 0 ? (
+              <ul className="space-y-2">
+                {tourCategories.map((category) => (
+                  <li key={category.id}>
+                    <Link 
+                      to={`/tours/${category.slug}`} 
+                      className="text-gray-300 hover:text-primary transition-colors text-sm"
+                    >
+                      {category.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-gray-400 text-sm">No categories available</p>
+            )}
           </div>
 
           {/* Contact Info */}
