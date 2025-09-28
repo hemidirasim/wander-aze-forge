@@ -249,8 +249,8 @@ const Contact = () => {
                   </select>
                 </div>
 
-                {/* Tour Selection (appears when category is selected) */}
-                {selectedCategory && (
+                {/* Tour Selection (appears when category is selected AND has tours) */}
+                {selectedCategory && getToursByCategory(selectedCategory.slug).length > 0 && (
                   <div className="space-y-2">
                     <Label htmlFor="tourType">Select Tour</Label>
                     <select 
@@ -265,6 +265,15 @@ const Contact = () => {
                         </option>
                       ))}
                     </select>
+                  </div>
+                )}
+
+                {/* Message when category has no tours */}
+                {selectedCategory && getToursByCategory(selectedCategory.slug).length === 0 && (
+                  <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-md">
+                    <p className="text-yellow-800 text-sm">
+                      No tours available in this category yet. Please contact us for custom options.
+                    </p>
                   </div>
                 )}
                 
