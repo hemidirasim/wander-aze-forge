@@ -430,7 +430,17 @@ async function handlePut(req: VercelRequest, res: VercelResponse) {
 }
 
 async function handleDelete(req: VercelRequest, res: VercelResponse) {
-  const { id } = req.query;
+  // Handle both query parameter (?id=91) and path parameter (/91)
+  let id = req.query.id;
+  
+  // If no query parameter, try to extract from URL path
+  if (!id && req.url) {
+    const urlParts = req.url.split('/');
+    const lastPart = urlParts[urlParts.length - 1];
+    if (lastPart && !isNaN(Number(lastPart))) {
+      id = lastPart;
+    }
+  }
   
   if (!id) {
     return res.status(400).json({
