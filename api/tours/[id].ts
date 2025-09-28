@@ -249,6 +249,8 @@ async function handlePut(req: VercelRequest, res: VercelResponse) {
 }
 
 async function handleDelete(req: VercelRequest, res: VercelResponse) {
+  const { id } = req.query;
+  
   try {
     const result = await pool.query('DELETE FROM tours WHERE id = $1 RETURNING id, title', [id]);
 
