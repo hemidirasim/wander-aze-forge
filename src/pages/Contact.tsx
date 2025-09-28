@@ -268,14 +268,6 @@ const Contact = () => {
                   </div>
                 )}
 
-                {/* Message when category has no tours */}
-                {selectedCategory && getToursByCategory(selectedCategory.slug).length === 0 && (
-                  <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-md">
-                    <p className="text-yellow-800 text-sm">
-                      No tours available in this category yet. Please contact us for custom options.
-                    </p>
-                  </div>
-                )}
                 
                 <div className="space-y-2">
                   <Label htmlFor="groupSize">Group Size</Label>

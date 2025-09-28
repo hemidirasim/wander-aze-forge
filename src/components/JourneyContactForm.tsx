@@ -228,14 +228,6 @@ const JourneyContactForm = () => {
                     />
                   )}
 
-                  {/* Message when category has no tours */}
-                  {selectedCategory && getToursByCategory(selectedCategory.slug).length === 0 && (
-                    <div className="p-3 bg-yellow-500/20 border border-yellow-500/30 rounded-md">
-                      <p className="text-yellow-200 text-sm">
-                        No tours available in this category yet. Please contact us for custom options.
-                      </p>
-                    </div>
-                  )}
 
 
                   {/* Group Size */}
