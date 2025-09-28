@@ -52,6 +52,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 }
 
 async function handleGet(req: VercelRequest, res: VercelResponse) {
+  const { id } = req.query;
+  
   try {
     console.log('Fetching tour with ID:', id);
     
@@ -104,6 +106,8 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
 }
 
 async function handlePut(req: VercelRequest, res: VercelResponse) {
+  const { id } = req.query;
+  
   try {
     const {
       title,
@@ -273,6 +277,8 @@ async function handlePut(req: VercelRequest, res: VercelResponse) {
 }
 
 async function handleDelete(req: VercelRequest, res: VercelResponse) {
+  const { id } = req.query;
+  
   try {
     console.log('Deleting tour with ID:', id);
     
