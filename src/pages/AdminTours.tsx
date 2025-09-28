@@ -118,7 +118,8 @@ const AdminTours: React.FC = () => {
     whatToBring: [] as string[],
     priceIncludes: [] as string[],
     galleryImages: [] as string[],
-    specialFields: {} as any
+    specialFields: {} as any,
+    participantPricing: [] as {participants: number, price: number}[]
   });
   const navigate = useNavigate();
 
@@ -143,6 +144,30 @@ const AdminTours: React.FC = () => {
     setFormData(prev => ({
       ...prev,
       [fieldName]: (prev[fieldName] as string[]).map((item, i) => i === index ? value : item)
+    }));
+  };
+
+  // Helper functions for participant pricing
+  const addParticipantPricing = () => {
+    setFormData(prev => ({
+      ...prev,
+      participantPricing: [...prev.participantPricing, { participants: 1, price: 0 }]
+    }));
+  };
+
+  const removeParticipantPricing = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      participantPricing: prev.participantPricing.filter((_, i) => i !== index)
+    }));
+  };
+
+  const updateParticipantPricing = (index: number, field: 'participants' | 'price', value: number) => {
+    setFormData(prev => ({
+      ...prev,
+      participantPricing: prev.participantPricing.map((item, i) => 
+        i === index ? { ...item, [field]: value } : item
+      )
     }));
   };
 

@@ -89,6 +89,7 @@ interface ExtendedTourForm {
   priceIncludes: string[];
   groupDiscounts: string;
   earlyBirdDiscount: string;
+  participantPricing: {participants: number, price: number}[];
   
   // Contact & Booking
   contactPhone: string;
@@ -165,6 +166,7 @@ const AdminTourFormExtended: React.FC = () => {
     priceIncludes: ['Transport', 'Meals', 'Guide', 'Equipment'],
     groupDiscounts: '10% for groups of 6+',
     earlyBirdDiscount: '15% for early bookings',
+    participantPricing: [],
     
     // Contact & Booking
     contactPhone: '+994 51 400 90 91',
@@ -264,6 +266,30 @@ const AdminTourFormExtended: React.FC = () => {
     setFormData(prev => ({
       ...prev,
       [field]: [...prev[field], '']
+    }));
+  };
+
+  // Helper functions for participant pricing
+  const addParticipantPricing = () => {
+    setFormData(prev => ({
+      ...prev,
+      participantPricing: [...prev.participantPricing, { participants: 1, price: 0 }]
+    }));
+  };
+
+  const removeParticipantPricing = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      participantPricing: prev.participantPricing.filter((_, i) => i !== index)
+    }));
+  };
+
+  const updateParticipantPricing = (index: number, field: 'participants' | 'price', value: number) => {
+    setFormData(prev => ({
+      ...prev,
+      participantPricing: prev.participantPricing.map((item, i) => 
+        i === index ? { ...item, [field]: value } : item
+      )
     }));
   };
 
@@ -434,15 +460,74 @@ const AdminTourFormExtended: React.FC = () => {
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="price">Price (USD) *</Label>
+                  <Label htmlFor="price">Base Price (USD) *</Label>
                   <Input
                     id="price"
                     type="number"
                     value={formData.price}
                     onChange={(e) => handleInputChange('price', e.target.value)}
-                    placeholder="Enter price"
+                    placeholder="Enter base price"
                     required
                   />
+                </div>
+                
+                {/* Participant-Based Pricing */}
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <Label className="text-base font-semibold">Participant-Based Pricing</Label>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={addParticipantPricing}
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add Pricing Tier
+                    </Button>
+                  </div>
+                  
+                  {formData.participantPricing.map((pricing, index) => (
+                    <div key={index} className="flex items-center space-x-4 p-4 border rounded-lg bg-gray-50">
+                      <div className="flex-1">
+                        <Label className="text-sm font-medium">Participants</Label>
+                        <Input
+                          type="number"
+                          value={pricing.participants}
+                          onChange={(e) => updateParticipantPricing(index, 'participants', parseInt(e.target.value) || 0)}
+                          placeholder="Number of participants"
+                          min="1"
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <Label className="text-sm font-medium">Price (USD)</Label>
+                        <Input
+                          type="number"
+                          value={pricing.price}
+                          onChange={(e) => updateParticipantPricing(index, 'price', parseFloat(e.target.value) || 0)}
+                          placeholder="Price for this group size"
+                          min="0"
+                          step="0.01"
+                        />
+                      </div>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => removeParticipantPricing(index)}
+                        className="text-red-600 hover:text-red-700"
+                      >
+                        <X className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  ))}
+                  
+                  {formData.participantPricing.length === 0 && (
+                    <div className="text-center py-8 text-gray-500">
+                      <DollarSign className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+                      <p>No participant pricing set</p>
+                      <p className="text-sm">Click "Add Pricing Tier" to set different prices for different group sizes</p>
+                    </div>
+                  )}
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="maxParticipants">Max Participants *</Label>
