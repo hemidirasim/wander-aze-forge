@@ -80,13 +80,17 @@ const DatabaseNavigation = () => {
             to="/" 
             className="flex items-center space-x-2 text-foreground hover:text-primary transition-smooth"
             onClick={scrollToTopInstant}
+            onMouseEnter={() => setIsToursOpen(false)}
           >
             <Mountain className="w-8 h-8 text-primary" />
             <span className="text-xl font-bold">Outtour.az</span>
           </Link>
 
           {/* Search Button - Center */}
-          <div className="hidden md:flex justify-center flex-1 max-w-md">
+          <div 
+            className="hidden md:flex justify-center flex-1 max-w-md"
+            onMouseEnter={() => setIsToursOpen(false)}
+          >
             <Button
               variant="ghost" 
               size="sm"
