@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Navigation from '@/components/Navigation';
+import DatabaseNavigation from '@/components/DatabaseNavigation';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -50,7 +50,7 @@ const Projects = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
+      <DatabaseNavigation />
       
 
       {/* Projects Section */}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Navigation from '@/components/Navigation';
+import DatabaseNavigation from '@/components/DatabaseNavigation';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -54,7 +54,7 @@ const Blog = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
-        <Navigation />
+        <DatabaseNavigation />
         
         {/* Hero Section Skeleton */}
         <section className="pt-24 pb-16 px-4 bg-gradient-mountain">
@@ -102,7 +102,7 @@ const Blog = () => {
   if (error) {
     return (
       <div className="min-h-screen bg-background">
-        <Navigation />
+        <DatabaseNavigation />
         
         <section className="pt-24 pb-16 px-4 bg-gradient-mountain">
           <div className="container mx-auto text-center">
@@ -129,7 +129,7 @@ const Blog = () => {
   if (!posts || posts.length === 0) {
     return (
       <div className="min-h-screen bg-background">
-        <Navigation />
+        <DatabaseNavigation />
         
         <section className="pt-24 pb-16 px-4 bg-gradient-mountain">
           <div className="container mx-auto text-center">
@@ -157,7 +157,7 @@ const Blog = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
+      <DatabaseNavigation />
       
 
       {/* Featured Post */}

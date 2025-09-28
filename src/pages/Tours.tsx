@@ -1,4 +1,4 @@
-import Navigation from '@/components/Navigation';
+import DatabaseNavigation from '@/components/DatabaseNavigation';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -53,7 +53,7 @@ const Tours = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
+      <DatabaseNavigation />
       
       {/* Hero Section */}
       <section className="relative h-96 flex items-center justify-center overflow-hidden">

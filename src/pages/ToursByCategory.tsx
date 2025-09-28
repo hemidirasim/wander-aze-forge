@@ -1,6 +1,6 @@
 import { useParams, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import Navigation from '@/components/Navigation';
+import DatabaseNavigation from '@/components/DatabaseNavigation';
 import Footer from '@/components/Footer';
 import TourCategoryDropdown from '@/components/TourCategoryDropdown';
 import TailorMadeForm from '@/components/TailorMadeForm';
@@ -102,7 +102,7 @@ const ToursByCategory = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
-        <Navigation />
+        <DatabaseNavigation />
         <div className="pt-24 px-4">
           <div className="container mx-auto max-w-4xl text-center">
             <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4" />
@@ -117,7 +117,7 @@ const ToursByCategory = () => {
   if (error) {
     return (
       <div className="min-h-screen bg-background">
-        <Navigation />
+        <DatabaseNavigation />
         <div className="pt-24 px-4">
           <div className="container mx-auto max-w-4xl text-center">
             <h1 className="text-4xl font-bold text-foreground mb-4">Error Loading Tours</h1>
@@ -135,7 +135,7 @@ const ToursByCategory = () => {
   if (categoryId === 'tailor-made') {
     return (
       <div className="min-h-screen bg-background">
-        <Navigation />
+        <DatabaseNavigation />
         
         {/* Hero Section */}
         <section className="relative h-[60vh] flex items-center justify-center">
@@ -186,7 +186,7 @@ const ToursByCategory = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
+      <DatabaseNavigation />
       
       {/* Hero Section */}
       <section className="relative h-[60vh] flex items-center justify-center">

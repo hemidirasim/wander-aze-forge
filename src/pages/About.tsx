@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Navigation from '@/components/Navigation';
+import DatabaseNavigation from '@/components/DatabaseNavigation';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -78,7 +78,7 @@ const About = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
-        <Navigation />
+        <DatabaseNavigation />
         <div className="pt-20">
           <div className="container mx-auto px-4 py-20">
             <div className="text-center mb-16">
@@ -106,7 +106,7 @@ const About = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
+      <DatabaseNavigation />
       
 
       {/* Our Story */}

@@ -1,5 +1,5 @@
 import { useParams, Link } from 'react-router-dom';
-import Navigation from '@/components/Navigation';
+import DatabaseNavigation from '@/components/DatabaseNavigation';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -30,7 +30,7 @@ const BlogDetail = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
-        <Navigation />
+        <DatabaseNavigation />
         
         {/* Hero Section Skeleton */}
         <section className="pt-24 pb-16 px-4 bg-gradient-mountain">
@@ -73,7 +73,7 @@ const BlogDetail = () => {
   if (error) {
     return (
       <div className="min-h-screen bg-background">
-        <Navigation />
+        <DatabaseNavigation />
         
         <section className="pt-24 pb-16 px-4 bg-gradient-mountain">
           <div className="container mx-auto">
@@ -107,7 +107,7 @@ const BlogDetail = () => {
   if (!post) {
     return (
       <div className="min-h-screen bg-background">
-        <Navigation />
+        <DatabaseNavigation />
         
         <section className="pt-24 pb-16 px-4 bg-gradient-mountain">
           <div className="container mx-auto">
@@ -140,7 +140,7 @@ const BlogDetail = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
+      <DatabaseNavigation />
       
       {/* Hero Section */}
       <section className="pt-24 pb-16 px-4 bg-gradient-mountain">

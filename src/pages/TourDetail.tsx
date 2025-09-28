@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import Navigation from '@/components/Navigation';
+import DatabaseNavigation from '@/components/DatabaseNavigation';
 import Footer from '@/components/Footer';
 import DatabaseTourProgramAccordion from '@/components/DatabaseTourProgramAccordion';
 import { Button } from '@/components/ui/button';
@@ -138,7 +138,7 @@ const TourDetail = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
-        <Navigation />
+        <DatabaseNavigation />
         <div className="pt-24 px-4">
           <div className="container mx-auto max-w-4xl text-center">
             <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4" />
@@ -152,7 +152,7 @@ const TourDetail = () => {
   if (error || !tour) {
     return (
       <div className="min-h-screen bg-background">
-        <Navigation />
+        <DatabaseNavigation />
         <div className="pt-24 px-4">
           <div className="container mx-auto max-w-4xl text-center">
             <h1 className="text-4xl font-bold text-foreground mb-4">Tour Not Found</h1>
@@ -175,7 +175,7 @@ const TourDetail = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
+      <DatabaseNavigation />
       
       {/* Back Button */}
       <section className="pt-20 px-4">

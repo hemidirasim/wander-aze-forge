@@ -1,5 +1,5 @@
-import Navigation from '@/components/Navigation';
-import TourCategoryGallery from '@/components/TourCategoryGallery';
+import DatabaseNavigation from '@/components/DatabaseNavigation';
+import DatabaseTourCategoryGallery from '@/components/DatabaseTourCategoryGallery';
 import JourneyContactForm from '@/components/JourneyContactForm';
 import DatabasePartners from '@/components/DatabasePartners';
 import DatabaseBlog from '@/components/DatabaseBlog';
@@ -80,7 +80,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
+      <DatabaseNavigation />
       
       {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center">
@@ -280,8 +280,8 @@ const Index = () => {
       {/* Customer Reviews */}
       <DatabaseReviews />
 
-      {/* Tour Category Gallery - 5 Photos Layout */}
-      <TourCategoryGallery />
+      {/* Tour Category Gallery - Database Categories */}
+      <DatabaseTourCategoryGallery />
 
       {/* Plan Your Journey Contact Form */}
       <JourneyContactForm />
