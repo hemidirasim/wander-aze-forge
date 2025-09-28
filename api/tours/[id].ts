@@ -250,7 +250,7 @@ async function handlePut(req: VercelRequest, res: VercelResponse) {
 
 async function handleDelete(req: VercelRequest, res: VercelResponse) {
   try {
-    const result = await pool.query('DELETE FROM tours WHERE id = $1 RETURNING *', [id]);
+    const result = await pool.query('DELETE FROM tours WHERE id = $1 RETURNING id, title', [id]);
 
     if (result.rows.length === 0) {
       return res.status(404).json({
@@ -259,8 +259,11 @@ async function handleDelete(req: VercelRequest, res: VercelResponse) {
       });
     }
 
+    console.log('Tour deleted successfully:', result.rows[0]);
+
     return res.status(200).json({
       success: true,
+      data: result.rows[0],
       message: 'Tour deleted successfully'
     });
 
