@@ -32,6 +32,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         return await handlePost(req, res);
       case 'PUT':
         return await handlePut(req, res);
+      case 'DELETE':
+        return await handleDelete(req, res);
       default:
         return res.status(405).json({ error: 'Method not allowed' });
     }
@@ -422,6 +424,48 @@ async function handlePut(req: VercelRequest, res: VercelResponse) {
     return res.status(500).json({
       success: false,
       error: 'Failed to update tour',
+      message: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
+}
+
+async function handleDelete(req: VercelRequest, res: VercelResponse) {
+  const { id } = req.query;
+  
+  if (!id) {
+    return res.status(400).json({
+      success: false,
+      error: 'Tour ID is required'
+    });
+  }
+
+  try {
+    // First check if tour exists
+    const checkResult = await pool.query('SELECT id, title FROM tours WHERE id = $1', [id]);
+    
+    if (checkResult.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: 'Tour not found'
+      });
+    }
+
+    // Delete the tour
+    const result = await pool.query('DELETE FROM tours WHERE id = $1 RETURNING id, title', [id]);
+    
+    console.log('Tour deleted successfully:', result.rows[0]);
+
+    return res.status(200).json({
+      success: true,
+      data: result.rows[0],
+      message: 'Tour deleted successfully'
+    });
+
+  } catch (error) {
+    console.error('Error deleting tour:', error);
+    return res.status(500).json({
+      success: false,
+      error: 'Failed to delete tour',
       message: error instanceof Error ? error.message : 'Unknown error'
     });
   }
