@@ -44,14 +44,14 @@ const Navigation = () => {
 
           {/* Search Button - Center */}
           <div className="hidden md:flex justify-center flex-1 max-w-md">
-            <Button 
+            <Button
               variant="ghost" 
               size="sm"
               onClick={() => setIsSearchOpen(true)}
               className="flex items-center gap-1.5 w-full max-w-sm px-3 py-1.5"
             >
-              <Search className="w-3.5 h-3.5" />
               <span className="text-xs text-muted-foreground">Search...</span>
+              <Search className="w-3.5 h-3.5" />
             </Button>
           </div>
 
@@ -257,8 +257,8 @@ const Navigation = () => {
                   setIsSearchOpen(true);
                 }}
               >
-                <Search className="w-3.5 h-3.5" />
                 <span className="text-sm">Search</span>
+                <Search className="w-3.5 h-3.5" />
               </Button>
               
               <Button variant="adventure" className="w-fit mt-4" asChild>
