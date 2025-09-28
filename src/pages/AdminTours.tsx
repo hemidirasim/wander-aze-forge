@@ -329,14 +329,24 @@ const AdminTours: React.FC = () => {
                   {filteredTours.map((tour) => (
                     <div key={tour.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
                       <div className="flex items-center space-x-4">
-                        <img 
-                          src={tour.image_url || '/placeholder-tour.jpg'} 
-                          alt={tour.title}
-                          className="w-16 h-16 object-cover rounded-lg"
-                          onError={(e) => {
-                            e.currentTarget.src = '/placeholder-tour.jpg';
-                          }}
-                        />
+                        {tour.image_url ? (
+                          <img 
+                            src={tour.image_url} 
+                            alt={tour.title}
+                            className="w-16 h-16 object-cover rounded-lg"
+                            onError={(e) => {
+                              // Hide the broken image and show fallback
+                              e.currentTarget.style.display = 'none';
+                              e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                            }}
+                          />
+                        ) : null}
+                        <div className={`w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center ${tour.image_url ? 'hidden' : ''}`}>
+                          <div className="text-center">
+                            <Image className="w-6 h-6 text-gray-400 mx-auto mb-1" />
+                            <span className="text-xs text-gray-500">No image</span>
+                          </div>
+                        </div>
                         <div>
                           <h3 className="font-medium text-gray-900">{tour.title}</h3>
                           <p className="text-sm text-gray-500">{tour.location || 'No location specified'}</p>
