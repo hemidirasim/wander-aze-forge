@@ -4,7 +4,7 @@ import AdminDashboard from '../pages/AdminDashboard';
 
 const SimpleAdminLayout: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [expandedMenus, setExpandedMenus] = useState<string[]>(['tours', 'projects', 'partners', 'blog']);
+  const [expandedMenus, setExpandedMenus] = useState<string[]>([]);
   const location = useLocation();
 
   const menuItems = [

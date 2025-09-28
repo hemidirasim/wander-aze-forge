@@ -28,7 +28,7 @@ interface MenuItem {
 
 const AdminLayout: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [expandedMenus, setExpandedMenus] = useState<string[]>(['tours', 'projects']);
+  const [expandedMenus, setExpandedMenus] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const location = useLocation();
 
