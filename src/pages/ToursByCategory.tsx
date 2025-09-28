@@ -323,25 +323,6 @@ const ToursByCategory = () => {
         </div>
       </section>
 
-      {/* Call to Action */}
-      <section className="py-20 px-4 bg-gradient-hero">
-        <div className="container mx-auto text-center">
-          <h2 className="text-4xl font-bold text-white mb-6">
-            Ready for Your {category.name} Adventure?
-          </h2>
-          <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-            Book your spot today or get in touch to plan a custom {category.name.toLowerCase()} experience
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" variant="outline" className="bg-white text-primary hover:bg-white/90" asChild>
-              <Link to="/contact">Plan Your Trip</Link>
-            </Button>
-            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-primary" asChild>
-              <Link to="/about">Why Choose Us</Link>
-            </Button>
-          </div>
-        </div>
-      </section>
       
       <Footer />
     </div>
