@@ -10,9 +10,6 @@ import {
   FolderOpen,
   Users,
   FileText,
-  Calendar,
-  MessageSquare,
-  Upload,
   Settings,
   LogOut,
   Menu,
@@ -149,24 +146,6 @@ const AdminLayout: React.FC = () => {
           path: '/admin/blog'
         }
       ]
-    },
-    {
-      id: 'bookings',
-      title: 'Bookings',
-      icon: Calendar,
-      path: '/admin/bookings'
-    },
-    {
-      id: 'contact',
-      title: 'Contact Messages',
-      icon: MessageSquare,
-      path: '/admin/contact'
-    },
-    {
-      id: 'files',
-      title: 'File Manager',
-      icon: Upload,
-      path: '/admin/files'
     },
     {
       id: 'settings',

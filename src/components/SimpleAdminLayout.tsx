@@ -51,30 +51,6 @@ const SimpleAdminLayout: React.FC = () => {
       ]
     },
     {
-      id: 'bookings',
-      title: 'Bookings',
-      icon: '📅',
-      path: '/admin/bookings'
-    },
-    {
-      id: 'contact',
-      title: 'Contact Messages',
-      icon: '💬',
-      path: '/admin/contact'
-    },
-    {
-      id: 'gallery',
-      title: 'Gallery',
-      icon: '🖼️',
-      path: '/admin/gallery'
-    },
-    {
-      id: 'files',
-      title: 'File Manager',
-      icon: '📤',
-      path: '/admin/files'
-    },
-    {
       id: 'settings',
       title: 'Settings',
       icon: '⚙️',
