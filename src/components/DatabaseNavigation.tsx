@@ -115,7 +115,7 @@ const DatabaseNavigation = () => {
               onMouseEnter={() => setIsToursOpen(true)}
               onMouseLeave={() => {
                 // Close dropdown when mouse leaves the tours area
-                setTimeout(() => setIsToursOpen(false), 150);
+                setTimeout(() => setIsToursOpen(false), 100);
               }}
             >
               <button
@@ -132,12 +132,12 @@ const DatabaseNavigation = () => {
                 <>
                   {/* Backdrop */}
                   <div 
-                    className="fixed inset-0 z-30" 
+                    className="fixed inset-0 z-20" 
                     onClick={() => setIsToursOpen(false)}
                   />
                   
                   {/* Dropdown Menu */}
-                  <div className="absolute top-full left-0 mt-2 w-64 bg-background border border-border rounded-lg shadow-elevated z-40 overflow-hidden">
+                  <div className="absolute top-full left-0 mt-2 w-64 bg-background border border-border rounded-lg shadow-elevated z-30 overflow-hidden">
                     <div className="py-2">
                       {/* All Tours Link */}
                       <Link
@@ -213,7 +213,12 @@ const DatabaseNavigation = () => {
                   scrollToTopInstant();
                   setIsToursOpen(false);
                 }}
-                onMouseEnter={() => setIsToursOpen(false)}
+                onMouseEnter={() => {
+                  setIsToursOpen(false);
+                }}
+                onMouseLeave={() => {
+                  setIsToursOpen(false);
+                }}
               >
                 {item.label}
               </Link>
