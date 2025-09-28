@@ -442,6 +442,8 @@ async function handleDelete(req: VercelRequest, res: VercelResponse) {
     }
   }
   
+  console.log('DELETE request - URL:', req.url, 'ID:', id);
+  
   if (!id) {
     return res.status(400).json({
       success: false,
