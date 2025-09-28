@@ -147,12 +147,6 @@ const DatabasePartners: React.FC = () => {
                     <p className="text-sm text-muted-foreground leading-relaxed">
                       {partner.description}
                     </p>
-                    <div className="text-primary hover:text-primary/80 text-sm font-medium mt-2 inline-flex items-center gap-1">
-                      Visit Website 
-                      <svg className="w-3 h-3 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                      </svg>
-                    </div>
                   </div>
                 </a>
               ) : (
@@ -177,9 +171,6 @@ const DatabasePartners: React.FC = () => {
                     </h3>
                     <p className="text-sm text-muted-foreground leading-relaxed">
                       {partner.description}
-                    </p>
-                    <p className="text-sm text-gray-400 mt-2">
-                      Website not available
                     </p>
                   </div>
                 </div>
