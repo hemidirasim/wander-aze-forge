@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/components/ui/use-toast';
-import { useTours, Tour } from '@/hooks/useTours';
+import { useTourCategories, TourCategory, Tour } from '@/hooks/useTourCategories';
 import { Send, MapPin, Calendar, Users } from 'lucide-react';
 
 const formSchema = z.object({
@@ -15,8 +15,8 @@ const formSchema = z.object({
   lastName: z.string().min(2, 'Last name must be at least 2 characters'),
   email: z.string().email('Please enter a valid email address'),
   phone: z.string().optional(),
+  tourCategory: z.string().optional(),
   tourType: z.string().optional(),
-  subTour: z.string().optional(),
   groupSize: z.string().optional(),
   dates: z.string().optional(),
   message: z.string().min(10, 'Please tell us more about your travel plans'),
@@ -28,7 +28,8 @@ type FormData = z.infer<typeof formSchema>;
 const JourneyContactForm = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { tours, loading: toursLoading } = useTours();
+  const { categories, tours, loading, getToursByCategory } = useTourCategories();
+  const [selectedCategory, setSelectedCategory] = useState<TourCategory | null>(null);
   const [selectedTour, setSelectedTour] = useState<Tour | null>(null);
 
   const form = useForm<FormData>({
@@ -38,8 +39,8 @@ const JourneyContactForm = () => {
       lastName: '',
       email: '',
       phone: '',
+      tourCategory: '',
       tourType: '',
-      subTour: '',
       groupSize: '',
       dates: '',
       message: '',
@@ -47,10 +48,16 @@ const JourneyContactForm = () => {
     }
   });
 
+  const handleCategoryChange = (categorySlug: string) => {
+    const category = categories.find(c => c.slug === categorySlug);
+    setSelectedCategory(category || null);
+    setSelectedTour(null); // Reset tour when category changes
+    form.setValue('tourType', ''); // Reset tour selection
+  };
+
   const handleTourChange = (tourId: string) => {
     const tour = tours.find(t => t.id.toString() === tourId);
     setSelectedTour(tour || null);
-    form.setValue('subTour', ''); // Reset sub-tour when main tour changes
   };
 
   const onSubmit = async (data: FormData) => {
@@ -68,6 +75,7 @@ const JourneyContactForm = () => {
       });
       
       form.reset();
+      setSelectedCategory(null);
       setSelectedTour(null);
     } catch (error) {
       toast({
@@ -157,29 +165,29 @@ const JourneyContactForm = () => {
                     )}
                   />
 
-                  {/* Tour Type */}
+                  {/* Tour Category */}
                   <FormField
                     control={form.control}
-                    name="tourType"
+                    name="tourCategory"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-white font-medium">Interested Tour</FormLabel>
+                        <FormLabel className="text-white font-medium">Tour Category</FormLabel>
                         <FormControl>
                           <select 
                             {...field}
                             onChange={(e) => {
                               field.onChange(e);
-                              handleTourChange(e.target.value);
+                              handleCategoryChange(e.target.value);
                             }}
                             className="w-full p-3 border border-white/30 rounded-md bg-white/20 text-white h-12"
-                            disabled={toursLoading}
+                            disabled={loading}
                           >
                             <option value="" className="bg-gray-800">
-                              {toursLoading ? 'Loading tours...' : 'Select a tour'}
+                              {loading ? 'Loading categories...' : 'Select a category'}
                             </option>
-                            {tours.map((tour) => (
-                              <option key={tour.id} value={tour.id.toString()} className="bg-gray-800">
-                                {tour.title} - {tour.duration} - {tour.difficulty}
+                            {categories.map((category) => (
+                              <option key={category.id} value={category.slug} className="bg-gray-800">
+                                {category.name}
                               </option>
                             ))}
                           </select>
@@ -189,23 +197,27 @@ const JourneyContactForm = () => {
                     )}
                   />
 
-                  {/* Sub-Tour Selection (appears when main tour has sub-tours) */}
-                  {selectedTour && selectedTour.tour_programs && selectedTour.tour_programs.length > 0 && (
+                  {/* Tour Selection (appears when category is selected) */}
+                  {selectedCategory && (
                     <FormField
                       control={form.control}
-                      name="subTour"
+                      name="tourType"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-white font-medium">Select Sub-Tour</FormLabel>
+                          <FormLabel className="text-white font-medium">Select Tour</FormLabel>
                           <FormControl>
                             <select 
                               {...field}
+                              onChange={(e) => {
+                                field.onChange(e);
+                                handleTourChange(e.target.value);
+                              }}
                               className="w-full p-3 border border-white/30 rounded-md bg-white/20 text-white h-12"
                             >
-                              <option value="" className="bg-gray-800">Select a sub-tour</option>
-                              {selectedTour.tour_programs.map((program) => (
-                                <option key={program.id} value={program.id.toString()} className="bg-gray-800">
-                                  Day {program.day_number}: {program.title}
+                              <option value="" className="bg-gray-800">Select a tour</option>
+                              {getToursByCategory(selectedCategory.slug).map((tour) => (
+                                <option key={tour.id} value={tour.id.toString()} className="bg-gray-800">
+                                  {tour.title} - {tour.duration} - {tour.difficulty}
                                 </option>
                               ))}
                             </select>
@@ -215,6 +227,7 @@ const JourneyContactForm = () => {
                       )}
                     />
                   )}
+
 
                   {/* Group Size */}
                   <FormField

@@ -8,7 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { MapPin, Phone, Mail, Clock, Facebook, Instagram, Linkedin, Twitter } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useTours, Tour } from '@/hooks/useTours';
+import { useTourCategories, TourCategory, Tour } from '@/hooks/useTourCategories';
 
 interface ContactSection {
   id: number;
@@ -24,7 +24,8 @@ interface ContactSection {
 const Contact = () => {
   const [contactData, setContactData] = useState<ContactSection[]>([]);
   const [loading, setLoading] = useState(true);
-  const { tours, loading: toursLoading } = useTours();
+  const { categories, tours, loading: dataLoading, getToursByCategory } = useTourCategories();
+  const [selectedCategory, setSelectedCategory] = useState<TourCategory | null>(null);
   const [selectedTour, setSelectedTour] = useState<Tour | null>(null);
 
   useEffect(() => {
@@ -48,6 +49,12 @@ const Contact = () => {
 
   const getSectionData = (section: string) => {
     return contactData.find(item => item.section === section);
+  };
+
+  const handleCategoryChange = (categorySlug: string) => {
+    const category = categories.find(c => c.slug === categorySlug);
+    setSelectedCategory(category || null);
+    setSelectedTour(null); // Reset tour when category changes
   };
 
   const handleTourChange = (tourId: string) => {
@@ -224,36 +231,37 @@ const Contact = () => {
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="tourType">Interested Tour</Label>
+                  <Label htmlFor="tourCategory">Tour Category</Label>
                   <select 
-                    id="tourType" 
+                    id="tourCategory" 
                     className="w-full p-3 border border-input rounded-md bg-background text-foreground"
-                    onChange={(e) => handleTourChange(e.target.value)}
-                    disabled={toursLoading}
+                    onChange={(e) => handleCategoryChange(e.target.value)}
+                    disabled={dataLoading}
                   >
                     <option value="">
-                      {toursLoading ? 'Loading tours...' : 'Select a tour'}
+                      {dataLoading ? 'Loading categories...' : 'Select a category'}
                     </option>
-                    {tours.map((tour) => (
-                      <option key={tour.id} value={tour.id.toString()}>
-                        {tour.title} - {tour.duration} - {tour.difficulty}
+                    {categories.map((category) => (
+                      <option key={category.id} value={category.slug}>
+                        {category.name}
                       </option>
                     ))}
                   </select>
                 </div>
 
-                {/* Sub-Tour Selection (appears when main tour has sub-tours) */}
-                {selectedTour && selectedTour.tour_programs && selectedTour.tour_programs.length > 0 && (
+                {/* Tour Selection (appears when category is selected) */}
+                {selectedCategory && (
                   <div className="space-y-2">
-                    <Label htmlFor="subTour">Select Sub-Tour</Label>
+                    <Label htmlFor="tourType">Select Tour</Label>
                     <select 
-                      id="subTour" 
+                      id="tourType" 
                       className="w-full p-3 border border-input rounded-md bg-background text-foreground"
+                      onChange={(e) => handleTourChange(e.target.value)}
                     >
-                      <option value="">Select a sub-tour</option>
-                      {selectedTour.tour_programs.map((program) => (
-                        <option key={program.id} value={program.id.toString()}>
-                          Day {program.day_number}: {program.title}
+                      <option value="">Select a tour</option>
+                      {getToursByCategory(selectedCategory.slug).map((tour) => (
+                        <option key={tour.id} value={tour.id.toString()}>
+                          {tour.title} - {tour.duration} - {tour.difficulty}
                         </option>
                       ))}
                     </select>
