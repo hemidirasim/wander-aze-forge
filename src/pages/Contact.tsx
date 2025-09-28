@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { MapPin, Phone, Mail, Clock, Facebook, Instagram, Linkedin, Twitter } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useTours, Tour } from '@/hooks/useTours';
 
 interface ContactSection {
   id: number;
@@ -23,6 +24,8 @@ interface ContactSection {
 const Contact = () => {
   const [contactData, setContactData] = useState<ContactSection[]>([]);
   const [loading, setLoading] = useState(true);
+  const { tours, loading: toursLoading } = useTours();
+  const [selectedTour, setSelectedTour] = useState<Tour | null>(null);
 
   useEffect(() => {
     fetchContactData();
@@ -45,6 +48,11 @@ const Contact = () => {
 
   const getSectionData = (section: string) => {
     return contactData.find(item => item.section === section);
+  };
+
+  const handleTourChange = (tourId: string) => {
+    const tour = tours.find(t => t.id.toString() === tourId);
+    setSelectedTour(tour || null);
   };
 
   const heroData = getSectionData('hero');
@@ -220,14 +228,37 @@ const Contact = () => {
                   <select 
                     id="tourType" 
                     className="w-full p-3 border border-input rounded-md bg-background text-foreground"
+                    onChange={(e) => handleTourChange(e.target.value)}
+                    disabled={toursLoading}
                   >
-                    <option value="">Select a tour type</option>
-                    <option value="khinalig-laza">Khinalig-Laza Homestay Hike</option>
-                    <option value="gizilgaya">3 Peaks Gizilgaya Plateau</option>
-                    <option value="wildlife">Caucasus Wildlife Safari</option>
-                    <option value="custom">Custom Tour</option>
+                    <option value="">
+                      {toursLoading ? 'Loading tours...' : 'Select a tour'}
+                    </option>
+                    {tours.map((tour) => (
+                      <option key={tour.id} value={tour.id.toString()}>
+                        {tour.title} - {tour.duration} - {tour.difficulty}
+                      </option>
+                    ))}
                   </select>
                 </div>
+
+                {/* Sub-Tour Selection (appears when main tour has sub-tours) */}
+                {selectedTour && selectedTour.tour_programs && selectedTour.tour_programs.length > 0 && (
+                  <div className="space-y-2">
+                    <Label htmlFor="subTour">Select Sub-Tour</Label>
+                    <select 
+                      id="subTour" 
+                      className="w-full p-3 border border-input rounded-md bg-background text-foreground"
+                    >
+                      <option value="">Select a sub-tour</option>
+                      {selectedTour.tour_programs.map((program) => (
+                        <option key={program.id} value={program.id.toString()}>
+                          Day {program.day_number}: {program.title}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
                 
                 <div className="space-y-2">
                   <Label htmlFor="groupSize">Group Size</Label>

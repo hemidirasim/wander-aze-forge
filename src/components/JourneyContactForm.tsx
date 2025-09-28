@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/components/ui/use-toast';
+import { useTours, Tour } from '@/hooks/useTours';
 import { Send, MapPin, Calendar, Users } from 'lucide-react';
 
 const formSchema = z.object({
@@ -15,6 +16,7 @@ const formSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
   phone: z.string().optional(),
   tourType: z.string().optional(),
+  subTour: z.string().optional(),
   groupSize: z.string().optional(),
   dates: z.string().optional(),
   message: z.string().min(10, 'Please tell us more about your travel plans'),
@@ -26,6 +28,8 @@ type FormData = z.infer<typeof formSchema>;
 const JourneyContactForm = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { tours, loading: toursLoading } = useTours();
+  const [selectedTour, setSelectedTour] = useState<Tour | null>(null);
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -35,12 +39,19 @@ const JourneyContactForm = () => {
       email: '',
       phone: '',
       tourType: '',
+      subTour: '',
       groupSize: '',
       dates: '',
       message: '',
       newsletter: false
     }
   });
+
+  const handleTourChange = (tourId: string) => {
+    const tour = tours.find(t => t.id.toString() === tourId);
+    setSelectedTour(tour || null);
+    form.setValue('subTour', ''); // Reset sub-tour when main tour changes
+  };
 
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
@@ -57,6 +68,7 @@ const JourneyContactForm = () => {
       });
       
       form.reset();
+      setSelectedTour(null);
     } catch (error) {
       toast({
         title: "Submission Failed",
@@ -155,19 +167,54 @@ const JourneyContactForm = () => {
                         <FormControl>
                           <select 
                             {...field}
+                            onChange={(e) => {
+                              field.onChange(e);
+                              handleTourChange(e.target.value);
+                            }}
                             className="w-full p-3 border border-white/30 rounded-md bg-white/20 text-white h-12"
+                            disabled={toursLoading}
                           >
-                            <option value="" className="bg-gray-800">Select a tour type</option>
-                            <option value="khinalig-laza" className="bg-gray-800">Khinalig-Laza Homestay Hike</option>
-                            <option value="gizilgaya" className="bg-gray-800">3 Peaks Gizilgaya Plateau</option>
-                            <option value="wildlife" className="bg-gray-800">Caucasus Wildlife Safari</option>
-                            <option value="custom" className="bg-gray-800">Custom Tour</option>
+                            <option value="" className="bg-gray-800">
+                              {toursLoading ? 'Loading tours...' : 'Select a tour'}
+                            </option>
+                            {tours.map((tour) => (
+                              <option key={tour.id} value={tour.id.toString()} className="bg-gray-800">
+                                {tour.title} - {tour.duration} - {tour.difficulty}
+                              </option>
+                            ))}
                           </select>
                         </FormControl>
                         <FormMessage className="text-red-200" />
                       </FormItem>
                     )}
                   />
+
+                  {/* Sub-Tour Selection (appears when main tour has sub-tours) */}
+                  {selectedTour && selectedTour.tour_programs && selectedTour.tour_programs.length > 0 && (
+                    <FormField
+                      control={form.control}
+                      name="subTour"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-white font-medium">Select Sub-Tour</FormLabel>
+                          <FormControl>
+                            <select 
+                              {...field}
+                              className="w-full p-3 border border-white/30 rounded-md bg-white/20 text-white h-12"
+                            >
+                              <option value="" className="bg-gray-800">Select a sub-tour</option>
+                              {selectedTour.tour_programs.map((program) => (
+                                <option key={program.id} value={program.id.toString()} className="bg-gray-800">
+                                  Day {program.day_number}: {program.title}
+                                </option>
+                              ))}
+                            </select>
+                          </FormControl>
+                          <FormMessage className="text-red-200" />
+                        </FormItem>
+                      )}
+                    />
+                  )}
 
                   {/* Group Size */}
                   <FormField
