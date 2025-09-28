@@ -17,7 +17,7 @@ const pool = new Pool(dbConfig);
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, PUT, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
   if (req.method === 'OPTIONS') {
@@ -26,36 +26,49 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const { id } = req.query;
 
-  if (!id) {
+  if (!id || isNaN(Number(id))) {
     return res.status(400).json({
       success: false,
-      error: 'Tour ID is required'
+      error: 'Invalid tour ID'
     });
   }
 
-  try {
-    switch (req.method) {
-      case 'GET':
-        return await handleGet(req, res);
-      case 'PUT':
-        return await handlePut(req, res);
-      case 'DELETE':
-        return await handleDelete(req, res);
-      default:
-        return res.status(405).json({ error: 'Method not allowed' });
-    }
-  } catch (error) {
-    console.error('Tour API error:', error);
-    return res.status(500).json({ 
-      error: 'Internal server error',
-      message: error instanceof Error ? error.message : 'Unknown error'
-    });
+  if (req.method === 'GET') {
+    return await handleGet(req, res);
   }
+
+  if (req.method === 'PUT') {
+    return await handlePut(req, res);
+  }
+
+  if (req.method === 'DELETE') {
+    return await handleDelete(req, res);
+  }
+
+  return res.status(405).json({
+    success: false,
+    error: 'Method not allowed'
+  });
 }
 
 async function handleGet(req: VercelRequest, res: VercelResponse) {
   try {
-    const result = await pool.query('SELECT * FROM tours WHERE id = $1', [id]);
+    console.log('Fetching tour with ID:', id);
+    
+    const result = await pool.query(`
+      SELECT 
+        id, title, description, price, duration, difficulty, rating, 
+        reviews_count, group_size, location, image_url, category,
+        highlights, includes, excludes, is_active, featured,
+        tour_programs, overview, best_season, meeting_point, languages,
+        accommodation_details, meals_details, water_snacks_details,
+        provided_equipment, what_to_bring, transport_details, pickup_service,
+        gallery_images, photography_service, price_includes, group_discounts,
+        early_bird_discount, contact_phone, booking_terms, itinerary,
+        requirements, special_fields, max_participants, created_at, updated_at
+      FROM tours 
+      WHERE id = $1
+    `, [id]);
     
     if (result.rows.length === 0) {
       return res.status(404).json({
@@ -64,17 +77,28 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
       });
     }
 
+    const tour = {
+      ...result.rows[0],
+      highlights: result.rows[0].highlights || [],
+      includes: result.rows[0].includes || [],
+      excludes: result.rows[0].excludes || [],
+      tour_programs: result.rows[0].tour_programs || [],
+      provided_equipment: result.rows[0].provided_equipment || [],
+      what_to_bring: result.rows[0].what_to_bring || [],
+      gallery_images: result.rows[0].gallery_images || [],
+      price_includes: result.rows[0].price_includes || []
+    };
+
     return res.status(200).json({
       success: true,
-      data: result.rows[0]
+      data: { tour }
     });
 
-  } catch (error) {
-    console.error('Error fetching tour:', error);
+  } catch (error: any) {
+    console.error('Database error:', error);
     return res.status(500).json({
       success: false,
-      error: 'Failed to fetch tour',
-      message: error instanceof Error ? error.message : 'Unknown error'
+      error: error.message || 'Database error'
     });
   }
 }
@@ -249,10 +273,14 @@ async function handlePut(req: VercelRequest, res: VercelResponse) {
 }
 
 async function handleDelete(req: VercelRequest, res: VercelResponse) {
-  const { id } = req.query;
-  
   try {
-    const result = await pool.query('DELETE FROM tours WHERE id = $1 RETURNING id, title', [id]);
+    console.log('Deleting tour with ID:', id);
+    
+    const result = await pool.query(`
+      DELETE FROM tours 
+      WHERE id = $1
+      RETURNING id, title
+    `, [id]);
 
     if (result.rows.length === 0) {
       return res.status(404).json({
@@ -261,20 +289,16 @@ async function handleDelete(req: VercelRequest, res: VercelResponse) {
       });
     }
 
-    console.log('Tour deleted successfully:', result.rows[0]);
-
     return res.status(200).json({
       success: true,
-      data: result.rows[0],
-      message: 'Tour deleted successfully'
+      message: 'Tour deleted successfully',
+      data: { deletedTour: result.rows[0] }
     });
-
-  } catch (error) {
-    console.error('Error deleting tour:', error);
+  } catch (error: any) {
+    console.error('Database error:', error);
     return res.status(500).json({
       success: false,
-      error: 'Failed to delete tour',
-      message: error instanceof Error ? error.message : 'Unknown error'
+      error: error.message || 'Database error'
     });
   }
 }
