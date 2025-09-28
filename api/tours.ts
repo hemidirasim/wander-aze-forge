@@ -142,6 +142,7 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
       specialFields = null,
       imageUrl = '',
       galleryImages = [],
+      tour_programs = [],
       rating = 4.5,
       reviewsCount = 0,
       groupSize = '',
@@ -181,9 +182,9 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
         accommodation_details, meals_details, water_snacks_details, provided_equipment, what_to_bring,
         transport_details, pickup_service, gallery_images, photography_service,
         price_includes, group_discounts, early_bird_discount, contact_phone, booking_terms,
-        is_active, featured
+        tour_programs, is_active, featured
       )
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34, $35, $36, $37, $38)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34, $35, $36, $37, $38, $39, $40)
        RETURNING *`,
       [
         title.trim(),
@@ -227,6 +228,7 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
         earlyBirdDiscount.trim(),
         contactPhone.trim(),
         bookingTerms.trim(),
+        JSON.stringify(tour_programs),
         
         isActive,
         featured
