@@ -56,7 +56,7 @@ const DatabaseTourCategoryGallery = () => {
             <Skeleton className="h-6 w-2/3 mx-auto" />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[...Array(5)].map((_, i) => (
+            {[...Array(6)].map((_, i) => (
               <Skeleton key={i} className="h-80 w-full rounded-lg" />
             ))}
           </div>
@@ -100,70 +100,24 @@ const DatabaseTourCategoryGallery = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {categories.map((category, index) => {
-            // Special layout for the first 5 categories
-            if (index === 0 || index === 1) {
-              // First row - 2 cards
-              return (
-                <Card key={category.id} className="group relative h-80 overflow-hidden border-0 hover:shadow-elevated transition-all duration-500">
-                  <Link to={`/tours/${category.slug}`} className="block h-full">
-                    <div className="relative h-full">
-                      <img 
-                        src={category.image_url || 'https://images.unsplash.com/photo-1551632811-561732d1e306?w=600&h=400&fit=crop'} 
-                        alt={category.name}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                      <div className="absolute bottom-6 left-6 right-6 text-white">
-                        <h3 className="text-2xl font-bold mb-2">{category.name}</h3>
-                        <p className="text-white/90">{category.description}</p>
-                      </div>
-                    </div>
-                  </Link>
-                </Card>
-              );
-            } else if (index === 2) {
-              // Second row - Large card
-              return (
-                <Card key={category.id} className="group relative h-80 md:col-span-2 lg:col-span-1 lg:row-span-2 lg:h-auto overflow-hidden border-0 hover:shadow-elevated transition-all duration-500">
-                  <Link to={`/tours/${category.slug}`} className="block h-full">
-                    <div className="relative h-full lg:h-[656px]">
-                      <img 
-                        src={category.image_url || 'https://images.unsplash.com/photo-1445308394109-4ec2920981b1?w=600&h=400&fit=crop'} 
-                        alt={category.name}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                      <div className="absolute bottom-6 left-6 right-6 text-white">
-                        <h3 className="text-3xl font-bold mb-4">{category.name}</h3>
-                        <p className="text-white/90 text-lg">{category.description}</p>
-                      </div>
-                    </div>
-                  </Link>
-                </Card>
-              );
-            } else {
-              // Remaining cards
-              return (
-                <Card key={category.id} className="group relative h-80 overflow-hidden border-0 hover:shadow-elevated transition-all duration-500">
-                  <Link to={`/tours/${category.slug}`} className="block h-full">
-                    <div className="relative h-full">
-                      <img 
-                        src={category.image_url || 'https://images.unsplash.com/photo-1551632811-561732d1e306?w=600&h=400&fit=crop'} 
-                        alt={category.name}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                      <div className="absolute bottom-6 left-6 right-6 text-white">
-                        <h3 className="text-2xl font-bold mb-2">{category.name}</h3>
-                        <p className="text-white/90">{category.description}</p>
-                      </div>
-                    </div>
-                  </Link>
-                </Card>
-              );
-            }
-          })}
+          {categories.map((category) => (
+            <Card key={category.id} className="group relative h-80 overflow-hidden border-0 hover:shadow-elevated transition-all duration-500">
+              <Link to={`/tours/${category.slug}`} className="block h-full">
+                <div className="relative h-full">
+                  <img 
+                    src={category.image_url || 'https://images.unsplash.com/photo-1551632811-561732d1e306?w=600&h=400&fit=crop'} 
+                    alt={category.name}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                  <div className="absolute bottom-6 left-6 right-6 text-white">
+                    <h3 className="text-2xl font-bold mb-2">{category.name}</h3>
+                    <p className="text-white/90">{category.description}</p>
+                  </div>
+                </div>
+              </Link>
+            </Card>
+          ))}
         </div>
       </div>
     </section>
