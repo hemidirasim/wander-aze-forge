@@ -30,6 +30,21 @@ const DatabaseNavigation = () => {
     fetchCategories();
   }, []);
 
+  // Close tours dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (isToursOpen) {
+        const target = event.target as Element;
+        if (!target.closest('[data-tours-dropdown]')) {
+          setIsToursOpen(false);
+        }
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isToursOpen]);
+
   const fetchCategories = async () => {
     try {
       setLoading(true);
@@ -112,11 +127,9 @@ const DatabaseNavigation = () => {
             {/* Tours Dropdown */}
             <div 
               className="relative"
+              data-tours-dropdown
               onMouseEnter={() => setIsToursOpen(true)}
-              onMouseLeave={() => {
-                // Close dropdown when mouse leaves the tours area
-                setTimeout(() => setIsToursOpen(false), 100);
-              }}
+              onMouseLeave={() => setIsToursOpen(false)}
             >
               <button
                 className={`flex items-center space-x-1 text-foreground hover:text-primary transition-smooth font-medium ${
@@ -137,7 +150,11 @@ const DatabaseNavigation = () => {
                   />
                   
                   {/* Dropdown Menu */}
-                  <div className="absolute top-full left-0 mt-2 w-64 bg-background border border-border rounded-lg shadow-elevated z-30 overflow-hidden">
+                  <div 
+                    className="absolute top-full left-0 mt-2 w-64 bg-background border border-border rounded-lg shadow-elevated z-30 overflow-hidden"
+                    onMouseEnter={() => setIsToursOpen(true)}
+                    onMouseLeave={() => setIsToursOpen(false)}
+                  >
                     <div className="py-2">
                       {/* All Tours Link */}
                       <Link
