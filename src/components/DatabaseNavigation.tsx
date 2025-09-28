@@ -97,8 +97,10 @@ const DatabaseNavigation = () => {
               onClick={() => setIsSearchOpen(true)}
               className="flex items-center gap-1.5 w-full max-w-sm px-3 py-1.5"
             >
-              <span className="text-xs text-muted-foreground">Search...</span>
-              <Search className="w-3.5 h-3.5" />
+              <div className="flex items-center gap-1.5">
+                <Search className="w-3.5 h-3.5" />
+                <span className="text-xs text-muted-foreground">Search...</span>
+              </div>
             </Button>
           </div>
 
@@ -320,8 +322,10 @@ const DatabaseNavigation = () => {
                   setIsSearchOpen(true);
                 }}
               >
-                <span className="text-sm">Search</span>
-                <Search className="w-3.5 h-3.5" />
+                <div className="flex items-center gap-1.5">
+                  <Search className="w-3.5 h-3.5" />
+                  <span className="text-sm">Search</span>
+                </div>
               </Button>
               
               <Button variant="adventure" className="w-fit mt-4" asChild>
