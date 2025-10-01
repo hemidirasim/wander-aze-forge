@@ -233,9 +233,9 @@ const AdminTourFormBasic: React.FC = () => {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="Easy">Easy</SelectItem>
-                        <SelectItem value="Medium">Medium</SelectItem>
-                        <SelectItem value="Hard">Hard</SelectItem>
-                        <SelectItem value="Expert">Expert</SelectItem>
+                        <SelectItem value="Moderate">Moderate</SelectItem>
+                        <SelectItem value="Difficult">Difficult</SelectItem>
+                        <SelectItem value="Challenging">Challenging</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
