@@ -73,15 +73,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const categoryPrefix = category ? `${category}/` : '';
     const uniqueFilename = `${categoryPrefix}${timestamp}-${randomString}.${fileExtension}`;
 
-    // For now, return a mock URL since we don't have blob storage configured
-    // In production, you would upload to a cloud storage service
-    const mockUrl = `https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&h=1080&fit=crop&t=${timestamp}`;
+    // Create a data URL from the base64 data for immediate use
+    const dataUrl = `data:${fileType || 'image/jpeg'};base64,${fileData}`;
     
-    // Return success response with mock URL
+    // Return success response with data URL
     res.status(200).json({
       success: true,
       id: `${timestamp}-${randomString}`,
-      url: mockUrl,
+      url: dataUrl,
       filename: uniqueFilename,
       originalName: filename,
       size: fileBuffer.length,
