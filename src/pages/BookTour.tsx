@@ -390,24 +390,40 @@ const BookTour = () => {
                         </span>
                       </div>
                       
-                      <Button 
-                        type="submit" 
-                        className="w-full h-12 text-base"
-                        disabled={booking}
-                        onClick={(e) => {
-                          console.log('Button clicked');
-                          console.log('Form data:', formData);
-                          console.log('Tour data:', tour);
-                          console.log('Token:', token ? 'present' : 'missing');
-                        }}
-                      >
-                        {booking ? (
-                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                        ) : (
-                          <CheckCircle className="w-4 h-4 mr-2" />
-                        )}
-                        {booking ? 'Booking...' : 'Book Tour'}
-                      </Button>
+                      <div className="space-y-2">
+                        <Button 
+                          type="button" 
+                          variant="outline"
+                          className="w-full"
+                          onClick={() => {
+                            console.log('Test button clicked');
+                            alert('Test button works!');
+                          }}
+                        >
+                          Test Button
+                        </Button>
+                        
+                        <Button 
+                          type="submit" 
+                          className="w-full h-12 text-base"
+                          disabled={booking}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            console.log('Button clicked');
+                            console.log('Form data:', formData);
+                            console.log('Tour data:', tour);
+                            console.log('Token:', token ? 'present' : 'missing');
+                            handleSubmit(e);
+                          }}
+                        >
+                          {booking ? (
+                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                          ) : (
+                            <CheckCircle className="w-4 h-4 mr-2" />
+                          )}
+                          {booking ? 'Booking...' : 'Book Tour'}
+                        </Button>
+                      </div>
                     </div>
                   </form>
                 </CardContent>
