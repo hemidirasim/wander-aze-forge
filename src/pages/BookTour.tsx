@@ -248,7 +248,7 @@ const BookTour = () => {
     <div className="min-h-screen bg-background">
       <DatabaseNavigation />
       <div className="container mx-auto p-6 pt-24">
-          <div className="mb-6">
+        <div className="mb-6">
             <Button 
               variant="outline" 
               onClick={() => navigate('/tours')}
