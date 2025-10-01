@@ -249,17 +249,17 @@ const BookTour = () => {
       <DatabaseNavigation />
       <div className="container mx-auto p-6 pt-24">
         <div className="mb-6">
-            <Button 
-              variant="outline" 
-              onClick={() => navigate('/tours')}
-              className="mb-4"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Tours
-            </Button>
-            <h1 className="text-3xl font-bold text-foreground">Book Your Tour</h1>
-            <p className="text-muted-foreground">Complete your booking for {tour.title}</p>
-          </div>
+          <Button 
+            variant="outline" 
+            onClick={() => navigate('/tours')}
+            className="mb-4"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Tours
+          </Button>
+          <h1 className="text-3xl font-bold text-foreground">Book Your Tour</h1>
+          <p className="text-muted-foreground">Complete your booking for {tour.title}</p>
+        </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Tour Details */}
