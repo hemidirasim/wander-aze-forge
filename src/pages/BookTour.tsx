@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import DatabaseNavigation from '@/components/DatabaseNavigation';
 import Footer from '@/components/Footer';
+import PricingCalculator from '@/components/PricingCalculator';
 
 interface Tour {
   id: number;
@@ -290,16 +291,28 @@ const BookTour = () => {
                   <div className="border-t pt-4">
                     <div className="bg-primary/10 p-4 rounded-lg">
                       <div className="flex items-center justify-between">
-                        <span className="text-lg font-semibold">Price per person:</span>
+                        <span className="text-lg font-semibold">Base price per person:</span>
                         <span className="text-3xl font-bold text-primary">${tour?.price || 0}</span>
                       </div>
                       <div className="text-sm text-muted-foreground mt-2">
-                        Total price will be calculated based on number of participants
+                        Final price will be calculated based on pricing policy and participants
                       </div>
                     </div>
                   </div>
                 </CardContent>
               </Card>
+
+              {/* Pricing Calculator */}
+              <PricingCalculator 
+                tourId={tour.id} 
+                onPriceChange={(details) => {
+                  // Update form data with calculated price
+                  setFormData(prev => ({
+                    ...prev,
+                    participants: details.participants
+                  }));
+                }}
+              />
             </div>
 
             {/* Booking Form */}
