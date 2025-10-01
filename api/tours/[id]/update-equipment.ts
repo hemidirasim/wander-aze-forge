@@ -87,11 +87,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       whatToBringArray
     });
 
-    // Update tour equipment in database
+    // Update tour equipment in database using JSONB format
     const query = `
       UPDATE tours SET
-        provided_equipment = $1,
-        what_to_bring = $2,
+        provided_equipment = $1::jsonb,
+        what_to_bring = $2::jsonb,
         updated_at = NOW()
       WHERE id = $3
       RETURNING *
