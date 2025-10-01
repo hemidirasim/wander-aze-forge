@@ -308,7 +308,7 @@ const BookTour = () => {
 
           {/* Booking Form */}
           <div className="space-y-6">
-              <Card>
+            <Card>
                 <CardHeader>
                   <CardTitle>Booking Details</CardTitle>
                   <p className="text-sm text-muted-foreground">
