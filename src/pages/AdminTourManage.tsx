@@ -98,7 +98,8 @@ const AdminTourManage: React.FC = () => {
         title: 'Media & Photography',
         description: 'Add gallery images and photography service',
         icon: <Camera className="w-5 h-5" />,
-        completed: false, // Will be implemented later
+        completed: !!(tour.gallery_images && tour.gallery_images.length > 0) || 
+                   !!(tour.photography_service && tour.photography_service.trim()),
         route: `/admin/tours/${id}/media`
       },
       {

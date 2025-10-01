@@ -28,6 +28,7 @@ import AdminTourManage from "./pages/AdminTourManage";
 import AdminTourEditBasic from "./pages/AdminTourEditBasic";
 import AdminTourEditEquipment from "./pages/AdminTourEditEquipment";
 import AdminTourEditTransport from "./pages/AdminTourEditTransport";
+import AdminTourEditMedia from "./pages/AdminTourEditMedia";
 import AdminTourEdit from "./pages/AdminTourEdit";
 import AdminGallery from "./pages/AdminGallery";
 import AdminTourFormTest from "./pages/AdminTourFormTest";
@@ -89,6 +90,7 @@ const App = () => (
             <Route path="tours/:id/basic" element={<AdminTourEditBasic />} />
             <Route path="tours/:id/equipment" element={<AdminTourEditEquipment />} />
             <Route path="tours/:id/transport" element={<AdminTourEditTransport />} />
+            <Route path="tours/:id/media" element={<AdminTourEditMedia />} />
             <Route path="tour-categories" element={<AdminTourCategories />} />
             <Route path="tour-form-basic" element={<AdminTourFormBasic />} />
             <Route path="tour-form-extended" element={<AdminTourFormExtended />} />
