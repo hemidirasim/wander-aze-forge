@@ -159,13 +159,6 @@ const AdminTourEditMedia: React.FC = () => {
     }
   };
 
-  const removeGalleryImage = (index: number) => {
-    setFormData(prev => ({
-      ...prev,
-      galleryImages: prev.galleryImages.filter((_, i) => i !== index)
-    }));
-  };
-
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
       ...prev,
