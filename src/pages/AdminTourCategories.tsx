@@ -42,6 +42,8 @@ const AdminTourCategories = () => {
   const [error, setError] = useState<string | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
   const [formData, setFormData] = useState({
     name: '',
     slug: '',
@@ -202,16 +204,30 @@ const AdminTourCategories = () => {
   const handleDragStart = (e: React.DragEvent, index: number) => {
     e.dataTransfer.effectAllowed = 'move';
     e.dataTransfer.setData('text/html', index.toString());
+    setDraggedIndex(index);
   };
 
-  const handleDragOver = (e: React.DragEvent) => {
+  const handleDragOver = (e: React.DragEvent, index: number) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
+    setDragOverIndex(index);
+  };
+
+  const handleDragLeave = () => {
+    setDragOverIndex(null);
+  };
+
+  const handleDragEnd = () => {
+    setDraggedIndex(null);
+    setDragOverIndex(null);
   };
 
   const handleDrop = async (e: React.DragEvent, dropIndex: number) => {
     e.preventDefault();
     const dragIndex = parseInt(e.dataTransfer.getData('text/html'));
+    
+    setDraggedIndex(null);
+    setDragOverIndex(null);
     
     if (dragIndex === dropIndex) return;
 
@@ -386,10 +402,16 @@ const AdminTourCategories = () => {
         {categories.map((category, index) => (
           <Card 
             key={category.id} 
-            className="group hover:shadow-lg transition-shadow cursor-move"
+            className={`group transition-all duration-200 cursor-move ${
+              draggedIndex === index ? 'opacity-50 scale-95 shadow-none' : 
+              dragOverIndex === index ? 'border-2 border-primary shadow-2xl scale-105 bg-primary/5' : 
+              'hover:shadow-lg'
+            }`}
             draggable
             onDragStart={(e) => handleDragStart(e, index)}
-            onDragOver={handleDragOver}
+            onDragOver={(e) => handleDragOver(e, index)}
+            onDragLeave={handleDragLeave}
+            onDragEnd={handleDragEnd}
             onDrop={(e) => handleDrop(e, index)}
           >
             <CardHeader>
