@@ -9,7 +9,7 @@ const pool = new Pool({
 });
 
 // Initialize Resend
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(process.env.RESEND_API_KEY || 're_azc4jdxV_DsucP4N5cvXWsbiQxU6Rk7fD');
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Set CORS headers
@@ -65,46 +65,55 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     `, [user.id, resetCode, expiresAt]);
 
     // Send reset email
-    const emailResult = await resend.emails.send({
-      from: 'Outtour Azerbaijan <noreply@outtour.az>',
-      to: [email],
-      subject: 'Reset Your Password - Outtour Azerbaijan',
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-          <div style="text-align: center; margin-bottom: 30px;">
-            <h1 style="color: #2563eb; margin: 0;">Outtour Azerbaijan</h1>
-            <p style="color: #666; margin: 5px 0;">Adventure Awaits</p>
-          </div>
-          
-          <div style="background: #f8fafc; padding: 30px; border-radius: 10px; text-align: center;">
-            <h2 style="color: #1f2937; margin: 0 0 20px 0;">Reset Your Password</h2>
-            <p style="color: #4b5563; margin: 0 0 30px 0; line-height: 1.6;">
-              Hi ${user.first_name},<br>
-              You requested to reset your password. Use the code below to reset your password.
-            </p>
-            
-            <div style="background: #dc2626; color: white; padding: 20px; border-radius: 8px; font-size: 24px; font-weight: bold; letter-spacing: 3px; margin: 20px 0;">
-              ${resetCode}
+    try {
+      const emailResult = await resend.emails.send({
+        from: 'Outtour Azerbaijan <noreply@outtour.az>',
+        to: [email],
+        subject: 'Reset Your Password - Outtour Azerbaijan',
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #2563eb; margin: 0;">Outtour Azerbaijan</h1>
+              <p style="color: #666; margin: 5px 0;">Adventure Awaits</p>
             </div>
             
-            <p style="color: #6b7280; font-size: 14px; margin: 20px 0 0 0;">
-              This code will expire in 15 minutes.
-            </p>
+            <div style="background: #f8fafc; padding: 30px; border-radius: 10px; text-align: center;">
+              <h2 style="color: #1f2937; margin: 0 0 20px 0;">Reset Your Password</h2>
+              <p style="color: #4b5563; margin: 0 0 30px 0; line-height: 1.6;">
+                Hi ${user.first_name},<br>
+                You requested to reset your password. Use the code below to reset your password.
+              </p>
+              
+              <div style="background: #dc2626; color: white; padding: 20px; border-radius: 8px; font-size: 24px; font-weight: bold; letter-spacing: 3px; margin: 20px 0;">
+                ${resetCode}
+              </div>
+              
+              <p style="color: #6b7280; font-size: 14px; margin: 20px 0 0 0;">
+                This code will expire in 15 minutes.
+              </p>
+            </div>
+            
+            <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+              <p style="color: #9ca3af; font-size: 12px; margin: 0;">
+                If you didn't request a password reset, please ignore this email.
+              </p>
+              <p style="color: #9ca3af; font-size: 12px; margin: 5px 0 0 0;">
+                © 2024 Outtour Azerbaijan. All rights reserved.
+              </p>
+            </div>
           </div>
-          
-          <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
-            <p style="color: #9ca3af; font-size: 12px; margin: 0;">
-              If you didn't request a password reset, please ignore this email.
-            </p>
-            <p style="color: #9ca3af; font-size: 12px; margin: 5px 0 0 0;">
-              © 2024 Outtour Azerbaijan. All rights reserved.
-            </p>
-          </div>
-        </div>
-      `
-    });
+        `
+      });
 
-    console.log('Password reset email sent:', emailResult);
+      console.log('Password reset email sent:', emailResult);
+    } catch (emailError) {
+      console.error('Email sending error:', emailError);
+      return res.status(500).json({
+        success: false,
+        error: 'Failed to send email',
+        message: 'Email service is temporarily unavailable'
+      });
+    }
 
     return res.status(200).json({
       success: true,
