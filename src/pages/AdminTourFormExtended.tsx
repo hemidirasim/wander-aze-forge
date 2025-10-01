@@ -454,8 +454,8 @@ const AdminTourFormExtended: React.FC = () => {
                     <SelectContent>
                       <SelectItem value="Easy">Easy</SelectItem>
                       <SelectItem value="Moderate">Moderate</SelectItem>
+                      <SelectItem value="Difficult">Difficult</SelectItem>
                       <SelectItem value="Challenging">Challenging</SelectItem>
-                      <SelectItem value="Expert">Expert</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
