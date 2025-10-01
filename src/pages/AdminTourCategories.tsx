@@ -282,37 +282,34 @@ const AdminTourCategories = () => {
       setError(null);
       console.log('Updating database...');
       
-      // Update first category
-      const response1 = await fetch(`/api/tour-categories?id=${updatedCat1.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedCat1)
-      });
+      // Try batch update approach - update both categories in parallel
+      const [response1, response2] = await Promise.all([
+        fetch(`/api/tour-categories?id=${updatedCat1.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updatedCat1)
+        }),
+        fetch(`/api/tour-categories?id=${updatedCat2.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updatedCat2)
+        })
+      ]);
       
-      if (!response1.ok) {
-        const error1 = await response1.json();
-        console.error('First update failed:', error1);
-        throw new Error(`First update failed: ${error1.error || 'Unknown error'}`);
-      }
-      
-      // Update second category
-      const response2 = await fetch(`/api/tour-categories?id=${updatedCat2.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedCat2)
-      });
-
-      if (!response2.ok) {
-        const error2 = await response2.json();
-        console.error('Second update failed:', error2);
-        throw new Error(`Second update failed: ${error2.error || 'Unknown error'}`);
-      }
-
-      const result1 = await response1.json();
-      const result2 = await response2.json();
+      const [result1, result2] = await Promise.all([
+        response1.json(),
+        response2.json()
+      ]);
       
       console.log('API Response 1:', result1);
       console.log('API Response 2:', result2);
+
+      if (!response1.ok || !response2.ok) {
+        const errors = [];
+        if (!response1.ok) errors.push(`Category 1: ${result1.error || 'Unknown error'}`);
+        if (!response2.ok) errors.push(`Category 2: ${result2.error || 'Unknown error'}`);
+        throw new Error(`Update failed: ${errors.join(', ')}`);
+      }
 
       console.log('Database updated successfully');
       console.log('Fetching fresh data...');
