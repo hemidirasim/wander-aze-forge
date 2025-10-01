@@ -30,8 +30,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     console.log('=== CREATE TOUR API CALLED ===');
-    console.log('Request body:', JSON.stringify(req.body, null, 2));
+    console.log('Request body size:', JSON.stringify(req.body).length);
     console.log('tour_programs from request:', req.body.tour_programs);
+    console.log('participant_pricing from request:', req.body.participant_pricing);
 
     // Ensure required columns exist
     try {
@@ -261,7 +262,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       console.error('Database error:', dbError);
       console.error('Database error message:', dbError.message);
       console.error('Database error code:', dbError.code);
-      throw dbError;
+      console.error('Database error detail:', dbError.detail);
+      console.error('Database error hint:', dbError.hint);
+      
+      return res.status(500).json({
+        success: false,
+        error: 'Database error',
+        message: dbError.message,
+        code: dbError.code,
+        detail: dbError.detail
+      });
     }
 
     return res.status(201).json({
