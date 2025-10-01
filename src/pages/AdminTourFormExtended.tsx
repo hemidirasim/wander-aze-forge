@@ -62,6 +62,16 @@ interface ExtendedTourForm {
   groupSize: string;
   location: string;
   
+  // Pricing Policy
+  pricing_policy: string;
+  base_price: string;
+  min_participants: number;
+  max_participants: number;
+  bulk_discount_threshold: number;
+  bulk_discount_percentage: number;
+  group_required_min: number;
+  group_required_max: number;
+  
   // Overview
   overview: string;
   bestSeason: string;
@@ -138,6 +148,16 @@ const AdminTourFormExtended: React.FC = () => {
     reviewsCount: '10',
     groupSize: '4-8 people',
     location: 'Gabala, Azerbaijan',
+    
+    // Pricing Policy
+    pricing_policy: 'fixed',
+    base_price: '150',
+    min_participants: 1,
+    max_participants: 20,
+    bulk_discount_threshold: 5,
+    bulk_discount_percentage: 0,
+    group_required_min: 5,
+    group_required_max: 10,
     
     // Overview
     overview: 'Join us for a wonderful test tour through the beautiful mountains of Azerbaijan. This is a perfect opportunity to test our system.',
