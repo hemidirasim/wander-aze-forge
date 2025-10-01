@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { MapPin, Phone, Mail, Clock, Facebook, Instagram, Linkedin, Twitter } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, Facebook, Instagram, Linkedin, Twitter, Youtube } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useTourCategories, TourCategory, Tour } from '@/hooks/useTourCategories';
 
@@ -70,7 +70,8 @@ const Contact = () => {
     { icon: Facebook, url: "https://www.facebook.com/campingazerbaijan2014", name: "Facebook" },
     { icon: Instagram, url: "https://www.instagram.com/camping_azerbaijan/", name: "Instagram" },
     { icon: Linkedin, url: "https://www.linkedin.com/company/campingazerbaijan/", name: "LinkedIn" },
-    { icon: Twitter, url: "https://x.com/CampingAze", name: "Twitter" }
+    { icon: Twitter, url: "https://x.com/CampingAze", name: "Twitter" },
+    { icon: Youtube, url: "https://www.youtube.com/@campingazerbaijan", name: "YouTube" }
   ];
 
   if (loading) {
@@ -114,18 +115,16 @@ const Contact = () => {
           <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
             {heroData?.title || 'Contact Us'}
           </h1>
-          {heroData?.content && (
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              {heroData.content}
-            </p>
-          )}
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+            If you've got any questions about your adventure or need some travel advice, we'd love to help. Submit your query below and we'll get back to you soon.
+          </p>
         </div>
       </section>
 
       {/* Contact Information */}
       <section className="py-20 px-4">
         <div className="container mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
             {/* Phone */}
             <Card className="text-center hover:shadow-elevated transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
               <CardHeader>
@@ -157,38 +156,6 @@ const Contact = () => {
                   {heroData?.contact_info?.email || 'info@outtour.az'}
                 </div>
                 <p className="text-sm text-muted-foreground">We'll respond within 24 hours</p>
-              </CardContent>
-            </Card>
-
-            {/* Location */}
-            <Card className="text-center hover:shadow-elevated transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
-              <CardHeader>
-                <div className="mx-auto w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                  <MapPin className="w-8 h-8 text-primary" />
-                </div>
-                <CardTitle className="text-xl text-foreground">Location</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-lg font-semibold text-foreground mb-2">
-                  {heroData?.contact_info?.address || 'Baku, Azerbaijan'}
-                </div>
-                <p className="text-sm text-muted-foreground">Tours depart from various locations</p>
-              </CardContent>
-            </Card>
-
-            {/* Office Hours */}
-            <Card className="text-center hover:shadow-elevated transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
-              <CardHeader>
-                <div className="mx-auto w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                  <Clock className="w-8 h-8 text-primary" />
-                </div>
-                <CardTitle className="text-xl text-foreground">Office Hours</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-lg font-semibold text-foreground mb-2">
-                  {heroData?.contact_info?.working_hours || 'Mon - Sat: 9AM - 6PM'}
-                </div>
-                <p className="text-sm text-muted-foreground">Emergency contact available 24/7</p>
               </CardContent>
             </Card>
           </div>
@@ -229,14 +196,70 @@ const Contact = () => {
                   <Label htmlFor="phone">Phone Number</Label>
                   <Input id="phone" type="tel" placeholder="+1 (555) 123-4567" />
                 </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="country">Country *</Label>
+                  <select 
+                    id="country" 
+                    className="w-full p-3 border border-input rounded-md bg-background text-foreground"
+                    required
+                  >
+                    <option value="">Select your country</option>
+                    <option value="US">United States</option>
+                    <option value="GB">United Kingdom</option>
+                    <option value="CA">Canada</option>
+                    <option value="AU">Australia</option>
+                    <option value="DE">Germany</option>
+                    <option value="FR">France</option>
+                    <option value="IT">Italy</option>
+                    <option value="ES">Spain</option>
+                    <option value="NL">Netherlands</option>
+                    <option value="BE">Belgium</option>
+                    <option value="CH">Switzerland</option>
+                    <option value="AT">Austria</option>
+                    <option value="SE">Sweden</option>
+                    <option value="NO">Norway</option>
+                    <option value="DK">Denmark</option>
+                    <option value="FI">Finland</option>
+                    <option value="PL">Poland</option>
+                    <option value="CZ">Czech Republic</option>
+                    <option value="RO">Romania</option>
+                    <option value="GR">Greece</option>
+                    <option value="PT">Portugal</option>
+                    <option value="IE">Ireland</option>
+                    <option value="TR">Turkey</option>
+                    <option value="RU">Russia</option>
+                    <option value="UA">Ukraine</option>
+                    <option value="AZ">Azerbaijan</option>
+                    <option value="GE">Georgia</option>
+                    <option value="AM">Armenia</option>
+                    <option value="KZ">Kazakhstan</option>
+                    <option value="UZ">Uzbekistan</option>
+                    <option value="JP">Japan</option>
+                    <option value="CN">China</option>
+                    <option value="KR">South Korea</option>
+                    <option value="IN">India</option>
+                    <option value="SG">Singapore</option>
+                    <option value="AE">United Arab Emirates</option>
+                    <option value="SA">Saudi Arabia</option>
+                    <option value="IL">Israel</option>
+                    <option value="BR">Brazil</option>
+                    <option value="AR">Argentina</option>
+                    <option value="MX">Mexico</option>
+                    <option value="ZA">South Africa</option>
+                    <option value="NZ">New Zealand</option>
+                    <option value="OTHER">Other</option>
+                  </select>
+                </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="tourCategory">Tour Category</Label>
+                  <Label htmlFor="tourCategory">Tour Category *</Label>
                   <select 
                     id="tourCategory" 
                     className="w-full p-3 border border-input rounded-md bg-background text-foreground"
                     onChange={(e) => handleCategoryChange(e.target.value)}
                     disabled={dataLoading}
+                    required
                   >
                     <option value="">
                       {dataLoading ? 'Loading categories...' : 'Select a category'}
@@ -270,13 +293,13 @@ const Contact = () => {
 
                 
                 <div className="space-y-2">
-                  <Label htmlFor="groupSize">Group Size</Label>
-                  <Input id="groupSize" type="number" min="1" max="20" placeholder="Number of travelers" />
+                  <Label htmlFor="groupSize">Group Size *</Label>
+                  <Input id="groupSize" type="number" min="1" max="20" placeholder="Number of travelers" required />
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="dates">Preferred Dates</Label>
-                  <Input id="dates" placeholder="e.g., June 15-20, 2024" />
+                  <Label htmlFor="dates">Preferred Dates *</Label>
+                  <Input id="dates" placeholder="e.g., June 15-20, 2024" required />
                 </div>
                 
                 <div className="space-y-2">
@@ -295,6 +318,13 @@ const Contact = () => {
                     Subscribe to our newsletter for adventure tips and tour updates
                   </Label>
                 </div>
+
+                <div className="flex items-start space-x-2">
+                  <input type="checkbox" id="terms" className="rounded mt-1" required />
+                  <Label htmlFor="terms" className="text-sm text-muted-foreground cursor-pointer">
+                    I agree to the <a href="/terms" className="text-primary hover:underline">Terms & Conditions</a> and <a href="/privacy" className="text-primary hover:underline">Privacy Policy</a> *
+                  </Label>
+                </div>
                 
                 <Button size="lg" variant="adventure" className="w-full">
                   Send Message
@@ -306,29 +336,9 @@ const Contact = () => {
               </CardContent>
             </Card>
 
-            {/* Map & Additional Info */}
+            {/* Additional Info */}
             <div className="space-y-8">
               
-              {/* Map Placeholder */}
-              <Card className="border-0 bg-card/80 backdrop-blur-sm">
-                <CardContent className="p-0">
-                  <div className="h-80 bg-muted/20 rounded-lg flex items-center justify-center relative overflow-hidden">
-                    <img 
-                      src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=600&h=400&fit=crop"
-                      alt="Azerbaijan landscape"
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                      <div className="text-center text-white">
-                        <MapPin className="w-12 h-12 mx-auto mb-4" />
-                        <div className="text-lg font-semibold">Based in Baku</div>
-                        <div className="text-sm">Tours operate throughout Azerbaijan</div>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
               {/* FAQ Quick Answers */}
               <Card className="border-0 bg-card/80 backdrop-blur-sm">
                 <CardHeader>
@@ -428,6 +438,16 @@ const Contact = () => {
                             className="w-12 h-12 bg-primary/10 hover:bg-primary hover:text-primary-foreground rounded-lg flex items-center justify-center transition-all duration-300 text-primary hover:scale-105"
                           >
                             <Twitter className="w-5 h-5" />
+                          </a>
+                        )}
+                        {socialData.contact_info.youtube && (
+                          <a
+                            href={socialData.contact_info.youtube}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-12 h-12 bg-primary/10 hover:bg-primary hover:text-primary-foreground rounded-lg flex items-center justify-center transition-all duration-300 text-primary hover:scale-105"
+                          >
+                            <Youtube className="w-5 h-5" />
                           </a>
                         )}
                       </>
