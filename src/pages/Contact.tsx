@@ -339,19 +339,19 @@ const Contact = () => {
             {/* Additional Info */}
             <div className="space-y-8">
               
-              {/* Hiking Group Image */}
+              {/* Contact Hero Image */}
               <Card className="border-0 bg-card/80 backdrop-blur-sm overflow-hidden">
                 <CardContent className="p-0">
                   <div className="relative h-96 overflow-hidden">
                     <img 
-                      src="/hiking-group.jpg"
-                      alt="Adventure Group Hiking"
+                      src="/contact-hero.jpg"
+                      alt="Contact Us - Adventure Tours"
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                     <div className="absolute bottom-6 left-6 right-6 text-white">
-                      <h3 className="text-2xl font-bold mb-2">Join Our Adventure Community</h3>
-                      <p className="text-white/90">Experience unforgettable journeys with fellow explorers</p>
+                      <h3 className="text-2xl font-bold mb-2">Get in Touch</h3>
+                      <p className="text-white/90">We're here to help plan your perfect adventure</p>
                     </div>
                   </div>
                 </CardContent>
