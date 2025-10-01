@@ -179,7 +179,7 @@ const TourDetail = () => {
       
       {/* Back Button */}
       <section className="pt-20 px-4">
-        <div className="container mx-auto max-w-6xl">
+        <div className="container mx-auto">
           <Button variant="ghost" asChild className="mb-6">
             <Link to={category ? `/tours/${category}` : '/tours'} className="flex items-center">
               <ArrowLeft className="w-4 h-4 mr-2" />
@@ -191,7 +191,7 @@ const TourDetail = () => {
 
       {/* Hero Section - Split Layout */}
       <section className="pb-12 px-4">
-        <div className="container mx-auto max-w-6xl">
+        <div className="container mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Left Side - Title and Details */}
             <div className="space-y-6">
@@ -229,7 +229,7 @@ const TourDetail = () => {
 
       {/* Tour Details */}
       <section className="py-16 px-4">
-        <div className="container mx-auto max-w-6xl">
+        <div className="container mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
             
             {/* Main Content */}
