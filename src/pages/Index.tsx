@@ -283,11 +283,11 @@ const Index = () => {
       {/* Tour Category Gallery - Database Categories */}
       <DatabaseTourCategoryGallery />
 
-      {/* Plan Your Journey Contact Form */}
-      <JourneyContactForm />
-
       {/* Latest Blog Stories */}
       <DatabaseBlog />
+
+      {/* Plan Your Journey Contact Form */}
+      <JourneyContactForm />
 
       {/* Business Partners */}
       <DatabasePartners />
