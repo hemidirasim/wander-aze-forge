@@ -65,6 +65,14 @@ const AdminTourManage: React.FC = () => {
 
   const tourSections: TourSection[] = [
     {
+      id: 'basic',
+      title: 'Basic Information',
+      description: 'Edit tour title, description, category, duration, difficulty, price',
+      icon: <Edit className="w-5 h-5" />,
+      completed: true,
+      route: `/admin/tours/${id}/basic`
+    },
+    {
       id: 'equipment',
       title: 'Equipment & Gear',
       description: 'Add provided equipment and what to bring',

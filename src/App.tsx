@@ -25,6 +25,7 @@ import AdminTourCategories from "./pages/AdminTourCategories";
 import AdminTourFormExtended from "./pages/AdminTourFormExtended";
 import AdminTourFormBasic from "./pages/AdminTourFormBasic";
 import AdminTourManage from "./pages/AdminTourManage";
+import AdminTourEditBasic from "./pages/AdminTourEditBasic";
 import AdminTourEdit from "./pages/AdminTourEdit";
 import AdminGallery from "./pages/AdminGallery";
 import AdminTourFormTest from "./pages/AdminTourFormTest";
@@ -83,6 +84,7 @@ const App = () => (
             <Route path="tours" element={<AdminTours />} />
             <Route path="tours/edit/:id" element={<AdminTourEdit />} />
             <Route path="tours/:id/manage" element={<AdminTourManage />} />
+            <Route path="tours/:id/basic" element={<AdminTourEditBasic />} />
             <Route path="tour-categories" element={<AdminTourCategories />} />
             <Route path="tour-form-basic" element={<AdminTourFormBasic />} />
             <Route path="tour-form-extended" element={<AdminTourFormExtended />} />
