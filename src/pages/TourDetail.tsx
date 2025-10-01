@@ -521,12 +521,36 @@ const TourDetail = () => {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="text-center space-y-4">
-                    <Button size="lg" variant="adventure" className="w-full" asChild>
-                      <Link to={`/book-tour/${tour.id}`}>
-                        <Calendar className="w-5 h-5 mr-2" />
-                        Book This Tour
-                      </Link>
-                    </Button>
+                    <div className="space-y-2">
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
+                        className="w-full"
+                        onClick={() => {
+                          console.log('Test button clicked');
+                          alert('Test button works!');
+                        }}
+                      >
+                        Test Button
+                      </Button>
+                      
+                      <Button 
+                        size="lg" 
+                        variant="adventure" 
+                        className="w-full" 
+                        asChild
+                        onClick={() => {
+                          console.log('Book This Tour clicked');
+                          console.log('Tour ID:', tour.id);
+                          console.log('Tour title:', tour.title);
+                        }}
+                      >
+                        <Link to={`/book-tour/${tour.id}`}>
+                          <Calendar className="w-5 h-5 mr-2" />
+                          Book This Tour
+                        </Link>
+                      </Button>
+                    </div>
                     
                     <div className="text-sm text-muted-foreground">
                       {tour.booking_terms || 'Free cancellation up to 24 hours before departure'}
