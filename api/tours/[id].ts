@@ -79,21 +79,22 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
       });
     }
 
+    // Parse JSON fields for the tour
     const tour = {
       ...result.rows[0],
-      highlights: result.rows[0].highlights || [],
-      includes: result.rows[0].includes || [],
-      excludes: result.rows[0].excludes || [],
-      tour_programs: result.rows[0].tour_programs || [],
-      provided_equipment: result.rows[0].provided_equipment || [],
-      what_to_bring: result.rows[0].what_to_bring || [],
-      gallery_images: result.rows[0].gallery_images || [],
-      price_includes: result.rows[0].price_includes || []
+      highlights: result.rows[0].highlights ? (typeof result.rows[0].highlights === 'string' ? JSON.parse(result.rows[0].highlights) : result.rows[0].highlights) : [],
+      includes: result.rows[0].includes ? (typeof result.rows[0].includes === 'string' ? JSON.parse(result.rows[0].includes) : result.rows[0].includes) : [],
+      excludes: result.rows[0].excludes ? (typeof result.rows[0].excludes === 'string' ? JSON.parse(result.rows[0].excludes) : result.rows[0].excludes) : [],
+      tour_programs: result.rows[0].tour_programs ? (typeof result.rows[0].tour_programs === 'string' ? JSON.parse(result.rows[0].tour_programs) : result.rows[0].tour_programs) : [],
+      provided_equipment: result.rows[0].provided_equipment ? (typeof result.rows[0].provided_equipment === 'string' ? JSON.parse(result.rows[0].provided_equipment) : result.rows[0].provided_equipment) : [],
+      what_to_bring: result.rows[0].what_to_bring ? (typeof result.rows[0].what_to_bring === 'string' ? JSON.parse(result.rows[0].what_to_bring) : result.rows[0].what_to_bring) : [],
+      gallery_images: result.rows[0].gallery_images ? (typeof result.rows[0].gallery_images === 'string' ? JSON.parse(result.rows[0].gallery_images) : result.rows[0].gallery_images) : [],
+      price_includes: result.rows[0].price_includes ? (typeof result.rows[0].price_includes === 'string' ? JSON.parse(result.rows[0].price_includes) : result.rows[0].price_includes) : []
     };
 
     return res.status(200).json({
       success: true,
-      data: { tour }
+      data: tour
     });
 
   } catch (error: any) {
