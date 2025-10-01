@@ -107,7 +107,9 @@ const AdminTourManage: React.FC = () => {
         title: 'Pricing Details',
         description: 'Add pricing information and discounts',
         icon: <DollarSign className="w-5 h-5" />,
-        completed: false, // Will be implemented later
+        completed: !!(tour.price_includes && tour.price_includes.length > 0) || 
+                   !!(tour.group_discounts && tour.group_discounts.trim()) || 
+                   !!(tour.early_bird_discount && tour.early_bird_discount.trim()),
         route: `/admin/tours/${id}/pricing`
       },
       {
@@ -131,7 +133,9 @@ const AdminTourManage: React.FC = () => {
         title: 'Accommodation & Meals',
         description: 'Add accommodation and meal details',
         icon: <Utensils className="w-5 h-5" />,
-        completed: false, // Will be implemented later
+        completed: !!(tour.accommodation_details && tour.accommodation_details.trim()) || 
+                   !!(tour.meals_details && tour.meals_details.trim()) || 
+                   !!(tour.water_snacks_details && tour.water_snacks_details.trim()),
         route: `/admin/tours/${id}/accommodation`
       },
     ];
