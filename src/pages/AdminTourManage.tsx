@@ -120,14 +120,6 @@ const AdminTourManage: React.FC = () => {
       completed: false,
       route: `/admin/tours/${id}/accommodation`
     },
-    {
-      id: 'contact',
-      title: 'Contact & Booking',
-      description: 'Add contact information and booking terms',
-      icon: <Settings className="w-5 h-5" />,
-      completed: false,
-      route: `/admin/tours/${id}/contact`
-    }
   ];
 
   useEffect(() => {

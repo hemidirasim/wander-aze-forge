@@ -206,7 +206,7 @@ const AdminTours: React.FC = () => {
 
   const handleEdit = (tour: Tour) => {
     console.log('Edit button clicked for tour:', tour);
-    navigate(`/admin/tours/edit/${tour.id}`);
+    navigate(`/admin/tours/${tour.id}/manage`);
   };
 
   const handleSave = async () => {
