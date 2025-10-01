@@ -37,6 +37,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       });
     }
 
+    // Ensure email_verifications table exists
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS email_verifications (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        code VARCHAR(6) NOT NULL,
+        expires_at TIMESTAMP NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        UNIQUE(user_id)
+      )
+    `);
+
     // Check if user exists and is not verified
     const userResult = await pool.query(
       'SELECT id, first_name, last_name, email_verified FROM users WHERE email = $1',
@@ -133,10 +145,29 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   } catch (error) {
     console.error('Send verification error:', error);
+    
+    // Check if it's a database error
+    if (error instanceof Error && error.message.includes('relation')) {
+      return res.status(500).json({
+        success: false,
+        error: 'Database table not found',
+        message: 'Please contact support to set up the database tables'
+      });
+    }
+    
+    // Check if it's a Resend API error
+    if (error instanceof Error && error.message.includes('resend')) {
+      return res.status(500).json({
+        success: false,
+        error: 'Email service error',
+        message: 'Failed to send email. Please try again later.'
+      });
+    }
+    
     return res.status(500).json({
       success: false,
-      error: 'Failed to send verification email',
-      message: error instanceof Error ? error.message : 'Unknown error'
+      error: 'Internal server error',
+      message: 'An unexpected error occurred. Please try again.'
     });
   }
 }
