@@ -168,7 +168,9 @@ const DatabaseNavigation = () => {
                           scrollToTopInstant();
                         }}
                       >
-                        <Mountain className="w-4 h-4 mr-3 text-primary" />
+                        <div className="w-6 h-6 mr-3 flex items-center justify-center flex-shrink-0">
+                          <Mountain className="w-5 h-5 text-primary" />
+                        </div>
                         <div>
                           <div className="font-medium">All Tours</div>
                           <div className="text-xs text-muted-foreground">
@@ -198,16 +200,18 @@ const DatabaseNavigation = () => {
                                 scrollToTopInstant();
                               }}
                             >
-                              {category.icon_url ? (
-                                <img 
-                                  src={category.icon_url} 
-                                  alt={category.name}
-                                  className="w-4 h-4 mr-3"
-                                  style={{ filter: 'brightness(0) saturate(100%) invert(45%) sepia(89%) saturate(1500%) hue-rotate(345deg) brightness(95%) contrast(95%)' }}
-                                />
-                              ) : (
-                                <Mountain className="w-4 h-4 mr-3 text-primary" />
-                              )}
+                              <div className="w-6 h-6 mr-3 flex items-center justify-center flex-shrink-0">
+                                {category.icon_url ? (
+                                  <img 
+                                    src={category.icon_url} 
+                                    alt={category.name}
+                                    className="w-5 h-5 object-contain"
+                                    style={{ filter: 'brightness(0) saturate(100%) invert(45%) sepia(89%) saturate(1500%) hue-rotate(345deg) brightness(95%) contrast(95%)' }}
+                                  />
+                                ) : (
+                                  <Mountain className="w-5 h-5 text-primary" />
+                                )}
+                              </div>
                               <div>
                                 <div className="font-medium">{category.name}</div>
                                 <div className="text-xs text-muted-foreground line-clamp-2">
