@@ -206,19 +206,18 @@ const BookTour = () => {
       <div className="min-h-screen bg-background">
         <DatabaseNavigation />
         <div className="container mx-auto p-6 pt-24">
-            <div className="animate-pulse">
-              <div className="h-8 bg-muted rounded w-1/3 mb-6"></div>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div className="space-y-4">
-                  <div className="h-64 bg-muted rounded"></div>
-                  <div className="h-4 bg-muted rounded w-3/4"></div>
-                  <div className="h-4 bg-muted rounded w-1/2"></div>
-                </div>
-                <div className="space-y-4">
-                  <div className="h-8 bg-muted rounded"></div>
-                  <div className="h-4 bg-muted rounded"></div>
-                  <div className="h-4 bg-muted rounded"></div>
-                </div>
+          <div className="animate-pulse">
+            <div className="h-8 bg-muted rounded w-1/3 mb-6"></div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <div className="space-y-4">
+                <div className="h-64 bg-muted rounded"></div>
+                <div className="h-4 bg-muted rounded w-3/4"></div>
+                <div className="h-4 bg-muted rounded w-1/2"></div>
+              </div>
+              <div className="space-y-4">
+                <div className="h-8 bg-muted rounded"></div>
+                <div className="h-4 bg-muted rounded"></div>
+                <div className="h-4 bg-muted rounded"></div>
               </div>
             </div>
           </div>
@@ -233,13 +232,12 @@ const BookTour = () => {
       <div className="min-h-screen bg-background">
         <DatabaseNavigation />
         <div className="container mx-auto p-6 pt-24 text-center">
-            <h1 className="text-2xl font-bold text-foreground mb-4">Tour Not Found</h1>
-            <p className="text-muted-foreground mb-6">The tour you're looking for doesn't exist.</p>
-            <Button onClick={() => navigate('/tours')}>
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Tours
-            </Button>
-          </div>
+          <h1 className="text-2xl font-bold text-foreground mb-4">Tour Not Found</h1>
+          <p className="text-muted-foreground mb-6">The tour you're looking for doesn't exist.</p>
+          <Button onClick={() => navigate('/tours')}>
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Tours
+          </Button>
         </div>
         <Footer />
       </div>
