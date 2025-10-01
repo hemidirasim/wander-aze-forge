@@ -262,8 +262,8 @@ const BookTour = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Tour Details */}
-            <div className="space-y-6">
+          {/* Tour Details */}
+          <div className="space-y-6">
               <Card>
                 <CardHeader>
                   <CardTitle className="text-xl">{tour.title}</CardTitle>
@@ -306,8 +306,8 @@ const BookTour = () => {
               </Card>
             </div>
 
-            {/* Booking Form */}
-            <div className="space-y-6">
+          {/* Booking Form */}
+          <div className="space-y-6">
               <Card>
                 <CardHeader>
                   <CardTitle>Booking Details</CardTitle>
