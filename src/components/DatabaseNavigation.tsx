@@ -11,6 +11,7 @@ interface DatabaseTourCategory {
   slug: string;
   description: string;
   image_url: string;
+  icon_url?: string;
   is_active: boolean;
   sort_order: number;
   created_at: string;
@@ -183,7 +184,6 @@ const DatabaseNavigation = () => {
                         </div>
                       ) : categories.length > 0 ? (
                         categories.map((category) => {
-                          const IconComponent = categoryIcons[category.slug as keyof typeof categoryIcons] || Mountain;
                           const isActive = location.pathname === `/tours/${category.slug}`;
                           
                           return (
@@ -198,7 +198,16 @@ const DatabaseNavigation = () => {
                                 scrollToTopInstant();
                               }}
                             >
-                              <IconComponent className="w-4 h-4 mr-3 text-primary" />
+                              {category.icon_url ? (
+                                <img 
+                                  src={category.icon_url} 
+                                  alt={category.name}
+                                  className="w-4 h-4 mr-3"
+                                  style={{ filter: 'brightness(0) saturate(100%) invert(45%) sepia(89%) saturate(1500%) hue-rotate(345deg) brightness(95%) contrast(95%)' }}
+                                />
+                              ) : (
+                                <Mountain className="w-4 h-4 mr-3 text-primary" />
+                              )}
                               <div>
                                 <div className="font-medium">{category.name}</div>
                                 <div className="text-xs text-muted-foreground line-clamp-2">

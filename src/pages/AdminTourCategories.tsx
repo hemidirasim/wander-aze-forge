@@ -25,6 +25,7 @@ interface TourCategory {
   slug: string;
   description: string;
   image_url: string;
+  icon_url?: string;
   is_active: boolean;
   sort_order: number;
   created_at: string;
@@ -49,10 +50,12 @@ const AdminTourCategories = () => {
     slug: '',
     description: '',
     image_url: '',
+    icon_url: '',
     is_active: true,
     sort_order: 0
   });
   const [galleryImages, setGalleryImages] = useState<UploadedImage[]>([]);
+  const [iconImages, setIconImages] = useState<UploadedImage[]>([]);
 
   useEffect(() => {
     fetchCategories();
@@ -90,10 +93,12 @@ const AdminTourCategories = () => {
       slug: category.slug,
       description: category.description,
       image_url: category.image_url,
+      icon_url: category.icon_url || '',
       is_active: category.is_active,
       sort_order: category.sort_order
     });
     setGalleryImages(category.image_url ? [{ url: category.image_url, name: 'Current Image' }] : []);
+    setIconImages(category.icon_url ? [{ url: category.icon_url, name: 'Current Icon' }] : []);
     setEditingId(category.id);
     setIsCreating(false);
   };
@@ -104,10 +109,12 @@ const AdminTourCategories = () => {
       slug: '',
       description: '',
       image_url: '',
+      icon_url: '',
       is_active: true,
       sort_order: 0
     });
     setGalleryImages([]);
+    setIconImages([]);
     setEditingId(null);
     setIsCreating(true);
   };
@@ -118,10 +125,12 @@ const AdminTourCategories = () => {
       slug: '',
       description: '',
       image_url: '',
+      icon_url: '',
       is_active: true,
       sort_order: 0
     });
     setGalleryImages([]);
+    setIconImages([]);
     setEditingId(null);
     setIsCreating(false);
   };
@@ -132,7 +141,8 @@ const AdminTourCategories = () => {
     try {
       const submitData = {
         ...formData,
-        image_url: galleryImages.length > 0 ? galleryImages[0].url : formData.image_url
+        image_url: galleryImages.length > 0 ? galleryImages[0].url : formData.image_url,
+        icon_url: iconImages.length > 0 ? iconImages[0].url : formData.icon_url
       };
 
       const url = editingId ? `/api/tour-categories?id=${editingId}` : '/api/tour-categories';
@@ -355,15 +365,33 @@ const AdminTourCategories = () => {
                   />
                 </div>
 
-              <div className="space-y-2">
-                <Label>Cover Image</Label>
-                <GalleryUpload
-                  images={galleryImages}
-                  onImagesChange={setGalleryImages}
-                  maxImages={1}
-                  className="w-full"
-                />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label>Cover Image</Label>
+                  <GalleryUpload
+                    images={galleryImages}
+                    onImagesChange={setGalleryImages}
+                    maxImages={1}
+                    className="w-full"
+                  />
                 </div>
+
+                <div className="space-y-2">
+                  <Label>Icon (SVG/PNG) - for Header Menu</Label>
+                  <GalleryUpload
+                    images={iconImages}
+                    onImagesChange={setIconImages}
+                    maxImages={1}
+                    className="w-full"
+                  />
+                  {iconImages.length > 0 && (
+                    <div className="p-3 bg-gray-50 rounded-md flex items-center gap-3">
+                      <img src={iconImages[0].url} alt="Icon preview" className="w-8 h-8" />
+                      <span className="text-sm text-muted-foreground">Icon preview</span>
+                    </div>
+                  )}
+                </div>
+              </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="space-y-2">
