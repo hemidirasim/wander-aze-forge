@@ -350,68 +350,46 @@ const AdminTourEditMedia: React.FC = () => {
                 {formData.galleryImages.length > 0 && (
                   <div className="space-y-4">
                     <Label>Gallery Images ({formData.galleryImages.length})</Label>
-                    
-                    {/* Main Image Selection */}
-                    <div className="space-y-2">
-                      <Label className="text-sm font-medium">Main Image (Tour Cover)</Label>
-                      <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                        {formData.galleryImages.map((image, index) => (
-                          <div 
-                            key={index} 
-                            className={`relative cursor-pointer border-2 rounded-lg overflow-hidden ${
-                              formData.mainImage === image 
-                                ? 'border-blue-500 ring-2 ring-blue-200' 
-                                : 'border-gray-200'
-                            }`}
-                            onClick={() => setFormData(prev => ({ ...prev, mainImage: image }))}
-                          >
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {formData.galleryImages.map((image, index) => (
+                        <div key={index} className="border rounded-lg p-3 space-y-2">
+                          <div className="relative">
                             <img 
                               src={image} 
                               alt={`Gallery ${index + 1}`}
-                              className="w-full h-20 object-cover"
+                              className="w-full h-32 object-cover rounded"
                               onError={(e) => {
                                 e.currentTarget.style.display = 'none';
                               }}
                             />
                             {formData.mainImage === image && (
-                              <div className="absolute top-1 right-1 bg-blue-500 text-white rounded-full p-1">
+                              <div className="absolute top-2 right-2 bg-green-500 text-white rounded-full p-1">
                                 <Camera className="w-3 h-3" />
                               </div>
                             )}
-                            <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white text-xs p-1 text-center">
-                              {formData.mainImage === image ? 'Main Image' : 'Click to set as main'}
-                            </div>
                           </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Gallery Images Grid */}
-                    <div className="space-y-2">
-                      <Label className="text-sm font-medium">All Gallery Images</Label>
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                        {formData.galleryImages.map((image, index) => (
-                          <div key={index} className="relative group">
-                            <img 
-                              src={image} 
-                              alt={`Gallery ${index + 1}`}
-                              className="w-full h-20 object-cover rounded border"
-                              onError={(e) => {
-                                e.currentTarget.style.display = 'none';
-                              }}
-                            />
+                          
+                          <div className="flex gap-2">
+                            <Button
+                              type="button"
+                              variant={formData.mainImage === image ? "default" : "outline"}
+                              size="sm"
+                              onClick={() => setFormData(prev => ({ ...prev, mainImage: image }))}
+                              className="flex-1"
+                            >
+                              {formData.mainImage === image ? 'Main Foto' : 'Main Foto Et'}
+                            </Button>
                             <Button
                               type="button"
                               variant="destructive"
                               size="sm"
                               onClick={() => removeGalleryImage(index)}
-                              className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity"
                             >
-                              <Trash2 className="w-3 h-3" />
+                              <Trash2 className="w-4 h-4" />
                             </Button>
                           </div>
-                        ))}
-                      </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 )}
