@@ -239,38 +239,56 @@ const AdminTourCategories = () => {
     setDraggedIndex(null);
     setDragOverIndex(null);
     
-    if (dragIndex === dropIndex) return;
+    if (dragIndex === dropIndex || isNaN(dragIndex)) return;
+
+    // Validate indices
+    if (dragIndex < 0 || dragIndex >= categories.length || dropIndex < 0 || dropIndex >= categories.length) {
+      console.error('Invalid drag/drop indices:', { dragIndex, dropIndex, categoriesLength: categories.length });
+      return;
+    }
 
     // Simple swap - just exchange positions of two items
     const newCategories = [...categories];
     
-    // Swap the two categories
-    const temp = newCategories[dragIndex];
-    newCategories[dragIndex] = newCategories[dropIndex];
-    newCategories[dropIndex] = temp;
+    // Get the two categories to swap
+    const draggedCategory = { ...newCategories[dragIndex] };
+    const targetCategory = { ...newCategories[dropIndex] };
+    
+    // Swap their sort_order values
+    const tempSortOrder = draggedCategory.sort_order;
+    draggedCategory.sort_order = targetCategory.sort_order;
+    targetCategory.sort_order = tempSortOrder;
+    
+    // Update array
+    newCategories[dragIndex] = targetCategory;
+    newCategories[dropIndex] = draggedCategory;
 
-    // Update sort_order for only the two swapped categories
-    const updatedCategories = newCategories.map((cat, idx) => ({
-      ...cat,
-      sort_order: idx
-    }));
+    // Update local state immediately for visual feedback
+    setCategories(newCategories);
 
-    setCategories(updatedCategories);
-
-    // Save only the two changed categories to database
+    // Save both categories to database
     try {
-      await Promise.all([
-        fetch(`/api/tour-categories?id=${updatedCategories[dragIndex].id}`, {
+      const responses = await Promise.all([
+        fetch(`/api/tour-categories?id=${draggedCategory.id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(updatedCategories[dragIndex])
+          body: JSON.stringify(draggedCategory)
         }),
-        fetch(`/api/tour-categories?id=${updatedCategories[dropIndex].id}`, {
+        fetch(`/api/tour-categories?id=${targetCategory.id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(updatedCategories[dropIndex])
+          body: JSON.stringify(targetCategory)
         })
       ]);
+
+      // Check if both requests succeeded
+      const allSucceeded = await Promise.all(responses.map(r => r.ok));
+      
+      if (!allSucceeded.every(success => success)) {
+        throw new Error('One or more updates failed');
+      }
+
+      console.log('Successfully swapped categories');
     } catch (err) {
       console.error('Error swapping categories:', err);
       setError('Failed to swap categories');
