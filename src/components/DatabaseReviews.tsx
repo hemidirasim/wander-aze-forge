@@ -1,9 +1,8 @@
 import React from 'react';
 import { useApi } from '@/hooks/useApi';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Star, ExternalLink } from 'lucide-react';
+import { ExternalLink } from 'lucide-react';
 
 interface Review {
   id: number;
@@ -62,7 +61,7 @@ const DatabaseReviews = () => {
       <div className="container mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-            What Our Travelers Say
+            What People Say About Us
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
             Don't just take our word for it - hear from the adventurers who have experienced Azerbaijan with us
@@ -74,28 +73,9 @@ const DatabaseReviews = () => {
             {reviews.map((review) => (
               <Card key={review.id} className="group hover:shadow-elevated transition-all duration-300 overflow-hidden border-0 bg-card/80 backdrop-blur-sm hover:scale-105">
                 <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <CardTitle className="text-lg font-bold text-foreground group-hover:text-primary transition-colors">
-                        {review.name}
-                      </CardTitle>
-                      <div className="flex items-center gap-2 mt-2">
-                        <div className="flex items-center">
-                          {[...Array(5)].map((_, i) => (
-                            <Star
-                              key={i}
-                              className={`w-4 h-4 ${
-                                i < review.rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
-                              }`}
-                            />
-                          ))}
-                        </div>
-                        <Badge variant="default" className="text-xs">
-                          {review.rating} Star{review.rating > 1 ? 's' : ''}
-                        </Badge>
-                      </div>
-                    </div>
-                  </div>
+                  <CardTitle className="text-lg font-bold text-foreground group-hover:text-primary transition-colors">
+                    {review.name}
+                  </CardTitle>
                 </CardHeader>
                 
                 <CardContent>
