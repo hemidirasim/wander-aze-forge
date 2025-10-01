@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Mountain, Menu, X, Binoculars, Users, Wrench, ChevronDown, Search } from 'lucide-react';
+import { Mountain, Menu, X, Binoculars, Users, Wrench, ChevronDown, Search, User, LogOut } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { scrollToTopInstant } from '@/hooks/useScrollToTop';
 import SearchModal from '@/components/SearchModal';
@@ -25,11 +25,18 @@ const DatabaseNavigation = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [categories, setCategories] = useState<DatabaseTourCategory[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   // Fetch categories from database
   useEffect(() => {
     fetchCategories();
+    checkAuthStatus();
   }, []);
+
+  const checkAuthStatus = () => {
+    const token = localStorage.getItem('authToken');
+    setIsLoggedIn(!!token);
+  };
 
   // Close tours dropdown when clicking outside
   useEffect(() => {
@@ -254,16 +261,47 @@ const DatabaseNavigation = () => {
               </Link>
             ))}
             
-            <Button 
-              variant="adventure" 
-              asChild
-              onMouseEnter={() => setIsToursOpen(false)}
-            >
-              <Link to="/contact" onClick={() => {
-                scrollToTopInstant();
-                setIsToursOpen(false);
-              }}>Book Now</Link>
-            </Button>
+            {/* Desktop Auth Buttons */}
+            {isLoggedIn ? (
+              <div className="flex items-center gap-2">
+                <Button variant="outline" asChild>
+                  <Link to="/dashboard" onClick={() => {
+                    scrollToTopInstant();
+                    setIsToursOpen(false);
+                  }}>
+                    <User className="w-4 h-4 mr-2" />
+                    Dashboard
+                  </Link>
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  className="text-muted-foreground hover:text-foreground"
+                  onClick={() => {
+                    localStorage.removeItem('authToken');
+                    setIsLoggedIn(false);
+                    window.location.href = '/';
+                  }}
+                >
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Logout
+                </Button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Button variant="outline" asChild>
+                  <Link to="/login" onClick={() => {
+                    scrollToTopInstant();
+                    setIsToursOpen(false);
+                  }}>Login</Link>
+                </Button>
+                <Button variant="adventure" asChild>
+                  <Link to="/register" onClick={() => {
+                    scrollToTopInstant();
+                    setIsToursOpen(false);
+                  }}>Sign Up</Link>
+                </Button>
+              </div>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -363,12 +401,48 @@ const DatabaseNavigation = () => {
                 </div>
               </Button>
               
-              <Button variant="adventure" className="w-fit mt-4" asChild>
-                <Link to="/contact" onClick={() => {
-                  setIsMenuOpen(false);
-                  scrollToTopInstant();
-                }}>Book Now</Link>
-              </Button>
+              {/* Auth Buttons */}
+              {isLoggedIn ? (
+                <div className="flex flex-col gap-2 mt-4">
+                  <Button variant="outline" className="w-fit" asChild>
+                    <Link to="/dashboard" onClick={() => {
+                      setIsMenuOpen(false);
+                      scrollToTopInstant();
+                    }}>
+                      <User className="w-4 h-4 mr-2" />
+                      Dashboard
+                    </Link>
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    className="w-fit text-muted-foreground hover:text-foreground"
+                    onClick={() => {
+                      localStorage.removeItem('authToken');
+                      setIsLoggedIn(false);
+                      setIsMenuOpen(false);
+                      window.location.href = '/';
+                    }}
+                  >
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Logout
+                  </Button>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-2 mt-4">
+                  <Button variant="outline" className="w-fit" asChild>
+                    <Link to="/login" onClick={() => {
+                      setIsMenuOpen(false);
+                      scrollToTopInstant();
+                    }}>Login</Link>
+                  </Button>
+                  <Button variant="adventure" className="w-fit" asChild>
+                    <Link to="/register" onClick={() => {
+                      setIsMenuOpen(false);
+                      scrollToTopInstant();
+                    }}>Sign Up</Link>
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
         )}
