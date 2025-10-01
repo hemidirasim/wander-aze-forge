@@ -142,69 +142,68 @@ const BlogDetail = () => {
     <div className="min-h-screen bg-background">
       <DatabaseNavigation />
       
-      {/* Hero Section */}
-      <section className="pt-24 pb-16 px-4 bg-gradient-mountain">
+      {/* Back Button */}
+      <section className="pt-20 px-4">
         <div className="container mx-auto">
-          <div className="mb-8">
-            <Button variant="ghost" asChild className="text-white hover:text-white/80">
-              <Link to="/blog" className="flex items-center">
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Blog
-              </Link>
-            </Button>
-          </div>
-          
-          <div className="max-w-4xl">
-            <div className="mb-6">
-              {post.category && (
-                <Badge variant="secondary" className="bg-white/20 text-white border-white/30 mb-4">
-                  {post.category}
-                </Badge>
-              )}
-            </div>
-            
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
-              {post.title}
-            </h1>
-            
-            <div className="flex flex-wrap items-center gap-6 text-white/90 mb-8">
-              <div className="flex items-center space-x-2">
-                <User className="w-5 h-5" />
-                <span className="font-medium">{post.author}</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Calendar className="w-5 h-5" />
-                <span>{new Date(post.created_at).toLocaleDateString('en-US', { 
-                  year: 'numeric', 
-                  month: 'long', 
-                  day: 'numeric' 
-                })}</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Clock className="w-5 h-5" />
-                <span>5 min read</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <BookOpen className="w-5 h-5" />
-                <span>Blog Post</span>
-              </div>
-            </div>
-          </div>
+          <Button variant="ghost" asChild className="mb-6">
+            <Link to="/blog" className="flex items-center">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Blog
+            </Link>
+          </Button>
         </div>
       </section>
 
-      {/* Featured Image */}
-      {post.featured_image && (
-        <section className="py-8 px-4">
-          <div className="container mx-auto max-w-4xl">
-            <img 
-              src={post.featured_image} 
-              alt={post.title}
-              className="w-full h-96 object-cover rounded-lg shadow-lg"
-            />
+      {/* Hero Section - Split Layout */}
+      <section className="pb-12 px-4">
+        <div className="container mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Left Side - Title and Meta */}
+            <div className="space-y-6">
+              {post.category && (
+                <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20">
+                  {post.category}
+                </Badge>
+              )}
+              
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight">
+                {post.title}
+              </h1>
+              
+              <div className="flex flex-wrap items-center gap-6 text-muted-foreground">
+                <div className="flex items-center space-x-2">
+                  <User className="w-5 h-5" />
+                  <span className="font-medium">{post.author}</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Calendar className="w-5 h-5" />
+                  <span>{new Date(post.created_at).toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                  })}</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Clock className="w-5 h-5" />
+                  <span>5 min read</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Side - Featured Image */}
+            {post.featured_image && (
+              <div className="relative h-96 lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl">
+                <img 
+                  src={post.featured_image} 
+                  alt={post.title}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+              </div>
+            )}
           </div>
-        </section>
-      )}
+        </div>
+      </section>
 
       {/* Article Content */}
       <section className="py-16 px-4">
