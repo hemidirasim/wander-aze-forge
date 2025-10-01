@@ -237,80 +237,81 @@ const AdminTourCategories = () => {
 
   const handleDrop = async (e: React.DragEvent, dropIndex: number) => {
     e.preventDefault();
+    e.stopPropagation();
+    
     const dragIndex = parseInt(e.dataTransfer.getData('text/html'));
+    
+    console.log('=== DRAG & DROP DEBUG ===');
+    console.log('Drag index:', dragIndex);
+    console.log('Drop index:', dropIndex);
     
     setDraggedIndex(null);
     setDragOverIndex(null);
     
-    if (dragIndex === dropIndex || isNaN(dragIndex)) return;
-
-    // Validate indices
-    if (dragIndex < 0 || dragIndex >= categories.length || dropIndex < 0 || dropIndex >= categories.length) {
-      console.error('Invalid drag/drop indices:', { dragIndex, dropIndex, categoriesLength: categories.length });
+    if (dragIndex === dropIndex || isNaN(dragIndex)) {
+      console.log('Same position or invalid index, skipping');
       return;
     }
 
-    console.log('Swapping:', { 
-      from: categories[dragIndex].name, 
-      fromOrder: categories[dragIndex].sort_order,
-      to: categories[dropIndex].name, 
-      toOrder: categories[dropIndex].sort_order 
-    });
+    // Validate indices
+    if (dragIndex < 0 || dragIndex >= categories.length || dropIndex < 0 || dropIndex >= categories.length) {
+      console.error('Invalid indices:', { dragIndex, dropIndex, length: categories.length });
+      return;
+    }
 
-    // Get the two categories to swap
-    const draggedCategory = { ...categories[dragIndex] };
-    const targetCategory = { ...categories[dropIndex] };
+    const cat1 = categories[dragIndex];
+    const cat2 = categories[dropIndex];
     
-    // Swap their sort_order values
-    const tempSortOrder = draggedCategory.sort_order;
-    draggedCategory.sort_order = targetCategory.sort_order;
-    targetCategory.sort_order = tempSortOrder;
-    
-    console.log('After swap:', { 
-      dragged: draggedCategory.name, 
-      draggedOrder: draggedCategory.sort_order,
-      target: targetCategory.name, 
-      targetOrder: targetCategory.sort_order 
-    });
+    console.log('Swapping categories:');
+    console.log('Cat 1:', { name: cat1.name, id: cat1.id, sort_order: cat1.sort_order });
+    console.log('Cat 2:', { name: cat2.name, id: cat2.id, sort_order: cat2.sort_order });
 
-    // Save both categories to database FIRST
+    // Create updated versions with swapped sort_order
+    const updatedCat1 = { ...cat1, sort_order: cat2.sort_order };
+    const updatedCat2 = { ...cat2, sort_order: cat1.sort_order };
+    
+    console.log('After swap:');
+    console.log('Updated Cat 1:', { name: updatedCat1.name, sort_order: updatedCat1.sort_order });
+    console.log('Updated Cat 2:', { name: updatedCat2.name, sort_order: updatedCat2.sort_order });
+
+    // Update database
     try {
-      const responses = await Promise.all([
-        fetch(`/api/tour-categories?id=${draggedCategory.id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(draggedCategory)
-        }),
-        fetch(`/api/tour-categories?id=${targetCategory.id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(targetCategory)
-        })
-      ]);
-
-      // Check if both requests succeeded
-      const results = await Promise.all(responses.map(async r => {
-        if (!r.ok) {
-          const errorData = await r.json();
-          console.error('Update failed:', errorData);
-          return false;
-        }
-        return true;
-      }));
+      console.log('Updating database...');
       
-      if (!results.every(success => success)) {
-        throw new Error('One or more updates failed');
+      const response1 = await fetch(`/api/tour-categories?id=${updatedCat1.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedCat1)
+      });
+      
+      const response2 = await fetch(`/api/tour-categories?id=${updatedCat2.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedCat2)
+      });
+
+      const result1 = await response1.json();
+      const result2 = await response2.json();
+      
+      console.log('API Response 1:', result1);
+      console.log('API Response 2:', result2);
+
+      if (!response1.ok || !response2.ok) {
+        throw new Error('Update failed');
       }
 
-      console.log('Successfully swapped categories in database');
+      console.log('Database updated successfully');
+      console.log('Fetching fresh data...');
       
-      // Refresh from database to get accurate state
+      // Refresh from database
       await fetchCategories();
+      
+      console.log('=== SWAP COMPLETE ===');
       
     } catch (err) {
       console.error('Error swapping categories:', err);
-      setError('Failed to swap categories');
-      await fetchCategories(); // Revert on error
+      setError('Failed to swap categories. Check console for details.');
+      await fetchCategories();
     }
   };
 
