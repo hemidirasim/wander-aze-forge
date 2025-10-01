@@ -68,7 +68,10 @@ const AdminTourCategories = () => {
       const data = await response.json();
       
       if (data.success) {
-        setCategories(data.data);
+        // Sort by sort_order to display correctly
+        const sortedCategories = data.data.sort((a: TourCategory, b: TourCategory) => a.sort_order - b.sort_order);
+        setCategories(sortedCategories);
+        console.log('Fetched and sorted categories:', sortedCategories.map((c: TourCategory) => ({ name: c.name, sort_order: c.sort_order })));
       } else {
         setError('Failed to fetch categories');
       }
@@ -247,26 +250,30 @@ const AdminTourCategories = () => {
       return;
     }
 
-    // Simple swap - just exchange positions of two items
-    const newCategories = [...categories];
-    
+    console.log('Swapping:', { 
+      from: categories[dragIndex].name, 
+      fromOrder: categories[dragIndex].sort_order,
+      to: categories[dropIndex].name, 
+      toOrder: categories[dropIndex].sort_order 
+    });
+
     // Get the two categories to swap
-    const draggedCategory = { ...newCategories[dragIndex] };
-    const targetCategory = { ...newCategories[dropIndex] };
+    const draggedCategory = { ...categories[dragIndex] };
+    const targetCategory = { ...categories[dropIndex] };
     
     // Swap their sort_order values
     const tempSortOrder = draggedCategory.sort_order;
     draggedCategory.sort_order = targetCategory.sort_order;
     targetCategory.sort_order = tempSortOrder;
     
-    // Update array
-    newCategories[dragIndex] = targetCategory;
-    newCategories[dropIndex] = draggedCategory;
+    console.log('After swap:', { 
+      dragged: draggedCategory.name, 
+      draggedOrder: draggedCategory.sort_order,
+      target: targetCategory.name, 
+      targetOrder: targetCategory.sort_order 
+    });
 
-    // Update local state immediately for visual feedback
-    setCategories(newCategories);
-
-    // Save both categories to database
+    // Save both categories to database FIRST
     try {
       const responses = await Promise.all([
         fetch(`/api/tour-categories?id=${draggedCategory.id}`, {
@@ -282,13 +289,24 @@ const AdminTourCategories = () => {
       ]);
 
       // Check if both requests succeeded
-      const allSucceeded = await Promise.all(responses.map(r => r.ok));
+      const results = await Promise.all(responses.map(async r => {
+        if (!r.ok) {
+          const errorData = await r.json();
+          console.error('Update failed:', errorData);
+          return false;
+        }
+        return true;
+      }));
       
-      if (!allSucceeded.every(success => success)) {
+      if (!results.every(success => success)) {
         throw new Error('One or more updates failed');
       }
 
-      console.log('Successfully swapped categories');
+      console.log('Successfully swapped categories in database');
+      
+      // Refresh from database to get accurate state
+      await fetchCategories();
+      
     } catch (err) {
       console.error('Error swapping categories:', err);
       setError('Failed to swap categories');
