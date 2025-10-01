@@ -62,15 +62,6 @@ interface ExtendedTourForm {
   groupSize: string;
   location: string;
   
-  // Pricing Policy
-  pricing_policy: string;
-  base_price: string;
-  min_participants: number;
-  max_participants: number;
-  bulk_discount_threshold: number;
-  bulk_discount_percentage: number;
-  group_required_min: number;
-  group_required_max: number;
   
   // Overview
   overview: string;
@@ -149,15 +140,6 @@ const AdminTourFormExtended: React.FC = () => {
     groupSize: '4-8 people',
     location: 'Gabala, Azerbaijan',
     
-    // Pricing Policy
-    pricing_policy: 'fixed',
-    base_price: '150',
-    min_participants: 1,
-    max_participants: 20,
-    bulk_discount_threshold: 5,
-    bulk_discount_percentage: 0,
-    group_required_min: 5,
-    group_required_max: 10,
     
     // Overview
     overview: 'Join us for a wonderful test tour through the beautiful mountains of Azerbaijan. This is a perfect opportunity to test our system.',
@@ -1072,131 +1054,6 @@ const AdminTourFormExtended: React.FC = () => {
             </CardContent>
           </Card>
 
-          {/* Pricing Policy */}
-          <Card className="shadow-lg">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <DollarSign className="w-5 h-5 text-green-500" />
-                <span>Pricing Policy</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div>
-                <Label htmlFor="pricing_policy">Pricing Policy Type</Label>
-                <Select 
-                  value={formData.pricing_policy} 
-                  onValueChange={(value) => handleInputChange('pricing_policy', value)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select pricing policy" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="fixed">Fixed Price (Same price for all participants)</SelectItem>
-                    <SelectItem value="bulk_discount">Bulk Discount (Discount for larger groups)</SelectItem>
-                    <SelectItem value="group_required">Group Required (Minimum group size required)</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="base_price">Base Price (USD)</Label>
-                  <Input
-                    id="base_price"
-                    type="number"
-                    value={formData.base_price}
-                    onChange={(e) => handleInputChange('base_price', e.target.value)}
-                    placeholder="150"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="min_participants">Minimum Participants</Label>
-                  <Input
-                    id="min_participants"
-                    type="number"
-                    value={formData.min_participants}
-                    onChange={(e) => handleInputChange('min_participants', parseInt(e.target.value) || 1)}
-                    placeholder="1"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="max_participants">Maximum Participants</Label>
-                  <Input
-                    id="max_participants"
-                    type="number"
-                    value={formData.max_participants}
-                    onChange={(e) => handleInputChange('max_participants', parseInt(e.target.value) || 20)}
-                    placeholder="20"
-                  />
-                </div>
-                {formData.pricing_policy === 'bulk_discount' && (
-                  <div>
-                    <Label htmlFor="bulk_discount_threshold">Bulk Discount Threshold</Label>
-                    <Input
-                      id="bulk_discount_threshold"
-                      type="number"
-                      value={formData.bulk_discount_threshold}
-                      onChange={(e) => handleInputChange('bulk_discount_threshold', parseInt(e.target.value) || 5)}
-                      placeholder="5"
-                    />
-                  </div>
-                )}
-              </div>
-
-              {formData.pricing_policy === 'bulk_discount' && (
-                <div>
-                  <Label htmlFor="bulk_discount_percentage">Bulk Discount Percentage</Label>
-                  <Input
-                    id="bulk_discount_percentage"
-                    type="number"
-                    value={formData.bulk_discount_percentage}
-                    onChange={(e) => handleInputChange('bulk_discount_percentage', parseFloat(e.target.value) || 0)}
-                    placeholder="10"
-                  />
-                  <p className="text-sm text-gray-600 mt-1">
-                    Example: 10% discount when 5+ participants
-                  </p>
-                </div>
-              )}
-
-              {formData.pricing_policy === 'group_required' && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="group_required_min">Minimum Group Size</Label>
-                    <Input
-                      id="group_required_min"
-                      type="number"
-                      value={formData.group_required_min}
-                      onChange={(e) => handleInputChange('group_required_min', parseInt(e.target.value) || 5)}
-                      placeholder="5"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="group_required_max">Maximum Group Size</Label>
-                    <Input
-                      id="group_required_max"
-                      type="number"
-                      value={formData.group_required_max}
-                      onChange={(e) => handleInputChange('group_required_max', parseInt(e.target.value) || 10)}
-                      placeholder="10"
-                    />
-                  </div>
-                </div>
-              )}
-
-              <div className="bg-blue-50 p-4 rounded-lg">
-                <h4 className="font-medium text-blue-900 mb-2">Pricing Policy Examples:</h4>
-                <ul className="text-sm text-blue-800 space-y-1">
-                  <li><strong>Fixed:</strong> $150 per person (1-20 participants)</li>
-                  <li><strong>Bulk Discount:</strong> $150 per person, 10% off for 5+ participants</li>
-                  <li><strong>Group Required:</strong> $150 per person, minimum 5 participants required</li>
-                </ul>
-              </div>
-            </CardContent>
-          </Card>
 
           {/* Status & Featured */}
           <Card className="shadow-lg">
