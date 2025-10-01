@@ -46,6 +46,7 @@ const AdminTourCategories = () => {
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [dragStartIndex, setDragStartIndex] = useState<number | null>(null);
   const [formData, setFormData] = useState({
     name: '',
     slug: '',
@@ -217,8 +218,11 @@ const AdminTourCategories = () => {
 
   const handleDragStart = (e: React.DragEvent, index: number) => {
     e.dataTransfer.effectAllowed = 'move';
-    e.dataTransfer.setData('text/html', index.toString());
+    e.dataTransfer.setData('text/plain', index.toString());
+    e.dataTransfer.setData('application/json', JSON.stringify({ index }));
     setDraggedIndex(index);
+    setDragStartIndex(index);
+    console.log('Drag started for index:', index);
   };
 
   const handleDragOver = (e: React.DragEvent, index: number) => {
@@ -234,13 +238,38 @@ const AdminTourCategories = () => {
   const handleDragEnd = () => {
     setDraggedIndex(null);
     setDragOverIndex(null);
+    setDragStartIndex(null);
   };
 
   const handleDrop = async (e: React.DragEvent, dropIndex: number) => {
     e.preventDefault();
     e.stopPropagation();
     
-    const dragIndex = parseInt(e.dataTransfer.getData('text/html'));
+    // Try multiple ways to get the drag index
+    let dragIndex: number;
+    
+    // First try state-based approach (most reliable)
+    if (dragStartIndex !== null) {
+      dragIndex = dragStartIndex;
+      console.log('Using state-based drag index:', dragIndex);
+    } else {
+      try {
+        // Try JSON data
+        const jsonData = e.dataTransfer.getData('application/json');
+        if (jsonData) {
+          const parsed = JSON.parse(jsonData);
+          dragIndex = parsed.index;
+          console.log('Using JSON drag index:', dragIndex);
+        } else {
+          // Fallback to text/plain
+          dragIndex = parseInt(e.dataTransfer.getData('text/plain'));
+          console.log('Using text drag index:', dragIndex);
+        }
+      } catch (err) {
+        console.error('Error parsing drag data:', err);
+        dragIndex = NaN;
+      }
+    }
     
     console.log('=== DRAG & DROP DEBUG ===');
     console.log('Drag index:', dragIndex);
