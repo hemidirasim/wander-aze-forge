@@ -70,12 +70,17 @@ const BookTour = () => {
 
   const fetchTourDetails = async () => {
     try {
+      console.log('Fetching tour details for ID:', id);
       const response = await fetch(`/api/tour-detail-simple?id=${id}`);
       const data = await response.json();
       
+      console.log('Tour API response:', data);
+      
       if (data.success) {
+        console.log('Tour data loaded:', data.data);
         setTour(data.data);
       } else {
+        console.error('Tour not found:', data);
         toast({
           title: "Tour Not Found",
           description: "The tour you're looking for doesn't exist.",
@@ -295,7 +300,7 @@ const BookTour = () => {
                     <div className="bg-primary/10 p-4 rounded-lg">
                       <div className="flex items-center justify-between">
                         <span className="text-lg font-semibold">Price per person:</span>
-                        <span className="text-3xl font-bold text-primary">${tour.price}</span>
+                        <span className="text-3xl font-bold text-primary">${tour?.price || 0}</span>
                       </div>
                       <div className="text-sm text-muted-foreground mt-2">
                         Total price will be calculated based on number of participants
@@ -392,11 +397,11 @@ const BookTour = () => {
                         <div className="flex items-center justify-between">
                           <span className="text-lg font-semibold">Total Price:</span>
                           <span className="text-3xl font-bold text-primary">
-                            ${tour.price * formData.participants}
+                            ${(tour?.price || 0) * formData.participants}
                           </span>
                         </div>
                         <div className="text-sm text-muted-foreground mt-2">
-                          ${tour.price} × {formData.participants} participant{formData.participants > 1 ? 's' : ''}
+                          ${tour?.price || 0} × {formData.participants} participant{formData.participants > 1 ? 's' : ''}
                         </div>
                       </div>
                       
