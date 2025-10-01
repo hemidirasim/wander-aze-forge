@@ -287,15 +287,6 @@ const ToursByCategory = () => {
             </div>
           ) : (
             <>
-              <div className="text-center mb-12">
-                <h2 className="text-4xl font-bold text-foreground mb-4 capitalize">
-                  {category.name} Adventures
-                </h2>
-                <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                  Choose from our carefully crafted {category.name.toLowerCase()} experiences
-                </p>
-              </div>
-
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {tours.map((tour) => (
                   <Card key={tour.id} className="group hover:shadow-elevated transition-all duration-300 overflow-hidden border-0 bg-card/80 backdrop-blur-sm">
