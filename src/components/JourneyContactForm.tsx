@@ -15,12 +15,16 @@ const formSchema = z.object({
   lastName: z.string().min(2, 'Last name must be at least 2 characters'),
   email: z.string().email('Please enter a valid email address'),
   phone: z.string().optional(),
-  tourCategory: z.string().optional(),
+  country: z.string().min(1, 'Please select your country'),
+  tourCategory: z.string().min(1, 'Please select a tour category'),
   tourType: z.string().optional(),
-  groupSize: z.string().optional(),
-  dates: z.string().optional(),
+  groupSize: z.string().min(1, 'Please enter group size'),
+  dates: z.string().min(1, 'Please enter your preferred dates'),
   message: z.string().min(10, 'Please tell us more about your travel plans'),
-  newsletter: z.boolean().optional()
+  newsletter: z.boolean().optional(),
+  terms: z.boolean().refine((val) => val === true, {
+    message: 'You must accept the terms and conditions',
+  })
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -39,12 +43,14 @@ const JourneyContactForm = () => {
       lastName: '',
       email: '',
       phone: '',
+      country: '',
       tourCategory: '',
       tourType: '',
       groupSize: '',
       dates: '',
       message: '',
-      newsletter: false
+      newsletter: false,
+      terms: false
     }
   });
 
@@ -165,13 +171,77 @@ const JourneyContactForm = () => {
                     )}
                   />
 
+                  {/* Country */}
+                  <FormField
+                    control={form.control}
+                    name="country"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-white font-medium">Country *</FormLabel>
+                        <FormControl>
+                          <select 
+                            {...field}
+                            className="w-full p-3 border border-white/30 rounded-md bg-white/20 text-white h-12"
+                          >
+                            <option value="" className="bg-gray-800">Select your country</option>
+                            <option value="US" className="bg-gray-800">United States</option>
+                            <option value="GB" className="bg-gray-800">United Kingdom</option>
+                            <option value="CA" className="bg-gray-800">Canada</option>
+                            <option value="AU" className="bg-gray-800">Australia</option>
+                            <option value="DE" className="bg-gray-800">Germany</option>
+                            <option value="FR" className="bg-gray-800">France</option>
+                            <option value="IT" className="bg-gray-800">Italy</option>
+                            <option value="ES" className="bg-gray-800">Spain</option>
+                            <option value="NL" className="bg-gray-800">Netherlands</option>
+                            <option value="BE" className="bg-gray-800">Belgium</option>
+                            <option value="CH" className="bg-gray-800">Switzerland</option>
+                            <option value="AT" className="bg-gray-800">Austria</option>
+                            <option value="SE" className="bg-gray-800">Sweden</option>
+                            <option value="NO" className="bg-gray-800">Norway</option>
+                            <option value="DK" className="bg-gray-800">Denmark</option>
+                            <option value="FI" className="bg-gray-800">Finland</option>
+                            <option value="PL" className="bg-gray-800">Poland</option>
+                            <option value="CZ" className="bg-gray-800">Czech Republic</option>
+                            <option value="RO" className="bg-gray-800">Romania</option>
+                            <option value="GR" className="bg-gray-800">Greece</option>
+                            <option value="PT" className="bg-gray-800">Portugal</option>
+                            <option value="IE" className="bg-gray-800">Ireland</option>
+                            <option value="TR" className="bg-gray-800">Turkey</option>
+                            <option value="RU" className="bg-gray-800">Russia</option>
+                            <option value="UA" className="bg-gray-800">Ukraine</option>
+                            <option value="AZ" className="bg-gray-800">Azerbaijan</option>
+                            <option value="GE" className="bg-gray-800">Georgia</option>
+                            <option value="AM" className="bg-gray-800">Armenia</option>
+                            <option value="KZ" className="bg-gray-800">Kazakhstan</option>
+                            <option value="UZ" className="bg-gray-800">Uzbekistan</option>
+                            <option value="JP" className="bg-gray-800">Japan</option>
+                            <option value="CN" className="bg-gray-800">China</option>
+                            <option value="KR" className="bg-gray-800">South Korea</option>
+                            <option value="IN" className="bg-gray-800">India</option>
+                            <option value="SG" className="bg-gray-800">Singapore</option>
+                            <option value="AE" className="bg-gray-800">United Arab Emirates</option>
+                            <option value="SA" className="bg-gray-800">Saudi Arabia</option>
+                            <option value="IL" className="bg-gray-800">Israel</option>
+                            <option value="BR" className="bg-gray-800">Brazil</option>
+                            <option value="AR" className="bg-gray-800">Argentina</option>
+                            <option value="MX" className="bg-gray-800">Mexico</option>
+                            <option value="ZA" className="bg-gray-800">South Africa</option>
+                            <option value="NZ" className="bg-gray-800">New Zealand</option>
+                            <option value="OTHER" className="bg-gray-800">Other</option>
+                          </select>
+                        </FormControl>
+                        <FormMessage className="text-red-200" />
+                      </FormItem>
+                    )}
+                  />
+
                   {/* Tour Category */}
                   <FormField
                     control={form.control}
                     name="tourCategory"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-white font-medium">Tour Category</FormLabel>
+                        <FormLabel className="text-white font-medium">Tour Category *</FormLabel>
                         <FormControl>
                           <select 
                             {...field}
@@ -236,7 +306,7 @@ const JourneyContactForm = () => {
                     name="groupSize"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-white font-medium">Group Size</FormLabel>
+                        <FormLabel className="text-white font-medium">Group Size *</FormLabel>
                         <FormControl>
                           <Input {...field} type="number" min="1" max="20" className="bg-white/20 border-white/30 text-white placeholder:text-white/70 h-12" placeholder="Number of travelers" />
                         </FormControl>
@@ -251,7 +321,7 @@ const JourneyContactForm = () => {
                     name="dates"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-white font-medium">Preferred Dates</FormLabel>
+                        <FormLabel className="text-white font-medium">Preferred Dates *</FormLabel>
                         <FormControl>
                           <Input {...field} className="bg-white/20 border-white/30 text-white placeholder:text-white/70 h-12" placeholder="e.g., June 15-20, 2024" />
                         </FormControl>
@@ -297,6 +367,28 @@ const JourneyContactForm = () => {
                       <FormLabel className="text-sm text-white/90 cursor-pointer">
                         Subscribe to our newsletter for adventure tips and tour updates
                       </FormLabel>
+                    </FormItem>
+                  )}
+                />
+
+                {/* Terms & Conditions Checkbox */}
+                <FormField
+                  control={form.control}
+                  name="terms"
+                  render={({ field }) => (
+                    <FormItem className="flex items-start space-x-2">
+                      <FormControl>
+                        <input 
+                          type="checkbox" 
+                          {...field}
+                          checked={field.value}
+                          className="rounded mt-1"
+                        />
+                      </FormControl>
+                      <FormLabel className="text-sm text-white/90 cursor-pointer">
+                        I agree to the <a href="/terms" className="text-white hover:underline font-semibold">Terms & Conditions</a> and <a href="/privacy" className="text-white hover:underline font-semibold">Privacy Policy</a> *
+                      </FormLabel>
+                      <FormMessage className="text-red-200" />
                     </FormItem>
                   )}
                 />
