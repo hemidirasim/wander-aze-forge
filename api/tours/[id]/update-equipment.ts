@@ -87,35 +87,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       whatToBringArray
     });
 
-    // Update tour equipment in database using JSONB format
+    // Update tour equipment in database using direct array format
     const query = `
       UPDATE tours SET
-        provided_equipment = $1::jsonb,
-        what_to_bring = $2::jsonb,
+        provided_equipment = $1,
+        what_to_bring = $2,
         updated_at = NOW()
       WHERE id = $3
       RETURNING *
     `;
 
-    // Safely stringify arrays
-    let providedEquipmentJson, whatToBringJson;
-    
-    try {
-      providedEquipmentJson = JSON.stringify(providedEquipmentArray);
-      whatToBringJson = JSON.stringify(whatToBringArray);
-      console.log('JSON stringify successful:', { providedEquipmentJson, whatToBringJson });
-    } catch (jsonError) {
-      console.error('JSON stringify error:', jsonError);
-      return res.status(500).json({
-        success: false,
-        error: 'Failed to process equipment data',
-        message: 'JSON serialization failed'
-      });
-    }
-
+    // Use arrays directly instead of JSON strings
     const values = [
-      providedEquipmentJson,
-      whatToBringJson,
+      providedEquipmentArray,
+      whatToBringArray,
       id
     ];
 
