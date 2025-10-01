@@ -7,15 +7,10 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { 
-  Calendar, 
-  Users, 
-  DollarSign, 
-  MapPin, 
   Clock, 
-  User, 
-  Phone,
-  CheckCircle,
-  ArrowLeft
+  MapPin, 
+  ArrowLeft, 
+  CheckCircle 
 } from 'lucide-react';
 import DatabaseNavigation from '@/components/DatabaseNavigation';
 import Footer from '@/components/Footer';
@@ -23,25 +18,22 @@ import Footer from '@/components/Footer';
 interface Tour {
   id: number;
   title: string;
-  category: string;
   description: string;
-  duration: string;
-  price: number;
   image_url: string;
-  highlights: string[];
-  included: string[];
-  not_included: string[];
+  price: number;
+  duration: string;
+  category: string;
 }
 
 const BookTour = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
+  
   const [tour, setTour] = useState<Tour | null>(null);
   const [loading, setLoading] = useState(true);
   const [booking, setBooking] = useState(false);
-  const [token, setToken] = useState<string | null>(null);
-
+  
   const [formData, setFormData] = useState({
     tourDate: '',
     participants: 1,
@@ -50,10 +42,10 @@ const BookTour = () => {
     emergencyContactPhone: ''
   });
 
+  const token = localStorage.getItem('authToken');
+
   useEffect(() => {
-    // Check authentication
-    const storedToken = localStorage.getItem('authToken');
-    if (!storedToken) {
+    if (!token) {
       toast({
         title: "Authentication Required",
         description: "Please log in to book a tour.",
@@ -62,11 +54,9 @@ const BookTour = () => {
       navigate('/login');
       return;
     }
-    setToken(storedToken);
 
-    // Fetch tour details
     fetchTourDetails();
-  }, [id, navigate, toast]);
+  }, [id, navigate, toast, token]);
 
   const fetchTourDetails = async () => {
     try {
@@ -110,14 +100,15 @@ const BookTour = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Validation
+    setBooking(true);
+
     if (!formData.tourDate) {
       toast({
         title: "Date Required",
         description: "Please select a tour date.",
         variant: "destructive"
       });
+      setBooking(false);
       return;
     }
 
@@ -127,6 +118,7 @@ const BookTour = () => {
         description: "Number of participants must be between 1 and 20.",
         variant: "destructive"
       });
+      setBooking(false);
       return;
     }
 
@@ -140,8 +132,6 @@ const BookTour = () => {
       return;
     }
 
-    setBooking(true);
-
     try {
       console.log('Submitting booking:', {
         tourId: tour?.id,
@@ -149,8 +139,10 @@ const BookTour = () => {
         tourCategory: tour?.category,
         tourDate: formData.tourDate,
         participants: formData.participants,
-        totalPrice: tour ? tour.price * formData.participants : 0,
-        token: token ? 'present' : 'missing'
+        totalPrice: (tour?.price || 0) * formData.participants,
+        specialRequests: formData.specialRequests,
+        emergencyContactName: formData.emergencyContactName,
+        emergencyContactPhone: formData.emergencyContactPhone
       });
 
       const response = await fetch('/api/bookings/create', {
@@ -165,27 +157,26 @@ const BookTour = () => {
           tourCategory: tour?.category,
           tourDate: formData.tourDate,
           participants: formData.participants,
-          totalPrice: tour ? tour.price * formData.participants : 0,
+          totalPrice: (tour?.price || 0) * formData.participants,
           specialRequests: formData.specialRequests,
           emergencyContactName: formData.emergencyContactName,
           emergencyContactPhone: formData.emergencyContactPhone
         })
       });
 
-      console.log('Response status:', response.status);
       const data = await response.json();
-      console.log('Response data:', data);
+      console.log('Booking response:', data);
 
       if (data.success) {
         toast({
           title: "Booking Successful!",
-          description: "Your tour has been booked. You will receive a confirmation email shortly.",
+          description: "Your tour has been booked successfully. You will receive a confirmation email shortly.",
         });
         navigate('/dashboard');
       } else {
         toast({
           title: "Booking Failed",
-          description: data.error || "Failed to book the tour.",
+          description: data.error || "Failed to book tour. Please try again.",
           variant: "destructive"
         });
       }
@@ -207,18 +198,19 @@ const BookTour = () => {
         <DatabaseNavigation />
         <div className="p-6 pt-24">
           <div className="container mx-auto">
-          <div className="animate-pulse">
-            <div className="h-8 bg-muted rounded w-1/3 mb-6"></div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <div className="space-y-4">
-                <div className="h-64 bg-muted rounded"></div>
-                <div className="h-4 bg-muted rounded w-3/4"></div>
-                <div className="h-4 bg-muted rounded w-1/2"></div>
-              </div>
-              <div className="space-y-4">
-                <div className="h-8 bg-muted rounded"></div>
-                <div className="h-4 bg-muted rounded"></div>
-                <div className="h-4 bg-muted rounded"></div>
+            <div className="animate-pulse">
+              <div className="h-8 bg-muted rounded w-1/3 mb-6"></div>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div className="space-y-4">
+                  <div className="h-64 bg-muted rounded"></div>
+                  <div className="h-4 bg-muted rounded w-3/4"></div>
+                  <div className="h-4 bg-muted rounded w-1/2"></div>
+                </div>
+                <div className="space-y-4">
+                  <div className="h-8 bg-muted rounded"></div>
+                  <div className="h-4 bg-muted rounded"></div>
+                  <div className="h-4 bg-muted rounded"></div>
+                </div>
               </div>
             </div>
           </div>
@@ -234,12 +226,13 @@ const BookTour = () => {
         <DatabaseNavigation />
         <div className="p-6 pt-24">
           <div className="container mx-auto text-center">
-          <h1 className="text-2xl font-bold text-foreground mb-4">Tour Not Found</h1>
-          <p className="text-muted-foreground mb-6">The tour you're looking for doesn't exist.</p>
-          <Button onClick={() => navigate('/tours')}>
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Tours
-          </Button>
+            <h1 className="text-2xl font-bold text-foreground mb-4">Tour Not Found</h1>
+            <p className="text-muted-foreground mb-6">The tour you're looking for doesn't exist.</p>
+            <Button onClick={() => navigate('/tours')}>
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Tours
+            </Button>
+          </div>
         </div>
         <Footer />
       </div>
@@ -252,21 +245,21 @@ const BookTour = () => {
       <div className="p-6 pt-24">
         <div className="container mx-auto">
           <div className="mb-6">
-          <Button 
-            variant="outline" 
-            onClick={() => navigate('/tours')}
-            className="mb-4"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Tours
-          </Button>
-          <h1 className="text-3xl font-bold text-foreground">Book Your Tour</h1>
-          <p className="text-muted-foreground">Complete your booking for {tour.title}</p>
-        </div>
+            <Button 
+              variant="outline" 
+              onClick={() => navigate('/tours')}
+              className="mb-4"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Tours
+            </Button>
+            <h1 className="text-3xl font-bold text-foreground">Book Your Tour</h1>
+            <p className="text-muted-foreground">Complete your booking for {tour.title}</p>
+          </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Tour Details */}
-          <div className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Tour Details */}
+            <div className="space-y-6">
               <Card>
                 <CardHeader>
                   <CardTitle className="text-xl">{tour.title}</CardTitle>
@@ -309,9 +302,9 @@ const BookTour = () => {
               </Card>
             </div>
 
-          {/* Booking Form */}
-          <div className="space-y-6">
-            <Card>
+            {/* Booking Form */}
+            <div className="space-y-6">
+              <Card>
                 <CardHeader>
                   <CardTitle>Booking Details</CardTitle>
                   <p className="text-sm text-muted-foreground">
@@ -405,29 +398,9 @@ const BookTour = () => {
                       
                       <div className="space-y-2">
                         <Button 
-                          type="button" 
-                          variant="outline"
-                          className="w-full"
-                          onClick={() => {
-                            console.log('Test button clicked');
-                            alert('Test button works!');
-                          }}
-                        >
-                          Test Button
-                        </Button>
-                        
-                        <Button 
                           type="submit" 
                           className="w-full h-12 text-base"
                           disabled={booking}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            console.log('Button clicked');
-                            console.log('Form data:', formData);
-                            console.log('Tour data:', tour);
-                            console.log('Token:', token ? 'present' : 'missing');
-                            handleSubmit(e);
-                          }}
                         >
                           {booking ? (
                             <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
