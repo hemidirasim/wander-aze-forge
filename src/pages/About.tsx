@@ -108,9 +108,28 @@ const About = () => {
     <div className="min-h-screen bg-background">
       <DatabaseNavigation />
       
+      {/* Hero Section */}
+      <section className="relative h-96 flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0">
+          <img 
+            src="/about-hero.webp"
+            alt="About Outtour Azerbaijan"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-black/50" />
+        </div>
+        <div className="relative z-10 text-center text-white px-4">
+          <h1 className="text-5xl md:text-7xl font-bold mb-6">
+            About Us
+          </h1>
+          <p className="text-xl md:text-2xl max-w-3xl mx-auto">
+            Connecting people with nature since 2014
+          </p>
+        </div>
+      </section>
 
       {/* Our Story */}
-      <section className="pt-32 pb-20 px-4">
+      <section className="pt-20 pb-20 px-4">
         <div className="container mx-auto max-w-5xl">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
