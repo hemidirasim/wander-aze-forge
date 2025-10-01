@@ -13,7 +13,8 @@ import {
   X,
   Camera,
   Image,
-  Upload
+  Upload,
+  Trash2
 } from 'lucide-react';
 
 interface Tour {
@@ -36,6 +37,9 @@ const AdminTourEditMedia: React.FC = () => {
     galleryImages: [] as string[],
     photographyService: ''
   });
+
+  const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   useEffect(() => {
     if (id) {
@@ -100,6 +104,65 @@ const AdminTourEditMedia: React.FC = () => {
     setFormData(prev => ({
       ...prev,
       galleryImages: prev.galleryImages.map((item, i) => i === index ? value : item)
+    }));
+  };
+
+  const handleFileUpload = async (files: FileList | null) => {
+    if (!files || files.length === 0) return;
+
+    setUploading(true);
+    setUploadProgress(0);
+
+    try {
+      const uploadPromises = Array.from(files).map(async (file, index) => {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('folder', 'tours/gallery');
+
+        const response = await fetch('/api/upload/image', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!response.ok) {
+          throw new Error(`Upload failed for ${file.name}`);
+        }
+
+        const data = await response.json();
+        setUploadProgress(((index + 1) / files.length) * 100);
+        
+        return data.url;
+      });
+
+      const uploadedUrls = await Promise.all(uploadPromises);
+      
+      setFormData(prev => ({
+        ...prev,
+        galleryImages: [...prev.galleryImages, ...uploadedUrls]
+      }));
+
+      toast({
+        title: "Upload Successful!",
+        description: `${uploadedUrls.length} image(s) uploaded successfully.`,
+      });
+
+    } catch (error) {
+      console.error('Upload error:', error);
+      toast({
+        title: "Upload Failed",
+        description: "Failed to upload images. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setUploading(false);
+      setUploadProgress(0);
+    }
+  };
+
+  const removeGalleryImage = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      galleryImages: prev.galleryImages.filter((_, i) => i !== index)
     }));
   };
 
@@ -223,39 +286,112 @@ const AdminTourEditMedia: React.FC = () => {
                   Gallery Images
                 </CardTitle>
                 <p className="text-sm text-muted-foreground">
-                  Add gallery images for the tour (URLs or file paths)
+                  Upload images or add image URLs for the tour gallery
                 </p>
               </CardHeader>
               <CardContent className="space-y-4">
-                {formData.galleryImages.map((image, index) => (
-                  <div key={index} className="flex items-center gap-2">
-                    <Input
-                      value={image}
-                      onChange={(e) => updateGalleryImage(index, e.target.value)}
-                      placeholder="Enter image URL or file path"
-                      className="flex-1"
-                    />
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => removeGalleryImage(index)}
-                      className="text-red-600 hover:text-red-700"
-                    >
-                      <X className="w-4 h-4" />
-                    </Button>
+                {/* File Upload Section */}
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                  <input
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    onChange={(e) => handleFileUpload(e.target.files)}
+                    className="hidden"
+                    id="file-upload"
+                    disabled={uploading}
+                  />
+                  <label
+                    htmlFor="file-upload"
+                    className="cursor-pointer flex flex-col items-center gap-2"
+                  >
+                    <Upload className="w-8 h-8 text-gray-400" />
+                    <span className="text-sm font-medium">
+                      {uploading ? 'Uploading...' : 'Click to upload images'}
+                    </span>
+                    <span className="text-xs text-gray-500">
+                      PNG, JPG, JPEG up to 10MB each
+                    </span>
+                  </label>
+                  
+                  {uploading && (
+                    <div className="mt-4">
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div 
+                          className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                          style={{ width: `${uploadProgress}%` }}
+                        ></div>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-1">
+                        {Math.round(uploadProgress)}% complete
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Gallery Images List */}
+                {formData.galleryImages.length > 0 && (
+                  <div className="space-y-2">
+                    <Label>Gallery Images ({formData.galleryImages.length})</Label>
+                    {formData.galleryImages.map((image, index) => (
+                      <div key={index} className="flex items-center gap-2 p-2 border rounded">
+                        <img 
+                          src={image} 
+                          alt={`Gallery ${index + 1}`}
+                          className="w-12 h-12 object-cover rounded"
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                          }}
+                        />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm truncate">{image}</p>
+                        </div>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => removeGalleryImage(index)}
+                          className="text-red-600 hover:text-red-700"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    ))}
                   </div>
-                ))}
-                
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={addGalleryImage}
-                  className="w-full"
-                >
-                  <Plus className="w-4 h-4 mr-2" />
-                  Add Gallery Image
-                </Button>
+                )}
+
+                {/* Manual URL Input */}
+                <div className="border-t pt-4">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={addGalleryImage}
+                    className="w-full"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add Image URL Manually
+                  </Button>
+                  
+                  {formData.galleryImages.map((image, index) => (
+                    <div key={index} className="flex items-center gap-2 mt-2">
+                      <Input
+                        value={image}
+                        onChange={(e) => updateGalleryImage(index, e.target.value)}
+                        placeholder="Enter image URL"
+                        className="flex-1"
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => removeGalleryImage(index)}
+                        className="text-red-600 hover:text-red-700"
+                      >
+                        <X className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
               </CardContent>
             </Card>
 
