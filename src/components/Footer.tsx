@@ -184,6 +184,17 @@ const Footer = () => {
               <p className="text-gray-500 text-xs mt-1">
                 Sustainable tourism • Cultural preservation • Environmental protection
               </p>
+              <p className="text-gray-500 text-xs mt-2">
+                Created by{' '}
+                <a 
+                  href="https://midiya.az" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-primary hover:text-primary/80 transition-colors font-medium"
+                >
+                  Midiya
+                </a>
+              </p>
             </div>
             <div className="flex space-x-6 text-sm">
               <Link to="/privacy" className="text-gray-400 hover:text-primary transition-colors">
