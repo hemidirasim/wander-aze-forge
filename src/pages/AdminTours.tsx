@@ -201,7 +201,7 @@ const AdminTours: React.FC = () => {
   };
 
   const handleCreate = () => {
-    navigate('/admin/tour-form-extended');
+    navigate('/admin/tour-form-basic');
   };
 
   const handleEdit = (tour: Tour) => {
