@@ -54,6 +54,11 @@ const BookTour = () => {
     // Check authentication
     const storedToken = localStorage.getItem('authToken');
     if (!storedToken) {
+      toast({
+        title: "Authentication Required",
+        description: "Please log in to book a tour.",
+        variant: "destructive"
+      });
       navigate('/login');
       return;
     }
@@ -61,7 +66,7 @@ const BookTour = () => {
 
     // Fetch tour details
     fetchTourDetails();
-  }, [id, navigate]);
+  }, [id, navigate, toast]);
 
   const fetchTourDetails = async () => {
     try {
@@ -100,9 +105,49 @@ const BookTour = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validation
+    if (!formData.tourDate) {
+      toast({
+        title: "Date Required",
+        description: "Please select a tour date.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (formData.participants < 1 || formData.participants > 20) {
+      toast({
+        title: "Invalid Participants",
+        description: "Number of participants must be between 1 and 20.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!token) {
+      toast({
+        title: "Authentication Required",
+        description: "Please log in to book a tour.",
+        variant: "destructive"
+      });
+      navigate('/login');
+      return;
+    }
+
     setBooking(true);
 
     try {
+      console.log('Submitting booking:', {
+        tourId: tour?.id,
+        tourTitle: tour?.title,
+        tourCategory: tour?.category,
+        tourDate: formData.tourDate,
+        participants: formData.participants,
+        totalPrice: tour ? tour.price * formData.participants : 0,
+        token: token ? 'present' : 'missing'
+      });
+
       const response = await fetch('/api/bookings/create', {
         method: 'POST',
         headers: {
@@ -122,7 +167,9 @@ const BookTour = () => {
         })
       });
 
+      console.log('Response status:', response.status);
       const data = await response.json();
+      console.log('Response data:', data);
 
       if (data.success) {
         toast({
@@ -347,6 +394,12 @@ const BookTour = () => {
                         type="submit" 
                         className="w-full h-12 text-base"
                         disabled={booking}
+                        onClick={(e) => {
+                          console.log('Button clicked');
+                          console.log('Form data:', formData);
+                          console.log('Tour data:', tour);
+                          console.log('Token:', token ? 'present' : 'missing');
+                        }}
                       >
                         {booking ? (
                           <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
