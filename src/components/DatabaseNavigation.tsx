@@ -261,6 +261,18 @@ const DatabaseNavigation = () => {
               </Link>
             ))}
             
+            {/* Book Now Button */}
+            <Button 
+              variant="adventure" 
+              asChild
+              onMouseEnter={() => setIsToursOpen(false)}
+            >
+              <Link to="/tours" onClick={() => {
+                scrollToTopInstant();
+                setIsToursOpen(false);
+              }}>Book Now</Link>
+            </Button>
+
             {/* Desktop Auth Buttons */}
             {isLoggedIn ? (
               <div className="flex items-center gap-2">
@@ -294,7 +306,7 @@ const DatabaseNavigation = () => {
                     setIsToursOpen(false);
                   }}>Login</Link>
                 </Button>
-                <Button variant="adventure" asChild>
+                <Button variant="outline" asChild>
                   <Link to="/register" onClick={() => {
                     scrollToTopInstant();
                     setIsToursOpen(false);
@@ -399,6 +411,14 @@ const DatabaseNavigation = () => {
                   <Search className="w-3.5 h-3.5" />
                   <span className="text-sm">Search</span>
                 </div>
+              </Button>
+              
+              {/* Book Now Button */}
+              <Button variant="adventure" className="w-fit mt-4" asChild>
+                <Link to="/tours" onClick={() => {
+                  setIsMenuOpen(false);
+                  scrollToTopInstant();
+                }}>Book Now</Link>
               </Button>
               
               {/* Auth Buttons */}
