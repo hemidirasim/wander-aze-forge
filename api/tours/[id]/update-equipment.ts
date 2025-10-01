@@ -54,16 +54,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       });
     }
 
-    // Ensure equipment columns exist
+    // Ensure equipment columns exist - do them separately
     try {
-      await pool.query(`
-        ALTER TABLE tours 
-        ADD COLUMN IF NOT EXISTS provided_equipment JSONB DEFAULT '[]'::jsonb,
-        ADD COLUMN IF NOT EXISTS what_to_bring JSONB DEFAULT '[]'::jsonb
-      `);
-      console.log('Equipment columns ensured');
+      await pool.query(`ALTER TABLE tours ADD COLUMN IF NOT EXISTS provided_equipment JSONB DEFAULT '[]'::jsonb`);
+      console.log('provided_equipment column ensured');
     } catch (columnError) {
-      console.log('Error ensuring equipment columns (might already exist):', columnError);
+      console.log('Error ensuring provided_equipment column:', columnError);
+    }
+    
+    try {
+      await pool.query(`ALTER TABLE tours ADD COLUMN IF NOT EXISTS what_to_bring JSONB DEFAULT '[]'::jsonb`);
+      console.log('what_to_bring column ensured');
+    } catch (columnError) {
+      console.log('Error ensuring what_to_bring column:', columnError);
     }
 
     // Extract equipment data
@@ -94,9 +97,25 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       RETURNING *
     `;
 
+    // Safely stringify arrays
+    let providedEquipmentJson, whatToBringJson;
+    
+    try {
+      providedEquipmentJson = JSON.stringify(providedEquipmentArray);
+      whatToBringJson = JSON.stringify(whatToBringArray);
+      console.log('JSON stringify successful:', { providedEquipmentJson, whatToBringJson });
+    } catch (jsonError) {
+      console.error('JSON stringify error:', jsonError);
+      return res.status(500).json({
+        success: false,
+        error: 'Failed to process equipment data',
+        message: 'JSON serialization failed'
+      });
+    }
+
     const values = [
-      JSON.stringify(providedEquipmentArray),
-      JSON.stringify(whatToBringArray),
+      providedEquipmentJson,
+      whatToBringJson,
       id
     ];
 
