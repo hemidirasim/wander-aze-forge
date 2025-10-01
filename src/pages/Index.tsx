@@ -137,11 +137,11 @@ const Index = () => {
                 {heroData?.description || 'Authentic mountain adventures • Sustainable tourism • Cultural immersion'}
               </p>
               
-              <div className="flex flex-col sm:flex-row gap-6 justify-center">
-                <Button size="lg" variant="hero-outline" asChild className="text-lg px-8 py-4">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button size="lg" variant="hero-outline" asChild className="text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 w-full sm:w-auto">
                   <Link to={heroData?.button1_link || '/tours'}>{heroData?.button1_text || 'Explore Tours'}</Link>
                 </Button>
-                <Button size="lg" variant="hero-outline" asChild className="text-lg px-8 py-4">
+                <Button size="lg" variant="hero-outline" asChild className="text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 w-full sm:w-auto">
                   <Link to={heroData?.button2_link || '/about'}>{heroData?.button2_text || 'Our Story'}</Link>
                 </Button>
               </div>
