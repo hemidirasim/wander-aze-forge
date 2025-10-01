@@ -60,7 +60,7 @@ const Projects = () => {
             <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
               Conservation & Community Projects
             </h2>
-            <div className="text-lg text-muted-foreground max-w-4xl mx-auto text-left space-y-4">
+            <div className="text-lg text-muted-foreground text-left space-y-4">
               <p>
                 Alongside offering community-based tours across Azerbaijan's mountains and villages, Outtour Azerbaijan supports and promotes several long-term initiatives. Some of these began under Camping Azerbaijan in 2016 and have since grown into independent projects.
               </p>
