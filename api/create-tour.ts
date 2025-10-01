@@ -31,8 +31,32 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     console.log('=== CREATE TOUR API CALLED ===');
     console.log('Request body size:', JSON.stringify(req.body).length);
+    
+    // Check if request body is too large
+    const bodySize = JSON.stringify(req.body).length;
+    if (bodySize > 1000000) { // 1MB limit
+      return res.status(413).json({
+        success: false,
+        error: 'Request body too large',
+        message: `Request body size (${bodySize} bytes) exceeds limit`
+      });
+    }
+    
     console.log('tour_programs from request:', req.body.tour_programs);
     console.log('participant_pricing from request:', req.body.participant_pricing);
+
+    // Test database connection first
+    try {
+      await pool.query('SELECT 1');
+      console.log('Database connection successful');
+    } catch (connectionError) {
+      console.error('Database connection failed:', connectionError);
+      return res.status(500).json({
+        success: false,
+        error: 'Database connection failed',
+        message: connectionError.message
+      });
+    }
 
     // Ensure required columns exist
     try {
@@ -204,7 +228,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         tourData.isActive,
         tourData.featured,
         tourData.pricing_type,
-        JSON.stringify(tourData.participant_pricing),
+        JSON.stringify(tourData.participant_pricing || []),
         result.rows[0].id
       ];
       
@@ -237,6 +261,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           RETURNING *
         `;
         
+        // Safely serialize JSON data
+        let tourProgramsJson, specialFieldsJson;
+        try {
+          tourProgramsJson = JSON.stringify(tourData.tour_programs || []);
+          specialFieldsJson = JSON.stringify(tourData.specialFields || {});
+        } catch (jsonError) {
+          console.error('JSON serialization error:', jsonError);
+          return res.status(500).json({
+            success: false,
+            error: 'JSON serialization failed',
+            message: jsonError.message
+          });
+        }
+
         const arrayUpdateValues = [
           tourData.providedEquipment || [],
           tourData.whatToBring || [],
@@ -245,8 +283,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           tourData.highlights || [],
           tourData.includes || [],
           tourData.excludes || [],
-          JSON.stringify(tourData.tour_programs || []),
-          JSON.stringify(tourData.specialFields || {}),
+          tourProgramsJson,
+          specialFieldsJson,
           result.rows[0].id
         ];
         
