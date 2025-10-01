@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Clock, Users, MapPin, Star, ArrowLeft, Loader2 } from 'lucide-react';
-import { getCategoryById } from '@/data/tourCategories';
 
 interface TourData {
   id: number;
@@ -30,9 +29,20 @@ interface TourData {
   featured: boolean;
 }
 
+interface CategoryData {
+  id: number;
+  name: string;
+  slug: string;
+  description: string;
+  image_url: string;
+  is_active: boolean;
+  sort_order: number;
+}
+
 const ToursByCategory = () => {
   const { category: categoryId } = useParams<{ category: string }>();
   const [tours, setTours] = useState<TourData[]>([]);
+  const [category, setCategory] = useState<CategoryData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
@@ -40,12 +50,27 @@ const ToursByCategory = () => {
     return <div>Category not found</div>;
   }
 
-  const category = getCategoryById(categoryId);
-
   useEffect(() => {
-    const fetchToursByCategory = async () => {
+    const fetchData = async () => {
       try {
         setLoading(true);
+
+        // Fetch category data
+        const categoryResponse = await fetch('/api/tour-categories');
+        const categoryResult = await categoryResponse.json();
+        
+        if (categoryResult.success) {
+          const foundCategory = categoryResult.data.find((cat: CategoryData) => cat.slug === categoryId);
+          if (foundCategory) {
+            setCategory(foundCategory);
+          } else {
+            setError('Category not found');
+            setLoading(false);
+            return;
+          }
+        }
+
+        // Fetch tours data
         const response = await fetch(`/api/test-db`);
         const result = await response.json();
 
@@ -77,20 +102,19 @@ const ToursByCategory = () => {
           
           setTours(categoryTours);
           console.log(`Found ${categoryTours.length} tours for category ${categoryId}`);
-          console.log('All tours from database:', tours);
         } else {
           setError(result.error || 'Failed to load tours');
         }
       } catch (err) {
-        setError('Failed to load tours');
-        console.error('Error fetching tours by category:', err);
+        setError('Failed to load data');
+        console.error('Error fetching data:', err);
       } finally {
         setLoading(false);
       }
     };
 
     if (categoryId) {
-      fetchToursByCategory();
+      fetchData();
     }
   }, [categoryId]);
 
@@ -132,7 +156,7 @@ const ToursByCategory = () => {
   }
 
   // Special handling for tailor-made category
-  if (categoryId === 'tailor-made') {
+  if (categoryId === 'tailor-made' && category) {
     return (
       <div className="min-h-screen bg-background">
         <DatabaseNavigation />
@@ -141,7 +165,7 @@ const ToursByCategory = () => {
         <section className="relative h-[60vh] flex items-center justify-center">
           <div 
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: `url(${category.image})` }}
+            style={{ backgroundImage: `url(${category.image_url || 'https://images.unsplash.com/photo-1551632811-561732d1e306?w=1920&h=1080&fit=crop'})` }}
           />
           <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-transparent" />
           <div className="relative z-10 text-center text-white max-w-4xl px-4">
@@ -192,7 +216,7 @@ const ToursByCategory = () => {
       <section className="relative h-[60vh] flex items-center justify-center">
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: `url(${category.image})` }}
+          style={{ backgroundImage: `url(${category.image_url || 'https://images.unsplash.com/photo-1551632811-561732d1e306?w=1920&h=1080&fit=crop'})` }}
         />
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-transparent" />
         <div className="relative z-10 text-center text-white max-w-4xl px-4">
