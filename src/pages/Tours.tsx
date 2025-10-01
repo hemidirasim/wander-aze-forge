@@ -143,7 +143,7 @@ const Tours = () => {
                   </CardHeader>
                   
                   <CardContent className="pt-0">
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between mb-3">
                       <span className="text-2xl font-bold text-primary">{tour.price}</span>
                       <Button variant="adventure" size="sm" asChild>
                         <Link to={`/tours/${tour.category}/${tour.id}`} className="flex items-center gap-2">
@@ -152,6 +152,11 @@ const Tours = () => {
                         </Link>
                       </Button>
                     </div>
+                    <Button variant="outline" size="sm" className="w-full" asChild>
+                      <Link to={`/book-tour/${tour.id}`} className="flex items-center gap-2">
+                        Book Now
+                      </Link>
+                    </Button>
                   </CardContent>
                 </Card>
               ))}

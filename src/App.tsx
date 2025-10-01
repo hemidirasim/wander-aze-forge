@@ -45,6 +45,7 @@ import UserDashboard from "./pages/UserDashboard";
 import VerifyEmail from "./pages/VerifyEmail";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import BookTour from "./pages/BookTour";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -71,6 +72,7 @@ const App = () => (
                 <Route path="/verify-email" element={<VerifyEmail />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
+                <Route path="/book-tour/:id" element={<BookTour />} />
                 <Route path="/dashboard" element={<UserDashboard />} />
           <Route path="/upload-demo" element={<UploadDemo />} />
           <Route path="/accordion-demo" element={<AccordionDemo />} />
