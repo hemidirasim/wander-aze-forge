@@ -15,7 +15,8 @@ import {
   MessageSquare,
   Settings,
   LogOut,
-  Plus
+  Plus,
+  CheckCircle
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import DatabaseNavigation from '@/components/DatabaseNavigation';
@@ -381,16 +382,159 @@ const UserDashboard = () => {
 
             {/* Profile Tab */}
             {activeTab === 'profile' && (
-              <Card>
-                <CardHeader>
-                  <CardTitle>Profile Settings</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground">
-                    Profile management features will be available soon.
-                  </p>
-                </CardContent>
-              </Card>
+              <div className="space-y-6">
+                {/* Profile Information */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Profile Information</CardTitle>
+                    <p className="text-sm text-muted-foreground">
+                      Update your personal information and contact details
+                    </p>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-sm font-medium text-foreground">First Name</label>
+                        <div className="mt-1 p-3 border rounded-md bg-muted/50">
+                          {user?.firstName || 'Not provided'}
+                        </div>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-foreground">Last Name</label>
+                        <div className="mt-1 p-3 border rounded-md bg-muted/50">
+                          {user?.lastName || 'Not provided'}
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <label className="text-sm font-medium text-foreground">Email Address</label>
+                      <div className="mt-1 p-3 border rounded-md bg-muted/50">
+                        {user?.email || 'Not provided'}
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-sm font-medium text-foreground">Phone Number</label>
+                        <div className="mt-1 p-3 border rounded-md bg-muted/50">
+                          {user?.phone || 'Not provided'}
+                        </div>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-foreground">Country</label>
+                        <div className="mt-1 p-3 border rounded-md bg-muted/50">
+                          {user?.country || 'Not provided'}
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <label className="text-sm font-medium text-foreground">Member Since</label>
+                      <div className="mt-1 p-3 border rounded-md bg-muted/50">
+                        {user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'Not available'}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Account Security */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Account Security</CardTitle>
+                    <p className="text-sm text-muted-foreground">
+                      Manage your account security and password
+                    </p>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex items-center justify-between p-4 border rounded-lg">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center">
+                          <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400" />
+                        </div>
+                        <div>
+                          <h4 className="font-medium text-foreground">Email Verified</h4>
+                          <p className="text-sm text-muted-foreground">
+                            Your email address is verified and secure
+                          </p>
+                        </div>
+                      </div>
+                      <Badge variant="secondary" className="bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400">
+                        Verified
+                      </Badge>
+                    </div>
+                    
+                    <div className="flex items-center justify-between p-4 border rounded-lg">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/20 rounded-full flex items-center justify-center">
+                          <Settings className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                        </div>
+                        <div>
+                          <h4 className="font-medium text-foreground">Password</h4>
+                          <p className="text-sm text-muted-foreground">
+                            Last updated when you registered
+                          </p>
+                        </div>
+                      </div>
+                      <Button variant="outline" size="sm">
+                        Change Password
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Account Actions */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Account Actions</CardTitle>
+                    <p className="text-sm text-muted-foreground">
+                      Manage your account settings and preferences
+                    </p>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex items-center justify-between p-4 border rounded-lg">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-orange-100 dark:bg-orange-900/20 rounded-full flex items-center justify-center">
+                          <User className="w-5 h-5 text-orange-600 dark:text-orange-400" />
+                        </div>
+                        <div>
+                          <h4 className="font-medium text-foreground">Edit Profile</h4>
+                          <p className="text-sm text-muted-foreground">
+                            Update your personal information
+                          </p>
+                        </div>
+                      </div>
+                      <Button variant="outline" size="sm">
+                        Edit
+                      </Button>
+                    </div>
+                    
+                    <div className="flex items-center justify-between p-4 border rounded-lg">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center">
+                          <LogOut className="w-5 h-5 text-red-600 dark:text-red-400" />
+                        </div>
+                        <div>
+                          <h4 className="font-medium text-foreground">Sign Out</h4>
+                          <p className="text-sm text-muted-foreground">
+                            Sign out of your account
+                          </p>
+                        </div>
+                      </div>
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => {
+                          localStorage.removeItem('authToken');
+                          window.location.href = '/login';
+                        }}
+                      >
+                        Sign Out
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
             )}
           </div>
         </div>
