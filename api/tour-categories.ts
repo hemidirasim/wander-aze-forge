@@ -87,7 +87,7 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
 
 async function handlePost(req: VercelRequest, res: VercelResponse) {
   try {
-    const { name, slug, description, image_url, is_active, sort_order } = req.body;
+    const { name, slug, description, image_url, icon_url, is_active, sort_order } = req.body;
 
     if (!name || !slug) {
       return res.status(400).json({
@@ -112,14 +112,15 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
     `);
 
     const result = await pool.query(`
-      INSERT INTO tour_categories (name, slug, description, image_url, is_active, sort_order)
-      VALUES ($1, $2, $3, $4, $5, $6)
+      INSERT INTO tour_categories (name, slug, description, image_url, icon_url, is_active, sort_order)
+      VALUES ($1, $2, $3, $4, $5, $6, $7)
       RETURNING *
     `, [
       name.trim(),
       slug.trim(),
       description?.trim() || '',
       image_url?.trim() || '',
+      icon_url?.trim() || null,
       is_active !== false,
       sort_order || 0
     ]);
@@ -144,7 +145,7 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
 async function handlePut(req: VercelRequest, res: VercelResponse) {
   try {
     const { id } = req.query;
-    const { name, slug, description, image_url, is_active, sort_order } = req.body;
+    const { name, slug, description, image_url, icon_url, is_active, sort_order } = req.body;
 
     if (!id) {
       return res.status(400).json({
@@ -181,16 +182,18 @@ async function handlePut(req: VercelRequest, res: VercelResponse) {
         slug = $2,
         description = $3,
         image_url = $4,
-        is_active = $5,
-        sort_order = $6,
+        icon_url = $5,
+        is_active = $6,
+        sort_order = $7,
         updated_at = CURRENT_TIMESTAMP
-      WHERE id = $7
+      WHERE id = $8
       RETURNING *
     `, [
       name.trim(),
       slug.trim(),
       description?.trim() || '',
       image_url?.trim() || '',
+      icon_url?.trim() || null,
       is_active !== false,
       sort_order || 0,
       id
