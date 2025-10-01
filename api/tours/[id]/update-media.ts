@@ -69,6 +69,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       console.log('Error ensuring photography_service column:', columnError);
     }
 
+    // Ensure image_url column can handle long URLs (TEXT instead of VARCHAR)
+    try {
+      await pool.query(`ALTER TABLE tours ALTER COLUMN image_url TYPE TEXT`);
+      console.log('image_url column updated to TEXT');
+    } catch (columnError) {
+      console.log('Error updating image_url column:', columnError);
+    }
+
     // Extract media data
     const galleryImages = req.body.galleryImages || [];
     const photographyService = req.body.photographyService || '';
