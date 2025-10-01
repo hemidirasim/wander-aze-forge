@@ -41,6 +41,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       });
     }
 
+    // Test database connection
+    try {
+      await pool.query('SELECT 1');
+      console.log('Database connection test successful');
+    } catch (connError) {
+      console.error('Database connection test failed:', connError);
+      return res.status(500).json({
+        success: false,
+        error: 'Database connection failed',
+        message: connError instanceof Error ? connError.message : 'Unknown connection error'
+      });
+    }
+
     // Ensure equipment columns exist
     try {
       await pool.query(`
@@ -88,6 +101,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     ];
 
     console.log('Executing database query with', values.length, 'parameters');
+    console.log('Query values:', values);
 
     const result = await pool.query(query, values);
     
@@ -110,12 +124,21 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     console.error('=== ERROR UPDATING EQUIPMENT ===');
     console.error('Error details:', error);
     console.error('Error message:', error instanceof Error ? error.message : 'Unknown error');
+    console.error('Error stack:', error instanceof Error ? error.stack : null);
+    
+    // Check if it's a database error
+    if (error && typeof error === 'object' && 'code' in error) {
+      console.error('Database error code:', (error as any).code);
+      console.error('Database error detail:', (error as any).detail);
+      console.error('Database error hint:', (error as any).hint);
+    }
     
     return res.status(500).json({
       success: false,
       error: 'Failed to update equipment information',
       message: error instanceof Error ? error.message : 'Unknown error',
-      details: error instanceof Error ? error.stack : null
+      details: error instanceof Error ? error.stack : null,
+      errorCode: error && typeof error === 'object' && 'code' in error ? (error as any).code : null
     });
   }
 }
