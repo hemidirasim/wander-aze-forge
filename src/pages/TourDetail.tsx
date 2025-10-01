@@ -514,67 +514,6 @@ const TourDetail = () => {
                 </CardContent>
               </Card>
 
-              {/* 9. Book Now */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-2xl">Book Now</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="text-center space-y-4">
-                    <div className="space-y-2">
-                      <Button 
-                        size="sm" 
-                        variant="outline" 
-                        className="w-full"
-                        onClick={() => {
-                          console.log('Test button clicked');
-                          alert('Test button works!');
-                        }}
-                      >
-                        Test Button
-                      </Button>
-                      
-                      <Button 
-                        size="lg" 
-                        variant="adventure" 
-                        className="w-full" 
-                        asChild
-                        onClick={() => {
-                          console.log('Book This Tour clicked');
-                          console.log('Tour ID:', tour.id);
-                          console.log('Tour title:', tour.title);
-                        }}
-                      >
-                        <Link to={`/book-tour/${tour.id}`}>
-                          <Calendar className="w-5 h-5 mr-2" />
-                          Book This Tour
-                        </Link>
-                      </Button>
-                    </div>
-                    
-                    <div className="text-sm text-muted-foreground">
-                      {tour.booking_terms || 'Free cancellation up to 24 hours before departure'}
-                    </div>
-                    
-                    <div className="border-t pt-4">
-                      <div className="flex items-center justify-center space-x-2 text-primary">
-                        <Phone className="w-5 h-5" />
-                        <span className="font-semibold">{tour.contact_phone || '+994 51 400 90 91'}</span>
-                      </div>
-                      <div className="text-center text-sm text-muted-foreground mt-1">
-                        Call for custom arrangements or questions
-                      </div>
-                    </div>
-                    
-                    <div className="bg-primary/10 p-4 rounded-lg">
-                      <p className="text-sm text-center">
-                        <strong>Secure Booking:</strong> Pay securely online or reserve now and pay on arrival. 
-                        All bookings are protected by our satisfaction guarantee.
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
             </div>
 
             {/* Booking Sidebar */}
@@ -589,9 +528,11 @@ const TourDetail = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <Button size="lg" variant="adventure" className="w-full">
-                    <Calendar className="w-5 h-5 mr-2" />
-                    Book This Tour
+                  <Button size="lg" variant="adventure" className="w-full" asChild>
+                    <Link to={`/book-tour/${tour.id}`}>
+                      <Calendar className="w-5 h-5 mr-2" />
+                      Book This Tour
+                    </Link>
                   </Button>
                   
                   <div className="text-center text-sm text-muted-foreground">
