@@ -6,6 +6,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Eye, EyeOff, UserPlus, User, Phone, MapPin } from 'lucide-react';
+import DatabaseNavigation from '@/components/DatabaseNavigation';
+import Footer from '@/components/Footer';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -102,7 +104,9 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+      <DatabaseNavigation />
+      <div className="flex items-center justify-center p-4 pt-24">
       <div className="w-full max-w-md">
         <Card className="border-0 shadow-2xl bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm">
           <CardHeader className="text-center pb-8">
@@ -378,6 +382,8 @@ const Register = () => {
           </CardContent>
         </Card>
       </div>
+      </div>
+      <Footer />
     </div>
   );
 };

@@ -18,6 +18,8 @@ import {
   Plus
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import DatabaseNavigation from '@/components/DatabaseNavigation';
+import Footer from '@/components/Footer';
 
 interface User {
   id: number;
@@ -184,6 +186,7 @@ const UserDashboard = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <DatabaseNavigation />
       <div className="container mx-auto p-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* User Profile Sidebar */}
@@ -392,6 +395,7 @@ const UserDashboard = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };
