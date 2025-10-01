@@ -131,88 +131,107 @@ const AdminTourFormExtended: React.FC = () => {
   const [categoriesLoading, setCategoriesLoading] = useState(true);
   const [formData, setFormData] = useState<ExtendedTourForm>({
     // Basic Info
-    title: 'Test Mountain Tour',
-    description: 'A beautiful test tour through the mountains of Azerbaijan. Perfect for testing the system.',
+    title: 'Göygöl Milli Parkı və Qafqaz Dağları Ekspedisiyası',
+    description: 'Göygöl Milli Parkının gözəl təbiətini kəşf edin və Qafqaz dağlarının möhtəşəm mənzərələrini görün. Bu 3 günlük ekspedisiya sizə unudulmaz təcrübə bəxş edəcək.',
     category: 'trekking',
-    duration: '2 days',
-    difficulty: 'Easy',
-    price: '150',
-    maxParticipants: '8',
-    rating: '4.5',
-    reviewsCount: '10',
-    groupSize: '4-8 people',
-    location: 'Gabala, Azerbaijan',
+    duration: '3 days',
+    difficulty: 'Medium',
+    price: '250',
+    maxParticipants: '12',
+    rating: '4.8',
+    reviewsCount: '47',
+    groupSize: '6-12 people',
+    location: 'Göygöl, Qafqaz Dağları, Azərbaycan',
     
     
     // Overview
-    overview: 'Join us for a wonderful test tour through the beautiful mountains of Azerbaijan. This is a perfect opportunity to test our system.',
-    bestSeason: 'May to October',
-    meetingPoint: 'Gabala City Center',
-    languages: 'English, Azerbaijani, Russian',
+    overview: 'Göygöl Milli Parkında 3 günlük möhtəşəm ekspedisiya. Qafqaz dağlarının ən gözəl yerlərini kəşf edin, təbiətin sirlərini öyrənin və unudulmaz xatirələr yaradın. Professional bələdçi ilə təhlükəsiz və rahat səyahət.',
+    bestSeason: 'Aprel - Oktyabr',
+    meetingPoint: 'Bakı şəhər mərkəzi, Fəvvarələr meydanı',
+    languages: 'Azərbaycan, İngilis, Rus',
     
     // Accommodation & Food
-    accommodationDetails: 'Comfortable hotel accommodation with all amenities.',
-    mealsDetails: 'All meals included: breakfast, lunch, and dinner.',
-    waterSnacksDetails: 'Water and snacks provided throughout the tour.',
+    accommodationDetails: 'Göygöl Milli Parkında rahat otel yerləşdirməsi. Bütün rahatlıq şəraitləri mövcuddur.',
+    mealsDetails: 'Bütün yeməklər daxildir: səhər yeməyi, nahar və axşam yeməyi. Azərbaycan milli mətbəxi.',
+    waterSnacksDetails: 'Tur boyunca su və qəlyanaltılar təmin edilir.',
     
     // Equipment
-    providedEquipment: ['Hiking boots', 'Safety equipment', 'First aid kit'],
-    whatToBring: ['Warm clothing', 'Personal items', 'Camera'],
+    providedEquipment: ['Dağ ayaqqabıları', 'Təhlükəsizlik avadanlığı', 'İlk yardım dəsti', 'GPS cihazı', 'Teleskop'],
+    whatToBring: ['İsti paltar', 'Şəxsi əşyalar', 'Fotoaparat', 'Günəş eynəyi', 'Su butulka'],
     
     // Transport
-    transportDetails: 'Private vehicle transport included.',
-    pickupService: 'Free pickup from Gabala hotels',
+    transportDetails: 'Şəxsi nəqliyyat vasitəsi daxildir. Rahat və təhlükəsiz səyahət.',
+    pickupService: 'Bakı otellərindən pulsuz götürmə xidməti',
     
     // Media
     galleryImages: [],
-    photographyService: 'Professional photos will be provided.',
+    photographyService: 'Professional fotoqraf xidməti təmin edilir. Bütün fotolar pulsuz.',
     
     // Price
-    priceIncludes: ['Transport', 'Meals', 'Guide', 'Equipment'],
-    groupDiscounts: '10% for groups of 6+',
-    earlyBirdDiscount: '15% for early bookings',
+    priceIncludes: ['Nəqliyyat', 'Yeməklər', 'Bələdçi', 'Avadanlıq', 'Otel', 'Fotoqraf'],
+    groupDiscounts: '6+ nəfər üçün 10% endirim',
+    earlyBirdDiscount: 'Erkən rezervasiya üçün 15% endirim',
     
     // Participant Pricing
-    pricing_type: 'fixed',
-    participant_pricing: [],
+    pricing_type: 'participant_based',
+    participant_pricing: [
+      { participants: 1, price: 300 },
+      { participants: 2, price: 280 },
+      { participants: 4, price: 250 },
+      { participants: 6, price: 220 },
+      { participants: 8, price: 200 }
+    ],
     
     // Contact & Booking
-    contactPhone: '+994 51 400 90 91',
-    bookingTerms: 'Full payment required before departure.',
+    contactPhone: '+994 50 123 45 67',
+    bookingTerms: 'Tur başlamazdan əvvəl tam ödəniş tələb olunur. 48 saat əvvəl ləğv etmək mümkündür.',
     
     // Highlights, Includes, Excludes
-    highlights: ['Mountain views', 'Fresh air', 'Nature experience'],
-    includes: ['Guide', 'Transport', 'Meals', 'Equipment'],
-    excludes: ['Personal items', 'Insurance', 'Tips'],
-    itinerary: 'Day 1: Arrival and short hike. Day 2: Main trekking and return.',
-    requirements: 'Basic fitness level required. Age 12+.',
-    specialFields: 'Test special fields content for debugging purposes.',
+    highlights: ['Göygöl gölünün möhtəşəm mənzərəsi', 'Qafqaz dağlarının zirvələri', 'Təbiətin sirləri', 'Professional fotoqrafiya', 'Azərbaycan milli mətbəxi'],
+    includes: ['Professional bələdçi', 'Nəqliyyat', 'Yeməklər', 'Avadanlıq', 'Otel yerləşdirməsi', 'Fotoqraf xidməti'],
+    excludes: ['Şəxsi əşyalar', 'Sığorta', 'Bəxşiş', 'Alkoqol içkiləri'],
+    itinerary: 'Gün 1: Bakıdan Göygölə gediş, qısa gəzinti. Gün 2: Əsas dağ yürüşü və Göygöl gölü. Gün 3: Qafqaz zirvələri və Bakıya qayıdış.',
+    requirements: 'Orta fiziki hazırlıq tələb olunur. 12+ yaş. Sağlamlıq vəsiqəsi tələb olunur.',
+    specialFields: 'Göygöl Milli Parkı xüsusi icazəsi tələb olunur. Hava şəraitinə görə dəyişiklik mümkündür.',
     
     // Tour Programs
     tourPrograms: [
       {
-        id: 'test-day-1',
+        id: 'goygol-day-1',
         dayNumber: 1,
-        title: 'Arrival and Short Hike',
-        description: 'Arrive at the meeting point and take a short introductory hike.',
-        activities: ['Welcome meeting', 'Equipment check', 'Short hike', 'Dinner'],
-        accommodation: 'Test hotel',
-        meals: ['Dinner'],
-        transportation: 'Walking',
-        highlights: ['First views', 'Group bonding'],
+        title: 'Bakıdan Göygölə Gediş və Qısa Gəzinti',
+        description: 'Bakıdan Göygöl Milli Parkına gediş. Göygöl gölünün ətrafında qısa gəzinti və təbiəti kəşf etmə.',
+        activities: ['Bakıdan yola çıxış', 'Göygöl Milli Parkına gediş', 'Qısa gəzinti', 'Axşam yeməyi'],
+        accommodation: 'Göygöl oteli',
+        meals: ['Nahar', 'Axşam yeməyi'],
+        transportation: 'Avtobus',
+        highlights: ['Göygöl gölü', 'Qafqaz mənzərəsi', 'Qrup tanışlığı'],
         difficultyLevel: 'Easy',
-        durationHours: 4
+        durationHours: 6
       },
       {
-        id: 'test-day-2',
+        id: 'goygol-day-2',
         dayNumber: 2,
-        title: 'Main Trekking Day',
-        description: 'The main day of our test tour with beautiful mountain views.',
-        activities: ['Morning briefing', 'Full day hike', 'Lunch break', 'Return'],
-        accommodation: 'Test hotel',
-        meals: ['Breakfast', 'Lunch', 'Dinner'],
-        transportation: 'Walking',
-        highlights: ['Mountain summit', 'Panoramic views', 'Nature photos'],
+        title: 'Əsas Dağ Yürüşü və Göygöl Gölü',
+        description: 'Göygöl Milli Parkının ən gözəl yerlərini kəşf edin. Qafqaz dağlarının zirvələrinə çıxış.',
+        activities: ['Səhər yeməyi', 'Dağ yürüşü', 'Göygöl gölü', 'Nahar fasiləsi', 'Zirvəyə çıxış'],
+        accommodation: 'Göygöl oteli',
+        meals: ['Səhər yeməyi', 'Nahar', 'Axşam yeməyi'],
+        transportation: 'Yürüyüş',
+        highlights: ['Göygöl gölü', 'Qafqaz zirvələri', 'Təbiət fotoları', 'Panoramik mənzərə'],
+        difficultyLevel: 'Moderate',
+        durationHours: 8
+      },
+      {
+        id: 'goygol-day-3',
+        dayNumber: 3,
+        title: 'Qafqaz Zirvələri və Bakıya Qayıdış',
+        description: 'Qafqaz dağlarının ən yüksək zirvələrinə çıxış və Bakıya qayıdış.',
+        activities: ['Səhər yeməyi', 'Zirvəyə çıxış', 'Fəaliyyət fotoları', 'Bakıya qayıdış'],
+        accommodation: 'Bakı oteli',
+        meals: ['Səhər yeməyi', 'Nahar'],
+        transportation: 'Avtobus',
+        highlights: ['Qafqaz zirvələri', 'Yaddaş fotoları', 'Bakıya qayıdış'],
         difficultyLevel: 'Moderate',
         durationHours: 6
       }
