@@ -54,12 +54,22 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     // Extract equipment data
-    const equipmentData = {
-      providedEquipment: req.body.providedEquipment || [],
-      whatToBring: req.body.whatToBring || []
-    };
+    const providedEquipment = req.body.providedEquipment || [];
+    const whatToBring = req.body.whatToBring || [];
 
-    console.log('Processed equipment data:', equipmentData);
+    console.log('Processed equipment data:', {
+      providedEquipment,
+      whatToBring
+    });
+
+    // Ensure arrays are properly formatted
+    const providedEquipmentArray = Array.isArray(providedEquipment) ? providedEquipment : [];
+    const whatToBringArray = Array.isArray(whatToBring) ? whatToBring : [];
+
+    console.log('Final arrays:', {
+      providedEquipmentArray,
+      whatToBringArray
+    });
 
     // Update tour equipment in database
     const query = `
@@ -72,8 +82,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     `;
 
     const values = [
-      JSON.stringify(equipmentData.providedEquipment),
-      JSON.stringify(equipmentData.whatToBring),
+      JSON.stringify(providedEquipmentArray),
+      JSON.stringify(whatToBringArray),
       id
     ];
 

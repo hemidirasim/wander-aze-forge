@@ -108,13 +108,21 @@ const AdminTourEditEquipment: React.FC = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
+    // Filter out empty strings from arrays
+    const cleanedFormData = {
+      providedEquipment: formData.providedEquipment.filter(item => item.trim() !== ''),
+      whatToBring: formData.whatToBring.filter(item => item.trim() !== '')
+    };
+
+    console.log('Sending equipment data:', cleanedFormData);
+
     try {
       const response = await fetch(`/api/tours/${id}/update-equipment`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(cleanedFormData)
       });
 
       const data = await response.json();
