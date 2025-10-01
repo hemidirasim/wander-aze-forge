@@ -292,9 +292,14 @@ const BookTour = () => {
                   </div>
 
                   <div className="border-t pt-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-lg font-semibold">Price per person:</span>
-                      <span className="text-2xl font-bold text-primary">${tour.price}</span>
+                    <div className="bg-primary/10 p-4 rounded-lg">
+                      <div className="flex items-center justify-between">
+                        <span className="text-lg font-semibold">Price per person:</span>
+                        <span className="text-3xl font-bold text-primary">${tour.price}</span>
+                      </div>
+                      <div className="text-sm text-muted-foreground mt-2">
+                        Total price will be calculated based on number of participants
+                      </div>
                     </div>
                   </div>
                 </CardContent>
@@ -383,11 +388,16 @@ const BookTour = () => {
                     </div>
 
                     <div className="border-t pt-4">
-                      <div className="flex items-center justify-between mb-4">
-                        <span className="text-lg font-semibold">Total Price:</span>
-                        <span className="text-2xl font-bold text-primary">
-                          ${tour.price * formData.participants}
-                        </span>
+                      <div className="bg-primary/10 p-4 rounded-lg mb-4">
+                        <div className="flex items-center justify-between">
+                          <span className="text-lg font-semibold">Total Price:</span>
+                          <span className="text-3xl font-bold text-primary">
+                            ${tour.price * formData.participants}
+                          </span>
+                        </div>
+                        <div className="text-sm text-muted-foreground mt-2">
+                          ${tour.price} × {formData.participants} participant{formData.participants > 1 ? 's' : ''}
+                        </div>
                       </div>
                       
                       <div className="space-y-2">
