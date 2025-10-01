@@ -231,12 +231,15 @@ const AdminTourCategories = () => {
     
     if (dragIndex === dropIndex) return;
 
-    // Reorder categories
+    // Simple swap - just exchange positions of two items
     const newCategories = [...categories];
-    const [draggedItem] = newCategories.splice(dragIndex, 1);
-    newCategories.splice(dropIndex, 0, draggedItem);
+    
+    // Swap the two categories
+    const temp = newCategories[dragIndex];
+    newCategories[dragIndex] = newCategories[dropIndex];
+    newCategories[dropIndex] = temp;
 
-    // Update sort_order for all categories
+    // Update sort_order for only the two swapped categories
     const updatedCategories = newCategories.map((cat, idx) => ({
       ...cat,
       sort_order: idx
@@ -244,20 +247,23 @@ const AdminTourCategories = () => {
 
     setCategories(updatedCategories);
 
-    // Save new order to database
+    // Save only the two changed categories to database
     try {
-      await Promise.all(
-        updatedCategories.map(cat =>
-          fetch(`/api/tour-categories?id=${cat.id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(cat)
-          })
-        )
-      );
+      await Promise.all([
+        fetch(`/api/tour-categories?id=${updatedCategories[dragIndex].id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updatedCategories[dragIndex])
+        }),
+        fetch(`/api/tour-categories?id=${updatedCategories[dropIndex].id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updatedCategories[dropIndex])
+        })
+      ]);
     } catch (err) {
-      console.error('Error updating category order:', err);
-      setError('Failed to update category order');
+      console.error('Error swapping categories:', err);
+      setError('Failed to swap categories');
       await fetchCategories(); // Revert on error
     }
   };
