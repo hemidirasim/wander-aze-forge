@@ -76,11 +76,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const saltRounds = 12;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    // Create user
+    // Create user (email_verified = false by default)
     const result = await pool.query(`
-      INSERT INTO users (first_name, last_name, email, password_hash, phone, country, created_at, updated_at)
-      VALUES ($1, $2, $3, $4, $5, $6, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
-      RETURNING id, first_name, last_name, email, phone, country, created_at
+      INSERT INTO users (first_name, last_name, email, password_hash, phone, country, email_verified, created_at, updated_at)
+      VALUES ($1, $2, $3, $4, $5, $6, false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+      RETURNING id, first_name, last_name, email, phone, country, email_verified, created_at
     `, [
       firstName.trim(),
       lastName.trim(),
@@ -103,9 +103,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         email: user.email,
         phone: user.phone,
         country: user.country,
+        emailVerified: user.email_verified,
         createdAt: user.created_at
       },
-      message: 'User registered successfully'
+      message: 'User registered successfully. Please check your email to verify your account.'
     });
 
   } catch (error) {

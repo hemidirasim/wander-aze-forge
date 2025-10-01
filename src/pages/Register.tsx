@@ -79,11 +79,11 @@ const Register = () => {
       if (data.success) {
         toast({
           title: "Registration Successful",
-          description: "Your account has been created! Please login to continue.",
+          description: "Your account has been created! Please verify your email to continue.",
         });
 
-        // Redirect to login
-        navigate('/login');
+        // Redirect to email verification
+        navigate('/verify-email', { state: { email: formData.email } });
       } else {
         toast({
           title: "Registration Failed",

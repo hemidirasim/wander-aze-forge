@@ -156,15 +156,26 @@ const Login = () => {
             </form>
 
             <div className="mt-6 text-center">
-              <p className="text-sm text-muted-foreground">
-                Don't have an account?{' '}
-                <Link 
-                  to="/register" 
-                  className="text-primary hover:text-primary/80 font-medium transition-colors"
-                >
-                  Create one here
-                </Link>
-              </p>
+              <div className="space-y-2">
+                <p className="text-sm text-muted-foreground">
+                  Don't have an account?{' '}
+                  <Link 
+                    to="/register" 
+                    className="text-primary hover:text-primary/80 font-medium transition-colors"
+                  >
+                    Create one here
+                  </Link>
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Forgot your password?{' '}
+                  <Link 
+                    to="/forgot-password" 
+                    className="text-primary hover:text-primary/80 font-medium transition-colors"
+                  >
+                    Reset it
+                  </Link>
+                </p>
+              </div>
             </div>
 
             <div className="mt-6 text-center">

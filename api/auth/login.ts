@@ -40,7 +40,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     // Find user
     const result = await pool.query(
-      'SELECT id, first_name, last_name, email, password_hash, phone, country, created_at FROM users WHERE email = $1',
+      'SELECT id, first_name, last_name, email, password_hash, phone, country, email_verified, created_at FROM users WHERE email = $1',
       [email.toLowerCase()]
     );
 
@@ -60,6 +60,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(401).json({
         success: false,
         error: 'Invalid email or password'
+      });
+    }
+
+    // Check if email is verified
+    if (!user.email_verified) {
+      return res.status(401).json({
+        success: false,
+        error: 'Please verify your email before logging in',
+        requiresVerification: true
       });
     }
 

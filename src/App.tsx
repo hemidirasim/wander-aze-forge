@@ -42,6 +42,9 @@ import SimpleAdminLayout from "./components/SimpleAdminLayout";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import UserDashboard from "./pages/UserDashboard";
+import VerifyEmail from "./pages/VerifyEmail";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -63,9 +66,12 @@ const App = () => (
           <Route path="/blog/:id" element={<BlogDetail />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/dashboard" element={<UserDashboard />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/verify-email" element={<VerifyEmail />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/reset-password" element={<ResetPassword />} />
+                <Route path="/dashboard" element={<UserDashboard />} />
           <Route path="/upload-demo" element={<UploadDemo />} />
           <Route path="/accordion-demo" element={<AccordionDemo />} />
           <Route path="/admin/login" element={<AdminLogin />} />
