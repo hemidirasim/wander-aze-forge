@@ -45,6 +45,7 @@ const AdminTourCategories = () => {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
+  const [isUpdating, setIsUpdating] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     slug: '',
@@ -244,6 +245,7 @@ const AdminTourCategories = () => {
     console.log('=== DRAG & DROP DEBUG ===');
     console.log('Drag index:', dragIndex);
     console.log('Drop index:', dropIndex);
+    console.log('Current categories:', categories.map((c, i) => ({ index: i, name: c.name, sort_order: c.sort_order })));
     
     setDraggedIndex(null);
     setDragOverIndex(null);
@@ -276,29 +278,41 @@ const AdminTourCategories = () => {
 
     // Update database
     try {
+      setIsUpdating(true);
+      setError(null);
       console.log('Updating database...');
       
+      // Update first category
       const response1 = await fetch(`/api/tour-categories?id=${updatedCat1.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedCat1)
       });
       
+      if (!response1.ok) {
+        const error1 = await response1.json();
+        console.error('First update failed:', error1);
+        throw new Error(`First update failed: ${error1.error || 'Unknown error'}`);
+      }
+      
+      // Update second category
       const response2 = await fetch(`/api/tour-categories?id=${updatedCat2.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedCat2)
       });
 
+      if (!response2.ok) {
+        const error2 = await response2.json();
+        console.error('Second update failed:', error2);
+        throw new Error(`Second update failed: ${error2.error || 'Unknown error'}`);
+      }
+
       const result1 = await response1.json();
       const result2 = await response2.json();
       
       console.log('API Response 1:', result1);
       console.log('API Response 2:', result2);
-
-      if (!response1.ok || !response2.ok) {
-        throw new Error('Update failed');
-      }
 
       console.log('Database updated successfully');
       console.log('Fetching fresh data...');
@@ -310,8 +324,11 @@ const AdminTourCategories = () => {
       
     } catch (err) {
       console.error('Error swapping categories:', err);
-      setError('Failed to swap categories. Check console for details.');
+      setError(`Failed to swap categories: ${err instanceof Error ? err.message : 'Unknown error'}`);
+      // Still refresh to show current state
       await fetchCategories();
+    } finally {
+      setIsUpdating(false);
     }
   };
 
@@ -342,8 +359,14 @@ const AdminTourCategories = () => {
         <div>
           <h1 className="text-3xl font-bold text-foreground">Tour Categories</h1>
           <p className="text-muted-foreground mt-2">
-            Manage tour categories and their settings
+            Manage tour categories and their settings. Drag and drop to reorder.
           </p>
+          {isUpdating && (
+            <div className="mt-2 text-sm text-primary flex items-center gap-2">
+              <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+              Updating order...
+            </div>
+          )}
         </div>
         <Button onClick={handleCreate} className="flex items-center gap-2">
           <Plus className="w-4 h-4" />
@@ -471,20 +494,21 @@ const AdminTourCategories = () => {
       {/* Categories List */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {categories.map((category, index) => (
-          <Card 
-            key={category.id} 
-            className={`group transition-all duration-200 cursor-move ${
-              draggedIndex === index ? 'opacity-50 scale-95 shadow-none' : 
-              dragOverIndex === index ? 'border-2 border-primary shadow-2xl scale-105 bg-primary/5' : 
-              'hover:shadow-lg'
-            }`}
-            draggable
-            onDragStart={(e) => handleDragStart(e, index)}
-            onDragOver={(e) => handleDragOver(e, index)}
-            onDragLeave={handleDragLeave}
-            onDragEnd={handleDragEnd}
-            onDrop={(e) => handleDrop(e, index)}
-          >
+                <Card 
+                  key={category.id} 
+                  className={`group transition-all duration-300 cursor-move ${
+                    draggedIndex === index ? 'opacity-30 scale-90 shadow-none rotate-2' : 
+                    dragOverIndex === index ? 'border-2 border-primary shadow-2xl scale-105 bg-primary/10 ring-2 ring-primary/20' : 
+                    isUpdating ? 'opacity-75 pointer-events-none' :
+                    'hover:shadow-lg hover:scale-102'
+                  }`}
+                  draggable={!isUpdating}
+                  onDragStart={(e) => handleDragStart(e, index)}
+                  onDragOver={(e) => handleDragOver(e, index)}
+                  onDragLeave={handleDragLeave}
+                  onDragEnd={handleDragEnd}
+                  onDrop={(e) => handleDrop(e, index)}
+                >
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
