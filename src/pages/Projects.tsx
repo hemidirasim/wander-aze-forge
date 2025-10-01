@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Link } from 'react-router-dom';
-import { Leaf, Users, Calendar, ArrowRight } from 'lucide-react';
+import { Users, Calendar, ArrowRight } from 'lucide-react';
 import projectsHero from '@/assets/projects-hero.jpg';
 
 interface Project {
@@ -60,9 +60,20 @@ const Projects = () => {
             <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
               Conservation & Community Projects
             </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Since 2014, we've been working to create positive impact through responsible tourism
-            </p>
+            <div className="text-lg text-muted-foreground max-w-4xl mx-auto text-left space-y-4">
+              <p>
+                Alongside offering community-based tours across Azerbaijan's mountains and villages, Outtour Azerbaijan supports and promotes several long-term initiatives. Some of these began under Camping Azerbaijan in 2016 and have since grown into independent projects.
+              </p>
+              <p>
+                <strong className="text-foreground">Kəndabad</strong>, founded in 2017, supports remote and mountain communities through initiatives such as Santa Claus in Remote Villages and School Bus in Remote Villages.
+              </p>
+              <p>
+                <strong className="text-foreground">Ecofront</strong>, launched in 2018, is an eco-activist group raising awareness about biodiversity and the climate crisis in Azerbaijan, while actively campaigning against illegal deforestation and the destruction of natural habitats.
+              </p>
+              <p>
+                <strong className="text-foreground">Birdwatching Azerbaijan</strong>, created in 2019, focuses on conserving the country's birdlife, fighting illegal hunting, and developing birding tourism to highlight Azerbaijan as a destination for nature enthusiasts.
+              </p>
+            </div>
           </div>
 
           {loading ? (
@@ -107,11 +118,6 @@ const Projects = () => {
                 </CardHeader>
                 
                 <CardContent className="space-y-3">
-                  <div className="flex items-center space-x-2 text-sm">
-                    <Leaf className="w-4 h-4 text-primary" />
-                    <span className="font-medium">Budget:</span>
-                    <span className="text-muted-foreground">${project.budget?.toLocaleString()}</span>
-                  </div>
                   <div className="flex items-center space-x-2 text-sm">
                     <Users className="w-4 h-4 text-primary" />
                     <span className="font-medium">Location:</span>

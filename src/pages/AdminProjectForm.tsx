@@ -268,6 +268,7 @@ const AdminProjectForm: React.FC = () => {
                   <SelectContent>
                     <SelectItem value="community_development">Community Development</SelectItem>
                     <SelectItem value="conservation">Conservation</SelectItem>
+                    <SelectItem value="social">Social</SelectItem>
                     <SelectItem value="research">Research</SelectItem>
                     <SelectItem value="infrastructure">Infrastructure</SelectItem>
                     <SelectItem value="education">Education</SelectItem>
