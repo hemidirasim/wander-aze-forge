@@ -33,12 +33,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     console.log('Request body:', JSON.stringify(req.body, null, 2));
     console.log('tour_programs from request:', req.body.tour_programs);
 
-    // Ensure tour_programs column exists
+    // Ensure required columns exist
     try {
       await pool.query(`
-        ALTER TABLE tours ADD COLUMN IF NOT EXISTS tour_programs JSONB DEFAULT '[]'
+        ALTER TABLE tours 
+        ADD COLUMN IF NOT EXISTS tour_programs JSONB DEFAULT '[]',
+        ADD COLUMN IF NOT EXISTS pricing_type VARCHAR(20) DEFAULT 'fixed',
+        ADD COLUMN IF NOT EXISTS participant_pricing JSONB DEFAULT '[]'::jsonb
       `);
-      console.log('tour_programs column ensured');
+      console.log('Required columns ensured');
     } catch (columnError) {
       console.log('Column might already exist or error adding:', columnError);
     }
@@ -102,7 +105,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       
       isActive: req.body.isActive !== false,
       featured: req.body.featured === true,
-      tour_programs: req.body.tour_programs || []
+      tour_programs: req.body.tour_programs || [],
+      
+      // Participant Pricing
+      pricing_type: req.body.pricing_type || 'fixed',
+      participant_pricing: req.body.participant_pricing || []
     };
 
     console.log('Processed tour data:', JSON.stringify(tourData, null, 2));
@@ -164,8 +171,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           itinerary = $20,
           requirements = $21,
           is_active = $22,
-          featured = $23
-        WHERE id = $24
+          featured = $23,
+          pricing_type = $24,
+          participant_pricing = $25
+        WHERE id = $26
         RETURNING *
       `;
       
@@ -193,6 +202,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         tourData.requirements,
         tourData.isActive,
         tourData.featured,
+        tourData.pricing_type,
+        JSON.stringify(tourData.participant_pricing),
         result.rows[0].id
       ];
       
