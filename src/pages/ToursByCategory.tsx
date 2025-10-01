@@ -167,23 +167,12 @@ const ToursByCategory = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               {/* Left Side - Content */}
               <div className="space-y-6">
-                <Badge variant="secondary" className="bg-primary text-primary-foreground">
-                  {category.name}
-                </Badge>
                 <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-foreground">
                   {category.name} Tours
                 </h1>
                 <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed">
                   {category.description}
                 </p>
-                <div className="flex flex-wrap gap-4 pt-4">
-                  <Button size="lg" variant="adventure" asChild>
-                    <Link to="/contact">Book Now</Link>
-                  </Button>
-                  <Button size="lg" variant="outline" asChild>
-                    <Link to="/tours">All Tours</Link>
-                  </Button>
-                </div>
               </div>
 
               {/* Right Side - Image */}
@@ -236,23 +225,12 @@ const ToursByCategory = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Left Side - Content */}
             <div className="space-y-6">
-              <Badge variant="secondary" className="bg-primary text-primary-foreground">
-                {category.name}
-              </Badge>
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-foreground">
                 {category.name} Tours
               </h1>
               <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed">
                 {category.description}
               </p>
-              <div className="flex flex-wrap gap-4 pt-4">
-                <Button size="lg" variant="adventure" asChild>
-                  <Link to="/contact">Book Now</Link>
-                </Button>
-                <Button size="lg" variant="outline" asChild>
-                  <Link to="/tours">All Tours</Link>
-                </Button>
-              </div>
             </div>
 
             {/* Right Side - Image */}
