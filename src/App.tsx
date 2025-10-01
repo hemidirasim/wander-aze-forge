@@ -23,6 +23,8 @@ import AdminTours from "./pages/AdminTours";
 import AdminTest from "./pages/AdminTest";
 import AdminTourCategories from "./pages/AdminTourCategories";
 import AdminTourFormExtended from "./pages/AdminTourFormExtended";
+import AdminTourFormBasic from "./pages/AdminTourFormBasic";
+import AdminTourManage from "./pages/AdminTourManage";
 import AdminTourEdit from "./pages/AdminTourEdit";
 import AdminGallery from "./pages/AdminGallery";
 import AdminTourFormTest from "./pages/AdminTourFormTest";
@@ -80,7 +82,9 @@ const App = () => (
           <Route path="/admin" element={<SimpleAdminLayout />}>
             <Route path="tours" element={<AdminTours />} />
             <Route path="tours/edit/:id" element={<AdminTourEdit />} />
+            <Route path="tours/:id/manage" element={<AdminTourManage />} />
             <Route path="tour-categories" element={<AdminTourCategories />} />
+            <Route path="tour-form-basic" element={<AdminTourFormBasic />} />
             <Route path="tour-form-extended" element={<AdminTourFormExtended />} />
             <Route path="tour-form-test" element={<AdminTourFormTest />} />
             <Route path="test-route" element={<AdminTestRoute />} />
