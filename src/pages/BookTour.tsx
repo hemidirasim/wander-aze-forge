@@ -205,11 +205,11 @@ const BookTour = () => {
     return (
       <div className="min-h-screen bg-background">
         <DatabaseNavigation />
-        <div className="container mx-auto p-6 pt-24">
-          <div className="max-w-6xl mx-auto">
+        <div className="w-full px-6 pt-24">
+          <div className="w-full">
             <div className="animate-pulse">
               <div className="h-8 bg-muted rounded w-1/3 mb-6"></div>
-              <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div className="space-y-4">
                   <div className="h-64 bg-muted rounded"></div>
                   <div className="h-4 bg-muted rounded w-3/4"></div>
@@ -233,8 +233,8 @@ const BookTour = () => {
     return (
       <div className="min-h-screen bg-background">
         <DatabaseNavigation />
-        <div className="container mx-auto p-6 pt-24">
-          <div className="max-w-6xl mx-auto text-center">
+        <div className="w-full px-6 pt-24">
+          <div className="w-full text-center">
             <h1 className="text-2xl font-bold text-foreground mb-4">Tour Not Found</h1>
             <p className="text-muted-foreground mb-6">The tour you're looking for doesn't exist.</p>
             <Button onClick={() => navigate('/tours')}>
@@ -251,8 +251,8 @@ const BookTour = () => {
   return (
     <div className="min-h-screen bg-background">
       <DatabaseNavigation />
-      <div className="container mx-auto p-6 pt-24">
-        <div className="max-w-6xl mx-auto">
+      <div className="w-full px-6 pt-24">
+        <div className="w-full">
           <div className="mb-6">
             <Button 
               variant="outline" 
@@ -266,7 +266,7 @@ const BookTour = () => {
             <p className="text-muted-foreground">Complete your booking for {tour.title}</p>
           </div>
 
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Tour Details */}
             <div className="space-y-6">
               <Card>
