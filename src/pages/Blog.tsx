@@ -214,7 +214,7 @@ const Blog = () => {
                   </CardContent>
                   
                   <CardFooter className="pt-4">
-                    <Button variant="adventure" asChild className="w-fit">
+                    <Button size="lg" variant="hero-outline" asChild className="text-lg px-8 py-4 border-primary bg-primary/10 hover:bg-primary hover:text-white">
                       <Link to={`/blog/${featuredPost.id}`} className="flex items-center">
                         Read Full Story
                         <ArrowRight className="w-4 h-4 ml-2" />
@@ -277,7 +277,7 @@ const Blog = () => {
                 </CardContent>
                 
                 <CardFooter>
-                  <Button variant="ghost" asChild className="w-full group-hover:bg-primary group-hover:text-primary-foreground">
+                  <Button size="lg" variant="hero-outline" asChild className="w-full text-base px-6 py-3 border-primary bg-primary/10 hover:bg-primary hover:text-white">
                     <Link to={`/blog/${post.id}`} className="flex items-center justify-center">
                       Read More
                       <ArrowRight className="w-4 h-4 ml-2" />
