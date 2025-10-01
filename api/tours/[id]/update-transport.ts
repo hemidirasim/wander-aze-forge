@@ -41,6 +41,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       });
     }
 
+    // Ensure transport columns exist
+    try {
+      await pool.query(`
+        ALTER TABLE tours 
+        ADD COLUMN IF NOT EXISTS transport_details TEXT,
+        ADD COLUMN IF NOT EXISTS pickup_service TEXT
+      `);
+      console.log('Transport columns ensured');
+    } catch (columnError) {
+      console.log('Error ensuring transport columns (might already exist):', columnError);
+    }
+
     // Extract transport data
     const transportData = {
       transportDetails: req.body.transportDetails || '',

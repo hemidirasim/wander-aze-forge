@@ -41,6 +41,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       });
     }
 
+    // Ensure equipment columns exist
+    try {
+      await pool.query(`
+        ALTER TABLE tours 
+        ADD COLUMN IF NOT EXISTS provided_equipment JSONB DEFAULT '[]'::jsonb,
+        ADD COLUMN IF NOT EXISTS what_to_bring JSONB DEFAULT '[]'::jsonb
+      `);
+      console.log('Equipment columns ensured');
+    } catch (columnError) {
+      console.log('Error ensuring equipment columns (might already exist):', columnError);
+    }
+
     // Extract equipment data
     const equipmentData = {
       providedEquipment: req.body.providedEquipment || [],
