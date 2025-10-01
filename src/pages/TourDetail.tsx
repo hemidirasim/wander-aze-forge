@@ -189,14 +189,42 @@ const TourDetail = () => {
         </div>
       </section>
 
-      {/* Hero Image */}
-      <section className="relative h-[60vh]">
-        <img 
-          src={mainImage} 
-          alt={tour.title}
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+      {/* Hero Section - Split Layout */}
+      <section className="pb-12 px-4">
+        <div className="container mx-auto max-w-6xl">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Left Side - Title and Details */}
+            <div className="space-y-6">
+              <div className="flex items-center flex-wrap gap-3">
+                <Badge variant="secondary" className="bg-white/90 text-foreground">{tour.difficulty}</Badge>
+                <Badge variant="secondary" className="bg-white/90 text-foreground">{tour.duration}</Badge>
+                <div className="flex items-center space-x-1">
+                  <Star className="w-5 h-5 fill-current text-autumn" />
+                  <span className="font-semibold">{tour.rating}</span>
+                  <span className="text-muted-foreground text-sm">({tour.reviews_count} reviews)</span>
+                </div>
+              </div>
+              
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground">
+                {tour.title}
+              </h1>
+              
+              <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
+                {tour.description}
+              </p>
+            </div>
+
+            {/* Right Side - Main Image */}
+            <div className="relative h-96 lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl">
+              <img 
+                src={mainImage} 
+                alt={tour.title}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* Tour Details */}
@@ -206,26 +234,6 @@ const TourDetail = () => {
             
             {/* Main Content */}
             <div className="lg:col-span-2 space-y-8">
-              
-              {/* Header */}
-              <div>
-                <div className="flex items-center space-x-4 mb-4">
-                  <Badge variant="secondary">{tour.difficulty}</Badge>
-                  <div className="flex items-center space-x-1">
-                    <Star className="w-5 h-5 fill-current text-autumn" />
-                    <span className="font-semibold">{tour.rating}</span>
-                    <span className="text-muted-foreground">({tour.reviews_count} reviews)</span>
-                  </div>
-                </div>
-                
-                <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-                  {tour.title}
-                </h1>
-                
-                <p className="text-xl text-muted-foreground leading-relaxed">
-                  {tour.description}
-                </p>
-              </div>
 
               {/* 1. Overview */}
               <Card>
