@@ -72,10 +72,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Extract media data
     const galleryImages = req.body.galleryImages || [];
     const photographyService = req.body.photographyService || '';
+    const mainImage = req.body.mainImage || '';
 
     console.log('Processed media data:', {
       galleryImages,
-      photographyService
+      photographyService,
+      mainImage
     });
 
     // Ensure arrays are properly formatted
@@ -91,8 +93,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       UPDATE tours SET
         gallery_images = $1,
         photography_service = $2,
+        image_url = $3,
         updated_at = NOW()
-      WHERE id = $3
+      WHERE id = $4
       RETURNING *
     `;
 
@@ -100,6 +103,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const values = [
       galleryImagesArray,
       photographyService,
+      mainImage,
       id
     ];
 

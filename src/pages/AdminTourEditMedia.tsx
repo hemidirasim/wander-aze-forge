@@ -35,7 +35,8 @@ const AdminTourEditMedia: React.FC = () => {
 
   const [formData, setFormData] = useState({
     galleryImages: [] as string[],
-    photographyService: ''
+    photographyService: '',
+    mainImage: ''
   });
 
   const [uploading, setUploading] = useState(false);
@@ -58,7 +59,8 @@ const AdminTourEditMedia: React.FC = () => {
         setTour(tourData);
         setFormData({
           galleryImages: tourData.gallery_images || [],
-          photographyService: tourData.photography_service || ''
+          photographyService: tourData.photography_service || '',
+          mainImage: tourData.image_url || ''
         });
         
         console.log('Loaded media data:', {
@@ -194,7 +196,8 @@ const AdminTourEditMedia: React.FC = () => {
     // Filter out empty strings from gallery images
     const cleanedFormData = {
       galleryImages: formData.galleryImages.filter(item => item.trim() !== ''),
-      photographyService: formData.photographyService
+      photographyService: formData.photographyService,
+      mainImage: formData.mainImage
     };
 
     console.log('Sending media data:', cleanedFormData);
@@ -345,67 +348,73 @@ const AdminTourEditMedia: React.FC = () => {
 
                 {/* Gallery Images List */}
                 {formData.galleryImages.length > 0 && (
-                  <div className="space-y-2">
+                  <div className="space-y-4">
                     <Label>Gallery Images ({formData.galleryImages.length})</Label>
-                    {formData.galleryImages.map((image, index) => (
-                      <div key={index} className="flex items-center gap-2 p-2 border rounded">
-                        <img 
-                          src={image} 
-                          alt={`Gallery ${index + 1}`}
-                          className="w-12 h-12 object-cover rounded"
-                          onError={(e) => {
-                            e.currentTarget.style.display = 'none';
-                          }}
-                        />
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm truncate">{image}</p>
-                        </div>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          onClick={() => removeGalleryImage(index)}
-                          className="text-red-600 hover:text-red-700"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
+                    
+                    {/* Main Image Selection */}
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium">Main Image (Tour Cover)</Label>
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                        {formData.galleryImages.map((image, index) => (
+                          <div 
+                            key={index} 
+                            className={`relative cursor-pointer border-2 rounded-lg overflow-hidden ${
+                              formData.mainImage === image 
+                                ? 'border-blue-500 ring-2 ring-blue-200' 
+                                : 'border-gray-200'
+                            }`}
+                            onClick={() => setFormData(prev => ({ ...prev, mainImage: image }))}
+                          >
+                            <img 
+                              src={image} 
+                              alt={`Gallery ${index + 1}`}
+                              className="w-full h-20 object-cover"
+                              onError={(e) => {
+                                e.currentTarget.style.display = 'none';
+                              }}
+                            />
+                            {formData.mainImage === image && (
+                              <div className="absolute top-1 right-1 bg-blue-500 text-white rounded-full p-1">
+                                <Camera className="w-3 h-3" />
+                              </div>
+                            )}
+                            <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white text-xs p-1 text-center">
+                              {formData.mainImage === image ? 'Main Image' : 'Click to set as main'}
+                            </div>
+                          </div>
+                        ))}
                       </div>
-                    ))}
+                    </div>
+
+                    {/* Gallery Images Grid */}
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium">All Gallery Images</Label>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                        {formData.galleryImages.map((image, index) => (
+                          <div key={index} className="relative group">
+                            <img 
+                              src={image} 
+                              alt={`Gallery ${index + 1}`}
+                              className="w-full h-20 object-cover rounded border"
+                              onError={(e) => {
+                                e.currentTarget.style.display = 'none';
+                              }}
+                            />
+                            <Button
+                              type="button"
+                              variant="destructive"
+                              size="sm"
+                              onClick={() => removeGalleryImage(index)}
+                              className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                              <Trash2 className="w-3 h-3" />
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 )}
-
-                {/* Manual URL Input */}
-                <div className="border-t pt-4">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={addGalleryImage}
-                    className="w-full"
-                  >
-                    <Plus className="w-4 h-4 mr-2" />
-                    Add Image URL Manually
-                  </Button>
-                  
-                  {formData.galleryImages.map((image, index) => (
-                    <div key={index} className="flex items-center gap-2 mt-2">
-                      <Input
-                        value={image}
-                        onChange={(e) => updateGalleryImage(index, e.target.value)}
-                        placeholder="Enter image URL"
-                        className="flex-1"
-                      />
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => removeGalleryImage(index)}
-                        className="text-red-600 hover:text-red-700"
-                      >
-                        <X className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  ))}
-                </div>
               </CardContent>
             </Card>
 
