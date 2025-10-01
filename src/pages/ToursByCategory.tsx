@@ -162,22 +162,40 @@ const ToursByCategory = () => {
         <DatabaseNavigation />
         
         {/* Hero Section */}
-        <section className="relative h-[60vh] flex items-center justify-center">
-          <div 
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: `url(${category.image_url || 'https://images.unsplash.com/photo-1551632811-561732d1e306?w=1920&h=1080&fit=crop'})` }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-transparent" />
-          <div className="relative z-10 text-center text-white max-w-4xl px-4">
-            <div className="mb-6">
-              <Badge variant="secondary" className="bg-primary text-primary-foreground mb-4">
-                {category.name}
-              </Badge>
+        <section className="pt-24 pb-12 px-4">
+          <div className="container mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+              {/* Left Side - Content */}
+              <div className="space-y-6">
+                <Badge variant="secondary" className="bg-primary text-primary-foreground">
+                  {category.name}
+                </Badge>
+                <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-foreground">
+                  {category.name} Tours
+                </h1>
+                <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed">
+                  {category.description}
+                </p>
+                <div className="flex flex-wrap gap-4 pt-4">
+                  <Button size="lg" variant="adventure" asChild>
+                    <Link to="/contact">Book Now</Link>
+                  </Button>
+                  <Button size="lg" variant="outline" asChild>
+                    <Link to="/tours">All Tours</Link>
+                  </Button>
+                </div>
+              </div>
+
+              {/* Right Side - Image */}
+              <div className="relative h-96 lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl">
+                <img 
+                  src={category.image_url || 'https://images.unsplash.com/photo-1551632811-561732d1e306?w=1920&h=1080&fit=crop'}
+                  alt={category.name}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+              </div>
             </div>
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 capitalize">{category.name} Tours</h1>
-            <p className="text-xl md:text-2xl mb-8 text-white/90">
-              {category.description}
-            </p>
           </div>
         </section>
 
@@ -213,22 +231,40 @@ const ToursByCategory = () => {
       <DatabaseNavigation />
       
       {/* Hero Section */}
-      <section className="relative h-[60vh] flex items-center justify-center">
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: `url(${category.image_url || 'https://images.unsplash.com/photo-1551632811-561732d1e306?w=1920&h=1080&fit=crop'})` }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-transparent" />
-        <div className="relative z-10 text-center text-white max-w-4xl px-4">
-          <div className="mb-6">
-            <Badge variant="secondary" className="bg-primary text-primary-foreground mb-4">
-              {category.name}
-            </Badge>
+      <section className="pt-24 pb-12 px-4">
+        <div className="container mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Left Side - Content */}
+            <div className="space-y-6">
+              <Badge variant="secondary" className="bg-primary text-primary-foreground">
+                {category.name}
+              </Badge>
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-foreground">
+                {category.name} Tours
+              </h1>
+              <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed">
+                {category.description}
+              </p>
+              <div className="flex flex-wrap gap-4 pt-4">
+                <Button size="lg" variant="adventure" asChild>
+                  <Link to="/contact">Book Now</Link>
+                </Button>
+                <Button size="lg" variant="outline" asChild>
+                  <Link to="/tours">All Tours</Link>
+                </Button>
+              </div>
+            </div>
+
+            {/* Right Side - Image */}
+            <div className="relative h-96 lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl">
+              <img 
+                src={category.image_url || 'https://images.unsplash.com/photo-1551632811-561732d1e306?w=1920&h=1080&fit=crop'}
+                alt={category.name}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+            </div>
           </div>
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 capitalize">{category.name} Tours</h1>
-          <p className="text-xl md:text-2xl mb-8 text-white/90">
-            {category.description}
-          </p>
         </div>
       </section>
 
