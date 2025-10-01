@@ -115,17 +115,38 @@ const AdminTourEditMedia: React.FC = () => {
 
     try {
       const uploadPromises = Array.from(files).map(async (file, index) => {
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('folder', 'tours/gallery');
+        // Convert file to base64
+        const base64 = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => {
+            const result = reader.result as string;
+            // Remove data:image/...;base64, prefix
+            const base64Data = result.split(',')[1];
+            resolve(base64Data);
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+
+        const uploadData = {
+          fileData: base64,
+          filename: file.name,
+          fileType: file.type,
+          fileSize: file.size,
+          category: 'tours/gallery'
+        };
 
         const response = await fetch('/api/upload/image', {
           method: 'POST',
-          body: formData,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(uploadData),
         });
 
         if (!response.ok) {
-          throw new Error(`Upload failed for ${file.name}`);
+          const errorData = await response.json();
+          throw new Error(`Upload failed for ${file.name}: ${errorData.error || 'Unknown error'}`);
         }
 
         const data = await response.json();
@@ -150,7 +171,7 @@ const AdminTourEditMedia: React.FC = () => {
       console.error('Upload error:', error);
       toast({
         title: "Upload Failed",
-        description: "Failed to upload images. Please try again.",
+        description: error instanceof Error ? error.message : "Failed to upload images. Please try again.",
         variant: "destructive"
       });
     } finally {
