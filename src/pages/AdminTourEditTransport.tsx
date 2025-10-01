@@ -53,6 +53,11 @@ const AdminTourEditTransport: React.FC = () => {
           transportDetails: tourData.transport_details || '',
           pickupService: tourData.pickup_service || ''
         });
+        
+        console.log('Loaded transport data:', {
+          transportDetails: tourData.transport_details,
+          pickupService: tourData.pickup_service
+        });
       } else {
         toast({
           title: "Error",

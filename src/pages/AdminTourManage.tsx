@@ -63,72 +63,78 @@ const AdminTourManage: React.FC = () => {
   const [tour, setTour] = useState<Tour | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const tourSections: TourSection[] = [
-    {
-      id: 'basic',
-      title: 'Basic Information',
-      description: 'Edit tour title, description, category, duration, difficulty, price',
-      icon: <Edit className="w-5 h-5" />,
-      completed: true,
-      route: `/admin/tours/${id}/basic`
-    },
-    {
-      id: 'equipment',
-      title: 'Equipment & Gear',
-      description: 'Add provided equipment and what to bring',
-      icon: <Shield className="w-5 h-5" />,
-      completed: false,
-      route: `/admin/tours/${id}/equipment`
-    },
-    {
-      id: 'transport',
-      title: 'Transport & Logistics',
-      description: 'Add transport details and pickup service',
-      icon: <Car className="w-5 h-5" />,
-      completed: false,
-      route: `/admin/tours/${id}/transport`
-    },
-    {
-      id: 'media',
-      title: 'Media & Photography',
-      description: 'Add gallery images and photography service',
-      icon: <Camera className="w-5 h-5" />,
-      completed: false,
-      route: `/admin/tours/${id}/media`
-    },
-    {
-      id: 'pricing',
-      title: 'Pricing Details',
-      description: 'Add pricing information and discounts',
-      icon: <DollarSign className="w-5 h-5" />,
-      completed: false,
-      route: `/admin/tours/${id}/pricing`
-    },
-    {
-      id: 'highlights',
-      title: 'Highlights & Features',
-      description: 'Add tour highlights and what\'s included/excluded',
-      icon: <Star className="w-5 h-5" />,
-      completed: false,
-      route: `/admin/tours/${id}/highlights`
-    },
-    {
-      id: 'programs',
-      title: 'Tour Programs',
-      description: 'Add detailed day-by-day tour programs',
-      icon: <Clock className="w-5 h-5" />,
-      completed: false,
-      route: `/admin/tours/${id}/programs`
-    },
-    {
-      id: 'accommodation',
-      title: 'Accommodation & Meals',
-      description: 'Add accommodation and meal details',
-      icon: <Utensils className="w-5 h-5" />,
-      completed: false,
-      route: `/admin/tours/${id}/accommodation`
-    },
-  ];
+  const getTourSections = (): TourSection[] => {
+    if (!tour) return [];
+    
+    return [
+      {
+        id: 'basic',
+        title: 'Basic Information',
+        description: 'Edit tour title, description, category, duration, difficulty, price',
+        icon: <Edit className="w-5 h-5" />,
+        completed: true, // Basic info is always completed after creation
+        route: `/admin/tours/${id}/basic`
+      },
+      {
+        id: 'equipment',
+        title: 'Equipment & Gear',
+        description: 'Add provided equipment and what to bring',
+        icon: <Shield className="w-5 h-5" />,
+        completed: !!(tour.provided_equipment && tour.provided_equipment.length > 0) || 
+                   !!(tour.what_to_bring && tour.what_to_bring.length > 0),
+        route: `/admin/tours/${id}/equipment`
+      },
+      {
+        id: 'transport',
+        title: 'Transport & Logistics',
+        description: 'Add transport details and pickup service',
+        icon: <Car className="w-5 h-5" />,
+        completed: !!(tour.transport_details && tour.transport_details.trim()) || 
+                   !!(tour.pickup_service && tour.pickup_service.trim()),
+        route: `/admin/tours/${id}/transport`
+      },
+      {
+        id: 'media',
+        title: 'Media & Photography',
+        description: 'Add gallery images and photography service',
+        icon: <Camera className="w-5 h-5" />,
+        completed: false, // Will be implemented later
+        route: `/admin/tours/${id}/media`
+      },
+      {
+        id: 'pricing',
+        title: 'Pricing Details',
+        description: 'Add pricing information and discounts',
+        icon: <DollarSign className="w-5 h-5" />,
+        completed: false, // Will be implemented later
+        route: `/admin/tours/${id}/pricing`
+      },
+      {
+        id: 'highlights',
+        title: 'Highlights & Features',
+        description: 'Add tour highlights and what\'s included/excluded',
+        icon: <Star className="w-5 h-5" />,
+        completed: false, // Will be implemented later
+        route: `/admin/tours/${id}/highlights`
+      },
+      {
+        id: 'programs',
+        title: 'Tour Programs',
+        description: 'Add detailed day-by-day tour programs',
+        icon: <Clock className="w-5 h-5" />,
+        completed: false, // Will be implemented later
+        route: `/admin/tours/${id}/programs`
+      },
+      {
+        id: 'accommodation',
+        title: 'Accommodation & Meals',
+        description: 'Add accommodation and meal details',
+        icon: <Utensils className="w-5 h-5" />,
+        completed: false, // Will be implemented later
+        route: `/admin/tours/${id}/accommodation`
+      },
+    ];
+  };
 
   useEffect(() => {
     if (id) {
@@ -264,7 +270,7 @@ const AdminTourManage: React.FC = () => {
             </p>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {tourSections.map((section) => (
+              {getTourSections().map((section) => (
                 <Card 
                   key={section.id} 
                   className="cursor-pointer hover:shadow-lg transition-shadow"

@@ -51,9 +51,36 @@ const AdminTourEditEquipment: React.FC = () => {
       if (data.success) {
         const tourData = data.data;
         setTour(tourData);
+        
+        // Parse JSON strings if they exist
+        let providedEquipment = [];
+        let whatToBring = [];
+        
+        if (tourData.provided_equipment) {
+          try {
+            providedEquipment = typeof tourData.provided_equipment === 'string' 
+              ? JSON.parse(tourData.provided_equipment) 
+              : tourData.provided_equipment;
+          } catch (e) {
+            console.log('Error parsing provided_equipment:', e);
+            providedEquipment = [];
+          }
+        }
+        
+        if (tourData.what_to_bring) {
+          try {
+            whatToBring = typeof tourData.what_to_bring === 'string' 
+              ? JSON.parse(tourData.what_to_bring) 
+              : tourData.what_to_bring;
+          } catch (e) {
+            console.log('Error parsing what_to_bring:', e);
+            whatToBring = [];
+          }
+        }
+        
         setFormData({
-          providedEquipment: tourData.provided_equipment || [],
-          whatToBring: tourData.what_to_bring || []
+          providedEquipment: providedEquipment,
+          whatToBring: whatToBring
         });
       } else {
         toast({
