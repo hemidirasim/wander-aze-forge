@@ -40,7 +40,7 @@ const AdminTestRoute: React.FC = () => {
                   Go to Simple Tour Form
                 </button>
                 <button 
-                  onClick={() => window.location.href = '/admin/tour-form-extended'}
+                  onClick={() => window.location.href = '/admin/tour-form-basic'}
                   className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 ml-2"
                 >
                   Go to Extended Tour Form
