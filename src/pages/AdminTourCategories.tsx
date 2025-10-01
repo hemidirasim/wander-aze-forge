@@ -15,7 +15,8 @@ import {
   X, 
   Image as ImageIcon,
   Eye,
-  EyeOff
+  EyeOff,
+  GripVertical
 } from 'lucide-react';
 
 interface TourCategory {
@@ -198,6 +199,53 @@ const AdminTourCategories = () => {
     }
   };
 
+  const handleDragStart = (e: React.DragEvent, index: number) => {
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/html', index.toString());
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  };
+
+  const handleDrop = async (e: React.DragEvent, dropIndex: number) => {
+    e.preventDefault();
+    const dragIndex = parseInt(e.dataTransfer.getData('text/html'));
+    
+    if (dragIndex === dropIndex) return;
+
+    // Reorder categories
+    const newCategories = [...categories];
+    const [draggedItem] = newCategories.splice(dragIndex, 1);
+    newCategories.splice(dropIndex, 0, draggedItem);
+
+    // Update sort_order for all categories
+    const updatedCategories = newCategories.map((cat, idx) => ({
+      ...cat,
+      sort_order: idx
+    }));
+
+    setCategories(updatedCategories);
+
+    // Save new order to database
+    try {
+      await Promise.all(
+        updatedCategories.map(cat =>
+          fetch(`/api/tour-categories?id=${cat.id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(cat)
+          })
+        )
+      );
+    } catch (err) {
+      console.error('Error updating category order:', err);
+      setError('Failed to update category order');
+      await fetchCategories(); // Revert on error
+    }
+  };
+
   if (loading) {
     return (
       <div className="container mx-auto p-6">
@@ -335,17 +383,27 @@ const AdminTourCategories = () => {
 
       {/* Categories List */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {categories.map((category) => (
-          <Card key={category.id} className="group hover:shadow-lg transition-shadow">
+        {categories.map((category, index) => (
+          <Card 
+            key={category.id} 
+            className="group hover:shadow-lg transition-shadow cursor-move"
+            draggable
+            onDragStart={(e) => handleDragStart(e, index)}
+            onDragOver={handleDragOver}
+            onDrop={(e) => handleDrop(e, index)}
+          >
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle className="text-lg">{category.name}</CardTitle>
+                <div className="flex items-center gap-2">
+                  <GripVertical className="w-5 h-5 text-muted-foreground cursor-grab active:cursor-grabbing" />
+                  <CardTitle className="text-lg">{category.name}</CardTitle>
+                </div>
                 <div className="flex items-center gap-2">
                   <Badge variant={category.is_active ? "default" : "secondary"}>
                     {category.is_active ? "Active" : "Inactive"}
                   </Badge>
                   <span className="text-sm text-muted-foreground">
-                    Order: {category.sort_order}
+                    #{category.sort_order}
                   </span>
                 </div>
               </div>
