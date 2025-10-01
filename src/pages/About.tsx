@@ -111,13 +111,27 @@ const About = () => {
 
       {/* Our Story */}
       <section className="pt-32 pb-20 px-4">
-        <div className="container mx-auto max-w-4xl">
+        <div className="container mx-auto max-w-5xl">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
               {ourStoryData?.title || 'Our Story'}
             </h2>
-            <div className="text-xl text-muted-foreground leading-relaxed whitespace-pre-line">
-              {ourStoryData?.content || 'Loading...'}
+            <div className="text-lg text-muted-foreground leading-relaxed text-left space-y-4">
+              <p>
+                Outtour Azerbaijan is a community-based eco-tourism initiative dedicated to sustainable and responsible travel in Azerbaijan. Founded in 2014 as Camping Azerbaijan, our mission has always been to connect people with nature, encourage eco-conscious journeys, and support local communities while showcasing the country's cultural richness and natural beauty.
+              </p>
+              <p>
+                Since then, we have organized more than 700 tours for travelers from over 50 countries, exploring remote mountain villages, scenic landscapes, and unique heritage sites. By collaborating with more than 100 local families and drivers, we create meaningful economic opportunities through homestays, traditional food, and cultural experiences. We also design tailored programs for companies, schools, and international groups.
+              </p>
+              <p>
+                Over the years, our work has helped nurture a growing local interest in ecotourism, inspiring Azerbaijanis to explore and protect their own natural and cultural heritage.
+              </p>
+              <p>
+                Beyond tours, outtour.az supports projects that make a difference, such as Kəndabad, Ecofront, and Birdwatching Azerbaijan. Notable initiatives include School Bus in Remote Villages and Santa Claus in Remote Villages, which bring long-term benefits and joy to rural communities.
+              </p>
+              <p className="font-semibold text-foreground">
+                Our vision is to position Azerbaijan as a regional leader in sustainable tourism — offering authentic hiking, birdwatching, cultural, and wildlife experiences while ensuring that local communities thrive alongside conservation.
+              </p>
             </div>
           </div>
 
