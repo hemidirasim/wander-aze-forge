@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { MapPin, Phone, Mail, Facebook, Instagram, Linkedin, Twitter, Heart, Leaf } from 'lucide-react';
+import { MapPin, Phone, Mail, Facebook, Instagram, Linkedin, Youtube, Heart, Leaf } from 'lucide-react';
 
 interface DatabaseTourCategory {
   id: number;
@@ -56,7 +56,16 @@ const Footer = () => {
     { icon: Facebook, href: 'https://www.facebook.com/campingazerbaijan2014', name: 'Facebook' },
     { icon: Instagram, href: 'https://www.instagram.com/camping_azerbaijan/', name: 'Instagram' },
     { icon: Linkedin, href: 'https://www.linkedin.com/company/campingazerbaijan/', name: 'LinkedIn' },
-    { icon: Twitter, href: 'https://x.com/CampingAze', name: 'Twitter' }
+    { icon: Youtube, href: 'https://www.youtube.com/@campingazerbaijan', name: 'YouTube' },
+    { 
+      icon: () => (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.31-8.86c-1.77-.45-2.34-.94-2.34-1.67 0-.84.79-1.43 2.1-1.43 1.38 0 1.9.66 1.94 1.64h1.71c-.05-1.34-.87-2.57-2.49-2.97V5.69h-2.16v1.04c-1.51.42-2.72 1.36-2.72 2.91 0 1.86 1.54 2.82 3.78 3.42 2.01.51 2.41 1.27 2.41 2.05 0 .58-.37 1.49-2.1 1.49-1.6 0-2.23-.72-2.32-1.64H8.41c.1 1.7 1.36 2.66 2.74 3.08v1.07h2.16v-1.08c1.53-.43 2.73-1.43 2.73-2.96 0-2.35-2.04-3.06-3.73-3.51z"/>
+        </svg>
+      ), 
+      href: 'https://www.tripadvisor.com/Profile/Campingaze', 
+      name: 'TripAdvisor' 
+    }
   ];
 
   return (
