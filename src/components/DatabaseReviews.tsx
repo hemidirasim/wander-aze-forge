@@ -3,7 +3,13 @@ import { useApi } from '@/hooks/useApi';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ExternalLink } from 'lucide-react';
-import Fancybox from '@/components/ui/fancybox';
+
+// Declare Fancybox for TypeScript
+declare global {
+  interface Window {
+    Fancybox: any;
+  }
+}
 
 interface Review {
   id: number;
@@ -21,6 +27,24 @@ interface Review {
 
 const DatabaseReviews = () => {
   const { data: reviews, loading, error } = useApi<Review[]>('/reviews?featured=true');
+
+  // Initialize Fancybox for review images
+  useEffect(() => {
+    if (window.Fancybox && reviews && reviews.length > 0) {
+      window.Fancybox.bind('[data-fancybox="reviews"]', {
+        Thumbs: {
+          autoStart: false,
+        },
+      });
+    }
+
+    // Cleanup Fancybox when component unmounts
+    return () => {
+      if (window.Fancybox) {
+        window.Fancybox.destroy();
+      }
+    };
+  }, [reviews]);
 
   if (loading) {
     return (
@@ -71,8 +95,7 @@ const DatabaseReviews = () => {
         </div>
 
         {reviews && reviews.length > 0 ? (
-          <Fancybox>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {reviews.map((review) => (
                 <Card key={review.id} className="group hover:shadow-elevated transition-all duration-300 overflow-hidden border-0 bg-card/80 backdrop-blur-sm hover:scale-105">
                   {review.image_url && (
@@ -134,8 +157,7 @@ const DatabaseReviews = () => {
                   </CardContent>
                 </Card>
               ))}
-            </div>
-          </Fancybox>
+          </div>
         ) : (
           <div className="text-center">
             <p className="text-muted-foreground text-lg">No reviews available at the moment.</p>
