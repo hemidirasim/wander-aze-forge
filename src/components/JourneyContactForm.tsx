@@ -177,7 +177,7 @@ const JourneyContactForm = () => {
             <h2 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
               Plan Your Journey With Us
             </h2>
-            <p className="text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xl text-white max-w-3xl mx-auto leading-relaxed">
               Ready to explore Azerbaijan? Tell us your travel dreams and we'll craft the perfect adventure for you
             </p>
           </div>
@@ -446,7 +446,7 @@ const JourneyContactForm = () => {
                           className="rounded"
                         />
                       </FormControl>
-                      <FormLabel className="text-sm text-gray-700 cursor-pointer">
+                      <FormLabel className="text-sm text-white cursor-pointer">
                         Subscribe to our newsletter for adventure tips and tour updates
                       </FormLabel>
                     </FormItem>
@@ -467,8 +467,8 @@ const JourneyContactForm = () => {
                           className="rounded mt-1"
                         />
                       </FormControl>
-                      <FormLabel className="text-sm text-gray-700 cursor-pointer">
-                        I agree to the <a href="/terms" className="text-gray-900 hover:underline font-semibold">Terms & Conditions</a> and <a href="/privacy" className="text-gray-900 hover:underline font-semibold">Privacy Policy</a> *
+                      <FormLabel className="text-sm text-white cursor-pointer">
+                        I agree to the <a href="/terms" className="text-white hover:underline font-semibold">Terms & Conditions</a> and <a href="/privacy" className="text-white hover:underline font-semibold">Privacy Policy</a> *
                       </FormLabel>
                       <FormMessage className="text-red-600" />
                     </FormItem>
@@ -493,7 +493,7 @@ const JourneyContactForm = () => {
                     )}
                   </Button>
                   
-                  <p className="text-xs text-gray-600 text-center mt-4">
+                  <p className="text-xs text-white text-center mt-4">
                     We respect your privacy. Your information will only be used to respond to your inquiry.
                   </p>
                 </div>
