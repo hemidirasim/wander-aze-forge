@@ -236,16 +236,16 @@ const DatabaseNavigation = () => {
                                 scrollToTopInstant();
                               }}
                             >
-                              <div className="w-6 h-6 mr-3 flex items-center justify-center flex-shrink-0">
+                              <div className="w-8 h-8 mr-3 flex items-center justify-center flex-shrink-0">
                                 {category.icon_url ? (
                                   <img 
                                     src={category.icon_url} 
                                     alt={category.name}
-                                    className="w-5 h-5 object-contain"
+                                    className="w-6 h-6 object-contain"
                                     style={{ filter: 'brightness(0) saturate(100%) invert(45%) sepia(89%) saturate(1500%) hue-rotate(345deg) brightness(95%) contrast(95%)' }}
                                   />
                                 ) : (
-                                  <Mountain className="w-5 h-5 text-primary" />
+                                  <Mountain className="w-6 h-6 text-primary" />
                                 )}
                               </div>
                               <div>
