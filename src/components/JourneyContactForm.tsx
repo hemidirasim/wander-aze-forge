@@ -182,7 +182,7 @@ const JourneyContactForm = () => {
             </p>
           </div>
 
-          <div className="rounded-2xl p-8 md:p-12 border border-gray-200 shadow-lg" style={{ background: '#d46f390d' }}>
+          <div className="rounded-2xl p-8 md:p-12 border border-gray-200 shadow-lg" style={{ background: 'rgb(215 114 61 / 50%)' }}>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6" autoComplete="off">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
