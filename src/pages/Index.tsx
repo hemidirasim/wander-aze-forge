@@ -172,12 +172,12 @@ const Index = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {highlights.map((highlight, index) => (
-              <Card key={index} className="group text-center hover:shadow-elevated transition-all duration-500 border-0 bg-card/80 backdrop-blur-sm hover:scale-105">
+              <Card key={index} className="text-center border-0 bg-card/80 backdrop-blur-sm">
                 <CardHeader className="pb-4">
-                  <div className="mx-auto w-20 h-20 bg-gradient-hero rounded-2xl flex items-center justify-center mb-6 group-hover:shadow-glow transition-all duration-300">
+                  <div className="mx-auto w-20 h-20 bg-gradient-hero rounded-2xl flex items-center justify-center mb-6">
                     <highlight.icon className="w-10 h-10 text-white" />
                   </div>
-                  <CardTitle className="text-2xl text-foreground group-hover:text-primary transition-colors">
+                  <CardTitle className="text-2xl text-foreground">
                     {highlight.title}
                   </CardTitle>
                 </CardHeader>
