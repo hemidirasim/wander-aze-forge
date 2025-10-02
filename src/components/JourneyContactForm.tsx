@@ -478,7 +478,7 @@ const JourneyContactForm = () => {
                         <FormControl>
                           <Input {...field} className="bg-white border-gray-300 text-gray-900 placeholder:text-gray-500 h-12" placeholder="Your first name" />
                         </FormControl>
-                        <FormMessage className="text-red-600" />
+                        <FormMessage className="text-gray-900" />
                       </FormItem>
                     )}
                   />
@@ -493,7 +493,7 @@ const JourneyContactForm = () => {
                         <FormControl>
                           <Input {...field} className="bg-white border-gray-300 text-gray-900 placeholder:text-gray-500 h-12" placeholder="Your last name" />
                         </FormControl>
-                        <FormMessage className="text-red-600" />
+                        <FormMessage className="text-gray-900" />
                       </FormItem>
                     )}
                   />
@@ -508,7 +508,7 @@ const JourneyContactForm = () => {
                         <FormControl>
                           <Input {...field} type="email" className="bg-white border-gray-300 text-gray-900 placeholder:text-gray-500 h-12" placeholder="your.email@example.com" />
                         </FormControl>
-                        <FormMessage className="text-red-600" />
+                        <FormMessage className="text-gray-900" />
                       </FormItem>
                     )}
                   />
@@ -523,7 +523,7 @@ const JourneyContactForm = () => {
                         <FormControl>
                           <Input {...field} type="tel" className="bg-white border-gray-300 text-gray-900 placeholder:text-gray-500 h-12" placeholder="+1 (555) 123-4567" />
                         </FormControl>
-                        <FormMessage className="text-red-600" />
+                        <FormMessage className="text-gray-900" />
                       </FormItem>
                     )}
                   />
@@ -594,7 +594,7 @@ const JourneyContactForm = () => {
                             )}
                           </div>
                         </FormControl>
-                        <FormMessage className="text-red-600" />
+                        <FormMessage className="text-gray-900" />
                       </FormItem>
                     )}
                   />
@@ -626,7 +626,7 @@ const JourneyContactForm = () => {
                             ))}
                           </select>
                         </FormControl>
-                        <FormMessage className="text-red-600" />
+                        <FormMessage className="text-gray-900" />
                       </FormItem>
                     )}
                   />
@@ -656,7 +656,7 @@ const JourneyContactForm = () => {
                               ))}
                             </select>
                           </FormControl>
-                          <FormMessage className="text-red-600" />
+                          <FormMessage className="text-gray-900" />
                         </FormItem>
                       )}
                     />
@@ -674,7 +674,7 @@ const JourneyContactForm = () => {
                         <FormControl>
                           <Input {...field} type="number" min="1" max="20" className="bg-white border-gray-300 text-gray-900 placeholder:text-gray-500 h-12" placeholder="Number of travelers" />
                         </FormControl>
-                        <FormMessage className="text-red-600" />
+                        <FormMessage className="text-gray-900" />
                       </FormItem>
                     )}
                   />
@@ -689,7 +689,7 @@ const JourneyContactForm = () => {
                         <FormControl>
                           <Input {...field} className="bg-white border-gray-300 text-gray-900 placeholder:text-gray-500 h-12" placeholder="e.g., June 15-20, 2024" />
                         </FormControl>
-                        <FormMessage className="text-red-600" />
+                        <FormMessage className="text-gray-900" />
                       </FormItem>
                     )}
                   />
@@ -709,7 +709,7 @@ const JourneyContactForm = () => {
                           placeholder="Tell us about your interests, fitness level, special requirements, or any questions you have..."
                         />
                       </FormControl>
-                      <FormMessage className="text-red-600" />
+                      <FormMessage className="text-gray-900" />
                     </FormItem>
                   )}
                 />
@@ -752,7 +752,7 @@ const JourneyContactForm = () => {
                       <FormLabel className="text-sm text-white cursor-pointer">
                         I agree to the <a href="/terms" className="text-white hover:underline font-bold">Terms & Conditions</a> and <a href="/privacy" className="text-white hover:underline font-bold">Privacy Policy</a> *
                       </FormLabel>
-                      <FormMessage className="text-red-600" />
+                      <FormMessage className="text-gray-900" />
                     </FormItem>
                   )}
                 />
