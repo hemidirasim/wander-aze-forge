@@ -32,9 +32,9 @@ const AdminTourEditPricing: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [formData, setFormData] = useState({
-    priceIncludes: [] as string[],
-    groupDiscounts: '',
-    earlyBirdDiscount: ''
+    basePrice: '',
+    participantPricing: [] as Array<{minParticipants: number, maxParticipants: number, pricePerPerson: number}>,
+    priceIncludes: [] as string[]
   });
 
   useEffect(() => {
@@ -53,15 +53,15 @@ const AdminTourEditPricing: React.FC = () => {
         const tourData = data.data;
         setTour(tourData);
         setFormData({
-          priceIncludes: tourData.price_includes || [],
-          groupDiscounts: tourData.group_discounts || '',
-          earlyBirdDiscount: tourData.early_bird_discount || ''
+          basePrice: tourData.price?.toString() || '',
+          participantPricing: tourData.participant_pricing || [],
+          priceIncludes: tourData.price_includes || []
         });
         
         console.log('Loaded pricing data:', {
-          priceIncludes: tourData.price_includes,
-          groupDiscounts: tourData.group_discounts,
-          earlyBirdDiscount: tourData.early_bird_discount
+          basePrice: tourData.price,
+          participantPricing: tourData.participant_pricing,
+          priceIncludes: tourData.price_includes
         });
       } else {
         toast({
@@ -82,6 +82,29 @@ const AdminTourEditPricing: React.FC = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const addParticipantPricing = () => {
+    setFormData(prev => ({
+      ...prev,
+      participantPricing: [...prev.participantPricing, {minParticipants: 1, maxParticipants: 1, pricePerPerson: 0}]
+    }));
+  };
+
+  const removeParticipantPricing = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      participantPricing: prev.participantPricing.filter((_, i) => i !== index)
+    }));
+  };
+
+  const updateParticipantPricing = (index: number, field: string, value: number) => {
+    setFormData(prev => ({
+      ...prev,
+      participantPricing: prev.participantPricing.map((item, i) => 
+        i === index ? { ...item, [field]: value } : item
+      )
+    }));
   };
 
   const addPriceInclude = () => {
@@ -118,9 +141,9 @@ const AdminTourEditPricing: React.FC = () => {
 
     // Filter out empty strings from price includes
     const cleanedFormData = {
-      priceIncludes: formData.priceIncludes.filter(item => item.trim() !== ''),
-      groupDiscounts: formData.groupDiscounts,
-      earlyBirdDiscount: formData.earlyBirdDiscount
+      basePrice: formData.basePrice,
+      participantPricing: formData.participantPricing,
+      priceIncludes: formData.priceIncludes.filter(item => item.trim() !== '')
     };
 
     console.log('Sending pricing data:', cleanedFormData);
@@ -218,11 +241,102 @@ const AdminTourEditPricing: React.FC = () => {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-8">
-            {/* Price Includes */}
+            {/* Base Price */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <DollarSign className="w-5 h-5 text-primary" />
+                  Base Price
+                </CardTitle>
+                <p className="text-sm text-muted-foreground">
+                  Set the base price for the tour
+                </p>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="basePrice">Base Price ($)</Label>
+                  <Input
+                    id="basePrice"
+                    type="number"
+                    value={formData.basePrice}
+                    onChange={(e) => handleInputChange('basePrice', e.target.value)}
+                    placeholder="Enter base price"
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Participant-Based Pricing */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Percent className="w-5 h-5 text-primary" />
+                  Participant-Based Pricing
+                </CardTitle>
+                <p className="text-sm text-muted-foreground">
+                  Set different prices based on number of participants
+                </p>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {formData.participantPricing.map((pricing, index) => (
+                  <div key={index} className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 border rounded-lg">
+                    <div className="space-y-2">
+                      <Label>Min Participants</Label>
+                      <Input
+                        type="number"
+                        value={pricing.minParticipants}
+                        onChange={(e) => updateParticipantPricing(index, 'minParticipants', parseInt(e.target.value) || 0)}
+                        placeholder="Min"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Max Participants</Label>
+                      <Input
+                        type="number"
+                        value={pricing.maxParticipants}
+                        onChange={(e) => updateParticipantPricing(index, 'maxParticipants', parseInt(e.target.value) || 0)}
+                        placeholder="Max"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Price Per Person ($)</Label>
+                      <Input
+                        type="number"
+                        value={pricing.pricePerPerson}
+                        onChange={(e) => updateParticipantPricing(index, 'pricePerPerson', parseInt(e.target.value) || 0)}
+                        placeholder="Price"
+                      />
+                    </div>
+                    <div className="flex items-end">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => removeParticipantPricing(index)}
+                        className="text-red-600 hover:text-red-700 w-full"
+                      >
+                        Remove
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+                
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={addParticipantPricing}
+                  className="w-full"
+                >
+                  + Add Participant Pricing Tier
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Price Includes */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Gift className="w-5 h-5 text-primary" />
                   Price Includes
                 </CardTitle>
                 <p className="text-sm text-muted-foreground">
@@ -258,56 +372,6 @@ const AdminTourEditPricing: React.FC = () => {
                 >
                   + Add Price Include Item
                 </Button>
-              </CardContent>
-            </Card>
-
-            {/* Group Discounts */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Percent className="w-5 h-5 text-primary" />
-                  Group Discounts
-                </CardTitle>
-                <p className="text-sm text-muted-foreground">
-                  Describe group discount policies
-                </p>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="groupDiscounts">Group Discount Information</Label>
-                  <Textarea
-                    id="groupDiscounts"
-                    value={formData.groupDiscounts}
-                    onChange={(e) => handleInputChange('groupDiscounts', e.target.value)}
-                    placeholder="Describe group discount rates, minimum group sizes, etc."
-                    rows={4}
-                  />
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Early Bird Discount */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Gift className="w-5 h-5 text-primary" />
-                  Early Bird Discount
-                </CardTitle>
-                <p className="text-sm text-muted-foreground">
-                  Describe early bird discount offers
-                </p>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="earlyBirdDiscount">Early Bird Discount Information</Label>
-                  <Textarea
-                    id="earlyBirdDiscount"
-                    value={formData.earlyBirdDiscount}
-                    onChange={(e) => handleInputChange('earlyBirdDiscount', e.target.value)}
-                    placeholder="Describe early bird discount rates, booking deadlines, etc."
-                    rows={4}
-                  />
-                </div>
               </CardContent>
             </Card>
 

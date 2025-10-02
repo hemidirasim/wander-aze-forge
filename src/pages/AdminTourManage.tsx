@@ -107,9 +107,9 @@ const AdminTourManage: React.FC = () => {
         title: 'Pricing Details',
         description: 'Add pricing information and discounts',
         icon: <DollarSign className="w-5 h-5" />,
-        completed: !!(tour.price_includes && tour.price_includes.length > 0) || 
-                   !!(tour.group_discounts && tour.group_discounts.trim()) || 
-                   !!(tour.early_bird_discount && tour.early_bird_discount.trim()),
+        completed: !!(tour.price && tour.price > 0) || 
+                   !!(tour.participant_pricing && tour.participant_pricing.length > 0) || 
+                   !!(tour.price_includes && tour.price_includes.length > 0),
         route: `/admin/tours/${id}/pricing`
       },
       {

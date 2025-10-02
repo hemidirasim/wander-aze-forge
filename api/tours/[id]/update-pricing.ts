@@ -63,45 +63,38 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
     
     try {
-      await pool.query(`ALTER TABLE tours ADD COLUMN IF NOT EXISTS group_discounts TEXT`);
-      console.log('group_discounts column ensured');
+      await pool.query(`ALTER TABLE tours ADD COLUMN IF NOT EXISTS participant_pricing JSONB DEFAULT '[]'::jsonb`);
+      console.log('participant_pricing column ensured');
     } catch (columnError) {
-      console.log('Error ensuring group_discounts column:', columnError);
-    }
-
-    try {
-      await pool.query(`ALTER TABLE tours ADD COLUMN IF NOT EXISTS early_bird_discount TEXT`);
-      console.log('early_bird_discount column ensured');
-    } catch (columnError) {
-      console.log('Error ensuring early_bird_discount column:', columnError);
+      console.log('Error ensuring participant_pricing column:', columnError);
     }
 
     // Extract pricing data
+    const basePrice = req.body.basePrice || '';
+    const participantPricing = req.body.participantPricing || [];
     const priceIncludes = req.body.priceIncludes || [];
-    const groupDiscounts = req.body.groupDiscounts || '';
-    const earlyBirdDiscount = req.body.earlyBirdDiscount || '';
 
     console.log('Processed pricing data:', {
-      priceIncludes,
-      groupDiscounts,
-      earlyBirdDiscount
+      basePrice,
+      participantPricing,
+      priceIncludes
     });
 
     // Update tour pricing in database
     const query = `
       UPDATE tours SET
-        price_includes = $1,
-        group_discounts = $2,
-        early_bird_discount = $3,
+        price = $1,
+        participant_pricing = $2,
+        price_includes = $3,
         updated_at = NOW()
       WHERE id = $4
       RETURNING *
     `;
 
     const values = [
+      basePrice,
+      participantPricing,
       priceIncludes,
-      groupDiscounts,
-      earlyBirdDiscount,
       id
     ];
 
