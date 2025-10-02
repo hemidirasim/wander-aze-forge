@@ -165,19 +165,27 @@ const TourProgramAccordion: React.FC<TourProgramAccordionProps> = ({ program, ca
 
                   {/* Meals & Accommodation */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <h4 className="font-semibold text-foreground flex items-center space-x-2">
-                        <Utensils className="w-4 h-4" />
-                        <span>Meals</span>
-                      </h4>
-                      <div className="space-y-1">
-                        {day.meals.map((meal, mealIndex) => (
-                          <div key={mealIndex} className="text-sm text-muted-foreground">
-                            • {meal}
-                          </div>
-                        ))}
+                    {day.meals && (
+                      <div className="space-y-2">
+                        <h4 className="font-semibold text-foreground flex items-center space-x-2">
+                          <Utensils className="w-4 h-4" />
+                          <span>Meals</span>
+                        </h4>
+                        <div className="space-y-1">
+                          {Array.isArray(day.meals) ? (
+                            day.meals.map((meal, mealIndex) => (
+                              <div key={mealIndex} className="text-sm text-muted-foreground">
+                                • {meal}
+                              </div>
+                            ))
+                          ) : (
+                            <div className="text-sm text-muted-foreground">
+                              • {day.meals}
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    </div>
+                    )}
 
                     {day.accommodation && (
                       <div className="space-y-2">

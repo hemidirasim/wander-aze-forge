@@ -162,18 +162,24 @@ const DatabaseTourProgramAccordion: React.FC<DatabaseTourProgramAccordionProps> 
 
                   {/* Meals & Accommodation */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {program.meals && program.meals.length > 0 && (
+                    {program.meals && (
                       <div className="space-y-2">
                         <h4 className="font-semibold text-foreground flex items-center space-x-2">
                           <Utensils className="w-4 h-4" />
                           <span>Meals</span>
                         </h4>
                         <div className="space-y-1">
-                          {program.meals.map((meal, mealIndex) => (
-                            <div key={mealIndex} className="text-sm text-muted-foreground">
-                              • {meal}
+                          {Array.isArray(program.meals) ? (
+                            program.meals.map((meal, mealIndex) => (
+                              <div key={mealIndex} className="text-sm text-muted-foreground">
+                                • {meal}
+                              </div>
+                            ))
+                          ) : (
+                            <div className="text-sm text-muted-foreground">
+                              • {program.meals}
                             </div>
-                          ))}
+                          )}
                         </div>
                       </div>
                     )}
