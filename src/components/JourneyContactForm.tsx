@@ -265,6 +265,10 @@ const JourneyContactForm = () => {
                                 setShowCountryList(true);
                               }}
                               onFocus={() => setShowCountryList(true)}
+                              autoComplete="off"
+                              autoCorrect="off"
+                              autoCapitalize="off"
+                              spellCheck="false"
                               className="w-full pl-10 pr-3 py-3 border border-white/30 rounded-md bg-white/20 text-white placeholder-white/60 h-12"
                             />
                             
