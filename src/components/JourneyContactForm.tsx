@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -36,6 +36,8 @@ const JourneyContactForm = () => {
   const [selectedCategory, setSelectedCategory] = useState<TourCategory | null>(null);
   const [selectedTour, setSelectedTour] = useState<Tour | null>(null);
   const [countrySearch, setCountrySearch] = useState('');
+  const [showCountryList, setShowCountryList] = useState(false);
+  const countryDropdownRef = useRef<HTMLDivElement>(null);
 
   // Country list with search and sorting
   const countries = [
@@ -91,6 +93,23 @@ const JourneyContactForm = () => {
       )
       .sort((a, b) => a.name.localeCompare(b.name));
   }, [countrySearch]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (countryDropdownRef.current && !countryDropdownRef.current.contains(event.target as Node)) {
+        setShowCountryList(false);
+      }
+    };
+
+    if (showCountryList) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showCountryList]);
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -235,7 +254,7 @@ const JourneyContactForm = () => {
                       <FormItem>
                         <FormLabel className="text-white font-medium">Country *</FormLabel>
                         <FormControl>
-                          <div className="relative">
+                          <div className="relative" ref={countryDropdownRef}>
                             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/60 w-4 h-4 pointer-events-none" />
                             <Input
                               type="text"
@@ -243,27 +262,48 @@ const JourneyContactForm = () => {
                               value={countrySearch}
                               onChange={(e) => {
                                 setCountrySearch(e.target.value);
-                                // Find country code by name
-                                const selectedCountry = countries.find(country => 
-                                  country.name.toLowerCase() === e.target.value.toLowerCase()
-                                );
-                                if (selectedCountry) {
-                                  field.onChange(selectedCountry.code);
-                                } else if (e.target.value.toLowerCase() === 'other') {
-                                  field.onChange('OTHER');
-                                } else {
-                                  field.onChange(e.target.value);
-                                }
+                                setShowCountryList(true);
                               }}
+                              onFocus={() => setShowCountryList(true)}
                               className="w-full pl-10 pr-3 py-3 border border-white/30 rounded-md bg-white/20 text-white placeholder-white/60 h-12"
-                              list="countries-datalist"
                             />
-                            <datalist id="countries-datalist">
-                              {filteredCountries.map((country) => (
-                                <option key={country.code} value={country.name} />
-                              ))}
-                              <option value="Other" />
-                            </datalist>
+                            
+                            {/* Custom Dropdown */}
+                            {showCountryList && (
+                              <div className="absolute top-full left-0 right-0 mt-1 bg-white/95 backdrop-blur-sm border border-white/30 rounded-md shadow-lg max-h-60 overflow-y-auto z-10">
+                                {filteredCountries.length > 0 ? (
+                                  filteredCountries.map((country) => (
+                                    <button
+                                      key={country.code}
+                                      type="button"
+                                      onClick={() => {
+                                        setCountrySearch(country.name);
+                                        field.onChange(country.code);
+                                        setShowCountryList(false);
+                                      }}
+                                      className="w-full text-left px-4 py-3 hover:bg-white/20 text-gray-800 hover:text-white transition-colors"
+                                    >
+                                      {country.name}
+                                    </button>
+                                  ))
+                                ) : (
+                                  <div className="px-4 py-3 text-gray-500">No countries found</div>
+                                )}
+                                
+                                {/* Other option */}
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setCountrySearch('Other');
+                                    field.onChange('OTHER');
+                                    setShowCountryList(false);
+                                  }}
+                                  className="w-full text-left px-4 py-3 hover:bg-white/20 text-gray-800 hover:text-white transition-colors border-t border-white/20"
+                                >
+                                  Other
+                                </button>
+                              </div>
+                            )}
                           </div>
                         </FormControl>
                         <FormMessage className="text-red-200" />
