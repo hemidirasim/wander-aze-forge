@@ -184,7 +184,7 @@ const JourneyContactForm = () => {
 
           <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 md:p-12 border border-white/20">
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6" autoComplete="off">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* First Name */}
                   <FormField
@@ -265,10 +265,12 @@ const JourneyContactForm = () => {
                                 setShowCountryList(true);
                               }}
                               onFocus={() => setShowCountryList(true)}
-                              autoComplete="off"
+                              autoComplete="new-password"
                               autoCorrect="off"
                               autoCapitalize="off"
                               spellCheck="false"
+                              name="country-search"
+                              id="country-search"
                               className="w-full pl-10 pr-3 py-3 border border-white/30 rounded-md bg-white/20 text-white placeholder-white/60 h-12"
                             />
                             
