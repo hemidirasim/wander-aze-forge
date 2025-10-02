@@ -170,19 +170,19 @@ const JourneyContactForm = () => {
   };
 
   return (
-    <section className="py-24 px-4 bg-gradient-hero">
+    <section className="py-24 px-4 bg-gray-100">
       <div className="container mx-auto">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-5xl md:text-6xl font-bold text-white mb-6">
+            <h2 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
               Plan Your Journey With Us
             </h2>
-            <p className="text-xl text-white/90 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed">
               Ready to explore Azerbaijan? Tell us your travel dreams and we'll craft the perfect adventure for you
             </p>
           </div>
 
-          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 md:p-12 border border-white/20">
+          <div className="bg-white rounded-2xl p-8 md:p-12 border border-gray-200 shadow-lg">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6" autoComplete="off">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -192,11 +192,11 @@ const JourneyContactForm = () => {
                     name="firstName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-white font-medium">First Name *</FormLabel>
+                        <FormLabel className="text-gray-900 font-medium">First Name *</FormLabel>
                         <FormControl>
-                          <Input {...field} className="bg-white/20 border-white/30 text-white placeholder:text-white/70 h-12" placeholder="Your first name" />
+                          <Input {...field} className="bg-gray-50 border-gray-300 text-gray-900 placeholder:text-gray-500 h-12" placeholder="Your first name" />
                         </FormControl>
-                        <FormMessage className="text-red-200" />
+                        <FormMessage className="text-red-600" />
                       </FormItem>
                     )}
                   />
@@ -207,11 +207,11 @@ const JourneyContactForm = () => {
                     name="lastName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-white font-medium">Last Name *</FormLabel>
+                        <FormLabel className="text-gray-900 font-medium">Last Name *</FormLabel>
                         <FormControl>
-                          <Input {...field} className="bg-white/20 border-white/30 text-white placeholder:text-white/70 h-12" placeholder="Your last name" />
+                          <Input {...field} className="bg-gray-50 border-gray-300 text-gray-900 placeholder:text-gray-500 h-12" placeholder="Your last name" />
                         </FormControl>
-                        <FormMessage className="text-red-200" />
+                        <FormMessage className="text-red-600" />
                       </FormItem>
                     )}
                   />
@@ -222,11 +222,11 @@ const JourneyContactForm = () => {
                     name="email"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-white font-medium">Email *</FormLabel>
+                        <FormLabel className="text-gray-900 font-medium">Email *</FormLabel>
                         <FormControl>
-                          <Input {...field} type="email" className="bg-white/20 border-white/30 text-white placeholder:text-white/70 h-12" placeholder="your.email@example.com" />
+                          <Input {...field} type="email" className="bg-gray-50 border-gray-300 text-gray-900 placeholder:text-gray-500 h-12" placeholder="your.email@example.com" />
                         </FormControl>
-                        <FormMessage className="text-red-200" />
+                        <FormMessage className="text-red-600" />
                       </FormItem>
                     )}
                   />
@@ -237,11 +237,11 @@ const JourneyContactForm = () => {
                     name="phone"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-white font-medium">Phone Number</FormLabel>
+                        <FormLabel className="text-gray-900 font-medium">Phone Number</FormLabel>
                         <FormControl>
-                          <Input {...field} type="tel" className="bg-white/20 border-white/30 text-white placeholder:text-white/70 h-12" placeholder="+1 (555) 123-4567" />
+                          <Input {...field} type="tel" className="bg-gray-50 border-gray-300 text-gray-900 placeholder:text-gray-500 h-12" placeholder="+1 (555) 123-4567" />
                         </FormControl>
-                        <FormMessage className="text-red-200" />
+                        <FormMessage className="text-red-600" />
                       </FormItem>
                     )}
                   />
@@ -252,10 +252,10 @@ const JourneyContactForm = () => {
                     name="country"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-white font-medium">Country *</FormLabel>
+                        <FormLabel className="text-gray-900 font-medium">Country *</FormLabel>
                         <FormControl>
                           <div className="relative" ref={countryDropdownRef}>
-                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/60 w-4 h-4 pointer-events-none" />
+                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-4 h-4 pointer-events-none" />
                             <Input
                               type="text"
                               placeholder="Search and select your country..."
@@ -271,12 +271,12 @@ const JourneyContactForm = () => {
                               spellCheck="false"
                               name="country-search"
                               id="country-search"
-                              className="w-full pl-10 pr-3 py-3 border border-white/30 rounded-md bg-white/20 text-white placeholder-white/60 h-12"
+                              className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-md bg-gray-50 text-gray-900 placeholder-gray-500 h-12"
                             />
                             
                             {/* Custom Dropdown */}
                             {showCountryList && (
-                              <div className="absolute top-full left-0 right-0 mt-1 bg-white/95 backdrop-blur-sm border border-white/30 rounded-md shadow-lg max-h-60 overflow-y-auto z-10">
+                              <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto z-10">
                                 {filteredCountries.length > 0 ? (
                                   filteredCountries.map((country) => (
                                     <button
@@ -287,7 +287,7 @@ const JourneyContactForm = () => {
                                         field.onChange(country.code);
                                         setShowCountryList(false);
                                       }}
-                                      className="w-full text-left px-4 py-3 hover:bg-white/20 text-gray-800 hover:text-white transition-colors"
+                                      className="w-full text-left px-4 py-3 hover:bg-gray-100 text-gray-900 transition-colors"
                                     >
                                       {country.name}
                                     </button>
@@ -304,7 +304,7 @@ const JourneyContactForm = () => {
                                     field.onChange('OTHER');
                                     setShowCountryList(false);
                                   }}
-                                  className="w-full text-left px-4 py-3 hover:bg-white/20 text-gray-800 hover:text-white transition-colors border-t border-white/20"
+                                  className="w-full text-left px-4 py-3 hover:bg-gray-100 text-gray-900 transition-colors border-t border-gray-200"
                                 >
                                   Other
                                 </button>
@@ -312,7 +312,7 @@ const JourneyContactForm = () => {
                             )}
                           </div>
                         </FormControl>
-                        <FormMessage className="text-red-200" />
+                        <FormMessage className="text-red-600" />
                       </FormItem>
                     )}
                   />
@@ -344,7 +344,7 @@ const JourneyContactForm = () => {
                             ))}
                           </select>
                         </FormControl>
-                        <FormMessage className="text-red-200" />
+                        <FormMessage className="text-red-600" />
                       </FormItem>
                     )}
                   />
@@ -374,7 +374,7 @@ const JourneyContactForm = () => {
                               ))}
                             </select>
                           </FormControl>
-                          <FormMessage className="text-red-200" />
+                          <FormMessage className="text-red-600" />
                         </FormItem>
                       )}
                     />
@@ -392,7 +392,7 @@ const JourneyContactForm = () => {
                         <FormControl>
                           <Input {...field} type="number" min="1" max="20" className="bg-white/20 border-white/30 text-white placeholder:text-white/70 h-12" placeholder="Number of travelers" />
                         </FormControl>
-                        <FormMessage className="text-red-200" />
+                        <FormMessage className="text-red-600" />
                       </FormItem>
                     )}
                   />
@@ -407,7 +407,7 @@ const JourneyContactForm = () => {
                         <FormControl>
                           <Input {...field} className="bg-white/20 border-white/30 text-white placeholder:text-white/70 h-12" placeholder="e.g., June 15-20, 2024" />
                         </FormControl>
-                        <FormMessage className="text-red-200" />
+                        <FormMessage className="text-red-600" />
                       </FormItem>
                     )}
                   />
@@ -427,7 +427,7 @@ const JourneyContactForm = () => {
                           placeholder="Tell us about your interests, fitness level, special requirements, or any questions you have..."
                         />
                       </FormControl>
-                      <FormMessage className="text-red-200" />
+                      <FormMessage className="text-red-600" />
                     </FormItem>
                   )}
                 />
@@ -470,7 +470,7 @@ const JourneyContactForm = () => {
                       <FormLabel className="text-sm text-white/90 cursor-pointer">
                         I agree to the <a href="/terms" className="text-white hover:underline font-semibold">Terms & Conditions</a> and <a href="/privacy" className="text-white hover:underline font-semibold">Privacy Policy</a> *
                       </FormLabel>
-                      <FormMessage className="text-red-200" />
+                      <FormMessage className="text-red-600" />
                     </FormItem>
                   )}
                 />
