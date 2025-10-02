@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useApi } from '@/hooks/useApi';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { ExternalLink, Quote, Star } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { ExternalLink, Quote, Star, ChevronLeft, ChevronRight } from 'lucide-react';
 
 // Declare Fancybox for TypeScript
 declare global {
@@ -27,6 +28,37 @@ interface Review {
 
 const DatabaseReviews = () => {
   const { data: reviews, loading, error } = useApi<Review[]>('/reviews?featured=true');
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [itemsPerView, setItemsPerView] = useState(3);
+
+  // Update items per view based on screen size
+  useEffect(() => {
+    const updateItemsPerView = () => {
+      if (window.innerWidth < 768) {
+        setItemsPerView(1);
+      } else if (window.innerWidth < 1024) {
+        setItemsPerView(2);
+      } else {
+        setItemsPerView(3);
+      }
+    };
+
+    updateItemsPerView();
+    window.addEventListener('resize', updateItemsPerView);
+    return () => window.removeEventListener('resize', updateItemsPerView);
+  }, []);
+
+  const nextSlide = () => {
+    if (reviews && reviews.length > 0) {
+      setCurrentIndex((prev) => (prev + 1) % Math.max(1, reviews.length - itemsPerView + 1));
+    }
+  };
+
+  const prevSlide = () => {
+    if (reviews && reviews.length > 0) {
+      setCurrentIndex((prev) => (prev - 1 + Math.max(1, reviews.length - itemsPerView + 1)) % Math.max(1, reviews.length - itemsPerView + 1));
+    }
+  };
 
   // Initialize Fancybox for review images
   useEffect(() => {
@@ -48,32 +80,26 @@ const DatabaseReviews = () => {
 
   if (loading) {
     return (
-      <section className="py-24 px-4 bg-gradient-to-br from-muted/20 to-background">
+      <section className="py-24 px-4 bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
         <div className="container mx-auto">
           <div className="text-center mb-16">
             <Skeleton className="h-12 w-96 mx-auto mb-6" />
             <Skeleton className="h-6 w-80 mx-auto" />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[...Array(6)].map((_, i) => (
-              <Card key={i} className="overflow-hidden border-0 bg-card/80 backdrop-blur-sm">
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <Skeleton className="h-6 w-32" />
-                    <Skeleton className="h-5 w-20" />
-                  </div>
-                  <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-3/4" />
-                </CardHeader>
-                <CardContent>
-                  <Skeleton className="h-20 w-full mb-4" />
-                  <div className="flex items-center justify-between">
-                    <Skeleton className="h-6 w-24" />
-                    <Skeleton className="h-6 w-6" />
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+          <div className="relative">
+            <div className="flex gap-6 overflow-hidden">
+              {[...Array(3)].map((_, i) => (
+                <Card key={i} className="flex-shrink-0 w-full md:w-1/2 lg:w-1/3 overflow-hidden border-0 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm">
+                  <CardContent className="p-8">
+                    <Skeleton className="h-20 w-full mb-4" />
+                    <div className="flex items-center justify-between">
+                      <Skeleton className="h-6 w-24" />
+                      <Skeleton className="h-6 w-6" />
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -100,86 +126,129 @@ const DatabaseReviews = () => {
         </div>
 
         {reviews && reviews.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {reviews.map((review, index) => (
-                <Card key={review.id} className="group relative overflow-hidden border-0 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
-                  {/* Quote Icon */}
-                  <div className="absolute top-6 right-6 text-primary/20 group-hover:text-primary/40 transition-colors">
-                    <Quote className="w-8 h-8" />
-                  </div>
-                  
-                  {/* Image Section */}
-                  {review.image_url && (
-                    <div className="relative h-56 overflow-hidden">
-                      <a
-                        href={review.image_url}
-                        data-fancybox="reviews"
-                        data-caption={`${review.name} - ${review.source}`}
-                        className="block"
-                      >
-                        <img
-                          src={review.image_url}
-                          alt={review.name}
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                          <div className="bg-white/90 dark:bg-slate-800/90 rounded-full p-4 shadow-lg">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
-                            </svg>
-                          </div>
-                        </div>
-                      </a>
-                    </div>
-                  )}
-                  
-                  <CardContent className="p-8">
-                    {/* Review Text */}
-                    <blockquote className="text-foreground leading-relaxed mb-6 text-lg italic">
-                      "{review.review_text}"
-                    </blockquote>
-                    
-                    {/* Author Info */}
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 bg-gradient-to-br from-primary/20 to-primary/10 rounded-full flex items-center justify-center">
-                          <span className="text-primary font-bold text-lg">
-                            {review.name.charAt(0)}
-                          </span>
-                        </div>
-                        <div>
-                          <div className="font-semibold text-foreground">{review.name}</div>
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            {review.source_logo && (
-                              <img
-                                src={review.source_logo}
-                                alt={review.source}
-                                className="h-4 w-auto max-w-16 object-contain"
-                              />
-                            )}
-                            <span>{review.source}</span>
-                          </div>
-                        </div>
+          <div className="relative">
+            {/* Navigation Buttons */}
+            <div className="flex justify-between items-center mb-8">
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={prevSlide}
+                disabled={currentIndex === 0}
+                className="flex items-center gap-2 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-primary/20 hover:border-primary/40 hover:bg-primary/5"
+              >
+                <ChevronLeft className="w-5 h-5" />
+                Previous
+              </Button>
+              
+              <div className="flex items-center gap-2">
+                {Array.from({ length: Math.max(1, reviews.length - itemsPerView + 1) }).map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentIndex(index)}
+                    className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                      index === currentIndex 
+                        ? 'bg-primary scale-125' 
+                        : 'bg-primary/30 hover:bg-primary/50'
+                    }`}
+                  />
+                ))}
+              </div>
+              
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={nextSlide}
+                disabled={currentIndex >= Math.max(0, reviews.length - itemsPerView)}
+                className="flex items-center gap-2 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-primary/20 hover:border-primary/40 hover:bg-primary/5"
+              >
+                Next
+                <ChevronRight className="w-5 h-5" />
+              </Button>
+            </div>
+
+            {/* Carousel Container */}
+            <div className="overflow-hidden">
+              <div 
+                className="flex transition-transform duration-500 ease-in-out"
+                style={{ transform: `translateX(-${currentIndex * (100 / itemsPerView)}%)` }}
+              >
+                {reviews.map((review, index) => (
+                  <div 
+                    key={review.id} 
+                    className="flex-shrink-0 px-3"
+                    style={{ width: `${100 / itemsPerView}%` }}
+                  >
+                    <Card className="relative overflow-hidden border-0 bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300 h-full">
+                      {/* Quote Icon */}
+                      <div className="absolute top-6 right-6 text-primary/20">
+                        <Quote className="w-8 h-8" />
                       </div>
                       
-                      {review.source_url && (
-                        <a
-                          href={review.source_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-primary hover:text-primary/80 transition-colors p-2 hover:bg-primary/10 rounded-full"
-                        >
-                          <ExternalLink className="w-4 h-4" />
-                        </a>
+                      {/* Image Section */}
+                      {review.image_url && (
+                        <div className="relative h-48 overflow-hidden">
+                          <a
+                            href={review.image_url}
+                            data-fancybox="reviews"
+                            data-caption={`${review.name} - ${review.source}`}
+                            className="block"
+                          >
+                            <img
+                              src={review.image_url}
+                              alt={review.name}
+                              className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                          </a>
+                        </div>
                       )}
-                    </div>
-                  </CardContent>
-                  
-                  {/* Decorative Border */}
-                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-primary/60 to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                </Card>
-              ))}
+                      
+                      <CardContent className="p-6">
+                        {/* Review Text */}
+                        <blockquote className="text-foreground leading-relaxed mb-6 text-base italic line-clamp-4">
+                          "{review.review_text}"
+                        </blockquote>
+                        
+                        {/* Author Info */}
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 bg-gradient-to-br from-primary/20 to-primary/10 rounded-full flex items-center justify-center">
+                              <span className="text-primary font-bold text-sm">
+                                {review.name.charAt(0)}
+                              </span>
+                            </div>
+                            <div>
+                              <div className="font-semibold text-foreground text-sm">{review.name}</div>
+                              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                                {review.source_logo && (
+                                  <img
+                                    src={review.source_logo}
+                                    alt={review.source}
+                                    className="h-3 w-auto max-w-12 object-contain"
+                                  />
+                                )}
+                                <span>{review.source}</span>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          {review.source_url && (
+                            <a
+                              href={review.source_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-primary hover:text-primary/80 transition-colors p-1.5 hover:bg-primary/10 rounded-full"
+                            >
+                              <ExternalLink className="w-3 h-3" />
+                            </a>
+                          )}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         ) : (
           <div className="text-center py-16">
