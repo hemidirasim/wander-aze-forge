@@ -54,12 +54,31 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       });
     }
 
-    // Ensure pricing columns exist
+    // Ensure pricing columns exist and convert types if needed
     try {
-      await pool.query(`ALTER TABLE tours ADD COLUMN IF NOT EXISTS price_includes JSONB DEFAULT '[]'::jsonb`);
-      console.log('price_includes column ensured');
+      // Check if price_includes column exists and its type
+      const columnCheck = await pool.query(`
+        SELECT data_type 
+        FROM information_schema.columns 
+        WHERE table_name = 'tours' AND column_name = 'price_includes'
+      `);
+      
+      if (columnCheck.rows.length > 0) {
+        const currentType = columnCheck.rows[0].data_type;
+        console.log('Current price_includes column type:', currentType);
+        
+        if (currentType === 'ARRAY' || currentType.includes('text')) {
+          // Convert text[] to JSONB
+          await pool.query(`ALTER TABLE tours ALTER COLUMN price_includes TYPE JSONB USING price_includes::jsonb`);
+          console.log('price_includes column converted to JSONB');
+        }
+      } else {
+        // Create new JSONB column
+        await pool.query(`ALTER TABLE tours ADD COLUMN price_includes JSONB DEFAULT '[]'::jsonb`);
+        console.log('price_includes column created as JSONB');
+      }
     } catch (columnError) {
-      console.log('Error ensuring price_includes column:', columnError);
+      console.log('Error handling price_includes column:', columnError);
     }
     
     try {
