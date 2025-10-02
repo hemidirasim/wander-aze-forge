@@ -118,7 +118,7 @@ const DatabaseNavigation = () => {
               variant="ghost" 
               size="sm"
               onClick={() => setIsSearchOpen(true)}
-              className="flex items-center justify-start gap-1.5 w-full max-w-sm px-3 py-1.5"
+              className="flex items-center justify-start gap-1.5 w-full max-w-xs px-3 py-1.5"
             >
               <div className="flex items-center gap-1.5">
                 <Search className="w-3.5 h-3.5" />
