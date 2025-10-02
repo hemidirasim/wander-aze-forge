@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -8,7 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/components/ui/use-toast';
 import { useTourCategories, TourCategory, Tour } from '@/hooks/useTourCategories';
-import { Send, MapPin, Calendar, Users } from 'lucide-react';
+import { Send, MapPin, Calendar, Users, Search } from 'lucide-react';
 
 const formSchema = z.object({
   firstName: z.string().min(2, 'First name must be at least 2 characters'),
@@ -35,6 +35,62 @@ const JourneyContactForm = () => {
   const { categories, tours, loading, getToursByCategory } = useTourCategories();
   const [selectedCategory, setSelectedCategory] = useState<TourCategory | null>(null);
   const [selectedTour, setSelectedTour] = useState<Tour | null>(null);
+  const [countrySearch, setCountrySearch] = useState('');
+
+  // Country list with search and sorting
+  const countries = [
+    { code: 'US', name: 'United States' },
+    { code: 'GB', name: 'United Kingdom' },
+    { code: 'CA', name: 'Canada' },
+    { code: 'AU', name: 'Australia' },
+    { code: 'DE', name: 'Germany' },
+    { code: 'FR', name: 'France' },
+    { code: 'IT', name: 'Italy' },
+    { code: 'ES', name: 'Spain' },
+    { code: 'NL', name: 'Netherlands' },
+    { code: 'BE', name: 'Belgium' },
+    { code: 'CH', name: 'Switzerland' },
+    { code: 'AT', name: 'Austria' },
+    { code: 'SE', name: 'Sweden' },
+    { code: 'NO', name: 'Norway' },
+    { code: 'DK', name: 'Denmark' },
+    { code: 'FI', name: 'Finland' },
+    { code: 'PL', name: 'Poland' },
+    { code: 'CZ', name: 'Czech Republic' },
+    { code: 'RO', name: 'Romania' },
+    { code: 'GR', name: 'Greece' },
+    { code: 'PT', name: 'Portugal' },
+    { code: 'IE', name: 'Ireland' },
+    { code: 'TR', name: 'Turkey' },
+    { code: 'RU', name: 'Russia' },
+    { code: 'UA', name: 'Ukraine' },
+    { code: 'AZ', name: 'Azerbaijan' },
+    { code: 'GE', name: 'Georgia' },
+    { code: 'AM', name: 'Armenia' },
+    { code: 'KZ', name: 'Kazakhstan' },
+    { code: 'UZ', name: 'Uzbekistan' },
+    { code: 'JP', name: 'Japan' },
+    { code: 'CN', name: 'China' },
+    { code: 'KR', name: 'South Korea' },
+    { code: 'IN', name: 'India' },
+    { code: 'SG', name: 'Singapore' },
+    { code: 'AE', name: 'United Arab Emirates' },
+    { code: 'SA', name: 'Saudi Arabia' },
+    { code: 'IL', name: 'Israel' },
+    { code: 'BR', name: 'Brazil' },
+    { code: 'AR', name: 'Argentina' },
+    { code: 'MX', name: 'Mexico' },
+    { code: 'ZA', name: 'South Africa' },
+    { code: 'NZ', name: 'New Zealand' }
+  ];
+
+  const filteredCountries = useMemo(() => {
+    return countries
+      .filter(country => 
+        country.name.toLowerCase().includes(countrySearch.toLowerCase())
+      )
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }, [countrySearch]);
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -179,56 +235,33 @@ const JourneyContactForm = () => {
                       <FormItem>
                         <FormLabel className="text-white font-medium">Country *</FormLabel>
                         <FormControl>
-                          <select 
-                            {...field}
-                            className="w-full p-3 border border-white/30 rounded-md bg-white/20 text-white h-12"
-                          >
-                            <option value="" className="bg-gray-800">Select your country</option>
-                            <option value="US" className="bg-gray-800">United States</option>
-                            <option value="GB" className="bg-gray-800">United Kingdom</option>
-                            <option value="CA" className="bg-gray-800">Canada</option>
-                            <option value="AU" className="bg-gray-800">Australia</option>
-                            <option value="DE" className="bg-gray-800">Germany</option>
-                            <option value="FR" className="bg-gray-800">France</option>
-                            <option value="IT" className="bg-gray-800">Italy</option>
-                            <option value="ES" className="bg-gray-800">Spain</option>
-                            <option value="NL" className="bg-gray-800">Netherlands</option>
-                            <option value="BE" className="bg-gray-800">Belgium</option>
-                            <option value="CH" className="bg-gray-800">Switzerland</option>
-                            <option value="AT" className="bg-gray-800">Austria</option>
-                            <option value="SE" className="bg-gray-800">Sweden</option>
-                            <option value="NO" className="bg-gray-800">Norway</option>
-                            <option value="DK" className="bg-gray-800">Denmark</option>
-                            <option value="FI" className="bg-gray-800">Finland</option>
-                            <option value="PL" className="bg-gray-800">Poland</option>
-                            <option value="CZ" className="bg-gray-800">Czech Republic</option>
-                            <option value="RO" className="bg-gray-800">Romania</option>
-                            <option value="GR" className="bg-gray-800">Greece</option>
-                            <option value="PT" className="bg-gray-800">Portugal</option>
-                            <option value="IE" className="bg-gray-800">Ireland</option>
-                            <option value="TR" className="bg-gray-800">Turkey</option>
-                            <option value="RU" className="bg-gray-800">Russia</option>
-                            <option value="UA" className="bg-gray-800">Ukraine</option>
-                            <option value="AZ" className="bg-gray-800">Azerbaijan</option>
-                            <option value="GE" className="bg-gray-800">Georgia</option>
-                            <option value="AM" className="bg-gray-800">Armenia</option>
-                            <option value="KZ" className="bg-gray-800">Kazakhstan</option>
-                            <option value="UZ" className="bg-gray-800">Uzbekistan</option>
-                            <option value="JP" className="bg-gray-800">Japan</option>
-                            <option value="CN" className="bg-gray-800">China</option>
-                            <option value="KR" className="bg-gray-800">South Korea</option>
-                            <option value="IN" className="bg-gray-800">India</option>
-                            <option value="SG" className="bg-gray-800">Singapore</option>
-                            <option value="AE" className="bg-gray-800">United Arab Emirates</option>
-                            <option value="SA" className="bg-gray-800">Saudi Arabia</option>
-                            <option value="IL" className="bg-gray-800">Israel</option>
-                            <option value="BR" className="bg-gray-800">Brazil</option>
-                            <option value="AR" className="bg-gray-800">Argentina</option>
-                            <option value="MX" className="bg-gray-800">Mexico</option>
-                            <option value="ZA" className="bg-gray-800">South Africa</option>
-                            <option value="NZ" className="bg-gray-800">New Zealand</option>
-                            <option value="OTHER" className="bg-gray-800">Other</option>
-                          </select>
+                          <div className="space-y-2">
+                            {/* Search Input */}
+                            <div className="relative">
+                              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/60 w-4 h-4" />
+                              <Input
+                                type="text"
+                                placeholder="Search countries..."
+                                value={countrySearch}
+                                onChange={(e) => setCountrySearch(e.target.value)}
+                                className="w-full pl-10 pr-3 py-3 border border-white/30 rounded-md bg-white/20 text-white placeholder-white/60 h-12"
+                              />
+                            </div>
+                            
+                            {/* Country Select */}
+                            <select 
+                              {...field}
+                              className="w-full p-3 border border-white/30 rounded-md bg-white/20 text-white h-12"
+                            >
+                              <option value="" className="bg-gray-800">Select your country</option>
+                              {filteredCountries.map((country) => (
+                                <option key={country.code} value={country.code} className="bg-gray-800">
+                                  {country.name}
+                                </option>
+                              ))}
+                              <option value="OTHER" className="bg-gray-800">Other</option>
+                            </select>
+                          </div>
                         </FormControl>
                         <FormMessage className="text-red-200" />
                       </FormItem>
