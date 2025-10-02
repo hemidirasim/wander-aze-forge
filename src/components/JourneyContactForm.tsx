@@ -177,7 +177,7 @@ const JourneyContactForm = () => {
             <h2 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
               Plan Your Journey With Us
             </h2>
-            <p className="text-xl text-white max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xl text-gray-900 max-w-3xl mx-auto leading-relaxed">
               Ready to explore Azerbaijan? Tell us your travel dreams and we'll craft the perfect adventure for you
             </p>
           </div>
