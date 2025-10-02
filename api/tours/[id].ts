@@ -65,8 +65,8 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
         tour_programs, overview, best_season, meeting_point, languages,
         accommodation_details, meals_details, water_snacks_details,
         provided_equipment, what_to_bring, transport_details, pickup_service,
-        gallery_images, photography_service, price_includes, group_discounts,
-        early_bird_discount, contact_phone, booking_terms, itinerary,
+        gallery_images, photography_service, price_includes, participant_pricing,
+        group_discounts, early_bird_discount, contact_phone, booking_terms, itinerary,
         requirements, special_fields, max_participants, created_at, updated_at
       FROM tours 
       WHERE id = $1
@@ -89,7 +89,8 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
       provided_equipment: result.rows[0].provided_equipment ? (typeof result.rows[0].provided_equipment === 'string' ? JSON.parse(result.rows[0].provided_equipment) : result.rows[0].provided_equipment) : [],
       what_to_bring: result.rows[0].what_to_bring ? (typeof result.rows[0].what_to_bring === 'string' ? JSON.parse(result.rows[0].what_to_bring) : result.rows[0].what_to_bring) : [],
       gallery_images: result.rows[0].gallery_images ? (typeof result.rows[0].gallery_images === 'string' ? JSON.parse(result.rows[0].gallery_images) : result.rows[0].gallery_images) : [],
-      price_includes: result.rows[0].price_includes ? (typeof result.rows[0].price_includes === 'string' ? JSON.parse(result.rows[0].price_includes) : result.rows[0].price_includes) : []
+      price_includes: result.rows[0].price_includes ? (typeof result.rows[0].price_includes === 'string' ? JSON.parse(result.rows[0].price_includes) : result.rows[0].price_includes) : [],
+      participant_pricing: result.rows[0].participant_pricing ? (typeof result.rows[0].participant_pricing === 'string' ? JSON.parse(result.rows[0].participant_pricing) : result.rows[0].participant_pricing) : []
     };
 
     return res.status(200).json({
