@@ -192,7 +192,7 @@ const JourneyContactForm = () => {
                     name="firstName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-gray-900 font-medium">First Name *</FormLabel>
+                        <FormLabel className="text-white font-medium">First Name *</FormLabel>
                         <FormControl>
                           <Input {...field} className="bg-gray-50 border-gray-300 text-gray-900 placeholder:text-gray-500 h-12" placeholder="Your first name" />
                         </FormControl>
@@ -207,7 +207,7 @@ const JourneyContactForm = () => {
                     name="lastName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-gray-900 font-medium">Last Name *</FormLabel>
+                        <FormLabel className="text-white font-medium">Last Name *</FormLabel>
                         <FormControl>
                           <Input {...field} className="bg-gray-50 border-gray-300 text-gray-900 placeholder:text-gray-500 h-12" placeholder="Your last name" />
                         </FormControl>
@@ -222,7 +222,7 @@ const JourneyContactForm = () => {
                     name="email"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-gray-900 font-medium">Email *</FormLabel>
+                        <FormLabel className="text-white font-medium">Email *</FormLabel>
                         <FormControl>
                           <Input {...field} type="email" className="bg-gray-50 border-gray-300 text-gray-900 placeholder:text-gray-500 h-12" placeholder="your.email@example.com" />
                         </FormControl>
@@ -237,7 +237,7 @@ const JourneyContactForm = () => {
                     name="phone"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-gray-900 font-medium">Phone Number</FormLabel>
+                        <FormLabel className="text-white font-medium">Phone Number</FormLabel>
                         <FormControl>
                           <Input {...field} type="tel" className="bg-gray-50 border-gray-300 text-gray-900 placeholder:text-gray-500 h-12" placeholder="+1 (555) 123-4567" />
                         </FormControl>
@@ -252,7 +252,7 @@ const JourneyContactForm = () => {
                     name="country"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-gray-900 font-medium">Country *</FormLabel>
+                        <FormLabel className="text-white font-medium">Country *</FormLabel>
                         <FormControl>
                           <div className="relative" ref={countryDropdownRef}>
                             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-4 h-4 pointer-events-none" />
@@ -323,7 +323,7 @@ const JourneyContactForm = () => {
                     name="tourCategory"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-gray-900 font-medium">Tour Category *</FormLabel>
+                        <FormLabel className="text-white font-medium">Tour Category *</FormLabel>
                         <FormControl>
                           <select 
                             {...field}
@@ -356,7 +356,7 @@ const JourneyContactForm = () => {
                       name="tourType"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-gray-900 font-medium">Select Tour</FormLabel>
+                          <FormLabel className="text-white font-medium">Select Tour</FormLabel>
                           <FormControl>
                             <select 
                               {...field}
@@ -388,7 +388,7 @@ const JourneyContactForm = () => {
                     name="groupSize"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-gray-900 font-medium">Group Size *</FormLabel>
+                        <FormLabel className="text-white font-medium">Group Size *</FormLabel>
                         <FormControl>
                           <Input {...field} type="number" min="1" max="20" className="bg-gray-50 border-gray-300 text-gray-900 placeholder:text-gray-500 h-12" placeholder="Number of travelers" />
                         </FormControl>
@@ -403,7 +403,7 @@ const JourneyContactForm = () => {
                     name="dates"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-gray-900 font-medium">Preferred Dates *</FormLabel>
+                        <FormLabel className="text-white font-medium">Preferred Dates *</FormLabel>
                         <FormControl>
                           <Input {...field} className="bg-gray-50 border-gray-300 text-gray-900 placeholder:text-gray-500 h-12" placeholder="e.g., June 15-20, 2024" />
                         </FormControl>
@@ -419,7 +419,7 @@ const JourneyContactForm = () => {
                   name="message"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-gray-900 font-medium">Message *</FormLabel>
+                      <FormLabel className="text-white font-medium">Message *</FormLabel>
                       <FormControl>
                         <Textarea 
                           {...field} 
