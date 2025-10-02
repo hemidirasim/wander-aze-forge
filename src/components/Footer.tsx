@@ -69,7 +69,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-gray-900 text-white">
+    <footer className="text-gray-900" style={{ background: 'rgb(243 244 246)' }}>
       <div className="container mx-auto px-4 py-16">
         <div className="flex flex-col lg:flex-row gap-8 mb-12">
           
@@ -81,11 +81,11 @@ const Footer = () => {
               </div>
               <h3 className="text-xl font-bold">Outtour.az</h3>
             </div>
-            <p className="text-gray-300 text-sm leading-relaxed">
+            <p className="text-gray-900 text-sm leading-relaxed">
               Azerbaijan's first ecotour company since 2014. We specialize in sustainable mountain adventures, 
               cultural immersion, and authentic local experiences.
             </p>
-            <div className="flex items-center space-x-2 text-sm text-gray-300">
+            <div className="flex items-center space-x-2 text-sm text-gray-900">
               <Heart className="w-4 h-4 text-red-400" />
               <span>Over 700 successful tours</span>
             </div>
@@ -101,7 +101,7 @@ const Footer = () => {
                   <li key={index}>
                     <Link 
                       to={link.href} 
-                      className="text-gray-300 hover:text-primary transition-colors text-sm"
+                      className="text-gray-900 hover:text-primary transition-colors text-sm"
                     >
                       {link.name}
                     </Link>
@@ -125,7 +125,7 @@ const Footer = () => {
                     <li key={category.id}>
                       <Link 
                         to={`/tours/${category.slug}`} 
-                        className="text-gray-300 hover:text-primary transition-colors text-sm"
+                        className="text-gray-900 hover:text-primary transition-colors text-sm"
                       >
                         {category.name}
                       </Link>
@@ -133,7 +133,7 @@ const Footer = () => {
                   ))}
                 </ul>
               ) : (
-                <p className="text-gray-400 text-sm">No categories available</p>
+                <p className="text-gray-900 text-sm">No categories available</p>
               )}
             </div>
           </div>
@@ -142,15 +142,15 @@ const Footer = () => {
           <div className="lg:w-1/4 space-y-4">
             <h4 className="text-lg font-semibold">Contact Us</h4>
             <div className="space-y-3">
-              <div className="flex items-center space-x-3 text-sm text-gray-300">
+              <div className="flex items-center space-x-3 text-sm text-gray-900">
                 <Phone className="w-4 h-4 text-primary" />
                 <span>+994 51 400 90 91</span>
               </div>
-              <div className="flex items-center space-x-3 text-sm text-gray-300">
+              <div className="flex items-center space-x-3 text-sm text-gray-900">
                 <Mail className="w-4 h-4 text-primary" />
                 <span>info@outtour.az</span>
               </div>
-              <div className="flex items-start space-x-3 text-sm text-gray-300">
+              <div className="flex items-start space-x-3 text-sm text-gray-900">
                 <MapPin className="w-4 h-4 text-primary mt-0.5" />
                 <span>Baku, Azerbaijan</span>
               </div>
@@ -178,16 +178,16 @@ const Footer = () => {
         </div>
 
         {/* Bottom Section */}
-        <div className="border-t border-gray-800 pt-8">
+        <div className="border-t border-gray-300 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <div className="text-center md:text-left">
-              <p className="text-gray-400 text-sm">
+              <p className="text-gray-900 text-sm">
                 © {currentYear} Outtour.az. All rights reserved.
               </p>
-              <p className="text-gray-500 text-xs mt-1">
+              <p className="text-gray-900 text-xs mt-1">
                 Sustainable tourism • Cultural preservation • Environmental protection
               </p>
-              <p className="text-gray-500 text-xs mt-2">
+              <p className="text-gray-900 text-xs mt-2">
                 Created by{' '}
                 <a 
                   href="https://midiya.az" 
@@ -200,13 +200,13 @@ const Footer = () => {
               </p>
             </div>
             <div className="flex space-x-6 text-sm">
-              <Link to="/privacy" className="text-gray-400 hover:text-primary transition-colors">
+              <Link to="/privacy" className="text-gray-900 hover:text-primary transition-colors">
                 Privacy Policy
               </Link>
-              <Link to="/terms" className="text-gray-400 hover:text-primary transition-colors">
+              <Link to="/terms" className="text-gray-900 hover:text-primary transition-colors">
                 Terms of Service
               </Link>
-              <Link to="/contact" className="text-gray-400 hover:text-primary transition-colors">
+              <Link to="/contact" className="text-gray-900 hover:text-primary transition-colors">
                 Support
               </Link>
             </div>
