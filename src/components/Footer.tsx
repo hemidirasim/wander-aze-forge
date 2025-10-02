@@ -166,10 +166,10 @@ const Footer = () => {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-8 h-8 bg-gray-800 hover:bg-primary rounded-lg flex items-center justify-center transition-colors"
+                    className="w-8 h-8 bg-gray-900 hover:bg-primary rounded-lg flex items-center justify-center transition-colors"
                     aria-label={social.name}
                   >
-                    <social.icon className="w-4 h-4" />
+                    <social.icon className="w-4 h-4 text-white" />
                   </a>
                 ))}
               </div>
