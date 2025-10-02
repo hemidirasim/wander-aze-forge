@@ -76,8 +76,20 @@ const AdminTourEditPrograms: React.FC = () => {
         
         console.log('Parsed programs:', parsedPrograms);
         
+        // Ensure programs have correct structure
+        const formattedPrograms = parsedPrograms.map((program: any, index: number) => ({
+          day: program.day || index + 1,
+          title: program.title || '',
+          description: program.description || '',
+          activities: Array.isArray(program.activities) ? program.activities : [],
+          meals: program.meals || '',
+          accommodation: program.accommodation || ''
+        }));
+        
+        console.log('Formatted programs:', formattedPrograms);
+        
         setFormData({
-          tourPrograms: parsedPrograms
+          tourPrograms: formattedPrograms
         });
       } else {
         toast({
@@ -293,8 +305,12 @@ const AdminTourEditPrograms: React.FC = () => {
               </CardHeader>
               <CardContent className="space-y-6">
                 {console.log('Rendering programs:', formData.tourPrograms)}
+                {console.log('Programs length:', formData.tourPrograms?.length)}
+                {console.log('Programs type:', typeof formData.tourPrograms)}
                 {formData.tourPrograms && formData.tourPrograms.length > 0 ? (
-                  formData.tourPrograms.map((program, index) => (
+                  formData.tourPrograms.map((program, index) => {
+                    console.log(`Rendering program ${index}:`, program);
+                    return (
                   <div key={index} className="border rounded-lg p-6 space-y-4">
                     <div className="flex items-center justify-between">
                       <h3 className="text-lg font-semibold">Day {program.day}</h3>
@@ -386,7 +402,8 @@ const AdminTourEditPrograms: React.FC = () => {
                       />
                     </div>
                   </div>
-                  ))
+                    );
+                  })
                 ) : (
                   <div className="text-center py-8 text-muted-foreground">
                     <p>No tour programs found. Add a new day to get started.</p>
