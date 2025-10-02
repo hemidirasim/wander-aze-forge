@@ -117,7 +117,9 @@ const AdminTourManage: React.FC = () => {
         title: 'Highlights & Features',
         description: 'Add tour highlights and what\'s included/excluded',
         icon: <Star className="w-5 h-5" />,
-        completed: false, // Will be implemented later
+        completed: !!(tour.highlights && tour.highlights.length > 0) || 
+                   !!(tour.includes && tour.includes.length > 0) || 
+                   !!(tour.excludes && tour.excludes.length > 0),
         route: `/admin/tours/${id}/highlights`
       },
       {
