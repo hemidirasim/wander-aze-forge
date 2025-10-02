@@ -92,10 +92,24 @@ const TourDetail = () => {
 
         if (result.success) {
           setTour(result.data.tour);
-          // Use tour_programs from tour data if programs array is empty
-          const tourPrograms = result.data.programs || result.data.tour.tour_programs || [];
-          console.log('Tour programs data:', tourPrograms);
+          
+          console.log('Full API response:', result);
           console.log('Tour data:', result.data.tour);
+          console.log('Tour programs from API:', result.data.programs);
+          console.log('Tour programs from tour:', result.data.tour.tour_programs);
+          
+          // Parse tour_programs if it's a string
+          let tourPrograms = result.data.programs || result.data.tour.tour_programs || [];
+          if (typeof tourPrograms === 'string') {
+            try {
+              tourPrograms = JSON.parse(tourPrograms);
+            } catch (e) {
+              console.error('Error parsing tour_programs:', e);
+              tourPrograms = [];
+            }
+          }
+          
+          console.log('Final tour programs:', tourPrograms);
           setPrograms(tourPrograms);
         } else {
           setError(result.error || 'Failed to load tour');
@@ -287,6 +301,8 @@ const TourDetail = () => {
                   </p>
                 </div>
 
+                {console.log('Rendering tour programs - programs:', programs)}
+                {console.log('Rendering tour programs - tour.tour_programs:', tour.tour_programs)}
                 {programs.length > 0 ? (
                   <DatabaseTourProgramAccordion 
                     programs={programs} 
