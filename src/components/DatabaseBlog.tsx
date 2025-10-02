@@ -208,7 +208,7 @@ const DatabaseBlog: React.FC = () => {
 
         {/* View All Button */}
         <div className="text-center mt-8">
-          <Button variant="outline" asChild>
+          <Button variant="outline" asChild className="hover:text-[#d26c37] hover:border-[#d26c37] transition-colors duration-300">
             <Link to="/blog">View All Stories</Link>
           </Button>
         </div>
