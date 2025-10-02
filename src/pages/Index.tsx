@@ -409,14 +409,14 @@ const Index = () => {
                     >
                       <Card className="relative overflow-hidden border-0 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300 h-full" style={{ background: 'rgb(215 114 61)' }}>
                         {/* Quote Icon */}
-                        <div className="absolute top-6 right-6 text-primary/20">
+                        <div className="absolute top-6 right-6 text-white/60">
                           <Quote className="w-8 h-8" />
                         </div>
                         
                         {/* Image Section - Circular */}
                         {review.image_url && (
                           <div className="flex justify-center mb-4">
-                            <div className="relative w-24 h-24 overflow-hidden rounded-full border-4 border-primary/20">
+                            <div className="relative w-24 h-24 overflow-hidden rounded-full border-4 border-white/30">
                               <a
                                 href={review.image_url}
                                 data-fancybox="reviews"
@@ -435,21 +435,21 @@ const Index = () => {
                         
                         <CardContent className="p-6">
                           {/* Review Text */}
-                          <blockquote className="text-foreground leading-relaxed mb-6 text-base italic line-clamp-4">
+                          <blockquote className="text-white leading-relaxed mb-6 text-base italic line-clamp-4">
                             "{review.review_text}"
                           </blockquote>
                           
                           {/* Author Info */}
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 bg-gradient-to-br from-primary/20 to-primary/10 rounded-full flex items-center justify-center">
-                                <span className="text-primary font-bold text-sm">
+                              <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                                <span className="text-white font-bold text-sm">
                                   {review.name.charAt(0)}
                                 </span>
                               </div>
                               <div>
-                                <div className="font-semibold text-foreground text-sm">{review.name}</div>
-                                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                                <div className="font-semibold text-white text-sm">{review.name}</div>
+                                <div className="flex items-center gap-2 text-xs text-white/80">
                                   {review.source_logo && (
                                     <img
                                       src={review.source_logo}
@@ -467,7 +467,7 @@ const Index = () => {
                                 href={review.source_url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-primary hover:text-primary/80 transition-colors p-1.5 hover:bg-primary/10 rounded-full"
+                                className="text-white hover:text-white/80 transition-colors p-1.5 hover:bg-white/20 rounded-full"
                               >
                                 <ExternalLink className="w-3 h-3" />
                               </a>
