@@ -393,13 +393,10 @@ const DatabaseNavigation = () => {
                   <Link to="/login" onClick={() => {
                     scrollToTopInstant();
                     setIsToursOpen(false);
-                  }}>Login</Link>
-                </Button>
-                <Button variant="outline" asChild>
-                  <Link to="/register" onClick={() => {
-                    scrollToTopInstant();
-                    setIsToursOpen(false);
-                  }}>Sign Up</Link>
+                  }}>
+                    <User className="w-4 h-4 mr-2" />
+                    Login
+                  </Link>
                 </Button>
               </div>
             )}
@@ -580,13 +577,10 @@ const DatabaseNavigation = () => {
                     <Link to="/login" onClick={() => {
                       setIsMenuOpen(false);
                       scrollToTopInstant();
-                    }}>Login</Link>
-                  </Button>
-                  <Button variant="adventure" className="w-fit" asChild>
-                    <Link to="/register" onClick={() => {
-                      setIsMenuOpen(false);
-                      scrollToTopInstant();
-                    }}>Sign Up</Link>
+                    }}>
+                      <User className="w-4 h-4 mr-2" />
+                      Login
+                    </Link>
                   </Button>
                 </div>
               )}
