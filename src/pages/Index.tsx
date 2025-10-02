@@ -357,43 +357,6 @@ const Index = () => {
             </div>
           ) : reviews && reviews.length > 0 ? (
             <div className="relative">
-              {/* Navigation Buttons - Centered below carousel */}
-              <div className="flex justify-center items-center gap-4 mt-8">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={prevReviewSlide}
-                  disabled={currentReviewIndex === 0}
-                  className="flex items-center gap-1 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-primary/20 hover:border-primary/40 hover:bg-primary/5"
-                >
-                  <ChevronLeft className="w-4 h-4" />
-                </Button>
-                
-                <div className="flex items-center gap-2">
-                  {Array.from({ length: Math.max(1, reviews.length - itemsPerView + 1) }).map((_, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setCurrentReviewIndex(index)}
-                      className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                        index === currentReviewIndex 
-                          ? 'bg-primary scale-125' 
-                          : 'bg-primary/30 hover:bg-primary/50'
-                      }`}
-                    />
-                  ))}
-                </div>
-                
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={nextReviewSlide}
-                  disabled={currentReviewIndex >= Math.max(0, reviews.length - itemsPerView)}
-                  className="flex items-center gap-1 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-primary/20 hover:border-primary/40 hover:bg-primary/5"
-                >
-                  <ChevronRight className="w-4 h-4" />
-                </Button>
-              </div>
-
               {/* Carousel Container */}
               <div className="overflow-hidden">
                 <div 
@@ -477,6 +440,43 @@ const Index = () => {
                     </div>
                   ))}
                 </div>
+              </div>
+
+              {/* Navigation Buttons - Below carousel */}
+              <div className="flex justify-center items-center gap-4 mt-12">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={prevReviewSlide}
+                  disabled={currentReviewIndex === 0}
+                  className="flex items-center gap-1 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-primary/20 hover:border-primary/40 hover:bg-primary/5"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </Button>
+                
+                <div className="flex items-center gap-2">
+                  {Array.from({ length: Math.max(1, reviews.length - itemsPerView + 1) }).map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentReviewIndex(index)}
+                      className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                        index === currentReviewIndex 
+                          ? 'bg-primary scale-125' 
+                          : 'bg-primary/30 hover:bg-primary/50'
+                      }`}
+                    />
+                  ))}
+                </div>
+                
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={nextReviewSlide}
+                  disabled={currentReviewIndex >= Math.max(0, reviews.length - itemsPerView)}
+                  className="flex items-center gap-1 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-primary/20 hover:border-primary/40 hover:bg-primary/5"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </Button>
               </div>
             </div>
           ) : (
