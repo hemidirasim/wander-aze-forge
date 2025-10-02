@@ -49,7 +49,7 @@ export async function GET(request: Request) {
         provided_equipment, what_to_bring, transport_details, pickup_service,
         gallery_images, photography_service, price_includes, group_discounts,
         early_bird_discount, contact_phone, booking_terms, itinerary,
-        requirements, special_fields
+        requirements, special_fields, participant_pricing
       FROM tours 
       WHERE id = $1
     `;
@@ -79,6 +79,7 @@ export async function GET(request: Request) {
       what_to_bring: tour.what_to_bring ? (typeof tour.what_to_bring === 'string' ? JSON.parse(tour.what_to_bring) : tour.what_to_bring) : [],
       gallery_images: tour.gallery_images ? (typeof tour.gallery_images === 'string' ? JSON.parse(tour.gallery_images) : tour.gallery_images) : [tour.image_url || '/placeholder-tour.jpg'],
       price_includes: tour.price_includes ? (typeof tour.price_includes === 'string' ? JSON.parse(tour.price_includes) : tour.price_includes) : [],
+      participant_pricing: tour.participant_pricing ? (typeof tour.participant_pricing === 'string' ? JSON.parse(tour.participant_pricing) : tour.participant_pricing) : [],
       // Use actual database values or defaults
       overview: tour.overview || tour.description,
       best_season: tour.best_season || 'All year round',
