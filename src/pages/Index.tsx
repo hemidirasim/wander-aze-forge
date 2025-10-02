@@ -60,6 +60,17 @@ const Index = () => {
     }
   };
 
+  // Auto-rotate carousel
+  useEffect(() => {
+    if (reviews && reviews.length > 0) {
+      const interval = setInterval(() => {
+        setCurrentReviewIndex((prev) => (prev + 1) % Math.max(1, reviews.length - itemsPerView + 1));
+      }, 4000); // Change slide every 4 seconds
+
+      return () => clearInterval(interval);
+    }
+  }, [reviews, itemsPerView]);
+
   const fetchFeaturedTours = async () => {
     try {
       const response = await fetch('/api/tours');
@@ -346,17 +357,16 @@ const Index = () => {
             </div>
           ) : reviews && reviews.length > 0 ? (
             <div className="relative">
-              {/* Navigation Buttons */}
-              <div className="flex justify-between items-center mb-8">
+              {/* Navigation Buttons - Centered below carousel */}
+              <div className="flex justify-center items-center gap-4 mt-8">
                 <Button
                   variant="outline"
-                  size="lg"
+                  size="sm"
                   onClick={prevReviewSlide}
                   disabled={currentReviewIndex === 0}
-                  className="flex items-center gap-2 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-primary/20 hover:border-primary/40 hover:bg-primary/5"
+                  className="flex items-center gap-1 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-primary/20 hover:border-primary/40 hover:bg-primary/5"
                 >
-                  <ChevronLeft className="w-5 h-5" />
-                  Previous
+                  <ChevronLeft className="w-4 h-4" />
                 </Button>
                 
                 <div className="flex items-center gap-2">
@@ -375,13 +385,12 @@ const Index = () => {
                 
                 <Button
                   variant="outline"
-                  size="lg"
+                  size="sm"
                   onClick={nextReviewSlide}
                   disabled={currentReviewIndex >= Math.max(0, reviews.length - itemsPerView)}
-                  className="flex items-center gap-2 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-primary/20 hover:border-primary/40 hover:bg-primary/5"
+                  className="flex items-center gap-1 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-primary/20 hover:border-primary/40 hover:bg-primary/5"
                 >
-                  Next
-                  <ChevronRight className="w-5 h-5" />
+                  <ChevronRight className="w-4 h-4" />
                 </Button>
               </div>
 
@@ -403,22 +412,23 @@ const Index = () => {
                           <Quote className="w-8 h-8" />
                         </div>
                         
-                        {/* Image Section */}
+                        {/* Image Section - Circular */}
                         {review.image_url && (
-                          <div className="relative h-48 overflow-hidden">
-                            <a
-                              href={review.image_url}
-                              data-fancybox="reviews"
-                              data-caption={`${review.name} - ${review.source}`}
-                              className="block"
-                            >
-                              <img
-                                src={review.image_url}
-                                alt={review.name}
-                                className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                              />
-                              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                            </a>
+                          <div className="flex justify-center mb-4">
+                            <div className="relative w-20 h-20 overflow-hidden rounded-full border-4 border-primary/20">
+                              <a
+                                href={review.image_url}
+                                data-fancybox="reviews"
+                                data-caption={`${review.name} - ${review.source}`}
+                                className="block"
+                              >
+                                <img
+                                  src={review.image_url}
+                                  alt={review.name}
+                                  className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
+                                />
+                              </a>
+                            </div>
                           </div>
                         )}
                         
