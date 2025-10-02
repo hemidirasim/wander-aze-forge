@@ -127,7 +127,7 @@ const AdminTourManage: React.FC = () => {
         title: 'Tour Programs',
         description: 'Add detailed day-by-day tour programs',
         icon: <Clock className="w-5 h-5" />,
-        completed: false, // Will be implemented later
+        completed: !!(tour.tour_programs && tour.tour_programs.length > 0),
         route: `/admin/tours/${id}/programs`
       },
       {
