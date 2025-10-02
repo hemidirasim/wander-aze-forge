@@ -80,6 +80,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       priceIncludes
     });
 
+    // Ensure participantPricing is a valid array
+    const validParticipantPricing = Array.isArray(participantPricing) ? participantPricing : [];
+    const validPriceIncludes = Array.isArray(priceIncludes) ? priceIncludes : [];
+
+    console.log('Validated data:', {
+      basePrice,
+      validParticipantPricing,
+      validPriceIncludes
+    });
+
     // Update tour pricing in database
     const query = `
       UPDATE tours SET
@@ -93,8 +103,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const values = [
       basePrice,
-      participantPricing,
-      priceIncludes,
+      validParticipantPricing,
+      validPriceIncludes,
       id
     ];
 

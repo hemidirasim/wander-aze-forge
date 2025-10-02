@@ -139,10 +139,14 @@ const AdminTourEditPricing: React.FC = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Filter out empty strings from price includes
+    // Filter out empty strings from price includes and validate participant pricing
+    const cleanedParticipantPricing = formData.participantPricing.filter(pricing => 
+      pricing.minParticipants > 0 && pricing.pricePerPerson > 0
+    );
+    
     const cleanedFormData = {
       basePrice: formData.basePrice,
-      participantPricing: formData.participantPricing,
+      participantPricing: cleanedParticipantPricing,
       priceIncludes: formData.priceIncludes.filter(item => item.trim() !== '')
     };
 
