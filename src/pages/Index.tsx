@@ -377,7 +377,7 @@ const Index = () => {
             <div className="relative">
               <div className="flex gap-6 overflow-hidden">
                 {[...Array(3)].map((_, i) => (
-                  <Card key={i} className="flex-shrink-0 w-full md:w-1/2 lg:w-1/3 overflow-hidden border-0 backdrop-blur-sm" style={{ background: 'rgb(215 114 61 / 50%)' }}>
+                  <Card key={i} className="flex-shrink-0 w-full md:w-1/2 lg:w-1/3 overflow-hidden border-0 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm">
                     <CardContent className="p-8">
                       <Skeleton className="h-20 w-full mb-4" />
                       <div className="flex items-center justify-between">
@@ -407,7 +407,7 @@ const Index = () => {
                       className="flex-shrink-0 px-3"
                       style={{ width: `${100 / itemsPerView}%` }}
                     >
-                      <Card className="relative overflow-hidden border-0 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300 h-full" style={{ background: 'rgb(215 114 61 / 50%)' }}>
+                      <Card className="relative overflow-hidden border-0 bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300 h-full">
                         {/* Quote Icon */}
                         <div className="absolute top-6 right-6 text-primary/20">
                           <Quote className="w-8 h-8" />
