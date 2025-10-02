@@ -114,7 +114,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       UPDATE tours SET
         price = $1,
         participant_pricing = $2::jsonb,
-        price_includes = $3::jsonb,
+        price_includes = $3,
         updated_at = NOW()
       WHERE id = $4
       RETURNING *
@@ -123,7 +123,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const values = [
       basePrice,
       JSON.stringify(validParticipantPricing),
-      JSON.stringify(validPriceIncludes),
+      validPriceIncludes, // Send as array for text[] column
       id
     ];
 
