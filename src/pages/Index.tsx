@@ -11,6 +11,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Award, Leaf, Heart, ArrowRight, Quote, Star, ChevronLeft, ChevronRight, ExternalLink } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useApi } from '@/hooks/useApi';
+
+// Declare Fancybox for TypeScript
+declare global {
+  interface Window {
+    Fancybox: any;
+  }
+}
+
 // Using public folder image
 const heroImage = '/hero-mountain-custom.jpg';
 
@@ -70,6 +78,31 @@ const Index = () => {
       return () => clearInterval(interval);
     }
   }, [reviews, itemsPerView]);
+
+  // Initialize Fancybox for review images
+  useEffect(() => {
+    if (window.Fancybox && reviews && reviews.length > 0) {
+      window.Fancybox.bind('[data-fancybox="reviews"]', {
+        Thumbs: {
+          autoStart: false,
+        },
+        Toolbar: {
+          display: {
+            left: ["infobar"],
+            middle: ["zoomIn", "zoomOut", "rotateCCW", "rotateCW"],
+            right: ["slideshow", "fullscreen", "thumbs", "close"]
+          }
+        }
+      });
+    }
+
+    // Cleanup Fancybox when component unmounts
+    return () => {
+      if (window.Fancybox) {
+        window.Fancybox.destroy();
+      }
+    };
+  }, [reviews]);
 
   const fetchFeaturedTours = async () => {
     try {
