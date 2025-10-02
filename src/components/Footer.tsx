@@ -71,10 +71,10 @@ const Footer = () => {
   return (
     <footer className="bg-gray-900 text-white">
       <div className="container mx-auto px-4 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+        <div className="flex flex-col lg:flex-row gap-8 mb-12">
           
-          {/* Company Info */}
-          <div className="space-y-4">
+          {/* Company Info - Left */}
+          <div className="lg:w-1/4 space-y-4">
             <div className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
                 <Leaf className="w-5 h-5 text-white" />
@@ -91,52 +91,55 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Quick Links */}
-          <div className="space-y-4">
-            <h4 className="text-lg font-semibold">Quick Links</h4>
-            <ul className="space-y-2">
-              {quickLinks.map((link, index) => (
-                <li key={index}>
-                  <Link 
-                    to={link.href} 
-                    className="text-gray-300 hover:text-primary transition-colors text-sm"
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Tour Categories */}
-          <div className="space-y-4">
-            <h4 className="text-lg font-semibold">Tour Categories</h4>
-            {loading ? (
-              <div className="space-y-2">
-                <div className="h-4 bg-gray-700 rounded animate-pulse"></div>
-                <div className="h-4 bg-gray-700 rounded animate-pulse"></div>
-                <div className="h-4 bg-gray-700 rounded animate-pulse"></div>
-              </div>
-            ) : tourCategories.length > 0 ? (
+          {/* Center Section - Quick Links and Tour Categories */}
+          <div className="lg:w-1/2 flex flex-col md:flex-row gap-8">
+            {/* Quick Links */}
+            <div className="md:w-1/2 space-y-4">
+              <h4 className="text-lg font-semibold">Quick Links</h4>
               <ul className="space-y-2">
-                {tourCategories.map((category) => (
-                  <li key={category.id}>
+                {quickLinks.map((link, index) => (
+                  <li key={index}>
                     <Link 
-                      to={`/tours/${category.slug}`} 
+                      to={link.href} 
                       className="text-gray-300 hover:text-primary transition-colors text-sm"
                     >
-                      {category.name}
+                      {link.name}
                     </Link>
                   </li>
                 ))}
               </ul>
-            ) : (
-              <p className="text-gray-400 text-sm">No categories available</p>
-            )}
+            </div>
+
+            {/* Tour Categories */}
+            <div className="md:w-1/2 space-y-4">
+              <h4 className="text-lg font-semibold">Tour Categories</h4>
+              {loading ? (
+                <div className="space-y-2">
+                  <div className="h-4 bg-gray-700 rounded animate-pulse"></div>
+                  <div className="h-4 bg-gray-700 rounded animate-pulse"></div>
+                  <div className="h-4 bg-gray-700 rounded animate-pulse"></div>
+                </div>
+              ) : tourCategories.length > 0 ? (
+                <ul className="space-y-2">
+                  {tourCategories.map((category) => (
+                    <li key={category.id}>
+                      <Link 
+                        to={`/tours/${category.slug}`} 
+                        className="text-gray-300 hover:text-primary transition-colors text-sm"
+                      >
+                        {category.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-gray-400 text-sm">No categories available</p>
+              )}
+            </div>
           </div>
 
-          {/* Contact Info */}
-          <div className="space-y-4">
+          {/* Contact Info - Right */}
+          <div className="lg:w-1/4 space-y-4">
             <h4 className="text-lg font-semibold">Contact Us</h4>
             <div className="space-y-3">
               <div className="flex items-center space-x-3 text-sm text-gray-300">
