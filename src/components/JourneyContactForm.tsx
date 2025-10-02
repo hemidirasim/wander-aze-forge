@@ -235,32 +235,35 @@ const JourneyContactForm = () => {
                       <FormItem>
                         <FormLabel className="text-white font-medium">Country *</FormLabel>
                         <FormControl>
-                          <div className="space-y-2">
-                            {/* Search Input */}
-                            <div className="relative">
-                              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/60 w-4 h-4" />
-                              <Input
-                                type="text"
-                                placeholder="Search countries..."
-                                value={countrySearch}
-                                onChange={(e) => setCountrySearch(e.target.value)}
-                                className="w-full pl-10 pr-3 py-3 border border-white/30 rounded-md bg-white/20 text-white placeholder-white/60 h-12"
-                              />
-                            </div>
-                            
-                            {/* Country Select */}
-                            <select 
-                              {...field}
-                              className="w-full p-3 border border-white/30 rounded-md bg-white/20 text-white h-12"
-                            >
-                              <option value="" className="bg-gray-800">Select your country</option>
+                          <div className="relative">
+                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/60 w-4 h-4 pointer-events-none" />
+                            <Input
+                              type="text"
+                              placeholder="Search and select your country..."
+                              value={countrySearch}
+                              onChange={(e) => {
+                                setCountrySearch(e.target.value);
+                                // Find country code by name
+                                const selectedCountry = countries.find(country => 
+                                  country.name.toLowerCase() === e.target.value.toLowerCase()
+                                );
+                                if (selectedCountry) {
+                                  field.onChange(selectedCountry.code);
+                                } else if (e.target.value.toLowerCase() === 'other') {
+                                  field.onChange('OTHER');
+                                } else {
+                                  field.onChange(e.target.value);
+                                }
+                              }}
+                              className="w-full pl-10 pr-3 py-3 border border-white/30 rounded-md bg-white/20 text-white placeholder-white/60 h-12"
+                              list="countries-datalist"
+                            />
+                            <datalist id="countries-datalist">
                               {filteredCountries.map((country) => (
-                                <option key={country.code} value={country.code} className="bg-gray-800">
-                                  {country.name}
-                                </option>
+                                <option key={country.code} value={country.name} />
                               ))}
-                              <option value="OTHER" className="bg-gray-800">Other</option>
-                            </select>
+                              <option value="Other" />
+                            </datalist>
                           </div>
                         </FormControl>
                         <FormMessage className="text-red-200" />
