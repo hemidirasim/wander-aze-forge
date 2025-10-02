@@ -33,7 +33,7 @@ const AdminTourEditPricing: React.FC = () => {
 
   const [formData, setFormData] = useState({
     basePrice: '',
-    participantPricing: [] as Array<{minParticipants: number, maxParticipants: number, pricePerPerson: number}>,
+    participantPricing: [] as Array<{minParticipants: number, pricePerPerson: number}>,
     priceIncludes: [] as string[]
   });
 
@@ -87,7 +87,7 @@ const AdminTourEditPricing: React.FC = () => {
   const addParticipantPricing = () => {
     setFormData(prev => ({
       ...prev,
-      participantPricing: [...prev.participantPricing, {minParticipants: 1, maxParticipants: 1, pricePerPerson: 0}]
+      participantPricing: [...prev.participantPricing, {minParticipants: 1, pricePerPerson: 0}]
     }));
   };
 
@@ -279,23 +279,14 @@ const AdminTourEditPricing: React.FC = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 {formData.participantPricing.map((pricing, index) => (
-                  <div key={index} className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 border rounded-lg">
+                  <div key={index} className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 border rounded-lg">
                     <div className="space-y-2">
                       <Label>Min Participants</Label>
                       <Input
                         type="number"
                         value={pricing.minParticipants}
                         onChange={(e) => updateParticipantPricing(index, 'minParticipants', parseInt(e.target.value) || 0)}
-                        placeholder="Min"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Max Participants</Label>
-                      <Input
-                        type="number"
-                        value={pricing.maxParticipants}
-                        onChange={(e) => updateParticipantPricing(index, 'maxParticipants', parseInt(e.target.value) || 0)}
-                        placeholder="Max"
+                        placeholder="Min participants"
                       />
                     </div>
                     <div className="space-y-2">
@@ -304,7 +295,7 @@ const AdminTourEditPricing: React.FC = () => {
                         type="number"
                         value={pricing.pricePerPerson}
                         onChange={(e) => updateParticipantPricing(index, 'pricePerPerson', parseInt(e.target.value) || 0)}
-                        placeholder="Price"
+                        placeholder="Price per person"
                       />
                     </div>
                     <div className="flex items-end">
