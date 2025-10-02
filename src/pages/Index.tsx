@@ -29,6 +29,7 @@ const Index = () => {
   const [currentReviewIndex, setCurrentReviewIndex] = useState(0);
   const [itemsPerView, setItemsPerView] = useState(3);
   const [heroLoading, setHeroLoading] = useState(true);
+  const [isHovered, setIsHovered] = useState(false);
   const navigate = useNavigate();
   
   // Fetch reviews data
@@ -68,16 +69,16 @@ const Index = () => {
     }
   };
 
-  // Auto-rotate carousel
+  // Auto-rotate carousel (pause on hover)
   useEffect(() => {
-    if (reviews && reviews.length > 0) {
+    if (reviews && reviews.length > 0 && !isHovered) {
       const interval = setInterval(() => {
         setCurrentReviewIndex((prev) => (prev + 1) % Math.max(1, reviews.length - itemsPerView + 1));
       }, 4000); // Change slide every 4 seconds
 
       return () => clearInterval(interval);
     }
-  }, [reviews, itemsPerView]);
+  }, [reviews, itemsPerView, isHovered]);
 
   // Initialize Fancybox for review images
   useEffect(() => {
@@ -391,7 +392,11 @@ const Index = () => {
           ) : reviews && reviews.length > 0 ? (
             <div className="relative">
               {/* Carousel Container */}
-              <div className="overflow-hidden">
+              <div 
+                className="overflow-hidden"
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+              >
                 <div 
                   className="flex transition-transform duration-500 ease-in-out"
                   style={{ transform: `translateX(-${currentReviewIndex * (100 / itemsPerView)}%)` }}
