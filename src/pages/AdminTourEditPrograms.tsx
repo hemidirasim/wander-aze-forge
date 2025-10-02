@@ -58,12 +58,26 @@ const AdminTourEditPrograms: React.FC = () => {
       if (data.success) {
         const tourData = data.data;
         setTour(tourData);
-        setFormData({
-          tourPrograms: tourData.tour_programs || []
-        });
         
-        console.log('Loaded tour programs data:', {
-          tourPrograms: tourData.tour_programs
+        console.log('Full tour data:', tourData);
+        console.log('Tour programs raw:', tourData.tour_programs);
+        console.log('Tour programs type:', typeof tourData.tour_programs);
+        
+        // Parse tour_programs if it's a string
+        let parsedPrograms = tourData.tour_programs || [];
+        if (typeof tourData.tour_programs === 'string') {
+          try {
+            parsedPrograms = JSON.parse(tourData.tour_programs);
+          } catch (e) {
+            console.error('Error parsing tour_programs:', e);
+            parsedPrograms = [];
+          }
+        }
+        
+        console.log('Parsed programs:', parsedPrograms);
+        
+        setFormData({
+          tourPrograms: parsedPrograms
         });
       } else {
         toast({
@@ -278,6 +292,7 @@ const AdminTourEditPrograms: React.FC = () => {
                 </p>
               </CardHeader>
               <CardContent className="space-y-6">
+                {console.log('Rendering programs:', formData.tourPrograms)}
                 {formData.tourPrograms.map((program, index) => (
                   <div key={index} className="border rounded-lg p-6 space-y-4">
                     <div className="flex items-center justify-between">
