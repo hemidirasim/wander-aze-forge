@@ -153,7 +153,7 @@ const DatabaseBlog: React.FC = () => {
                   </CardContent>
                   
                   <CardFooter>
-                    <Button variant="adventure" asChild className="w-fit">
+                    <Button size="lg" variant="hero-outline" asChild className="text-lg px-8 py-4 border-0 bg-primary/10 text-foreground hover:bg-primary hover:text-white w-fit">
                       <Link to={`/blog/${featuredPost.id}`} className="flex items-center">
                         Read Full Story
                         <ArrowRight className="w-4 h-4 ml-2" />
