@@ -443,11 +443,6 @@ const Index = () => {
                           {/* Author Info */}
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-                                <span className="text-white font-bold text-sm">
-                                  {review.name.charAt(0)}
-                                </span>
-                              </div>
                               <div>
                                 <div className="font-semibold text-white text-sm">{review.name}</div>
                                 <div className="flex items-center gap-2 text-xs text-white/80">
