@@ -108,39 +108,45 @@ const DatabaseTourProgramAccordion: React.FC<DatabaseTourProgramAccordionProps> 
                   )}
 
                   {/* Activities Timeline */}
-                  {program.activities && program.activities.length > 0 && (
+                  {program.activities && (
                     <div className="space-y-4">
                       <h4 className="font-semibold text-foreground">Daily Schedule</h4>
                       <div className="space-y-3">
-                        {program.activities.map((activity, activityIndex) => (
-                          <div key={activityIndex} className="flex items-start space-x-4 p-3 bg-background rounded-lg border">
-                            <div className="flex items-center justify-center w-10 h-10 bg-primary/10 rounded-full">
-                              {getActivityIcon(activity.icon)}
-                            </div>
-                            <div className="flex-1 space-y-1">
-                              <div className="flex items-center justify-between">
-                                <h5 className="font-medium text-foreground">{activity.activity}</h5>
-                                <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                                  <Clock className="w-4 h-4" />
-                                  <span>{activity.time}</span>
-                                  {activity.duration && (
-                                    <>
-                                      <span>•</span>
-                                      <span>{activity.duration}</span>
-                                    </>
-                                  )}
-                                </div>
+                        {Array.isArray(program.activities) ? (
+                          program.activities.map((activity, activityIndex) => (
+                            <div key={activityIndex} className="flex items-start space-x-4 p-3 bg-background rounded-lg border">
+                              <div className="flex items-center justify-center w-10 h-10 bg-primary/10 rounded-full">
+                                {getActivityIcon(activity.icon)}
                               </div>
-                              <p className="text-muted-foreground text-sm">{activity.description}</p>
-                              {activity.location && (
-                                <div className="flex items-center space-x-1 text-xs text-muted-foreground">
-                                  <MapPin className="w-3 h-3" />
-                                  <span>{activity.location}</span>
+                              <div className="flex-1 space-y-1">
+                                <div className="flex items-center justify-between">
+                                  <h5 className="font-medium text-foreground">{activity.activity}</h5>
+                                  <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                                    <Clock className="w-4 h-4" />
+                                    <span>{activity.time}</span>
+                                    {activity.duration && (
+                                      <>
+                                        <span>•</span>
+                                        <span>{activity.duration}</span>
+                                      </>
+                                    )}
+                                  </div>
                                 </div>
-                              )}
+                                <p className="text-muted-foreground text-sm">{activity.description}</p>
+                                {activity.location && (
+                                  <div className="flex items-center space-x-1 text-xs text-muted-foreground">
+                                    <MapPin className="w-3 h-3" />
+                                    <span>{activity.location}</span>
+                                  </div>
+                                )}
+                              </div>
                             </div>
+                          ))
+                        ) : (
+                          <div className="p-4 bg-muted/30 rounded-lg">
+                            <p className="text-muted-foreground">{program.activities}</p>
                           </div>
-                        ))}
+                        )}
                       </div>
                     </div>
                   )}
