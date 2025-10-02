@@ -92,9 +92,9 @@ const Footer = () => {
           </div>
 
           {/* Center Section - Quick Links and Tour Categories */}
-          <div className="lg:w-1/2 flex flex-col md:flex-row gap-8">
+          <div className="lg:w-1/2 flex flex-col md:flex-row gap-8 justify-center items-center">
             {/* Quick Links */}
-            <div className="md:w-1/2 space-y-4">
+            <div className="md:w-1/2 space-y-4 text-center md:text-left">
               <h4 className="text-lg font-semibold">Quick Links</h4>
               <ul className="space-y-2">
                 {quickLinks.map((link, index) => (
@@ -111,7 +111,7 @@ const Footer = () => {
             </div>
 
             {/* Tour Categories */}
-            <div className="md:w-1/2 space-y-4">
+            <div className="md:w-1/2 space-y-4 text-center md:text-left">
               <h4 className="text-lg font-semibold">Tour Categories</h4>
               {loading ? (
                 <div className="space-y-2">
