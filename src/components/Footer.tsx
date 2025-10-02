@@ -139,27 +139,27 @@ const Footer = () => {
           </div>
 
           {/* Contact Info - Right */}
-          <div className="lg:w-1/4 space-y-4">
+          <div className="lg:w-1/4 space-y-4 text-right">
             <h4 className="text-lg font-semibold">Contact Us</h4>
             <div className="space-y-3">
-              <div className="flex items-center space-x-3 text-sm text-gray-900">
-                <Phone className="w-4 h-4 text-primary" />
+              <div className="flex items-center justify-end space-x-3 text-sm text-gray-900">
                 <span>+994 51 400 90 91</span>
+                <Phone className="w-4 h-4 text-primary" />
               </div>
-              <div className="flex items-center space-x-3 text-sm text-gray-900">
-                <Mail className="w-4 h-4 text-primary" />
+              <div className="flex items-center justify-end space-x-3 text-sm text-gray-900">
                 <span>info@outtour.az</span>
+                <Mail className="w-4 h-4 text-primary" />
               </div>
-              <div className="flex items-start space-x-3 text-sm text-gray-900">
-                <MapPin className="w-4 h-4 text-primary mt-0.5" />
+              <div className="flex items-start justify-end space-x-3 text-sm text-gray-900">
                 <span>Baku, Azerbaijan</span>
+                <MapPin className="w-4 h-4 text-primary mt-0.5" />
               </div>
             </div>
             
             {/* Social Media */}
             <div className="pt-4">
-              <h5 className="text-sm font-semibold mb-3">Follow Our Adventures</h5>
-              <div className="flex space-x-3">
+              <h5 className="text-sm font-semibold mb-3 text-right">Follow Our Adventures</h5>
+              <div className="flex justify-end space-x-3">
                 {socialLinks.map((social, index) => (
                   <a
                     key={index}
