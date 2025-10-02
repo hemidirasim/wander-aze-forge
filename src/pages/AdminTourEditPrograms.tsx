@@ -293,7 +293,8 @@ const AdminTourEditPrograms: React.FC = () => {
               </CardHeader>
               <CardContent className="space-y-6">
                 {console.log('Rendering programs:', formData.tourPrograms)}
-                {formData.tourPrograms.map((program, index) => (
+                {formData.tourPrograms && formData.tourPrograms.length > 0 ? (
+                  formData.tourPrograms.map((program, index) => (
                   <div key={index} className="border rounded-lg p-6 space-y-4">
                     <div className="flex items-center justify-between">
                       <h3 className="text-lg font-semibold">Day {program.day}</h3>
@@ -310,15 +311,16 @@ const AdminTourEditPrograms: React.FC = () => {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor={`title-${index}`}>Day Title</Label>
-                        <Input
-                          id={`title-${index}`}
-                          value={program.title}
-                          onChange={(e) => updateProgram(index, 'title', e.target.value)}
-                          placeholder="Enter day title"
-                        />
-                      </div>
+                    <div className="space-y-2">
+                      <Label htmlFor={`title-${index}`}>Day Title</Label>
+                      <Input
+                        id={`title-${index}`}
+                        value={program.title || ''}
+                        onChange={(e) => updateProgram(index, 'title', e.target.value)}
+                        placeholder="Enter day title"
+                      />
+                      {console.log(`Day ${index} title:`, program.title)}
+                    </div>
                       <div className="space-y-2">
                         <Label htmlFor={`meals-${index}`}>Meals</Label>
                         <Input
@@ -384,7 +386,12 @@ const AdminTourEditPrograms: React.FC = () => {
                       />
                     </div>
                   </div>
-                ))}
+                  ))
+                ) : (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <p>No tour programs found. Add a new day to get started.</p>
+                  </div>
+                )}
                 
                 <Button
                   type="button"
