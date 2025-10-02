@@ -416,7 +416,7 @@ const Index = () => {
                         {/* Image Section - Circular */}
                         {review.image_url && (
                           <div className="flex justify-center mb-4">
-                            <div className="relative w-32 h-32 overflow-hidden rounded-full border-4 border-white">
+                            <div className="relative w-24 h-24 overflow-hidden rounded-full border border-white">
                               <a
                                 href={review.image_url}
                                 data-fancybox="reviews"
@@ -426,7 +426,8 @@ const Index = () => {
                                 <img
                                   src={review.image_url}
                                   alt={review.name}
-                                  className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
+                                  className="w-full h-full object-cover object-center transition-transform duration-300 hover:scale-110"
+                                  style={{ minHeight: '120px' }}
                                 />
                               </a>
                             </div>
