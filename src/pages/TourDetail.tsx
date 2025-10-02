@@ -94,6 +94,8 @@ const TourDetail = () => {
           setTour(result.data.tour);
           // Use tour_programs from tour data if programs array is empty
           const tourPrograms = result.data.programs || result.data.tour.tour_programs || [];
+          console.log('Tour programs data:', tourPrograms);
+          console.log('Tour data:', result.data.tour);
           setPrograms(tourPrograms);
         } else {
           setError(result.error || 'Failed to load tour');
@@ -279,7 +281,7 @@ const TourDetail = () => {
                     Comprehensive daily schedule with activities, timings, and highlights
                     {(programs.length > 0 || (tour && tour.tour_programs && tour.tour_programs.length > 0)) && (
                       <span className="block mt-2 text-sm text-yellow-600">
-                        📊 Live data from database
+                        📊 Tour Programs
                       </span>
                     )}
                   </p>

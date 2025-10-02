@@ -99,7 +99,7 @@ const DatabaseProjects: React.FC = () => {
           Projects from Database
         </h2>
         <p className="text-gray-600">
-          Live data from PostgreSQL database via API
+          Our ongoing projects and initiatives
         </p>
       </div>
       

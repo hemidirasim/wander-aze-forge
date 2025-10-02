@@ -97,7 +97,7 @@ const DatabaseTours: React.FC = () => {
           Tours from Database
         </h2>
         <p className="text-gray-600">
-          Live data from PostgreSQL database via API
+          Discover our amazing tour experiences
         </p>
       </div>
       

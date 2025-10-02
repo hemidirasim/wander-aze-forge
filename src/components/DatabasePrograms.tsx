@@ -82,7 +82,7 @@ const DatabasePrograms: React.FC = () => {
           Programs from Database
         </h2>
         <p className="text-gray-600">
-          Live data from PostgreSQL database via API
+          Our community programs and initiatives
         </p>
       </div>
       
