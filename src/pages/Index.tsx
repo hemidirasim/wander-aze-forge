@@ -415,7 +415,7 @@ const Index = () => {
                         
                         {/* Image Section - Circular */}
                         {review.image_url && (
-                          <div className="flex justify-center mb-4">
+                          <div className="flex justify-center my-4">
                             <div className="relative w-24 h-24 overflow-hidden rounded-full border border-white">
                               <a
                                 href={review.image_url}
