@@ -64,7 +64,7 @@ const DatabaseTourProgramAccordion: React.FC<DatabaseTourProgramAccordionProps> 
       <CardContent className="p-0">
         <Accordion type="single" collapsible className="w-full">
           {programs.map((program, index) => (
-            <AccordionItem key={program.id} value={`day-${program.id}`} className="border-b border-border">
+            <AccordionItem key={index} value={`day-${index}`} className="border-b border-border">
               <AccordionTrigger className="px-6 py-4 hover:no-underline">
                 <div className="flex items-center justify-between w-full pr-4">
                   <div className="flex items-center space-x-4">
@@ -74,7 +74,7 @@ const DatabaseTourProgramAccordion: React.FC<DatabaseTourProgramAccordionProps> 
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold text-left">Day {program.day_number}</h3>
-                        <p className="text-sm text-muted-foreground text-left">{program.day_title}</p>
+                        <p className="text-sm text-muted-foreground text-left">{program.title}</p>
                       </div>
                     </div>
                   </div>

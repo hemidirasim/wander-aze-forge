@@ -56,6 +56,7 @@ interface TourData {
   special_fields: any;
   category: string;
   tour_programs: any[];
+  participant_pricing: Array<{minParticipants: number, pricePerPerson: number}>;
 }
 
 interface ProgramData {
@@ -483,6 +484,25 @@ const TourDetail = () => {
                       {category === 'group-tours' ? 'per group' : 'per person'}
                     </div>
                   </div>
+                  
+                  {/* Participant-Based Pricing */}
+                  {tour.participant_pricing && tour.participant_pricing.length > 0 && (
+                    <div className="border-t pt-4">
+                      <h4 className="font-semibold mb-3">Group Pricing:</h4>
+                      <div className="space-y-2">
+                        {tour.participant_pricing.map((pricing, index) => (
+                          <div key={index} className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
+                            <span className="text-sm">
+                              {pricing.minParticipants}+ participants
+                            </span>
+                            <span className="font-semibold text-primary">
+                              ${pricing.pricePerPerson} per person
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                   <div className="border-t pt-4">
                     <h4 className="font-semibold mb-2">Price Includes:</h4>
                     {tour.price_includes && tour.price_includes.length > 0 ? (
