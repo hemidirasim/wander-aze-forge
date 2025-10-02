@@ -26,6 +26,8 @@ const DatabaseNavigation = () => {
   const [categories, setCategories] = useState<DatabaseTourCategory[]>([]);
   const [loading, setLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [userProfile, setUserProfile] = useState<any>(null);
 
   // Fetch categories from database
   useEffect(() => {
@@ -36,6 +38,26 @@ const DatabaseNavigation = () => {
   const checkAuthStatus = () => {
     const token = localStorage.getItem('authToken');
     setIsLoggedIn(!!token);
+    if (token) {
+      fetchUserProfile();
+    }
+  };
+
+  const fetchUserProfile = async () => {
+    try {
+      const token = localStorage.getItem('authToken');
+      const response = await fetch('/api/user/profile', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setUserProfile(data);
+      }
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
+    }
   };
 
   // Close tours dropdown when clicking outside
@@ -47,11 +69,17 @@ const DatabaseNavigation = () => {
           setIsToursOpen(false);
         }
       }
+      if (isProfileOpen) {
+        const target = event.target as Element;
+        if (!target.closest('[data-profile-dropdown]')) {
+          setIsProfileOpen(false);
+        }
+      }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [isToursOpen]);
+  }, [isToursOpen, isProfileOpen]);
 
   const fetchCategories = async () => {
     try {
@@ -274,30 +302,90 @@ const DatabaseNavigation = () => {
               }}>Book Now</Link>
             </Button>
 
-            {/* Desktop Auth Buttons */}
+            {/* Desktop Profile Button */}
             {isLoggedIn ? (
-              <div className="flex items-center gap-2">
-                <Button variant="outline" asChild>
-                  <Link to="/dashboard" onClick={() => {
-                    scrollToTopInstant();
-                    setIsToursOpen(false);
-                  }}>
-                    <User className="w-4 h-4 mr-2" />
-                    Dashboard
-                  </Link>
-                </Button>
+              <div className="relative" data-profile-dropdown>
                 <Button 
-                  variant="ghost" 
-                  className="text-muted-foreground hover:text-foreground"
-                  onClick={() => {
-                    localStorage.removeItem('authToken');
-                    setIsLoggedIn(false);
-                    window.location.href = '/';
-                  }}
+                  variant="outline" 
+                  onClick={() => setIsProfileOpen(!isProfileOpen)}
+                  className="flex items-center gap-2"
                 >
-                  <LogOut className="w-4 h-4 mr-2" />
-                  Logout
+                  <User className="w-4 h-4" />
+                  Profile
+                  <ChevronDown className="w-4 h-4" />
                 </Button>
+                
+                {isProfileOpen && (
+                  <div className="absolute right-0 top-full mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+                    <div className="p-4 border-b border-gray-200">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
+                          <User className="w-5 h-5 text-white" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-gray-900">
+                            {userProfile?.firstName} {userProfile?.lastName}
+                          </h3>
+                          <p className="text-sm text-gray-600">{userProfile?.email}</p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="p-2">
+                      <Link
+                        to="/dashboard"
+                        className="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+                        onClick={() => {
+                          setIsProfileOpen(false);
+                          scrollToTopInstant();
+                        }}
+                      >
+                        <User className="w-4 h-4 mr-3" />
+                        Dashboard
+                      </Link>
+                      
+                      <Link
+                        to="/user/bookings"
+                        className="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+                        onClick={() => {
+                          setIsProfileOpen(false);
+                          scrollToTopInstant();
+                        }}
+                      >
+                        <Binoculars className="w-4 h-4 mr-3" />
+                        My Bookings
+                      </Link>
+                      
+                      <Link
+                        to="/user/reviews"
+                        className="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+                        onClick={() => {
+                          setIsProfileOpen(false);
+                          scrollToTopInstant();
+                        }}
+                      >
+                        <Users className="w-4 h-4 mr-3" />
+                        My Reviews
+                      </Link>
+                      
+                      <div className="border-t border-gray-200 my-2"></div>
+                      
+                      <button
+                        className="flex items-center w-full px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-md transition-colors"
+                        onClick={() => {
+                          localStorage.removeItem('authToken');
+                          setIsLoggedIn(false);
+                          setIsProfileOpen(false);
+                          setUserProfile(null);
+                          window.location.href = '/';
+                        }}
+                      >
+                        <LogOut className="w-4 h-4 mr-3" />
+                        Logout
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             ) : (
               <div className="flex items-center gap-2">
@@ -422,31 +510,69 @@ const DatabaseNavigation = () => {
                 }}>Book Now</Link>
               </Button>
               
-              {/* Auth Buttons */}
+              {/* Mobile Profile Section */}
               {isLoggedIn ? (
-                <div className="flex flex-col gap-2 mt-4">
-                  <Button variant="outline" className="w-fit" asChild>
-                    <Link to="/dashboard" onClick={() => {
-                      setIsMenuOpen(false);
-                      scrollToTopInstant();
-                    }}>
-                      <User className="w-4 h-4 mr-2" />
-                      Dashboard
-                    </Link>
-                  </Button>
-                  <Button 
-                    variant="ghost" 
-                    className="w-fit text-muted-foreground hover:text-foreground"
-                    onClick={() => {
-                      localStorage.removeItem('authToken');
-                      setIsLoggedIn(false);
-                      setIsMenuOpen(false);
-                      window.location.href = '/';
-                    }}
-                  >
-                    <LogOut className="w-4 h-4 mr-2" />
-                    Logout
-                  </Button>
+                <div className="mt-4">
+                  <div className="p-4 bg-gray-50 rounded-lg mb-4">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
+                        <User className="w-5 h-5 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-gray-900">
+                          {userProfile?.firstName} {userProfile?.lastName}
+                        </h3>
+                        <p className="text-sm text-gray-600">{userProfile?.email}</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex flex-col gap-2">
+                    <Button variant="outline" className="w-fit" asChild>
+                      <Link to="/dashboard" onClick={() => {
+                        setIsMenuOpen(false);
+                        scrollToTopInstant();
+                      }}>
+                        <User className="w-4 h-4 mr-2" />
+                        Dashboard
+                      </Link>
+                    </Button>
+                    
+                    <Button variant="outline" className="w-fit" asChild>
+                      <Link to="/user/bookings" onClick={() => {
+                        setIsMenuOpen(false);
+                        scrollToTopInstant();
+                      }}>
+                        <Binoculars className="w-4 h-4 mr-2" />
+                        My Bookings
+                      </Link>
+                    </Button>
+                    
+                    <Button variant="outline" className="w-fit" asChild>
+                      <Link to="/user/reviews" onClick={() => {
+                        setIsMenuOpen(false);
+                        scrollToTopInstant();
+                      }}>
+                        <Users className="w-4 h-4 mr-2" />
+                        My Reviews
+                      </Link>
+                    </Button>
+                    
+                    <Button 
+                      variant="ghost" 
+                      className="w-fit text-red-600 hover:text-red-700 hover:bg-red-50"
+                      onClick={() => {
+                        localStorage.removeItem('authToken');
+                        setIsLoggedIn(false);
+                        setIsMenuOpen(false);
+                        setUserProfile(null);
+                        window.location.href = '/';
+                      }}
+                    >
+                      <LogOut className="w-4 h-4 mr-2" />
+                      Logout
+                    </Button>
+                  </div>
                 </div>
               ) : (
                 <div className="flex flex-col gap-2 mt-4">
