@@ -308,11 +308,9 @@ const DatabaseNavigation = () => {
                 <Button 
                   variant="outline" 
                   onClick={() => setIsProfileOpen(!isProfileOpen)}
-                  className="flex items-center gap-2"
+                  className="p-2"
                 >
-                  <User className="w-4 h-4" />
-                  Profile
-                  <ChevronDown className="w-4 h-4" />
+                  <User className="w-5 h-5" />
                 </Button>
                 
                 {isProfileOpen && (
