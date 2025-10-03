@@ -1,9 +1,10 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Mountain, Menu, X, Binoculars, Users, Wrench, ChevronDown, Search, User, LogOut } from 'lucide-react';
+import { Menu, X, Binoculars, Users, Wrench, ChevronDown, Search, User, LogOut } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { scrollToTopInstant } from '@/hooks/useScrollToTop';
 import SearchModal from '@/components/SearchModal';
+import Logo from '@/components/Logo';
 
 interface DatabaseTourCategory {
   id: number;
@@ -103,12 +104,12 @@ const DatabaseNavigation = () => {
 
 
   const categoryIcons = {
-    hiking: Mountain,
-    trekking: Mountain,
+    hiking: Binoculars,
+    trekking: Binoculars,
     wildlife: Binoculars,
     'group-tours': Users,
     'tailor-made': Wrench,
-    cultural: Mountain,
+    cultural: Binoculars,
     photography: Binoculars
   };
 
@@ -133,7 +134,7 @@ const DatabaseNavigation = () => {
             onClick={scrollToTopInstant}
             onMouseEnter={() => setIsToursOpen(false)}
           >
-            <Mountain className="w-8 h-8 text-primary" />
+            <Logo className="w-8 h-8" />
             <span className="text-xl font-bold">Outtour.az</span>
           </Link>
 

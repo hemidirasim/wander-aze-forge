@@ -1,10 +1,11 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Mountain, Menu, X, Binoculars, Users, Wrench, ChevronDown, Search } from 'lucide-react';
+import { Menu, X, Binoculars, Users, Wrench, ChevronDown, Search } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { tourCategories } from '@/data/tourCategories';
 import { scrollToTopInstant } from '@/hooks/useScrollToTop';
 import SearchModal from '@/components/SearchModal';
+import Logo from '@/components/Logo';
 
 const Navigation = () => {
   const location = useLocation();
@@ -29,8 +30,8 @@ const Navigation = () => {
 
 
   const categoryIcons = {
-    hiking: Mountain,
-    trekking: Mountain,
+    hiking: Binoculars,
+    trekking: Binoculars,
     wildlife: Binoculars,
     'group-tours': Users,
     'tailor-made': Wrench
@@ -57,7 +58,7 @@ const Navigation = () => {
             onClick={scrollToTopInstant}
             onMouseEnter={() => setIsToursOpen(false)}
           >
-            <Mountain className="w-8 h-8 text-primary" />
+            <Logo className="w-8 h-8" />
             <span className="text-xl font-bold">Outtour.az</span>
           </Link>
 
