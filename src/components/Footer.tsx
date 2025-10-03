@@ -92,7 +92,7 @@ const Footer = () => {
             </div>
             
             {/* Social Media */}
-            <div className="pt-4 border border-[#d06d3b] p-3 rounded">
+            <div className="pt-4">
               <h5 className="text-sm font-semibold mb-3">Follow Our Adventures</h5>
               <div className="flex space-x-3">
                 {socialLinks.map((social, index) => (
@@ -101,7 +101,7 @@ const Footer = () => {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-8 h-8 hover:bg-primary rounded-lg flex items-center justify-center transition-colors"
+                    className="w-8 h-8 border border-[#d06d3b] hover:bg-primary rounded-lg flex items-center justify-center transition-colors"
                     aria-label={social.name}
                   >
                     <social.icon className="w-4 h-4 text-gray-900" />
