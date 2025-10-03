@@ -240,7 +240,7 @@ const Index = () => {
       <section className="py-24 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-20">
-            <h2 className="text-5xl md:text-6xl font-bold text-foreground mb-6">
+            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
               What Makes Us Special
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
@@ -365,7 +365,7 @@ const Index = () => {
               <Star className="w-4 h-4 fill-current" />
               <span>Trusted by Adventurers</span>
             </div>
-            <h2 className="text-4xl md:text-6xl font-bold text-foreground mb-6">
+            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
               What People Say About Us
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
