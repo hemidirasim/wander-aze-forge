@@ -125,11 +125,6 @@ const AdminLogin: React.FC = () => {
               </Button>
             </form>
             
-            <div className="mt-6 text-center">
-              <p className="text-white/50 text-sm">
-                Default credentials: admin / admin123
-              </p>
-            </div>
           </CardContent>
         </Card>
       </div>
