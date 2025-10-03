@@ -167,7 +167,8 @@ const Footer = () => {
               <h3 className="text-xl font-bold">Outtour.az</h3>
             </div>
             <p className="text-gray-900 text-sm leading-relaxed">
-              Azerbaijan's first ecotour company since 2014. We specialize in sustainable<br/>
+              Azerbaijan's first ecotour company<br/>
+              since 2014. We specialize in sustainable<br/>
               mountain adventures, cultural immersion,<br/>
               and authentic local experiences.
             </p>
