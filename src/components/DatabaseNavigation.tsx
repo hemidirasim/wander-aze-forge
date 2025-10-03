@@ -134,7 +134,7 @@ const DatabaseNavigation = () => {
             onClick={scrollToTopInstant}
             onMouseEnter={() => setIsToursOpen(false)}
           >
-            <Logo className="w-32 h-32" />
+            <Logo className="w-28 h-28" />
           </Link>
 
           {/* Search Button - Center */}
