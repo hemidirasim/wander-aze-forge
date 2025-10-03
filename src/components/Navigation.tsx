@@ -58,7 +58,7 @@ const Navigation = () => {
             onClick={scrollToTopInstant}
             onMouseEnter={() => setIsToursOpen(false)}
           >
-            <Logo className="w-16 h-16" />
+            <Logo className="w-32 h-32" />
           </Link>
 
           {/* Search Button - Center */}
