@@ -130,12 +130,11 @@ const DatabaseNavigation = () => {
           {/* Logo */}
           <Link 
             to="/" 
-            className="flex items-center space-x-2 text-foreground hover:text-primary transition-smooth"
+            className="flex items-center text-foreground hover:text-primary transition-smooth"
             onClick={scrollToTopInstant}
             onMouseEnter={() => setIsToursOpen(false)}
           >
-            <Logo className="w-8 h-8" />
-            <span className="text-xl font-bold">Outtour.az</span>
+            <Logo className="w-12 h-12" />
           </Link>
 
           {/* Search Button - Center */}
