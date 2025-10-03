@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Menu, X, Binoculars, Users, Wrench, ChevronDown, Search } from 'lucide-react';
+import { Menu, X, Binoculars, Users, Wrench, ChevronDown, Search, Mountain } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { tourCategories } from '@/data/tourCategories';
 import { scrollToTopInstant } from '@/hooks/useScrollToTop';

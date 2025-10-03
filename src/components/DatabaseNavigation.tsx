@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Menu, X, Binoculars, Users, Wrench, ChevronDown, Search, User, LogOut } from 'lucide-react';
+import { Menu, X, Binoculars, Users, Wrench, ChevronDown, Search, User, LogOut, Mountain } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { scrollToTopInstant } from '@/hooks/useScrollToTop';
 import SearchModal from '@/components/SearchModal';
