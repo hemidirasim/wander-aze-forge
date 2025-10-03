@@ -110,7 +110,7 @@ const Contact = () => {
       <DatabaseNavigation />
       
       {/* Hero Section from Database */}
-      <section className="pt-32 pb-12 px-4">
+      <section className="pt-32 pb-16 px-4">
         <div className="container mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
             {heroData?.title || 'Contact Us'}
