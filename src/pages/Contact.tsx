@@ -124,41 +124,6 @@ const Contact = () => {
       {/* Contact Information */}
       <section className="py-20 px-4">
         <div className="container mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-            {/* Phone */}
-            <Card className="text-center hover:shadow-elevated transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
-              <CardHeader>
-                <div className="mx-auto w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                  <Phone className="w-8 h-8 text-primary" />
-                </div>
-                <CardTitle className="text-xl text-foreground">Phone</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-lg font-semibold text-foreground mb-2">
-                  {heroData?.contact_info?.phone || '(+994) 50 123 45 67'}
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  {heroData?.contact_info?.working_hours || 'Available 9 AM - 6 PM (GMT+4)'}
-                </p>
-              </CardContent>
-            </Card>
-
-            {/* Email */}
-            <Card className="text-center hover:shadow-elevated transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
-              <CardHeader>
-                <div className="mx-auto w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                  <Mail className="w-8 h-8 text-primary" />
-                </div>
-                <CardTitle className="text-xl text-foreground">Email</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-lg font-semibold text-foreground mb-2">
-                  {heroData?.contact_info?.email || 'info@outtour.az'}
-                </div>
-                <p className="text-sm text-muted-foreground">We'll respond within 24 hours</p>
-              </CardContent>
-            </Card>
-          </div>
         </div>
       </section>
 
@@ -406,82 +371,43 @@ const Contact = () => {
                 </CardContent>
               </Card>
 
-              {/* Social Media */}
+              {/* Contact Information */}
               <Card className="border-0 bg-card/80 backdrop-blur-sm">
                 <CardHeader>
-                  <CardTitle className="text-xl">{socialData?.title || 'Follow Our Adventures'}</CardTitle>
+                  <CardTitle className="text-xl">Contact Information</CardTitle>
                   <p className="text-muted-foreground text-sm">
-                    {socialData?.content || 'Stay updated with our latest tours and tips on social media'}
+                    Get in touch with us for tour bookings and inquiries
                   </p>
                 </CardHeader>
-                <CardContent>
-                  <div className="flex space-x-4">
-                    {socialData?.contact_info ? (
-                      <>
-                        {socialData.contact_info.facebook && (
-                          <a
-                            href={socialData.contact_info.facebook}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="w-12 h-12 bg-primary/10 hover:bg-primary hover:text-primary-foreground rounded-lg flex items-center justify-center transition-all duration-300 text-primary hover:scale-105"
-                          >
-                            <Facebook className="w-5 h-5" />
-                          </a>
-                        )}
-                        {socialData.contact_info.instagram && (
-                          <a
-                            href={socialData.contact_info.instagram}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="w-12 h-12 bg-primary/10 hover:bg-primary hover:text-primary-foreground rounded-lg flex items-center justify-center transition-all duration-300 text-primary hover:scale-105"
-                          >
-                            <Instagram className="w-5 h-5" />
-                          </a>
-                        )}
-                        {socialData.contact_info.linkedin && (
-                          <a
-                            href={socialData.contact_info.linkedin}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="w-12 h-12 bg-primary/10 hover:bg-primary hover:text-primary-foreground rounded-lg flex items-center justify-center transition-all duration-300 text-primary hover:scale-105"
-                          >
-                            <Linkedin className="w-5 h-5" />
-                          </a>
-                        )}
-                        {socialData.contact_info.twitter && (
-                          <a
-                            href={socialData.contact_info.twitter}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="w-12 h-12 bg-primary/10 hover:bg-primary hover:text-primary-foreground rounded-lg flex items-center justify-center transition-all duration-300 text-primary hover:scale-105"
-                          >
-                            <Twitter className="w-5 h-5" />
-                          </a>
-                        )}
-                        {socialData.contact_info.youtube && (
-                          <a
-                            href={socialData.contact_info.youtube}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="w-12 h-12 bg-primary/10 hover:bg-primary hover:text-primary-foreground rounded-lg flex items-center justify-center transition-all duration-300 text-primary hover:scale-105"
-                          >
-                            <Youtube className="w-5 h-5" />
-                          </a>
-                        )}
-                      </>
-                    ) : (
-                      socialLinks.map((social, index) => (
-                        <a
-                          key={index}
-                          href={social.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="w-12 h-12 bg-primary/10 hover:bg-primary hover:text-primary-foreground rounded-lg flex items-center justify-center transition-all duration-300 text-primary hover:scale-105"
-                        >
-                          <social.icon className="w-5 h-5" />
-                        </a>
-                      ))
-                    )}
+                <CardContent className="space-y-6">
+                  {/* Phone */}
+                  <div className="flex items-start space-x-4">
+                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Phone className="w-6 h-6 text-primary" />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-foreground mb-1">Phone</h4>
+                      <div className="text-lg font-semibold text-foreground mb-1">
+                        {heroData?.contact_info?.phone || '(+994) 50 123 45 67'}
+                      </div>
+                      <p className="text-sm text-muted-foreground">
+                        {heroData?.contact_info?.working_hours || 'Available 9 AM - 6 PM (GMT+4)'}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Email */}
+                  <div className="flex items-start space-x-4">
+                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Mail className="w-6 h-6 text-primary" />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-foreground mb-1">Email</h4>
+                      <div className="text-lg font-semibold text-foreground mb-1">
+                        {heroData?.contact_info?.email || 'info@outtour.az'}
+                      </div>
+                      <p className="text-sm text-muted-foreground">We'll respond within 24 hours</p>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
