@@ -280,7 +280,7 @@ const ToursByCategory = () => {
                 <Button variant="adventure" asChild>
                   <Link to="/tours">Browse All Tours</Link>
                 </Button>
-                <Button variant="outline" asChild>
+                <Button variant="adventure" asChild>
                   <Link to="/contact">Custom Tour Request</Link>
                 </Button>
               </div>
