@@ -101,10 +101,10 @@ const Footer = () => {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-8 h-8 border border-gray-900 hover:bg-primary hover:border-primary rounded-lg flex items-center justify-center transition-colors group"
+                    className="w-8 h-8 border border-gray-900 hover:bg-primary hover:border-primary hover:text-white rounded-lg flex items-center justify-center transition-colors"
                     aria-label={social.name}
                   >
-                    <social.icon className="w-4 h-4 text-gray-900 group-hover:text-white transition-colors" />
+                    <social.icon className="w-4 h-4 text-gray-900 transition-colors" style={{ color: 'inherit' }} />
                   </a>
                 ))}
               </div>
