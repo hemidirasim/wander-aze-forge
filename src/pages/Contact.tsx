@@ -307,11 +307,6 @@ const Contact = () => {
                       alt="Contact Us - Adventure Tours"
                       className="w-full h-full object-cover"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                    <div className="absolute bottom-6 left-6 right-6 text-white">
-                      <h3 className="text-2xl font-bold mb-2">Get in Touch</h3>
-                      <p className="text-white/90">We're here to help plan your perfect adventure</p>
-                    </div>
                   </div>
                 </CardContent>
               </Card>
