@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -198,7 +199,7 @@ const TailorMadeForm = () => {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-base font-medium">
-                  * Which destinations would you like to explore? (See our tour itineraries for ideas.)
+                  * Which destinations would you like to explore? (<Link to="/tours" className="text-primary hover:underline">See our tour itineraries for ideas</Link>.)
                 </FormLabel>
                 <FormControl>
                   <Textarea {...field} className="min-h-[100px] resize-y" />
