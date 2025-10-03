@@ -167,9 +167,10 @@ const Footer = () => {
               <h3 className="text-xl font-bold">Outtour.az</h3>
             </div>
             <p className="text-gray-900 text-sm leading-relaxed">
-              Azerbaijan's first ecotour company since 2014.<br/>
-              We specialize in sustainable mountain adventures,<br/>
-              cultural immersion, and authentic local experiences.
+              Azerbaijan's first ecotour company<br/>
+              since 2014. We specialize in sustainable mountain<br/>
+              adventures, cultural immersion, and authentic<br/>
+              local experiences.
             </p>
             <div className="flex items-center justify-end space-x-2 text-sm text-gray-900">
               <Heart className="w-4 h-4 text-red-400" />
