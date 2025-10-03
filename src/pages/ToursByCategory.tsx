@@ -127,7 +127,7 @@ const ToursByCategory = () => {
     return (
       <div className="min-h-screen bg-background">
         <DatabaseNavigation />
-        <div className="pt-24 px-4">
+        <div className="pt-32 px-4">
           <div className="container mx-auto max-w-4xl text-center">
             <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4" />
             <p className="text-muted-foreground">Loading {category.name} tours...</p>
@@ -142,7 +142,7 @@ const ToursByCategory = () => {
     return (
       <div className="min-h-screen bg-background">
         <DatabaseNavigation />
-        <div className="pt-24 px-4">
+        <div className="pt-32 px-4">
           <div className="container mx-auto max-w-4xl text-center">
             <h1 className="text-4xl font-bold text-foreground mb-4">Error Loading Tours</h1>
             <p className="text-muted-foreground mb-8">{error}</p>
@@ -162,7 +162,7 @@ const ToursByCategory = () => {
         <DatabaseNavigation />
         
         {/* Hero Section */}
-        <section className="pt-24 pb-12 px-4">
+        <section className="pt-32 pb-12 px-4">
           <div className="container mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               {/* Left Side - Content */}
@@ -220,7 +220,7 @@ const ToursByCategory = () => {
       <DatabaseNavigation />
       
       {/* Hero Section */}
-      <section className="pt-24 pb-12 px-4">
+      <section className="pt-32 pb-12 px-4">
         <div className="container mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Left Side - Content */}

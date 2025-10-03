@@ -156,7 +156,7 @@ const TourDetail = () => {
     return (
       <div className="min-h-screen bg-background">
         <DatabaseNavigation />
-        <div className="pt-24 px-4">
+        <div className="pt-32 px-4">
           <div className="container mx-auto max-w-4xl text-center">
             <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4" />
             <p className="text-muted-foreground">Loading tour details...</p>
@@ -170,7 +170,7 @@ const TourDetail = () => {
     return (
       <div className="min-h-screen bg-background">
         <DatabaseNavigation />
-        <div className="pt-24 px-4">
+        <div className="pt-32 px-4">
           <div className="container mx-auto max-w-4xl text-center">
             <h1 className="text-4xl font-bold text-foreground mb-4">Tour Not Found</h1>
             <p className="text-muted-foreground mb-8">
@@ -556,7 +556,7 @@ const TourDetail = () => {
 
             {/* Booking Sidebar */}
             <div className="lg:col-span-1">
-              <Card className="sticky top-24">
+              <Card className="sticky top-32">
                 <CardHeader>
                   <CardTitle className="text-3xl text-center">
                     <span className="text-primary">{tour.price}</span>

@@ -33,7 +33,7 @@ const BlogDetail = () => {
         <DatabaseNavigation />
         
         {/* Hero Section Skeleton */}
-        <section className="pt-24 pb-16 px-4 bg-gradient-mountain">
+        <section className="pt-32 pb-16 px-4 bg-gradient-mountain">
           <div className="container mx-auto">
             <div className="mb-8">
               <Skeleton className="h-10 w-32" />
@@ -75,7 +75,7 @@ const BlogDetail = () => {
       <div className="min-h-screen bg-background">
         <DatabaseNavigation />
         
-        <section className="pt-24 pb-16 px-4 bg-gradient-mountain">
+        <section className="pt-32 pb-16 px-4 bg-gradient-mountain">
           <div className="container mx-auto">
             <div className="mb-8">
               <Button variant="ghost" asChild className="text-white hover:text-white/80">
@@ -109,7 +109,7 @@ const BlogDetail = () => {
       <div className="min-h-screen bg-background">
         <DatabaseNavigation />
         
-        <section className="pt-24 pb-16 px-4 bg-gradient-mountain">
+        <section className="pt-32 pb-16 px-4 bg-gradient-mountain">
           <div className="container mx-auto">
             <div className="mb-8">
               <Button variant="ghost" asChild className="text-white hover:text-white/80">

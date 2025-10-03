@@ -196,7 +196,7 @@ const BookTour = () => {
     return (
       <div className="min-h-screen bg-background">
         <DatabaseNavigation />
-        <div className="p-6 pt-24">
+        <div className="p-6 pt-32">
           <div className="container mx-auto">
             <div className="animate-pulse">
               <div className="h-8 bg-muted rounded w-1/3 mb-6"></div>
@@ -224,7 +224,7 @@ const BookTour = () => {
     return (
       <div className="min-h-screen bg-background">
         <DatabaseNavigation />
-        <div className="p-6 pt-24">
+        <div className="p-6 pt-32">
           <div className="container mx-auto text-center">
             <h1 className="text-2xl font-bold text-foreground mb-4">Tour Not Found</h1>
             <p className="text-muted-foreground mb-6">The tour you're looking for doesn't exist.</p>
@@ -242,7 +242,7 @@ const BookTour = () => {
   return (
     <div className="min-h-screen bg-background">
       <DatabaseNavigation />
-      <div className="p-6 pt-24">
+      <div className="p-6 pt-32">
         <div className="container mx-auto">
           <div className="mb-6">
             <Button 
