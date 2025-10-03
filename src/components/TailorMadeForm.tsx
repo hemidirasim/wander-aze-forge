@@ -81,7 +81,8 @@ const TailorMadeForm = () => {
   const adventureOptions = [
     { id: 'hiking', label: 'Hiking' },
     { id: 'trekking', label: 'Trekking' },
-    { id: 'wildlife', label: 'Wildlife' }
+    { id: 'wildlife', label: 'Wildlife' },
+    { id: 'culture', label: 'Culture' }
   ];
 
   const accommodationOptions = [
