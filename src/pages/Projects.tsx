@@ -57,7 +57,7 @@ const Projects = () => {
       <section className="pt-32 pb-20 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-8">
+            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-16">
               Conservation & Community Projects
             </h2>
             <div className="text-lg text-muted-foreground text-left space-y-4">
