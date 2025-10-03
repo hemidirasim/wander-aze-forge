@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import DatabaseNavigation from '@/components/DatabaseNavigation';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { MapPin, Phone, Mail, Clock, Facebook, Instagram, Linkedin, Twitter, Youtube } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, Facebook, Instagram, Linkedin, Twitter, Youtube, Search } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useTourCategories, TourCategory, Tour } from '@/hooks/useTourCategories';
 
@@ -27,6 +27,9 @@ const Contact = () => {
   const { categories, tours, loading: dataLoading, getToursByCategory } = useTourCategories();
   const [selectedCategory, setSelectedCategory] = useState<TourCategory | null>(null);
   const [selectedTour, setSelectedTour] = useState<Tour | null>(null);
+  const [countrySearch, setCountrySearch] = useState('');
+  const [showCountryList, setShowCountryList] = useState(false);
+  const countryDropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     fetchContactData();
@@ -73,6 +76,78 @@ const Contact = () => {
     { icon: Twitter, url: "https://x.com/CampingAze", name: "Twitter" },
     { icon: Youtube, url: "https://www.youtube.com/@campingazerbaijan", name: "YouTube" }
   ];
+
+  // Country list with search and sorting
+  const countries = [
+    { code: 'US', name: 'United States' },
+    { code: 'GB', name: 'United Kingdom' },
+    { code: 'CA', name: 'Canada' },
+    { code: 'AU', name: 'Australia' },
+    { code: 'DE', name: 'Germany' },
+    { code: 'FR', name: 'France' },
+    { code: 'IT', name: 'Italy' },
+    { code: 'ES', name: 'Spain' },
+    { code: 'NL', name: 'Netherlands' },
+    { code: 'BE', name: 'Belgium' },
+    { code: 'CH', name: 'Switzerland' },
+    { code: 'AT', name: 'Austria' },
+    { code: 'SE', name: 'Sweden' },
+    { code: 'NO', name: 'Norway' },
+    { code: 'DK', name: 'Denmark' },
+    { code: 'FI', name: 'Finland' },
+    { code: 'PL', name: 'Poland' },
+    { code: 'CZ', name: 'Czech Republic' },
+    { code: 'RO', name: 'Romania' },
+    { code: 'GR', name: 'Greece' },
+    { code: 'PT', name: 'Portugal' },
+    { code: 'IE', name: 'Ireland' },
+    { code: 'TR', name: 'Turkey' },
+    { code: 'RU', name: 'Russia' },
+    { code: 'UA', name: 'Ukraine' },
+    { code: 'AZ', name: 'Azerbaijan' },
+    { code: 'GE', name: 'Georgia' },
+    { code: 'AM', name: 'Armenia' },
+    { code: 'KZ', name: 'Kazakhstan' },
+    { code: 'UZ', name: 'Uzbekistan' },
+    { code: 'JP', name: 'Japan' },
+    { code: 'CN', name: 'China' },
+    { code: 'KR', name: 'South Korea' },
+    { code: 'IN', name: 'India' },
+    { code: 'SG', name: 'Singapore' },
+    { code: 'AE', name: 'United Arab Emirates' },
+    { code: 'SA', name: 'Saudi Arabia' },
+    { code: 'IL', name: 'Israel' },
+    { code: 'BR', name: 'Brazil' },
+    { code: 'AR', name: 'Argentina' },
+    { code: 'MX', name: 'Mexico' },
+    { code: 'ZA', name: 'South Africa' },
+    { code: 'NZ', name: 'New Zealand' }
+  ];
+
+  const filteredCountries = useMemo(() => {
+    return countries
+      .filter(country => 
+        country.name.toLowerCase().includes(countrySearch.toLowerCase())
+      )
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }, [countrySearch]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (countryDropdownRef.current && !countryDropdownRef.current.contains(event.target as Node)) {
+        setShowCountryList(false);
+      }
+    };
+
+    if (showCountryList) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showCountryList]);
 
   if (loading) {
     return (
@@ -158,57 +233,62 @@ const Contact = () => {
 
                 <div className="space-y-2">
                   <Label htmlFor="country">Country *</Label>
-                  <select 
-                    id="country" 
-                    className="w-full p-3 border border-input rounded-md bg-background text-foreground"
-                    required
-                  >
-                    <option value="">Select your country</option>
-                    <option value="US">United States</option>
-                    <option value="GB">United Kingdom</option>
-                    <option value="CA">Canada</option>
-                    <option value="AU">Australia</option>
-                    <option value="DE">Germany</option>
-                    <option value="FR">France</option>
-                    <option value="IT">Italy</option>
-                    <option value="ES">Spain</option>
-                    <option value="NL">Netherlands</option>
-                    <option value="BE">Belgium</option>
-                    <option value="CH">Switzerland</option>
-                    <option value="AT">Austria</option>
-                    <option value="SE">Sweden</option>
-                    <option value="NO">Norway</option>
-                    <option value="DK">Denmark</option>
-                    <option value="FI">Finland</option>
-                    <option value="PL">Poland</option>
-                    <option value="CZ">Czech Republic</option>
-                    <option value="RO">Romania</option>
-                    <option value="GR">Greece</option>
-                    <option value="PT">Portugal</option>
-                    <option value="IE">Ireland</option>
-                    <option value="TR">Turkey</option>
-                    <option value="RU">Russia</option>
-                    <option value="UA">Ukraine</option>
-                    <option value="AZ">Azerbaijan</option>
-                    <option value="GE">Georgia</option>
-                    <option value="AM">Armenia</option>
-                    <option value="KZ">Kazakhstan</option>
-                    <option value="UZ">Uzbekistan</option>
-                    <option value="JP">Japan</option>
-                    <option value="CN">China</option>
-                    <option value="KR">South Korea</option>
-                    <option value="IN">India</option>
-                    <option value="SG">Singapore</option>
-                    <option value="AE">United Arab Emirates</option>
-                    <option value="SA">Saudi Arabia</option>
-                    <option value="IL">Israel</option>
-                    <option value="BR">Brazil</option>
-                    <option value="AR">Argentina</option>
-                    <option value="MX">Mexico</option>
-                    <option value="ZA">South Africa</option>
-                    <option value="NZ">New Zealand</option>
-                    <option value="OTHER">Other</option>
-                  </select>
+                  <div className="relative" ref={countryDropdownRef}>
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4 pointer-events-none" />
+                    <Input
+                      type="text"
+                      placeholder="Search and select your country..."
+                      value={countrySearch}
+                      onChange={(e) => {
+                        setCountrySearch(e.target.value);
+                        setShowCountryList(true);
+                      }}
+                      onFocus={() => setShowCountryList(true)}
+                      autoComplete="new-password"
+                      autoCorrect="off"
+                      autoCapitalize="off"
+                      spellCheck="false"
+                      name="country-search"
+                      id="country-search"
+                      className="w-full pl-10 pr-3 py-3 border border-input rounded-md bg-background text-foreground h-12"
+                      required
+                    />
+                    
+                    {/* Custom Dropdown */}
+                    {showCountryList && (
+                      <div className="absolute top-full left-0 right-0 mt-1 bg-background border border-input rounded-md shadow-lg max-h-60 overflow-y-auto z-10">
+                        {filteredCountries.length > 0 ? (
+                          filteredCountries.map((country) => (
+                            <button
+                              key={country.code}
+                              type="button"
+                              onClick={() => {
+                                setCountrySearch(country.name);
+                                setShowCountryList(false);
+                              }}
+                              className="w-full text-left px-4 py-3 hover:bg-accent hover:text-accent-foreground text-foreground transition-colors"
+                            >
+                              {country.name}
+                            </button>
+                          ))
+                        ) : (
+                          <div className="px-4 py-3 text-muted-foreground">No countries found</div>
+                        )}
+                        
+                        {/* Other option */}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setCountrySearch('Other');
+                            setShowCountryList(false);
+                          }}
+                          className="w-full text-left px-4 py-3 hover:bg-accent hover:text-accent-foreground text-foreground transition-colors border-t border-input"
+                        >
+                          Other
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </div>
                 
                 <div className="space-y-2">
