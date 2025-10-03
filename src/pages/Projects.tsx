@@ -91,14 +91,6 @@ const Projects = () => {
                     alt={project.title}
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
-                  <div className="absolute top-4 left-4">
-                    <Badge 
-                      variant={project.status === 'Completed' ? 'default' : 'secondary'}
-                      className={project.status === 'Completed' ? 'bg-primary' : 'bg-autumn'}
-                    >
-                      {project.status}
-                    </Badge>
-                  </div>
                   <div className="absolute top-4 right-4">
                     <Badge variant="outline" className="bg-background/90">
                       {project.category}
