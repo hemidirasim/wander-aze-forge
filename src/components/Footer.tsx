@@ -69,7 +69,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="text-gray-900" style={{ background: 'rgb(243 244 246)' }}>
+    <footer className="text-gray-900" style={{ background: 'rgb(209 211 213)' }}>
       <div className="container mx-auto px-4 py-16">
         <div className="flex flex-col lg:flex-row gap-8 mb-12">
           
