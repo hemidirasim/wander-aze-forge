@@ -110,7 +110,7 @@ const Contact = () => {
       <DatabaseNavigation />
       
       {/* Hero Section from Database */}
-      <section className="pt-32 pb-8 px-4">
+      <section className="pt-32 pb-4 px-4">
         <div className="container mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
             {heroData?.title || 'Contact Us'}
@@ -380,7 +380,6 @@ const Contact = () => {
                       <Phone className="w-6 h-6 text-primary" />
                     </div>
                     <div>
-                      <h4 className="font-semibold text-foreground mb-1">Phone</h4>
                       <div className="text-lg font-semibold text-foreground mb-1">
                         {heroData?.contact_info?.phone || '(+994) 50 123 45 67'}
                       </div>
@@ -396,7 +395,6 @@ const Contact = () => {
                       <Mail className="w-6 h-6 text-primary" />
                     </div>
                     <div>
-                      <h4 className="font-semibold text-foreground mb-1">Email</h4>
                       <div className="text-lg font-semibold text-foreground mb-1">
                         {heroData?.contact_info?.email || 'info@outtour.az'}
                       </div>
