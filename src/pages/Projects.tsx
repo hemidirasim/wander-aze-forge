@@ -92,7 +92,7 @@ const Projects = () => {
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                   <div className="absolute top-4 right-4">
-                    <Badge variant="outline" className="bg-background/90">
+                    <Badge variant="outline" className="bg-background/90 hover:bg-[hsl(var(--secondary)/.8)] transition-colors">
                       {project.category}
                     </Badge>
                   </div>
