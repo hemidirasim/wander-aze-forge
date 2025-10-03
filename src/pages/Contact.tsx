@@ -121,12 +121,6 @@ const Contact = () => {
         </div>
       </section>
 
-      {/* Contact Information */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto">
-        </div>
-      </section>
-
       {/* Contact Form & Map */}
       <section className="pb-20 px-4">
         <div className="container mx-auto max-w-6xl">
