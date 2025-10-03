@@ -376,11 +376,11 @@ const TailorMadeForm = () => {
                 <div className="space-y-1 leading-none">
                   <Label className="text-sm">
                     * I agree to the{' '}
-                    <a href="#" className="text-primary underline hover:no-underline">
+                    <a href="#" className="text-primary no-underline hover:underline">
                       Terms & Conditions
                     </a>{' '}
                     and{' '}
-                    <a href="#" className="text-primary underline hover:no-underline">
+                    <a href="#" className="text-primary no-underline hover:underline">
                       Privacy Policy
                     </a>
                     .

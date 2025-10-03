@@ -750,7 +750,7 @@ const JourneyContactForm = () => {
                         />
                       </FormControl>
                       <FormLabel className="text-sm text-white cursor-pointer">
-                        I agree to the <a href="/terms" className="text-white hover:underline font-bold">Terms & Conditions</a> and <a href="/privacy" className="text-white hover:underline font-bold">Privacy Policy</a> *
+                        I agree to the <a href="/terms" className="text-white font-bold no-underline hover:underline">Terms & Conditions</a> and <a href="/privacy" className="text-white font-bold no-underline hover:underline">Privacy Policy</a> *
                       </FormLabel>
                       <FormMessage className="text-gray-900" />
                     </FormItem>

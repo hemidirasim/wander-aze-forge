@@ -322,7 +322,7 @@ const Contact = () => {
                 <div className="flex items-start space-x-2">
                   <input type="checkbox" id="terms" className="rounded mt-1" required />
                   <Label htmlFor="terms" className="text-sm text-muted-foreground cursor-pointer">
-                    I agree to the <a href="/terms" className="text-primary hover:underline">Terms & Conditions</a> and <a href="/privacy" className="text-primary hover:underline">Privacy Policy</a> *
+                    I agree to the <a href="/terms" className="text-primary no-underline hover:underline">Terms & Conditions</a> and <a href="/privacy" className="text-primary no-underline hover:underline">Privacy Policy</a> *
                   </Label>
                 </div>
                 
