@@ -88,7 +88,8 @@ const TailorMadeForm = () => {
   const accommodationOptions = [
     { id: 'guesthouse', label: 'Guesthouse in the villages' },
     { id: 'tent', label: 'Overnight at tent' },
-    { id: 'hotels', label: '3-4 star hotels' }
+    { id: 'hotels', label: '3-4 star hotels' },
+    { id: 'luxury', label: '5 star hotels' }
   ];
 
   return (
