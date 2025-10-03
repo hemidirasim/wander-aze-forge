@@ -161,18 +161,19 @@ const Footer = () => {
           {/* Company Info - Right */}
           <div className="lg:w-1/4 space-y-4 text-right">
             <div className="flex items-center justify-end space-x-2">
-              <h3 className="text-xl font-bold">Outtour.az</h3>
               <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
                 <Leaf className="w-5 h-5 text-white" />
               </div>
+              <h3 className="text-xl font-bold">Outtour.az</h3>
             </div>
             <p className="text-gray-900 text-sm leading-relaxed">
-              Azerbaijan's first ecotour company since 2014. We specialize in sustainable mountain adventures, 
+              Azerbaijan's first ecotour company since 2014.<br/>
+              We specialize in sustainable mountain adventures,<br/>
               cultural immersion, and authentic local experiences.
             </p>
             <div className="flex items-center justify-end space-x-2 text-sm text-gray-900">
-              <span>Over 700 successful tours</span>
               <Heart className="w-4 h-4 text-red-400" />
+              <span>Over 700 successful tours</span>
             </div>
           </div>
         </div>
