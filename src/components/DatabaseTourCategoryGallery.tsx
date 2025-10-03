@@ -69,7 +69,7 @@ const DatabaseTourCategoryGallery = () => {
     return (
       <section className="py-24 px-4">
         <div className="container mx-auto text-center">
-          <h2 className="text-4xl font-bold text-foreground mb-4">Explore Our Adventures</h2>
+          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">Explore Our Adventures</h2>
           <p className="text-muted-foreground mb-8">Error loading tour categories: {error}</p>
         </div>
       </section>
@@ -80,7 +80,7 @@ const DatabaseTourCategoryGallery = () => {
     return (
       <section className="py-24 px-4">
         <div className="container mx-auto text-center">
-          <h2 className="text-4xl font-bold text-foreground mb-4">Explore Our Adventures</h2>
+          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">Explore Our Adventures</h2>
           <p className="text-muted-foreground">No tour categories available at the moment.</p>
         </div>
       </section>
@@ -91,7 +91,7 @@ const DatabaseTourCategoryGallery = () => {
     <section className="py-24 px-4">
       <div className="container mx-auto">
         <div className="text-center mb-20">
-          <h2 className="text-5xl md:text-6xl font-bold text-foreground mb-6">
+          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
             Explore Our Adventures
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">

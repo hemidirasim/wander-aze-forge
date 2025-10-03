@@ -70,7 +70,7 @@ const DatabaseBlog: React.FC = () => {
       <section className="py-16 px-4 bg-background">
         <div className="container mx-auto">
           <div className="text-center">
-            <h2 className="text-4xl font-bold text-foreground mb-4">Latest Stories</h2>
+            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">Latest Stories</h2>
             <p className="text-red-500">Error loading blog posts</p>
           </div>
         </div>
@@ -83,7 +83,7 @@ const DatabaseBlog: React.FC = () => {
       <section className="py-16 px-4 bg-background">
         <div className="container mx-auto">
           <div className="text-center">
-            <h2 className="text-4xl font-bold text-foreground mb-4">Latest Stories</h2>
+            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">Latest Stories</h2>
             <p className="text-muted-foreground">No blog posts available</p>
           </div>
         </div>
@@ -99,10 +99,10 @@ const DatabaseBlog: React.FC = () => {
     <section className="py-16 px-4 bg-background">
       <div className="container mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-foreground mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
             Latest Stories
           </h2>
-          <p className="text-lg text-muted-foreground">
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
             Discover our latest adventures and travel tips
           </p>
         </div>
