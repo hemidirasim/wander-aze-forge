@@ -66,11 +66,11 @@ const Tours = () => {
           <div className="absolute inset-0 bg-black/50" />
         </div>
         <div className="relative z-10 text-center text-white">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">
             All Tours
           </h1>
-          <p className="text-xl md:text-2xl max-w-3xl mx-auto">
-            Discover all our adventure tours across different categories and difficulty levels
+          <p className="text-lg md:text-xl max-w-2xl mx-auto">
+            Discover our adventure tours
           </p>
         </div>
       </section>
