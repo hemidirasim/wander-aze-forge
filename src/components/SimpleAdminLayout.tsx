@@ -50,12 +50,6 @@ const SimpleAdminLayout: React.FC = () => {
         { title: 'All Posts', path: '/admin/blogs' }
       ]
     },
-    {
-      id: 'settings',
-      title: 'Settings',
-      icon: '⚙️',
-      path: '/admin/settings'
-    }
   ];
 
   const toggleMenu = (menuId: string) => {

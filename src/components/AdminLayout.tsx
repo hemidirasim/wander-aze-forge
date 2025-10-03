@@ -10,7 +10,6 @@ import {
   FolderOpen,
   Users,
   FileText,
-  Settings,
   LogOut,
   Menu,
   X,
@@ -147,12 +146,6 @@ const AdminLayout: React.FC = () => {
         }
       ]
     },
-    {
-      id: 'settings',
-      title: 'Settings',
-      icon: Settings,
-      path: '/admin/settings'
-    }
   ];
 
   const toggleMenu = (menuId: string) => {
