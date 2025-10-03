@@ -141,15 +141,15 @@ const Projects = () => {
       </section>
 
       {/* Call to Action */}
-      <section className="py-20 px-4 bg-gradient-forest">
+      <section className="py-20 px-4">
         <div className="container mx-auto text-center">
-          <h2 className="text-4xl font-bold text-white mb-6">
+          <h2 className="text-4xl font-bold text-foreground mb-6">
             Join Our Conservation Efforts
           </h2>
-          <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
+          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
             Every tour you book contributes to our conservation projects and supports local communities
           </p>
-          <Button size="lg" variant="outline" className="bg-white text-forest hover:bg-white/90" asChild>
+          <Button size="lg" variant="adventure" asChild>
             <Link to="/contact">Partner With Us</Link>
           </Button>
         </div>
