@@ -314,7 +314,7 @@ const Index = () => {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                     <div className="absolute top-4 left-4">
-                      <span className="px-3 py-1 bg-primary text-primary-foreground text-sm font-medium rounded-full">
+                      <span className="px-3 py-1 bg-white text-black text-sm font-medium rounded-full">
                         {tour.difficulty}
                       </span>
                     </div>
