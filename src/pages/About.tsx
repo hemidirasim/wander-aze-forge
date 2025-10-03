@@ -114,7 +114,8 @@ const About = () => {
           <img 
             src="/about-hero.webp"
             alt="About Outtour Azerbaijan"
-            className="w-full h-full object-cover object-top"
+            className="w-full h-full object-cover"
+            style={{ objectPosition: 'center 20%' }}
           />
         </div>
         <div className="relative z-10 text-center text-white px-4">

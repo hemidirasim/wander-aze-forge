@@ -61,7 +61,8 @@ const Tours = () => {
           <img 
             src="https://e4sm2p9cqicdxjyg.public.blob.vercel-storage.com/tours/All%20tours%20cover%202.webp" 
             alt="All Tours"
-            className="w-full h-full object-cover object-top"
+            className="w-full h-full object-cover"
+            style={{ objectPosition: 'center 20%' }}
           />
         </div>
         <div className="relative z-10 text-center text-white">
