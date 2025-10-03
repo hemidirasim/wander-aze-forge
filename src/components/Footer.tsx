@@ -73,21 +73,41 @@ const Footer = () => {
       <div className="container mx-auto px-4 py-16">
         <div className="flex flex-col lg:flex-row gap-8 mb-12">
           
-          {/* Company Info - Left */}
+          {/* Contact Info - Left */}
           <div className="lg:w-1/4 space-y-4">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                <Leaf className="w-5 h-5 text-white" />
+            <h4 className="text-lg font-semibold">Contact Us</h4>
+            <div className="space-y-3">
+              <div className="flex items-center space-x-3 text-sm text-gray-900">
+                <Phone className="w-4 h-4 text-primary" />
+                <span>+994 51 400 90 91</span>
               </div>
-              <h3 className="text-xl font-bold">Outtour.az</h3>
+              <div className="flex items-center space-x-3 text-sm text-gray-900">
+                <Mail className="w-4 h-4 text-primary" />
+                <span>info@outtour.az</span>
+              </div>
+              <div className="flex items-start space-x-3 text-sm text-gray-900">
+                <MapPin className="w-4 h-4 text-primary mt-0.5" />
+                <span>Baku, Azerbaijan</span>
+              </div>
             </div>
-            <p className="text-gray-900 text-sm leading-relaxed">
-              Azerbaijan's first ecotour company since 2014. We specialize in sustainable mountain adventures, 
-              cultural immersion, and authentic local experiences.
-            </p>
-            <div className="flex items-center space-x-2 text-sm text-gray-900">
-              <Heart className="w-4 h-4 text-red-400" />
-              <span>Over 700 successful tours</span>
+            
+            {/* Social Media */}
+            <div className="pt-4">
+              <h5 className="text-sm font-semibold mb-3">Follow Our Adventures</h5>
+              <div className="flex space-x-3">
+                {socialLinks.map((social, index) => (
+                  <a
+                    key={index}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-8 h-8 bg-gray-900 hover:bg-primary rounded-lg flex items-center justify-center transition-colors"
+                    aria-label={social.name}
+                  >
+                    <social.icon className="w-4 h-4 text-white" />
+                  </a>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -138,41 +158,21 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Contact Info - Right */}
+          {/* Company Info - Right */}
           <div className="lg:w-1/4 space-y-4 text-right">
-            <h4 className="text-lg font-semibold">Contact Us</h4>
-            <div className="space-y-3">
-              <div className="flex items-center justify-end space-x-3 text-sm text-gray-900">
-                <span>+994 51 400 90 91</span>
-                <Phone className="w-4 h-4 text-primary" />
-              </div>
-              <div className="flex items-center justify-end space-x-3 text-sm text-gray-900">
-                <span>info@outtour.az</span>
-                <Mail className="w-4 h-4 text-primary" />
-              </div>
-              <div className="flex items-start justify-end space-x-3 text-sm text-gray-900">
-                <span>Baku, Azerbaijan</span>
-                <MapPin className="w-4 h-4 text-primary mt-0.5" />
+            <div className="flex items-center justify-end space-x-2">
+              <h3 className="text-xl font-bold">Outtour.az</h3>
+              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                <Leaf className="w-5 h-5 text-white" />
               </div>
             </div>
-            
-            {/* Social Media */}
-            <div className="pt-4">
-              <h5 className="text-sm font-semibold mb-3 text-right">Follow Our Adventures</h5>
-              <div className="flex justify-end space-x-3">
-                {socialLinks.map((social, index) => (
-                  <a
-                    key={index}
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-8 h-8 bg-gray-900 hover:bg-primary rounded-lg flex items-center justify-center transition-colors"
-                    aria-label={social.name}
-                  >
-                    <social.icon className="w-4 h-4 text-white" />
-                  </a>
-                ))}
-              </div>
+            <p className="text-gray-900 text-sm leading-relaxed">
+              Azerbaijan's first ecotour company since 2014. We specialize in sustainable mountain adventures, 
+              cultural immersion, and authentic local experiences.
+            </p>
+            <div className="flex items-center justify-end space-x-2 text-sm text-gray-900">
+              <span>Over 700 successful tours</span>
+              <Heart className="w-4 h-4 text-red-400" />
             </div>
           </div>
         </div>
