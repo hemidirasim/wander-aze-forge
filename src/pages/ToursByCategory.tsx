@@ -168,7 +168,7 @@ const ToursByCategory = () => {
               {/* Left Side - Content */}
               <div className="space-y-6">
                 <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-foreground">
-                  {category.name} Tours
+                  {category.name}
                 </h1>
                 <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed">
                   {category.description}
@@ -226,7 +226,7 @@ const ToursByCategory = () => {
             {/* Left Side - Content */}
             <div className="space-y-6">
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-foreground">
-                {category.name} Tours
+                {category.name}
               </h1>
               <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed">
                 {category.description}
