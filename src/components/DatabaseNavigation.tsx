@@ -387,7 +387,7 @@ const DatabaseNavigation = () => {
               </div>
             ) : (
               <div className="flex items-center gap-2">
-                <Button variant="outline" className="hover:bg-gradient-hero hover:text-primary-foreground hover:border-transparent hover:shadow-glow transition-all duration-300 hover:scale-105" asChild>
+                <Button variant="outline" className="hover:bg-gradient-hero hover:text-white hover:border-transparent hover:shadow-glow transition-all duration-300 hover:scale-105" asChild>
                   <Link to="/login" onClick={() => {
                     scrollToTopInstant();
                     setIsToursOpen(false);
@@ -571,7 +571,7 @@ const DatabaseNavigation = () => {
                 </div>
               ) : (
                 <div className="flex flex-col gap-2 mt-4">
-                  <Button variant="outline" className="w-fit hover:bg-gradient-hero hover:text-primary-foreground hover:border-transparent hover:shadow-glow transition-all duration-300 hover:scale-105" asChild>
+                  <Button variant="outline" className="w-fit hover:bg-gradient-hero hover:text-white hover:border-transparent hover:shadow-glow transition-all duration-300 hover:scale-105" asChild>
                     <Link to="/login" onClick={() => {
                       setIsMenuOpen(false);
                       scrollToTopInstant();
