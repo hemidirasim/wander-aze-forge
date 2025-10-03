@@ -59,8 +59,8 @@ const Tours = () => {
       <section className="relative h-96 flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
           <img 
-            src={toursHero} 
-            alt="Adventure Tours"
+            src="https://e4sm2p9cqicdxjyg.public.blob.vercel-storage.com/tours/All%20tours%20cover%202.webp" 
+            alt="All Tours"
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-black/50" />
