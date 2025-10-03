@@ -387,7 +387,7 @@ const DatabaseNavigation = () => {
               </div>
             ) : (
               <div className="flex items-center gap-2">
-                <Button variant="outline" asChild>
+                <Button variant="outline" className="hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors" asChild>
                   <Link to="/login" onClick={() => {
                     scrollToTopInstant();
                     setIsToursOpen(false);
@@ -571,7 +571,7 @@ const DatabaseNavigation = () => {
                 </div>
               ) : (
                 <div className="flex flex-col gap-2 mt-4">
-                  <Button variant="outline" className="w-fit" asChild>
+                  <Button variant="outline" className="w-fit hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors" asChild>
                     <Link to="/login" onClick={() => {
                       setIsMenuOpen(false);
                       scrollToTopInstant();
