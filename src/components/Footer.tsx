@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Phone, Mail, Facebook, Instagram, Linkedin, Youtube, Heart, Leaf } from 'lucide-react';
+import Logo from '@/components/Logo';
 
 interface DatabaseTourCategory {
   id: number;
@@ -160,11 +161,8 @@ const Footer = () => {
 
           {/* Company Info - Right */}
           <div className="lg:w-1/4 space-y-4 text-right">
-            <div className="flex items-center justify-end space-x-2">
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                <Leaf className="w-5 h-5 text-white" />
-              </div>
-              <h3 className="text-xl font-bold">Outtour.az</h3>
+            <div className="flex items-center justify-end">
+              <Logo className="w-16 h-16" />
             </div>
             <p className="text-gray-900 text-sm leading-relaxed">
               Azerbaijan's first ecotour company<br/>
@@ -184,7 +182,7 @@ const Footer = () => {
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <div className="text-center md:text-left">
               <p className="text-gray-900 text-sm">
-                © {currentYear} Outtour.az. All rights reserved.
+                © {currentYear} Outtour. All rights reserved.
               </p>
               <p className="text-gray-900 text-xs mt-1">
                 Sustainable tourism • Cultural preservation • Environmental protection
