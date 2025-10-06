@@ -117,6 +117,11 @@ const AdminTourEditMedia: React.FC = () => {
 
     try {
       const uploadPromises = Array.from(files).map(async (file, index) => {
+        // Check file size (5MB limit per file)
+        if (file.size > 5 * 1024 * 1024) {
+          throw new Error(`File ${file.name} is too large. Maximum size is 5MB.`);
+        }
+
         // Convert file to base64
         const base64 = await new Promise<string>((resolve, reject) => {
           const reader = new FileReader();
@@ -206,6 +211,20 @@ const AdminTourEditMedia: React.FC = () => {
       // Check payload size
       const payloadSize = JSON.stringify(cleanedFormData).length;
       console.log('Payload size:', payloadSize, 'bytes');
+      
+      // Check if any images are still base64 (not uploaded)
+      const hasBase64Images = cleanedFormData.galleryImages.some(img => 
+        img.startsWith('data:image/') || img.startsWith('data:image/webp')
+      );
+      
+      if (hasBase64Images) {
+        toast({
+          title: "Images Not Uploaded",
+          description: "Please upload images first before saving. Base64 images are too large to send.",
+          variant: "destructive"
+        });
+        return;
+      }
       
       if (payloadSize > 4 * 1024 * 1024) { // 4MB limit
         toast({
@@ -352,7 +371,7 @@ const AdminTourEditMedia: React.FC = () => {
                       {uploading ? 'Uploading...' : 'Click to upload images'}
                     </span>
                     <span className="text-xs text-gray-500">
-                      PNG, JPG, JPEG up to 10MB each
+                      PNG, JPG, JPEG up to 5MB each
                     </span>
                   </label>
                   
