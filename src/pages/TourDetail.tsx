@@ -576,15 +576,6 @@ const TourDetail = () => {
                       </div>
                     </div>
                   )}
-                  {(tour.group_discounts || tour.early_bird_discount) && (
-                    <div className="bg-muted/50 p-4 rounded-lg">
-                      <p className="text-sm text-muted-foreground">
-                        {tour.group_discounts && <><strong>Group Discounts:</strong> {tour.group_discounts}</>}
-                        {tour.group_discounts && tour.early_bird_discount && <><br /></>}
-                        {tour.early_bird_discount && <><strong>Early Bird:</strong> {tour.early_bird_discount}</>}
-                      </p>
-                    </div>
-                  )}
                 </CardContent>
               </Card>
 
