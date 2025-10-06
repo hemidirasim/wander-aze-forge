@@ -226,13 +226,9 @@ const TourDetail = () => {
                 </div>
               </div>
               
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground">
-                {tour.title}
-              </h1>
-              
               {/* Hiking Details */}
               {(tour.total_hiking_distance || tour.total_elevation_gain || tour.total_elevation_loss) && (
-                <div className="flex flex-wrap gap-4 mb-4">
+                <div className="flex flex-wrap gap-4">
                   {tour.total_hiking_distance && (
                     <div className="flex items-center space-x-2 bg-primary/10 text-primary px-3 py-2 rounded-lg">
                       <span className="font-semibold">Distance:</span>
@@ -253,6 +249,10 @@ const TourDetail = () => {
                   )}
                 </div>
               )}
+              
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground">
+                {tour.title}
+              </h1>
               
               <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
                 {tour.description}
