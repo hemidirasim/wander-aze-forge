@@ -62,6 +62,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       difficulty: req.body.difficulty?.trim() || '',
       price: parseFloat(req.body.price) || 0,
       maxParticipants: parseInt(req.body.maxParticipants) || 0,
+      minParticipants: parseInt(req.body.minParticipants) || 0,
       rating: parseFloat(req.body.rating) || 4.5,
       reviewsCount: parseInt(req.body.reviewsCount) || 0,
       groupSize: req.body.groupSize?.trim() || '',
@@ -73,6 +74,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       bestSeason: req.body.bestSeason?.trim() || 'May to October',
       meetingPoint: req.body.meetingPoint?.trim() || '',
       languages: req.body.languages?.trim() || 'English, Azerbaijani, Russian',
+      startDate: req.body.startDate?.trim() || '',
+      endDate: req.body.endDate?.trim() || '',
       isActive: req.body.isActive !== false,
       featured: req.body.featured === true
     };
@@ -89,21 +92,24 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         difficulty = $5,
         price = $6,
         max_participants = $7,
-        rating = $8,
-        reviews_count = $9,
-        group_size = $10,
-        location = $11,
-        total_hiking_distance = $12,
-        total_elevation_gain = $13,
-        total_elevation_loss = $14,
-        overview = $15,
-        best_season = $16,
-        meeting_point = $17,
-        languages = $18,
-        is_active = $19,
-        featured = $20,
+        min_participants = $8,
+        rating = $9,
+        reviews_count = $10,
+        group_size = $11,
+        location = $12,
+        total_hiking_distance = $13,
+        total_elevation_gain = $14,
+        total_elevation_loss = $15,
+        overview = $16,
+        best_season = $17,
+        meeting_point = $18,
+        languages = $19,
+        start_date = $20,
+        end_date = $21,
+        is_active = $22,
+        featured = $23,
         updated_at = NOW()
-      WHERE id = $21
+      WHERE id = $24
       RETURNING *
     `;
 
@@ -115,6 +121,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       tourData.difficulty,
       tourData.price,
       tourData.maxParticipants,
+      tourData.minParticipants,
       tourData.rating,
       tourData.reviewsCount,
       tourData.groupSize,
@@ -126,6 +133,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       tourData.bestSeason,
       tourData.meetingPoint,
       tourData.languages,
+      tourData.startDate,
+      tourData.endDate,
       tourData.isActive,
       tourData.featured,
       id
