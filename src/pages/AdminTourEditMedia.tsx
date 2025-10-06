@@ -203,6 +203,19 @@ const AdminTourEditMedia: React.FC = () => {
     console.log('Sending media data:', cleanedFormData);
 
     try {
+      // Check payload size
+      const payloadSize = JSON.stringify(cleanedFormData).length;
+      console.log('Payload size:', payloadSize, 'bytes');
+      
+      if (payloadSize > 4 * 1024 * 1024) { // 4MB limit
+        toast({
+          title: "Payload Too Large",
+          description: "Please reduce the number of images or image sizes.",
+          variant: "destructive"
+        });
+        return;
+      }
+
       const response = await fetch(`/api/tours/${id}/update-media`, {
         method: 'PUT',
         headers: {
@@ -210,6 +223,18 @@ const AdminTourEditMedia: React.FC = () => {
         },
         body: JSON.stringify(cleanedFormData)
       });
+
+      if (!response.ok) {
+        if (response.status === 413) {
+          toast({
+            title: "Request Too Large",
+            description: "The request is too large. Please reduce the number of images.",
+            variant: "destructive"
+          });
+          return;
+        }
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
 
       const data = await response.json();
 
@@ -231,7 +256,7 @@ const AdminTourEditMedia: React.FC = () => {
       console.error('Error updating media:', error);
       toast({
         title: "Error",
-        description: "Failed to update media",
+        description: error instanceof Error ? error.message : "Failed to update media",
         variant: "destructive"
       });
     } finally {

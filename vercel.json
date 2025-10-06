@@ -1,7 +1,8 @@
 {
   "functions": {
     "api/tours/[id]/update-media.ts": {
-      "maxDuration": 30
+      "maxDuration": 30,
+      "memory": 1024
     }
   },
   "rewrites": [

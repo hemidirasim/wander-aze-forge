@@ -19,7 +19,9 @@ export const config = {
     bodyParser: {
       sizeLimit: '50mb',
     },
+    responseLimit: '50mb',
   },
+  maxDuration: 30,
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
