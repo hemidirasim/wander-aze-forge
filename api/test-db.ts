@@ -35,6 +35,7 @@ export async function GET() {
       SELECT 
         id, title, description, price, duration, difficulty, rating, 
         reviews_count, group_size, max_participants, location, image_url, category,
+        total_hiking_distance, total_elevation_gain, total_elevation_loss,
         highlights, includes, excludes, is_active, featured
       FROM tours 
       WHERE is_active = true

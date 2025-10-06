@@ -98,7 +98,10 @@ export async function GET(request: Request) {
       booking_terms: tour.booking_terms || 'Booking terms will be provided',
       itinerary: tour.itinerary || 'Detailed itinerary will be provided',
       requirements: tour.requirements || 'Basic fitness level required',
-      special_fields: tour.special_fields || {}
+      special_fields: tour.special_fields || {},
+      total_hiking_distance: tour.total_hiking_distance || null,
+      total_elevation_gain: tour.total_elevation_gain || null,
+      total_elevation_loss: tour.total_elevation_loss || null
     };
 
     return new Response(JSON.stringify({
