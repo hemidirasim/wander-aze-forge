@@ -66,6 +66,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       reviewsCount: parseInt(req.body.reviewsCount) || 0,
       groupSize: req.body.groupSize?.trim() || '',
       location: req.body.location?.trim() || '',
+      totalHikingDistance: req.body.totalHikingDistance?.trim() || '',
+      totalElevationGain: req.body.totalElevationGain?.trim() || '',
+      totalElevationLoss: req.body.totalElevationLoss?.trim() || '',
       overview: req.body.overview?.trim() || '',
       bestSeason: req.body.bestSeason?.trim() || 'May to October',
       meetingPoint: req.body.meetingPoint?.trim() || '',
@@ -90,14 +93,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         reviews_count = $9,
         group_size = $10,
         location = $11,
-        overview = $12,
-        best_season = $13,
-        meeting_point = $14,
-        languages = $15,
-        is_active = $16,
-        featured = $17,
+        total_hiking_distance = $12,
+        total_elevation_gain = $13,
+        total_elevation_loss = $14,
+        overview = $15,
+        best_season = $16,
+        meeting_point = $17,
+        languages = $18,
+        is_active = $19,
+        featured = $20,
         updated_at = NOW()
-      WHERE id = $18
+      WHERE id = $21
       RETURNING *
     `;
 
@@ -113,6 +119,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       tourData.reviewsCount,
       tourData.groupSize,
       tourData.location,
+      tourData.totalHikingDistance,
+      tourData.totalElevationGain,
+      tourData.totalElevationLoss,
       tourData.overview,
       tourData.bestSeason,
       tourData.meetingPoint,
