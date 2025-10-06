@@ -6,7 +6,7 @@ import DatabaseTourProgramAccordion from '@/components/DatabaseTourProgramAccord
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Clock, Users, MapPin, Star, CheckCircle, Calendar, Phone, ArrowLeft, Loader2, Eye, Info, Sparkles, CalendarDays, Bed, Utensils, Shirt, Car, Camera, DollarSign } from 'lucide-react';
+import { Clock, Users, MapPin, Star, CheckCircle, Calendar, Phone, ArrowLeft, Loader2, Eye, Info, Sparkles, CalendarDays, Bed, Utensils, Shirt, Car, Camera, DollarSign, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 // Declare Fancybox for TypeScript
@@ -398,7 +398,7 @@ const TourDetail = () => {
                         {tour.excludes.map((item, index) => (
                           <div key={index} className="flex items-start space-x-3">
                             <div className="w-5 h-5 border-2 border-red-500 rounded-full flex-shrink-0 mt-0.5 flex items-center justify-center">
-                              <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                              <X className="w-3 h-3 text-red-500" />
                             </div>
                             <span className="text-muted-foreground">{item}</span>
                           </div>
