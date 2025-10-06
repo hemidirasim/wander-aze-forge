@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { put } from '@vercel/blob';
 import formidable from 'formidable';
+import { promises as fs } from 'fs';
 
 export const config = {
   api: {
@@ -58,7 +59,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Upload all images
     const uploadPromises = imageFiles.map(async (file: any) => {
       try {
-        const fileBuffer = await require('fs').promises.readFile(file.filepath);
+        const fileBuffer = await fs.readFile(file.filepath);
         
         // Create unique filename
         const timestamp = Date.now();
@@ -73,7 +74,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         });
 
         // Clean up temporary file
-        await require('fs').promises.unlink(file.filepath).catch(() => {});
+        await fs.unlink(file.filepath).catch(() => {});
 
         return {
           url: blob.url,
