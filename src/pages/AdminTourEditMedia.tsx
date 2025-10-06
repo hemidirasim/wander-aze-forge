@@ -120,47 +120,38 @@ const AdminTourEditMedia: React.FC = () => {
     setUploadProgress(0);
 
     try {
-      const uploadPromises = Array.from(files).map(async (file, index) => {
-        // Check file size (5MB limit per file)
-        if (file.size > 5 * 1024 * 1024) {
-          throw new Error(`File ${file.name} is too large. Maximum size is 5MB.`);
-        }
-
-        // Use FormData instead of base64
-        const formData = new FormData();
-        formData.append('image', file);
-        formData.append('type', 'tour');
-        formData.append('filename', file.name);
-        formData.append('fileType', file.type);
-        formData.append('fileSize', file.size.toString());
-
-        const response = await fetch('/api/upload/image', {
-          method: 'POST',
-          body: formData,
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(`Upload failed for ${file.name}: ${errorData.error || 'Unknown error'}`);
-        }
-
-        const data = await response.json();
-        setUploadProgress(((index + 1) / files.length) * 100);
-        
-        return data.url;
-      });
-
-      const uploadedUrls = await Promise.all(uploadPromises);
+      // Use the same logic as FileUpload component
+      const formData = new FormData();
       
-      setFormData(prev => ({
-        ...prev,
-        galleryImages: [...prev.galleryImages, ...uploadedUrls]
-      }));
-
-      toast({
-        title: "Upload Successful!",
-        description: `${uploadedUrls.length} image(s) uploaded successfully.`,
+      Array.from(files).forEach(file => {
+        formData.append('images', file);
       });
+      formData.append('type', 'tour');
+
+      const response = await fetch('/api/upload/images', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Upload failed');
+      }
+
+      const result = await response.json();
+      
+      if (result.success && result.blobs) {
+        const uploadedUrls = result.blobs.map((blob: any) => blob.url);
+        
+        setFormData(prev => ({
+          ...prev,
+          galleryImages: [...prev.galleryImages, ...uploadedUrls]
+        }));
+
+        toast({
+          title: "Upload Successful!",
+          description: `${uploadedUrls.length} image(s) uploaded successfully.`,
+        });
+      }
 
     } catch (error) {
       console.error('Upload error:', error);
