@@ -259,7 +259,7 @@ const TourDetail = () => {
                   <CardTitle className="text-2xl">Overview</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <p className="text-muted-foreground">
+                  <p className="text-muted-foreground whitespace-pre-wrap">
                     {tour.overview || `This ${tour.category} adventure offers an incredible opportunity to explore Azerbaijan's stunning landscapes and rich cultural heritage. Perfect for ${tour.difficulty.toLowerCase()} level adventurers, this tour combines natural beauty with authentic local experiences.`}
                   </p>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
@@ -401,7 +401,7 @@ const TourDetail = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <h4 className="font-semibold mb-2">Difficulty Level</h4>
-                      <p className="text-muted-foreground">{tour.difficulty} - {tour.requirements || 'Suitable for participants with appropriate fitness level'}</p>
+                      <p className="text-muted-foreground whitespace-pre-wrap">{tour.difficulty} - {tour.requirements || 'Suitable for participants with appropriate fitness level'}</p>
                     </div>
                     <div>
                       <h4 className="font-semibold mb-2">Best Season</h4>
@@ -427,7 +427,7 @@ const TourDetail = () => {
                 <CardContent className="space-y-4">
                   <div>
                     <h4 className="font-semibold mb-2">Accommodation</h4>
-                    <p className="text-muted-foreground">
+                    <p className="text-muted-foreground whitespace-pre-wrap">
                       {tour.accommodation_details || (tour.duration.includes('day') && !tour.duration.includes('1 day') 
                         ? 'Mountain guesthouses, traditional villages, and camping under the stars (weather permitting). All accommodations are clean, comfortable, and provide authentic local experiences.'
                         : 'Day tour - no overnight accommodation required.'
@@ -436,13 +436,13 @@ const TourDetail = () => {
                   </div>
                   <div>
                     <h4 className="font-semibold mb-2">Meals</h4>
-                    <p className="text-muted-foreground">
+                    <p className="text-muted-foreground whitespace-pre-wrap">
                       {tour.meals_details || 'Traditional Azerbaijani cuisine featuring fresh, local ingredients. Vegetarian and dietary restrictions can be accommodated with advance notice. Includes breakfast, lunch, and dinner for multi-day tours.'}
                     </p>
                   </div>
                   <div>
                     <h4 className="font-semibold mb-2">Water & Snacks</h4>
-                    <p className="text-muted-foreground">
+                    <p className="text-muted-foreground whitespace-pre-wrap">
                       {tour.water_snacks_details || 'Fresh drinking water, energy snacks, and local fruits provided throughout the tour.'}
                     </p>
                   </div>
@@ -501,13 +501,13 @@ const TourDetail = () => {
                 <CardContent className="space-y-4">
                   <div>
                     <h4 className="font-semibold mb-2">Included Transportation</h4>
-                    <p className="text-muted-foreground">
+                    <p className="text-muted-foreground whitespace-pre-wrap">
                       {tour.transport_details || 'Comfortable, air-conditioned vehicles from Baku to the tour starting point and return. Professional drivers familiar with mountain roads ensure safe and scenic journeys.'}
                     </p>
                   </div>
                   <div>
                     <h4 className="font-semibold mb-2">Pick-up Service</h4>
-                    <p className="text-muted-foreground">
+                    <p className="text-muted-foreground whitespace-pre-wrap">
                       {tour.pickup_service || 'Pick-up from central Baku locations or your hotel (within city limits). Exact pick-up time and location will be confirmed 24 hours before departure.'}
                     </p>
                   </div>
@@ -604,7 +604,7 @@ const TourDetail = () => {
                     </Link>
                   </Button>
                   
-                  <div className="text-center text-sm text-muted-foreground">
+                  <div className="text-center text-sm text-muted-foreground whitespace-pre-wrap">
                     {tour.booking_terms || 'Free cancellation up to 24 hours before'}
                   </div>
                   
