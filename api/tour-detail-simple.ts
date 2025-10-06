@@ -49,7 +49,7 @@ export async function GET(request: Request) {
         provided_equipment, what_to_bring, transport_details, pickup_service,
         gallery_images, photography_service, price_includes, group_discounts,
         early_bird_discount, contact_phone, booking_terms, itinerary,
-        requirements, special_fields, participant_pricing
+        requirements, special_fields, participant_pricing, max_participants
       FROM tours 
       WHERE id = $1
     `;
