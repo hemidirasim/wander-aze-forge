@@ -130,6 +130,9 @@ const AdminTourEditMedia: React.FC = () => {
         const formData = new FormData();
         formData.append('image', file);
         formData.append('type', 'tour');
+        formData.append('filename', file.name);
+        formData.append('fileType', file.type);
+        formData.append('fileSize', file.size.toString());
 
         const response = await fetch('/api/upload/image', {
           method: 'POST',

@@ -1,6 +1,14 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { put } from '@vercel/blob';
 
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '10mb',
+    },
+  },
+}
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -31,17 +39,41 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     if (req.headers['content-type']?.includes('multipart/form-data')) {
       // Handle FormData (direct file upload)
-      const formData = req.body as any;
+      console.log('FormData request body:', req.body);
       
-      if (!formData || !formData.image) {
-        return res.status(400).json({ error: 'No file provided in FormData' });
+      // Vercel automatically parses FormData, but we need to handle it differently
+      if (!req.body || typeof req.body !== 'object') {
+        return res.status(400).json({ error: 'Invalid FormData body' });
       }
 
-      const file = formData.image;
-      fileData = file.data || file;
-      filename = file.name || 'uploaded-image';
-      fileType = file.type || 'image/jpeg';
-      fileSize = file.size || 0;
+      const formData = req.body as any;
+      
+      // Check for file in different possible locations
+      const file = formData.image || formData.file || formData.upload;
+      
+      if (!file) {
+        console.log('Available form fields:', Object.keys(formData));
+        return res.status(400).json({ error: 'No file provided in FormData. Available fields: ' + Object.keys(formData).join(', ') });
+      }
+
+      // Handle different file object structures
+      if (file.data) {
+        fileData = file.data;
+        filename = file.name || 'uploaded-image';
+        fileType = file.type || 'image/jpeg';
+        fileSize = file.size || 0;
+      } else if (file instanceof Buffer) {
+        fileData = file;
+        filename = formData.filename || 'uploaded-image';
+        fileType = formData.fileType || 'image/jpeg';
+        fileSize = formData.fileSize || 0;
+      } else {
+        fileData = file;
+        filename = formData.filename || 'uploaded-image';
+        fileType = formData.fileType || 'image/jpeg';
+        fileSize = formData.fileSize || 0;
+      }
+      
       category = formData.type || 'tours';
     } else {
       // Handle JSON request with base64 file data (legacy support)
