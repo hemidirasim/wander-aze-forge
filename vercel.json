@@ -1,4 +1,9 @@
 {
+  "functions": {
+    "api/tours/[id]/update-media.ts": {
+      "maxDuration": 30
+    }
+  },
   "rewrites": [
     {
       "source": "/admin/(.*)",
