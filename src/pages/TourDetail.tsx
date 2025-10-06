@@ -26,6 +26,7 @@ interface TourData {
   rating: number;
   reviews_count: number;
   group_size: string;
+  max_participants: number;
   location: string;
   overview: string;
   best_season: string;
@@ -273,7 +274,9 @@ const TourDetail = () => {
                       <Users className="w-5 h-5 text-primary" />
                       <div>
                         <div className="font-semibold">Group Size</div>
-                        <div className="text-muted-foreground">{tour.group_size}</div>
+                        <div className="text-muted-foreground">
+                          {tour.max_participants ? `Up to ${tour.max_participants} participants` : tour.group_size}
+                        </div>
                       </div>
                     </div>
                     <div className="flex items-center space-x-3">
