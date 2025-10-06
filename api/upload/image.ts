@@ -1,4 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { put } from '@vercel/blob';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Enable CORS
@@ -20,23 +21,48 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       method: req.method,
       contentType: req.headers['content-type'],
       bodyType: typeof req.body,
+      isFormData: req.headers['content-type']?.includes('multipart/form-data'),
       hasFileData: !!(req.body && req.body.fileData),
       hasFilename: !!(req.body && req.body.filename)
     });
 
-    // Handle JSON request with base64 file data
-    if (!req.body || typeof req.body !== 'object') {
-      return res.status(400).json({ error: 'Invalid request body' });
-    }
+    // Handle both FormData and JSON requests
+    let fileData, filename, fileType, fileSize, category = 'tours';
 
-    const { fileData, filename, fileType, fileSize, category = 'hero' } = req.body;
+    if (req.headers['content-type']?.includes('multipart/form-data')) {
+      // Handle FormData (direct file upload)
+      const formData = req.body as any;
+      
+      if (!formData || !formData.image) {
+        return res.status(400).json({ error: 'No file provided in FormData' });
+      }
 
-    if (!fileData) {
-      return res.status(400).json({ error: 'No file data provided' });
-    }
+      const file = formData.image;
+      fileData = file.data || file;
+      filename = file.name || 'uploaded-image';
+      fileType = file.type || 'image/jpeg';
+      fileSize = file.size || 0;
+      category = formData.type || 'tours';
+    } else {
+      // Handle JSON request with base64 file data (legacy support)
+      if (!req.body || typeof req.body !== 'object') {
+        return res.status(400).json({ error: 'Invalid request body' });
+      }
 
-    if (!filename) {
-      return res.status(400).json({ error: 'No filename provided' });
+      const body = req.body as any;
+      fileData = body.fileData;
+      filename = body.filename;
+      fileType = body.fileType;
+      fileSize = body.fileSize;
+      category = body.category || 'tours';
+
+      if (!fileData) {
+        return res.status(400).json({ error: 'No file data provided' });
+      }
+
+      if (!filename) {
+        return res.status(400).json({ error: 'No filename provided' });
+      }
     }
 
     // Validate file type
@@ -47,22 +73,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       });
     }
 
-    // Validate file size (10MB limit for hero images)
-    const maxSize = 10 * 1024 * 1024; // 10MB
+    // Validate file size (5MB limit)
+    const maxSize = 5 * 1024 * 1024; // 5MB
     if (fileSize && fileSize > maxSize) {
       return res.status(400).json({ 
         error: `File size ${fileSize} bytes exceeds maximum size of ${maxSize} bytes` 
-      });
-    }
-
-    // Convert base64 to Buffer
-    let fileBuffer;
-    try {
-      fileBuffer = Buffer.from(fileData, 'base64');
-    } catch (error) {
-      return res.status(400).json({ 
-        error: 'Invalid base64 file data',
-        details: error instanceof Error ? error.message : 'Unknown error'
       });
     }
 
@@ -73,20 +88,58 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const categoryPrefix = category ? `${category}/` : '';
     const uniqueFilename = `${categoryPrefix}${timestamp}-${randomString}.${fileExtension}`;
 
-    // Create a data URL from the base64 data for immediate use
-    const dataUrl = `data:${fileType || 'image/jpeg'};base64,${fileData}`;
-    
-    // Return success response with data URL
-    res.status(200).json({
-      success: true,
-      id: `${timestamp}-${randomString}`,
-      url: dataUrl,
-      filename: uniqueFilename,
-      originalName: filename,
-      size: fileBuffer.length,
-      type: fileType || 'image/jpeg',
-      uploadedAt: new Date().toISOString(),
-    });
+    let fileBuffer;
+    let dataUrl;
+
+    if (typeof fileData === 'string') {
+      // Handle base64 data (legacy)
+      try {
+        fileBuffer = Buffer.from(fileData, 'base64');
+        dataUrl = `data:${fileType || 'image/jpeg'};base64,${fileData}`;
+      } catch (error) {
+        return res.status(400).json({ 
+          error: 'Invalid base64 file data',
+          details: error instanceof Error ? error.message : 'Unknown error'
+        });
+      }
+    } else {
+      // Handle binary data (FormData)
+      fileBuffer = Buffer.from(fileData);
+      dataUrl = `data:${fileType || 'image/jpeg'};base64,${fileBuffer.toString('base64')}`;
+    }
+
+    // Upload to Vercel Blob Storage
+    try {
+      const blob = await put(uniqueFilename, fileBuffer, {
+        access: 'public',
+        contentType: fileType || 'image/jpeg',
+      });
+
+      // Return success response with blob URL
+      res.status(200).json({
+        success: true,
+        id: `${timestamp}-${randomString}`,
+        url: blob.url,
+        filename: uniqueFilename,
+        originalName: filename,
+        size: fileBuffer.length,
+        type: fileType || 'image/jpeg',
+        uploadedAt: new Date().toISOString(),
+      });
+    } catch (blobError) {
+      console.error('Blob upload error:', blobError);
+      // Fallback to data URL if blob upload fails
+      res.status(200).json({
+        success: true,
+        id: `${timestamp}-${randomString}`,
+        url: dataUrl,
+        filename: uniqueFilename,
+        originalName: filename,
+        size: fileBuffer.length,
+        type: fileType || 'image/jpeg',
+        uploadedAt: new Date().toISOString(),
+      });
+    }
 
   } catch (error) {
     console.error('Image upload error:', error);
