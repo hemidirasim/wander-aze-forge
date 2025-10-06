@@ -34,7 +34,7 @@ export async function GET() {
     const result = await pool.query(`
       SELECT 
         id, title, description, price, duration, difficulty, rating, 
-        reviews_count, group_size, location, image_url, category,
+        reviews_count, group_size, max_participants, location, image_url, category,
         highlights, includes, excludes, is_active, featured
       FROM tours 
       WHERE is_active = true
