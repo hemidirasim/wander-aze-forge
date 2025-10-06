@@ -275,7 +275,7 @@ const TourDetail = () => {
                       <div>
                         <div className="font-semibold">Group Size</div>
                         <div className="text-muted-foreground">
-                          {tour.max_participants && tour.max_participants > 0 ? `Up to ${tour.max_participants} participants` : 
+                          {tour.max_participants > 0 ? `Up to ${tour.max_participants} participants` : 
                            tour.group_size || 'Small group (4-8 people)'}
                         </div>
                         {/* Debug info */}
