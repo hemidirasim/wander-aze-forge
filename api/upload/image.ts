@@ -1,11 +1,10 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { put } from '@vercel/blob';
+import formidable from 'formidable';
 
 export const config = {
   api: {
-    bodyParser: {
-      sizeLimit: '10mb',
-    },
+    bodyParser: false, // Disable bodyParser for FormData
   },
 }
 
@@ -38,43 +37,40 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     let fileData, filename, fileType, fileSize, category = 'tours';
 
     if (req.headers['content-type']?.includes('multipart/form-data')) {
-      // Handle FormData (direct file upload)
-      console.log('FormData request body:', req.body);
-      
-      // Vercel automatically parses FormData, but we need to handle it differently
-      if (!req.body || typeof req.body !== 'object') {
-        return res.status(400).json({ error: 'Invalid FormData body' });
-      }
+      // Handle FormData using formidable
+      try {
+        const form = formidable({
+          maxFileSize: 5 * 1024 * 1024, // 5MB
+          keepExtensions: true,
+        });
 
-      const formData = req.body as any;
-      
-      // Check for file in different possible locations
-      const file = formData.image || formData.file || formData.upload;
-      
-      if (!file) {
-        console.log('Available form fields:', Object.keys(formData));
-        return res.status(400).json({ error: 'No file provided in FormData. Available fields: ' + Object.keys(formData).join(', ') });
-      }
+        const [fields, files] = await form.parse(req);
+        
+        console.log('FormData fields:', fields);
+        console.log('FormData files:', files);
 
-      // Handle different file object structures
-      if (file.data) {
-        fileData = file.data;
-        filename = file.name || 'uploaded-image';
-        fileType = file.type || 'image/jpeg';
+        const file = files.image?.[0] || files.file?.[0] || files.upload?.[0];
+        
+        if (!file) {
+          return res.status(400).json({ error: 'No file provided in FormData' });
+        }
+
+        fileData = await require('fs').promises.readFile(file.filepath);
+        filename = file.originalFilename || 'uploaded-image';
+        fileType = file.mimetype || 'image/jpeg';
         fileSize = file.size || 0;
-      } else if (file instanceof Buffer) {
-        fileData = file;
-        filename = formData.filename || 'uploaded-image';
-        fileType = formData.fileType || 'image/jpeg';
-        fileSize = formData.fileSize || 0;
-      } else {
-        fileData = file;
-        filename = formData.filename || 'uploaded-image';
-        fileType = formData.fileType || 'image/jpeg';
-        fileSize = formData.fileSize || 0;
+        category = fields.type?.[0] || 'tours';
+
+        // Clean up temporary file
+        await require('fs').promises.unlink(file.filepath).catch(() => {});
+        
+      } catch (formError) {
+        console.error('Formidable parsing error:', formError);
+        return res.status(400).json({ 
+          error: 'Failed to parse FormData',
+          details: formError instanceof Error ? formError.message : 'Unknown error'
+        });
       }
-      
-      category = formData.type || 'tours';
     } else {
       // Handle JSON request with base64 file data (legacy support)
       if (!req.body || typeof req.body !== 'object') {
