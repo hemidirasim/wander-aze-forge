@@ -43,7 +43,7 @@ interface GalleryUploadProps {
 const GalleryUpload: React.FC<GalleryUploadProps> = ({
   onImagesChange,
   initialImages = [],
-  maxImages = 10,
+  maxImages = 20,
   allowedTypes = ['image/jpeg', 'image/png', 'image/webp'],
   maxSize = 5 // 5MB
 }) => {

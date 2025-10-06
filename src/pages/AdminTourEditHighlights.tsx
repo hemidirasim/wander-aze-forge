@@ -412,3 +412,4 @@ const AdminTourEditHighlights: React.FC = () => {
 };
 
 export default AdminTourEditHighlights;
+

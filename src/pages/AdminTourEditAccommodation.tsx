@@ -288,3 +288,4 @@ const AdminTourEditAccommodation: React.FC = () => {
 };
 
 export default AdminTourEditAccommodation;
+

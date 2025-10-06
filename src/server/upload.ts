@@ -50,7 +50,7 @@ router.post('/image', upload.single('image'), async (req, res) => {
 });
 
 // Upload multiple images
-router.post('/images', upload.array('images', 10), async (req, res) => {
+router.post('/images', upload.array('images', 20), async (req, res) => {
   try {
     const files = req.files as Express.Multer.File[];
     const { type } = req.body;
