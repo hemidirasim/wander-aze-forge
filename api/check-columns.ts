@@ -1,69 +1,46 @@
+import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { Pool } from 'pg';
 
-export async function GET() {
-  let pool: Pool | null = null;
-  
+const dbConfig = {
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false },
+};
+const pool = new Pool(dbConfig);
+
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (req.method !== 'GET') {
+    return res.status(405).json({ success: false, message: 'Method Not Allowed' });
+  }
+
   try {
-    console.log('Check Columns API called');
-    
-    if (!process.env.DATABASE_URL) {
-      return new Response(JSON.stringify({ 
-        success: false, 
-        error: 'Database connection not configured' 
-      }), { 
-        status: 500,
-        headers: { 'Content-Type': 'application/json' }
-      });
-    }
+    const client = await pool.connect();
 
-    pool = new Pool({
-      connectionString: process.env.DATABASE_URL,
-      ssl: {
-        rejectUnauthorized: false
-      }
-    });
-
-    // Test connection
-    await pool.query('SELECT 1');
-    console.log('Database connection successful');
-
-    // Get column information for tours table
-    const result = await pool.query(`
+    // Check if columns exist
+    const checkColumnsQuery = `
       SELECT column_name, data_type, is_nullable, column_default
       FROM information_schema.columns 
       WHERE table_name = 'tours' 
-      ORDER BY ordinal_position
-    `);
+      AND column_name IN ('min_participants', 'start_date', 'end_date')
+      ORDER BY column_name
+    `;
+
+    const result = await client.query(checkColumnsQuery);
     
-    console.log('Tours table columns:', result.rows);
-    
-    return new Response(JSON.stringify({
+    client.release();
+
+    return res.status(200).json({
       success: true,
-      message: 'Database connection successful',
+      message: 'Column check completed',
       columns: result.rows,
-      columnCount: result.rows.length
-    }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
+      totalFound: result.rows.length
     });
 
   } catch (error) {
-    console.error('Error in check columns API:', error);
-    return new Response(JSON.stringify({ 
-      success: false, 
-      error: error instanceof Error ? error.message : 'Internal server error' 
-    }), { 
-      status: 500,
-      headers: { 'Content-Type': 'application/json' }
+    console.error('Column check error:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Column check failed',
+      error: error instanceof Error ? error.message : 'Unknown error'
     });
-  } finally {
-    if (pool) {
-      try {
-        await pool.end();
-        console.log('Database connection closed');
-      } catch (closeError) {
-        console.error('Error closing database connection:', closeError);
-      }
-    }
   }
 }
