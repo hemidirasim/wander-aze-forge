@@ -10,8 +10,7 @@ import {
   Save,
   ArrowLeft,
   DollarSign,
-  Percent,
-  Gift
+  Percent
 } from 'lucide-react';
 
 interface Tour {
@@ -33,8 +32,7 @@ const AdminTourEditPricing: React.FC = () => {
 
   const [formData, setFormData] = useState({
     basePrice: '',
-    participantPricing: [] as Array<{minParticipants: number, pricePerPerson: number}>,
-    priceIncludes: [] as string[]
+    participantPricing: [] as Array<{minParticipants: number, pricePerPerson: number}>
   });
 
   useEffect(() => {
@@ -54,14 +52,12 @@ const AdminTourEditPricing: React.FC = () => {
         setTour(tourData);
         setFormData({
           basePrice: tourData.price?.toString() || '',
-          participantPricing: tourData.participant_pricing || [],
-          priceIncludes: tourData.price_includes || []
+          participantPricing: tourData.participant_pricing || []
         });
         
         console.log('Loaded pricing data:', {
           basePrice: tourData.price,
-          participantPricing: tourData.participant_pricing,
-          priceIncludes: tourData.price_includes
+          participantPricing: tourData.participant_pricing
         });
       } else {
         toast({
@@ -107,26 +103,6 @@ const AdminTourEditPricing: React.FC = () => {
     }));
   };
 
-  const addPriceInclude = () => {
-    setFormData(prev => ({
-      ...prev,
-      priceIncludes: [...prev.priceIncludes, '']
-    }));
-  };
-
-  const removePriceInclude = (index: number) => {
-    setFormData(prev => ({
-      ...prev,
-      priceIncludes: prev.priceIncludes.filter((_, i) => i !== index)
-    }));
-  };
-
-  const updatePriceInclude = (index: number, value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      priceIncludes: prev.priceIncludes.map((item, i) => i === index ? value : item)
-    }));
-  };
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
@@ -139,15 +115,14 @@ const AdminTourEditPricing: React.FC = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Filter out empty strings from price includes and validate participant pricing
+    // Validate participant pricing
     const cleanedParticipantPricing = formData.participantPricing.filter(pricing => 
       pricing.minParticipants > 0 && pricing.pricePerPerson > 0
     );
     
     const cleanedFormData = {
       basePrice: formData.basePrice,
-      participantPricing: cleanedParticipantPricing,
-      priceIncludes: formData.priceIncludes.filter(item => item.trim() !== '')
+      participantPricing: cleanedParticipantPricing
     };
 
     console.log('Sending pricing data:', cleanedFormData);
@@ -327,48 +302,6 @@ const AdminTourEditPricing: React.FC = () => {
               </CardContent>
             </Card>
 
-            {/* Price Includes */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Gift className="w-5 h-5 text-primary" />
-                  Price Includes
-                </CardTitle>
-                <p className="text-sm text-muted-foreground">
-                  List what is included in the tour price
-                </p>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {formData.priceIncludes.map((item, index) => (
-                  <div key={index} className="flex items-center gap-2">
-                    <Input
-                      value={item}
-                      onChange={(e) => updatePriceInclude(index, e.target.value)}
-                      placeholder="Enter what's included in the price"
-                      className="flex-1"
-                    />
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => removePriceInclude(index)}
-                      className="text-red-600 hover:text-red-700"
-                    >
-                      ×
-                    </Button>
-                  </div>
-                ))}
-                
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={addPriceInclude}
-                  className="w-full"
-                >
-                  + Add Price Include Item
-                </Button>
-              </CardContent>
-            </Card>
 
             {/* Submit Button */}
             <div className="flex justify-end space-x-4">
