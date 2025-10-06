@@ -287,6 +287,61 @@ const TourDetail = () => {
                 </CardContent>
               </Card>
 
+              {/* 1.5. Highlights & Features */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-2xl">Highlights & Features</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  {/* Tour Highlights */}
+                  {tour.highlights && tour.highlights.length > 0 && (
+                    <div>
+                      <h4 className="font-semibold mb-3 text-lg">Tour Highlights</h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        {tour.highlights.map((highlight, index) => (
+                          <div key={index} className="flex items-start space-x-3">
+                            <CheckCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                            <span className="text-muted-foreground">{highlight}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* What's Included */}
+                  {tour.includes && tour.includes.length > 0 && (
+                    <div>
+                      <h4 className="font-semibold mb-3 text-lg">What's Included</h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        {tour.includes.map((item, index) => (
+                          <div key={index} className="flex items-start space-x-3">
+                            <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                            <span className="text-muted-foreground">{item}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* What's Excluded */}
+                  {tour.excludes && tour.excludes.length > 0 && (
+                    <div>
+                      <h4 className="font-semibold mb-3 text-lg">What's Excluded</h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        {tour.excludes.map((item, index) => (
+                          <div key={index} className="flex items-start space-x-3">
+                            <div className="w-5 h-5 border-2 border-red-500 rounded-full flex-shrink-0 mt-0.5 flex items-center justify-center">
+                              <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                            </div>
+                            <span className="text-muted-foreground">{item}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
               {/* 2. Detailed Tour Program */}
               <div className="space-y-4">
                 <div className="text-center mb-6">
