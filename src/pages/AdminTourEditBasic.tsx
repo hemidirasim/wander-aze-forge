@@ -34,6 +34,7 @@ interface Tour {
   difficulty: string;
   price: number;
   max_participants: number;
+  min_participants: number;
   rating: number;
   reviews_count: number;
   group_size: string;
@@ -45,6 +46,8 @@ interface Tour {
   best_season: string;
   meeting_point: string;
   languages: string;
+  start_date: string;
+  end_date: string;
   is_active: boolean;
   featured: boolean;
 }
@@ -68,6 +71,7 @@ const AdminTourEditBasic: React.FC = () => {
     difficulty: '',
     price: '',
     maxParticipants: '',
+    minParticipants: '',
     rating: '4.5',
     reviewsCount: '0',
     groupSize: '',
@@ -79,6 +83,8 @@ const AdminTourEditBasic: React.FC = () => {
     bestSeason: 'May to October',
     meetingPoint: '',
     languages: 'English, Azerbaijani, Russian',
+    startDate: '',
+    endDate: '',
     isActive: true,
     featured: false
   });
@@ -107,6 +113,7 @@ const AdminTourEditBasic: React.FC = () => {
           difficulty: tourData.difficulty || '',
           price: tourData.price?.toString() || '',
           maxParticipants: tourData.max_participants?.toString() || '',
+          minParticipants: tourData.min_participants?.toString() || '',
           rating: tourData.rating?.toString() || '4.5',
           reviewsCount: tourData.reviews_count?.toString() || '0',
           groupSize: tourData.group_size || '',
@@ -118,6 +125,8 @@ const AdminTourEditBasic: React.FC = () => {
           bestSeason: tourData.best_season || 'May to October',
           meetingPoint: tourData.meeting_point || '',
           languages: tourData.languages || 'English, Azerbaijani, Russian',
+          startDate: tourData.start_date || '',
+          endDate: tourData.end_date || '',
           isActive: tourData.is_active !== false,
           featured: tourData.featured === true
         });
@@ -365,7 +374,7 @@ const AdminTourEditBasic: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="maxParticipants">Max Participants *</Label>
                     <Input
@@ -378,6 +387,16 @@ const AdminTourEditBasic: React.FC = () => {
                     />
                   </div>
                   <div className="space-y-2">
+                    <Label htmlFor="minParticipants">Min Participants</Label>
+                    <Input
+                      id="minParticipants"
+                      type="number"
+                      value={formData.minParticipants}
+                      onChange={(e) => handleInputChange('minParticipants', e.target.value)}
+                      placeholder="Enter min participants"
+                    />
+                  </div>
+                  <div className="space-y-2">
                     <Label htmlFor="location">Location *</Label>
                     <Input
                       id="location"
@@ -385,6 +404,27 @@ const AdminTourEditBasic: React.FC = () => {
                       onChange={(e) => handleInputChange('location', e.target.value)}
                       placeholder="Enter location"
                       required
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="startDate">Start Date</Label>
+                    <Input
+                      id="startDate"
+                      type="date"
+                      value={formData.startDate}
+                      onChange={(e) => handleInputChange('startDate', e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="endDate">End Date</Label>
+                    <Input
+                      id="endDate"
+                      type="date"
+                      value={formData.endDate}
+                      onChange={(e) => handleInputChange('endDate', e.target.value)}
                     />
                   </div>
                 </div>
