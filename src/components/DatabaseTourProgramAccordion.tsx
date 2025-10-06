@@ -71,7 +71,7 @@ const DatabaseTourProgramAccordion: React.FC<DatabaseTourProgramAccordionProps> 
                     <div className="flex items-center space-x-2">
                       <div>
                         <h3 className="text-lg font-semibold text-left">{program.title || `Day ${program.day_number}`}</h3>
-                        <p className="text-sm text-muted-foreground text-left">Day {program.day_number}</p>
+                        <p className="text-sm text-muted-foreground text-left">{program.day_number}</p>
                       </div>
                     </div>
                   </div>
