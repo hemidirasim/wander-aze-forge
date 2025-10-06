@@ -126,33 +126,14 @@ const AdminTourEditMedia: React.FC = () => {
           throw new Error(`File ${file.name} is too large. Maximum size is 5MB.`);
         }
 
-        // Convert file to base64
-        const base64 = await new Promise<string>((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = () => {
-            const result = reader.result as string;
-            // Remove data:image/...;base64, prefix
-            const base64Data = result.split(',')[1];
-            resolve(base64Data);
-          };
-          reader.onerror = reject;
-          reader.readAsDataURL(file);
-        });
-
-        const uploadData = {
-          fileData: base64,
-          filename: file.name,
-          fileType: file.type,
-          fileSize: file.size,
-          category: 'tours/gallery'
-        };
+        // Use FormData instead of base64
+        const formData = new FormData();
+        formData.append('image', file);
+        formData.append('type', 'tour');
 
         const response = await fetch('/api/upload/image', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(uploadData),
+          body: formData,
         });
 
         if (!response.ok) {
@@ -224,7 +205,7 @@ const AdminTourEditMedia: React.FC = () => {
       if (base64Images.length > 0) {
         toast({
           title: "Images Not Uploaded",
-          description: `Please upload ${base64Images.length} image(s) first before saving. Base64 images are too large to send.`,
+          description: `Please upload ${base64Images.length} image(s) first before saving. Only URLs are allowed.`,
           variant: "destructive"
         });
         return;
@@ -443,7 +424,7 @@ const AdminTourEditMedia: React.FC = () => {
                           </div>
                           {isBase64Image(image) && (
                             <p className="text-xs text-red-500 text-center">
-                              Not uploaded - Click "Upload Images" first
+                              Not uploaded - Only URLs allowed
                             </p>
                           )}
                         </div>
