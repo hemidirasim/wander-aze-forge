@@ -38,6 +38,9 @@ interface Tour {
   reviews_count: number;
   group_size: string;
   location: string;
+  total_hiking_distance: string;
+  total_elevation_gain: string;
+  total_elevation_loss: string;
   overview: string;
   best_season: string;
   meeting_point: string;
@@ -69,6 +72,9 @@ const AdminTourEditBasic: React.FC = () => {
     reviewsCount: '0',
     groupSize: '',
     location: '',
+    totalHikingDistance: '',
+    totalElevationGain: '',
+    totalElevationLoss: '',
     overview: '',
     bestSeason: 'May to October',
     meetingPoint: '',
@@ -105,6 +111,9 @@ const AdminTourEditBasic: React.FC = () => {
           reviewsCount: tourData.reviews_count?.toString() || '0',
           groupSize: tourData.group_size || '',
           location: tourData.location || '',
+          totalHikingDistance: tourData.total_hiking_distance || '',
+          totalElevationGain: tourData.total_elevation_gain || '',
+          totalElevationLoss: tourData.total_elevation_loss || '',
           overview: tourData.overview || '',
           bestSeason: tourData.best_season || 'May to October',
           meetingPoint: tourData.meeting_point || '',
@@ -376,6 +385,36 @@ const AdminTourEditBasic: React.FC = () => {
                       onChange={(e) => handleInputChange('location', e.target.value)}
                       placeholder="Enter location"
                       required
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="totalHikingDistance">Total Hiking Distance</Label>
+                    <Input
+                      id="totalHikingDistance"
+                      value={formData.totalHikingDistance}
+                      onChange={(e) => handleInputChange('totalHikingDistance', e.target.value)}
+                      placeholder="e.g., 15 km, 25 miles"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="totalElevationGain">Total Elevation Gain</Label>
+                    <Input
+                      id="totalElevationGain"
+                      value={formData.totalElevationGain}
+                      onChange={(e) => handleInputChange('totalElevationGain', e.target.value)}
+                      placeholder="e.g., 1200m, 4000ft"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="totalElevationLoss">Total Elevation Loss</Label>
+                    <Input
+                      id="totalElevationLoss"
+                      value={formData.totalElevationLoss}
+                      onChange={(e) => handleInputChange('totalElevationLoss', e.target.value)}
+                      placeholder="e.g., 800m, 2600ft"
                     />
                   </div>
                 </div>
