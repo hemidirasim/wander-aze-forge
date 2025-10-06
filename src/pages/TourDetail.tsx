@@ -278,10 +278,6 @@ const TourDetail = () => {
                           {tour.max_participants && tour.max_participants > 0 ? `Up to ${tour.max_participants} participants` : 
                            tour.group_size || 'Small group (4-8 people)'}
                         </div>
-                        {/* Debug info - always show for troubleshooting */}
-                        <div className="text-xs text-gray-500 mt-1">
-                          Debug: max_participants={JSON.stringify(tour.max_participants)}, group_size={JSON.stringify(tour.group_size)}
-                        </div>
                       </div>
                     </div>
                     <div className="flex items-center space-x-3">
