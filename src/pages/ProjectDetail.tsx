@@ -8,6 +8,13 @@ import { Badge } from '@/components/ui/badge';
 import { Leaf, Users, Calendar, Target, CheckCircle, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
+// Declare Fancybox for TypeScript
+declare global {
+  interface Window {
+    Fancybox: any;
+  }
+}
+
 const ProjectDetail = () => {
   const { id } = useParams();
 
@@ -188,12 +195,19 @@ const ProjectDetail = () => {
                   <CardContent>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       {project.gallery_urls.map((image, index) => (
-                        <img
+                        <a
                           key={index}
-                          src={image}
-                          alt={`Project image ${index + 1}`}
-                          className="w-full h-48 object-cover rounded-lg hover:scale-105 transition-transform duration-300"
-                        />
+                          href={image}
+                          data-fancybox="project-gallery"
+                          data-caption={`Project image ${index + 1}`}
+                          className="block"
+                        >
+                          <img
+                            src={image}
+                            alt={`Project image ${index + 1}`}
+                            className="w-full h-48 object-cover rounded-lg hover:scale-105 transition-transform duration-300 cursor-pointer"
+                          />
+                        </a>
                       ))}
                     </div>
                   </CardContent>
