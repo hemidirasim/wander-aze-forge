@@ -70,6 +70,11 @@ interface ExtendedTourForm {
   meetingPoint: string;
   languages: string;
   
+  // Hiking Details
+  totalHikingDistance: string;
+  totalElevationGain: string;
+  totalElevationLoss: string;
+  
   // Accommodation & Food
   accommodationDetails: string;
   mealsDetails: string;
@@ -150,6 +155,11 @@ const AdminTourEdit: React.FC = () => {
     bestSeason: 'May to October',
     meetingPoint: '',
     languages: 'English, Azerbaijani, Russian',
+    
+    // Hiking Details
+    totalHikingDistance: '',
+    totalElevationGain: '',
+    totalElevationLoss: '',
     
     // Accommodation & Food
     accommodationDetails: '',
@@ -259,6 +269,11 @@ const AdminTourEdit: React.FC = () => {
             bestSeason: tour.best_season || 'May to October',
             meetingPoint: tour.meeting_point || '',
             languages: tour.languages || 'English, Azerbaijani, Russian',
+            
+            // Hiking Details
+            totalHikingDistance: tour.total_hiking_distance || '',
+            totalElevationGain: tour.total_elevation_gain || '',
+            totalElevationLoss: tour.total_elevation_loss || '',
             
             // Accommodation & Food
             accommodationDetails: tour.accommodation_details || '',
@@ -387,6 +402,11 @@ const AdminTourEdit: React.FC = () => {
         bestSeason: formData.bestSeason.trim(),
         meetingPoint: formData.meetingPoint.trim(),
         languages: formData.languages.trim(),
+        
+        // Hiking Details
+        totalHikingDistance: formData.totalHikingDistance.trim(),
+        totalElevationGain: formData.totalElevationGain.trim(),
+        totalElevationLoss: formData.totalElevationLoss.trim(),
         
         accommodationDetails: formData.accommodationDetails.trim(),
         mealsDetails: formData.mealsDetails.trim(),
@@ -598,6 +618,40 @@ const AdminTourEdit: React.FC = () => {
                     onChange={(e) => handleInputChange('location', e.target.value)}
                     placeholder="e.g., Greater Caucasus Mountains"
                   />
+                </div>
+              </div>
+              
+              {/* Hiking Details */}
+              <div className="border-t pt-6">
+                <h3 className="text-lg font-semibold mb-4 text-gray-800">Hiking Details</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="totalHikingDistance">Total Hiking Distance</Label>
+                    <Input
+                      id="totalHikingDistance"
+                      value={formData.totalHikingDistance}
+                      onChange={(e) => handleInputChange('totalHikingDistance', e.target.value)}
+                      placeholder="e.g., 15 km, 25 miles"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="totalElevationGain">Total Elevation Gain</Label>
+                    <Input
+                      id="totalElevationGain"
+                      value={formData.totalElevationGain}
+                      onChange={(e) => handleInputChange('totalElevationGain', e.target.value)}
+                      placeholder="e.g., 1200m, 4000ft"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="totalElevationLoss">Total Elevation Loss</Label>
+                    <Input
+                      id="totalElevationLoss"
+                      value={formData.totalElevationLoss}
+                      onChange={(e) => handleInputChange('totalElevationLoss', e.target.value)}
+                      placeholder="e.g., 800m, 2600ft"
+                    />
+                  </div>
                 </div>
               </div>
               

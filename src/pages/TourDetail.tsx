@@ -28,6 +28,9 @@ interface TourData {
   group_size: string;
   max_participants: number;
   location: string;
+  total_hiking_distance: string;
+  total_elevation_gain: string;
+  total_elevation_loss: string;
   overview: string;
   best_season: string;
   meeting_point: string;
@@ -226,6 +229,30 @@ const TourDetail = () => {
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground">
                 {tour.title}
               </h1>
+              
+              {/* Hiking Details */}
+              {(tour.total_hiking_distance || tour.total_elevation_gain || tour.total_elevation_loss) && (
+                <div className="flex flex-wrap gap-4 mb-4">
+                  {tour.total_hiking_distance && (
+                    <div className="flex items-center space-x-2 bg-primary/10 text-primary px-3 py-2 rounded-lg">
+                      <span className="font-semibold">Distance:</span>
+                      <span>{tour.total_hiking_distance}</span>
+                    </div>
+                  )}
+                  {tour.total_elevation_gain && (
+                    <div className="flex items-center space-x-2 bg-green-100 text-green-800 px-3 py-2 rounded-lg">
+                      <span className="font-semibold">↑ Gain:</span>
+                      <span>{tour.total_elevation_gain}</span>
+                    </div>
+                  )}
+                  {tour.total_elevation_loss && (
+                    <div className="flex items-center space-x-2 bg-red-100 text-red-800 px-3 py-2 rounded-lg">
+                      <span className="font-semibold">↓ Loss:</span>
+                      <span>{tour.total_elevation_loss}</span>
+                    </div>
+                  )}
+                </div>
+              )}
               
               <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
                 {tour.description}
