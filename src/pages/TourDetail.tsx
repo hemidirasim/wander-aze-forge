@@ -318,7 +318,34 @@ const TourDetail = () => {
                 </CardContent>
               </Card>
 
-              {/* 1.5. Highlights & Features */}
+              {/* 1.5. Details */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-2xl">Details</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <h4 className="font-semibold mb-2">Difficulty Level</h4>
+                      <p className="text-muted-foreground whitespace-pre-wrap">{tour.difficulty} - {tour.requirements || 'Suitable for participants with appropriate fitness level'}</p>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold mb-2">Best Season</h4>
+                      <p className="text-muted-foreground">{tour.best_season || 'May to October (weather dependent)'}</p>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold mb-2">Meeting Point</h4>
+                      <p className="text-muted-foreground">{tour.meeting_point || 'Baku city center (exact location provided upon booking)'}</p>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold mb-2">Language</h4>
+                      <p className="text-muted-foreground">{tour.languages || 'English, Azerbaijani, Russian'}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* 1.6. Highlights & Features */}
               <Card>
                 <CardHeader>
                   <CardTitle className="text-2xl">Highlights & Features</CardTitle>
@@ -419,34 +446,8 @@ const TourDetail = () => {
                 )}
               </div>
 
-              {/* 3. Details */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-2xl">Details</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <h4 className="font-semibold mb-2">Difficulty Level</h4>
-                      <p className="text-muted-foreground whitespace-pre-wrap">{tour.difficulty} - {tour.requirements || 'Suitable for participants with appropriate fitness level'}</p>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold mb-2">Best Season</h4>
-                      <p className="text-muted-foreground">{tour.best_season || 'May to October (weather dependent)'}</p>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold mb-2">Meeting Point</h4>
-                      <p className="text-muted-foreground">{tour.meeting_point || 'Baku city center (exact location provided upon booking)'}</p>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold mb-2">Language</h4>
-                      <p className="text-muted-foreground">{tour.languages || 'English, Azerbaijani, Russian'}</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
 
-              {/* 4. Accommodation and Food */}
+              {/* 3. Accommodation and Food */}
               <Card>
                 <CardHeader>
                   <CardTitle className="text-2xl">Accommodation and Food</CardTitle>
@@ -476,7 +477,7 @@ const TourDetail = () => {
                 </CardContent>
               </Card>
 
-              {/* 5. Clothing / Equipment */}
+              {/* 4. Clothing / Equipment */}
               <Card>
                 <CardHeader>
                   <CardTitle className="text-2xl">Clothing / Equipment</CardTitle>
@@ -520,7 +521,7 @@ const TourDetail = () => {
                 </CardContent>
               </Card>
 
-              {/* 6. Transport */}
+              {/* 5. Transport */}
               <Card>
                 <CardHeader>
                   <CardTitle className="text-2xl">Transport</CardTitle>
@@ -541,7 +542,7 @@ const TourDetail = () => {
                 </CardContent>
               </Card>
 
-              {/* 7. Media */}
+              {/* 6. Media */}
               <Card>
                 <CardHeader>
                   <CardTitle className="text-2xl">Media</CardTitle>
@@ -576,7 +577,7 @@ const TourDetail = () => {
                 </CardContent>
               </Card>
 
-              {/* 8. Tour Price */}
+              {/* 7. Tour Price */}
               <Card>
                 <CardHeader>
                   <CardTitle className="text-2xl">Tour Price</CardTitle>
