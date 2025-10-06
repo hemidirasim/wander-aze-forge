@@ -165,10 +165,7 @@ const Footer = () => {
               <Logo className="w-28 h-28" />
             </div>
             <p className="text-gray-900 text-sm leading-relaxed">
-              Azerbaijan's first ecotour company<br/>
-              since 2014. We specialize in sustainable<br/>
-              mountain adventures, cultural immersion,<br/>
-              and authentic local experiences.
+              Founded in 2014 as Camping Azerbaijan, Outtour Azerbaijan is recognised as the country's first ecotour operator. We specialise in sustainable mountain adventures, cultural immersion and community-led experiences.
             </p>
             <div className="flex items-center justify-end space-x-2 text-sm text-gray-900">
               <Heart className="w-4 h-4 text-red-400" />
