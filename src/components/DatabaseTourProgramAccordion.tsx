@@ -100,9 +100,18 @@ const DatabaseTourProgramAccordion: React.FC<DatabaseTourProgramAccordionProps> 
               
               <AccordionContent className="px-6 pb-6">
                 <div className="space-y-6">
+                  {/* Day Description */}
+                  {program.description && (
+                    <div className="bg-muted/30 p-4 rounded-lg">
+                      <h4 className="font-semibold text-foreground mb-2">Day Description</h4>
+                      <p className="text-muted-foreground">{program.description}</p>
+                    </div>
+                  )}
+
                   {/* Day Overview */}
                   {program.day_overview && (
                     <div className="bg-muted/30 p-4 rounded-lg">
+                      <h4 className="font-semibold text-foreground mb-2">Day Overview</h4>
                       <p className="text-muted-foreground">{program.day_overview}</p>
                     </div>
                   )}
