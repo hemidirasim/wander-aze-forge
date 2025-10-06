@@ -38,12 +38,21 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     
     console.log('FormData fields:', fields);
     console.log('FormData files:', files);
+    console.log('Available file keys:', Object.keys(files));
+    console.log('Available field keys:', Object.keys(fields));
 
     const imageFiles = files.images || [];
     const type = fields.type?.[0] || 'tours';
     
+    console.log('Image files count:', imageFiles.length);
+    console.log('Type:', type);
+    
     if (imageFiles.length === 0) {
-      return res.status(400).json({ error: 'No images provided' });
+      return res.status(400).json({ 
+        error: 'No images provided',
+        availableFiles: Object.keys(files),
+        availableFields: Object.keys(fields)
+      });
     }
 
     // Upload all images
