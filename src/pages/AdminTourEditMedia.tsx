@@ -96,7 +96,8 @@ const AdminTourEditMedia: React.FC = () => {
   };
 
   const isBase64Image = (url: string) => {
-    return url.startsWith('data:image/') || url.startsWith('data:image/webp');
+    // Only check for actual base64 data URLs, not regular URLs
+    return url.startsWith('data:image/') && url.includes('base64,');
   };
 
   const removeGalleryImage = (index: number) => {
@@ -199,7 +200,7 @@ const AdminTourEditMedia: React.FC = () => {
       if (base64Images.length > 0) {
         toast({
           title: "Images Not Uploaded",
-          description: `Please upload ${base64Images.length} image(s) first before saving. Only URLs are allowed.`,
+          description: `Please upload ${base64Images.length} image(s) first before saving. Base64 images are not allowed.`,
           variant: "destructive"
         });
         return;
@@ -418,7 +419,7 @@ const AdminTourEditMedia: React.FC = () => {
                           </div>
                           {isBase64Image(image) && (
                             <p className="text-xs text-red-500 text-center">
-                              Not uploaded - Only URLs allowed
+                              Not uploaded - Please upload first
                             </p>
                           )}
                         </div>
