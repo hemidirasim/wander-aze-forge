@@ -576,25 +576,6 @@ const TourDetail = () => {
                       </div>
                     </div>
                   )}
-                  <div className="border-t pt-4">
-                    <h4 className="font-semibold mb-2">Price Includes:</h4>
-                    {tour.price_includes && tour.price_includes.length > 0 ? (
-                      <ul className="text-muted-foreground space-y-1">
-                        {tour.price_includes.map((item, index) => (
-                          <li key={index}>• {item}</li>
-                        ))}
-                      </ul>
-                    ) : (
-                      <ul className="text-muted-foreground space-y-1">
-                        <li>• Professional guide services</li>
-                        <li>• All transportation</li>
-                        <li>• Safety equipment</li>
-                        <li>• Insurance coverage</li>
-                        <li>• Meals (as specified)</li>
-                        <li>• Accommodation (multi-day tours)</li>
-                      </ul>
-                    )}
-                  </div>
                   {(tour.group_discounts || tour.early_bird_discount) && (
                     <div className="bg-muted/50 p-4 rounded-lg">
                       <p className="text-sm text-muted-foreground">
