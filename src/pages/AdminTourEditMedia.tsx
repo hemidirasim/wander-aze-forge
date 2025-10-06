@@ -95,6 +95,10 @@ const AdminTourEditMedia: React.FC = () => {
     }));
   };
 
+  const isBase64Image = (url: string) => {
+    return url.startsWith('data:image/') || url.startsWith('data:image/webp');
+  };
+
   const removeGalleryImage = (index: number) => {
     setFormData(prev => ({
       ...prev,
@@ -213,14 +217,14 @@ const AdminTourEditMedia: React.FC = () => {
       console.log('Payload size:', payloadSize, 'bytes');
       
       // Check if any images are still base64 (not uploaded)
-      const hasBase64Images = cleanedFormData.galleryImages.some(img => 
-        img.startsWith('data:image/') || img.startsWith('data:image/webp')
+      const base64Images = cleanedFormData.galleryImages.filter(img => 
+        img.trim() !== '' && isBase64Image(img)
       );
       
-      if (hasBase64Images) {
+      if (base64Images.length > 0) {
         toast({
           title: "Images Not Uploaded",
-          description: "Please upload images first before saving. Base64 images are too large to send.",
+          description: `Please upload ${base64Images.length} image(s) first before saving. Base64 images are too large to send.`,
           variant: "destructive"
         });
         return;
@@ -411,6 +415,11 @@ const AdminTourEditMedia: React.FC = () => {
                                 <Camera className="w-3 h-3" />
                               </div>
                             )}
+                            {isBase64Image(image) && (
+                              <div className="absolute top-2 left-2 bg-red-500 text-white rounded-full p-1">
+                                <Upload className="w-3 h-3" />
+                              </div>
+                            )}
                           </div>
                           
                           <div className="flex gap-2">
@@ -432,6 +441,11 @@ const AdminTourEditMedia: React.FC = () => {
                               <Trash2 className="w-4 h-4" />
                             </Button>
                           </div>
+                          {isBase64Image(image) && (
+                            <p className="text-xs text-red-500 text-center">
+                              Not uploaded - Click "Upload Images" first
+                            </p>
+                          )}
                         </div>
                       ))}
                     </div>
