@@ -73,7 +73,7 @@ async function handleSearch(req: VercelRequest, res: VercelResponse) {
 
       // Search tours
       const toursResult = await client.query(
-        `SELECT id, title, description, image_url, created_at, 'tour' as type
+        `SELECT id, title, description, image_url, created_at, 'tour' as type, category
          FROM tours 
          WHERE LOWER(title) LIKE $1 OR LOWER(description) LIKE $1
          ORDER BY created_at DESC

@@ -14,6 +14,7 @@ interface SearchResult {
   created_at: string;
   type: string;
   section: 'blog' | 'project' | 'tour';
+  category?: string;
 }
 
 interface SearchModalProps {
@@ -138,7 +139,12 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
         url = `${baseUrl}/projects/${result.id}`;
         break;
       case 'tour':
-        url = `${baseUrl}/tours/${result.id}`;
+        // Use category slug if available, otherwise fallback to direct tour ID
+        if (result.category) {
+          url = `${baseUrl}/tours/${result.category}/${result.id}`;
+        } else {
+          url = `${baseUrl}/tours/${result.id}`;
+        }
         break;
     }
     
