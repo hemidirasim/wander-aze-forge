@@ -404,14 +404,6 @@ const TourDetail = () => {
               <div className="space-y-4">
                 <div className="text-center mb-6">
                   <h2 className="text-3xl font-bold text-foreground mb-2">Detailed Tour Program</h2>
-                  <p className="text-muted-foreground">
-                    Comprehensive daily schedule with activities, timings, and highlights
-                    {(programs.length > 0 || (tour && tour.tour_programs && tour.tour_programs.length > 0)) && (
-                      <span className="block mt-2 text-sm text-yellow-600">
-                        📊 Tour Programs
-                      </span>
-                    )}
-                  </p>
                 </div>
 
                 {console.log('Rendering tour programs - programs:', programs)}
