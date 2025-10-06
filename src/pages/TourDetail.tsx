@@ -280,7 +280,7 @@ const TourDetail = () => {
                         </div>
                         {/* Debug info */}
                         <div className="text-xs text-gray-500 mt-1">
-                          Debug: max_participants={JSON.stringify(tour.max_participants)}, group_size={JSON.stringify(tour.group_size)}
+                          Debug: max_participants={JSON.stringify(tour.max_participants)}, group_size={JSON.stringify(tour.group_size)}, type: {typeof tour.max_participants}
                         </div>
                       </div>
                     </div>
