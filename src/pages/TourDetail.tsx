@@ -6,7 +6,7 @@ import DatabaseTourProgramAccordion from '@/components/DatabaseTourProgramAccord
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Clock, Users, MapPin, Star, CheckCircle, Calendar, Phone, ArrowLeft, Loader2 } from 'lucide-react';
+import { Clock, Users, MapPin, Star, CheckCircle, Calendar, Phone, ArrowLeft, Loader2, Eye, Info, Sparkles, CalendarDays, Bed, Utensils, Shirt, Car, Camera, DollarSign } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 // Declare Fancybox for TypeScript
@@ -283,7 +283,10 @@ const TourDetail = () => {
               {/* 1. Overview */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-2xl">Overview</CardTitle>
+                  <CardTitle className="text-2xl flex items-center gap-2">
+                    <Eye className="w-6 h-6 text-primary" />
+                    Overview
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <p className="text-muted-foreground whitespace-pre-wrap">
@@ -321,7 +324,10 @@ const TourDetail = () => {
               {/* 1.5. Details */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-2xl">Details</CardTitle>
+                  <CardTitle className="text-2xl flex items-center gap-2">
+                    <Info className="w-6 h-6 text-primary" />
+                    Details
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -348,7 +354,10 @@ const TourDetail = () => {
               {/* 1.6. Highlights & Features */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-2xl">Highlights & Features</CardTitle>
+                  <CardTitle className="text-2xl flex items-center gap-2">
+                    <Sparkles className="w-6 h-6 text-primary" />
+                    Highlights & Features
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   {/* Tour Highlights */}
@@ -403,7 +412,10 @@ const TourDetail = () => {
               {/* 2. Detailed Tour Program */}
               <div className="space-y-4">
                 <div className="text-center mb-6">
-                  <h2 className="text-3xl font-bold text-foreground mb-2">Detailed Tour Program</h2>
+                  <h2 className="text-3xl font-bold text-foreground mb-2 flex items-center justify-center gap-3">
+                    <CalendarDays className="w-8 h-8 text-primary" />
+                    Detailed Tour Program
+                  </h2>
                 </div>
 
                 {console.log('Rendering tour programs - programs:', programs)}
@@ -442,7 +454,10 @@ const TourDetail = () => {
               {/* 3. Accommodation and Food */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-2xl">Accommodation and Food</CardTitle>
+                  <CardTitle className="text-2xl flex items-center gap-2">
+                    <Bed className="w-6 h-6 text-primary" />
+                    Accommodation and Food
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
@@ -472,7 +487,10 @@ const TourDetail = () => {
               {/* 4. Clothing / Equipment */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-2xl">Clothing / Equipment</CardTitle>
+                  <CardTitle className="text-2xl flex items-center gap-2">
+                    <Shirt className="w-6 h-6 text-primary" />
+                    Clothing / Equipment
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
@@ -516,7 +534,10 @@ const TourDetail = () => {
               {/* 5. Transport */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-2xl">Transport</CardTitle>
+                  <CardTitle className="text-2xl flex items-center gap-2">
+                    <Car className="w-6 h-6 text-primary" />
+                    Transport
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
@@ -537,7 +558,10 @@ const TourDetail = () => {
               {/* 6. Media */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-2xl">Media</CardTitle>
+                  <CardTitle className="text-2xl flex items-center gap-2">
+                    <Camera className="w-6 h-6 text-primary" />
+                    Media
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   {tour && tour.gallery_images && tour.gallery_images.length > 0 ? (
@@ -572,7 +596,10 @@ const TourDetail = () => {
               {/* 7. Tour Price */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-2xl">Tour Price</CardTitle>
+                  <CardTitle className="text-2xl flex items-center gap-2">
+                    <DollarSign className="w-6 h-6 text-primary" />
+                    Tour Price
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="text-center">
