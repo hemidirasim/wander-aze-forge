@@ -169,13 +169,6 @@ const ProjectDetail = () => {
                       </div>
                     </div>
                     <div className="flex items-center space-x-3">
-                      <Target className="w-5 h-5 text-primary" />
-                      <div>
-                        <div className="font-semibold">Budget</div>
-                        <div className="text-muted-foreground">${project.budget?.toLocaleString()}</div>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-3">
                       <Leaf className="w-5 h-5 text-primary" />
                       <div>
                         <div className="font-semibold">Status</div>
