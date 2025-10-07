@@ -62,7 +62,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       difficulty: req.body.difficulty?.trim() || '',
       price: parseFloat(req.body.price) || 0,
       maxParticipants: parseInt(req.body.maxParticipants) || 0,
-      minParticipants: parseInt(req.body.minParticipants) || 0,
+      minParticipants: parseInt(req.body.minParticipants) || null,
       rating: parseFloat(req.body.rating) || 4.5,
       reviewsCount: parseInt(req.body.reviewsCount) || 0,
       groupSize: req.body.groupSize?.trim() || '',
@@ -74,8 +74,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       bestSeason: req.body.bestSeason?.trim() || 'May to October',
       meetingPoint: req.body.meetingPoint?.trim() || '',
       languages: req.body.languages?.trim() || 'English, Azerbaijani, Russian',
-      startDate: req.body.startDate?.trim() || '',
-      endDate: req.body.endDate?.trim() || '',
+      startDate: req.body.startDate?.trim() || null,
+      endDate: req.body.endDate?.trim() || null,
       isActive: req.body.isActive !== false,
       featured: req.body.featured === true
     };
