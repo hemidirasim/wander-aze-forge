@@ -633,7 +633,10 @@ const TourDetail = () => {
                         </>
                       )}
                     </div>
-                    <div className="text-lg text-muted-foreground">
+                    <div className="text-xs text-muted-foreground mt-2">
+                      Price varies by group size
+                    </div>
+                    <div className="text-lg text-muted-foreground mt-1">
                       {category === 'group-tours' ? ' / group' : ' / per person'}
                     </div>
                   </CardTitle>

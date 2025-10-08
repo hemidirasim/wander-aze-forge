@@ -145,9 +145,14 @@ const Tours = () => {
                   
                   <CardContent className="pt-0">
                     <div className="flex items-center justify-between">
-                      <div className="text-2xl font-bold text-primary">
-                        <span className="text-sm font-normal">From </span>
-                        ${Math.round(typeof tour.price === 'string' ? parseFloat(tour.price.replace(/[^0-9.]/g, '')) : tour.price)}
+                      <div>
+                        <div className="text-2xl font-bold text-primary">
+                          <span className="text-sm font-normal">From </span>
+                          ${Math.round(typeof tour.price === 'string' ? parseFloat(tour.price.replace(/[^0-9.]/g, '')) : tour.price)}
+                        </div>
+                        <div className="text-xs text-muted-foreground mt-1">
+                          Price varies by group size
+                        </div>
                       </div>
                       <Button variant="adventure" size="sm" asChild>
                         <Link to={`/tours/${tour.category}/${tour.slug || tour.id}`} className="flex items-center gap-2">
