@@ -131,9 +131,10 @@ const Tours = () => {
                     <CardTitle className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
                       {tour.title}
                     </CardTitle>
-                    <p className="text-muted-foreground text-sm leading-relaxed line-clamp-2">
-                      {tour.description}
-                    </p>
+                    <div 
+                      className="text-muted-foreground text-sm leading-relaxed prose prose-sm max-w-none line-clamp-2"
+                      dangerouslySetInnerHTML={{ __html: tour.description }}
+                    />
                   </CardHeader>
                   
                   <CardContent className="pt-0">

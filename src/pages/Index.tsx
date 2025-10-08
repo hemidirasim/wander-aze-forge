@@ -329,9 +329,10 @@ const Index = () => {
                     <CardTitle className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
                       {tour.title}
                     </CardTitle>
-                    <p className="text-muted-foreground text-sm leading-relaxed">
-                      {tour.description}
-                    </p>
+                    <div 
+                      className="text-muted-foreground text-sm leading-relaxed prose prose-sm max-w-none line-clamp-3"
+                      dangerouslySetInnerHTML={{ __html: tour.description }}
+                    />
                   </CardHeader>
                   
                   <CardContent className="pt-0">
