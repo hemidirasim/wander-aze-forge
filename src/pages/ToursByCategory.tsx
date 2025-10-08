@@ -347,7 +347,8 @@ const ToursByCategory = () => {
                     
                     <CardFooter className="flex items-center justify-between pt-6">
                       <div className="text-2xl font-bold text-primary">
-                        {formatPrice(tour.price)}
+                        <span className="text-sm font-normal">From </span>
+                        ${Math.round(typeof tour.price === 'string' ? parseFloat(tour.price.replace(/[^0-9.]/g, '')) : tour.price)}
                       </div>
                       <Button variant="adventure" asChild>
                         <Link to={`/tours/${categoryId}/${tour.slug || tour.id}`}>

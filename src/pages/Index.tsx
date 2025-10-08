@@ -343,7 +343,10 @@ const Index = () => {
                   
                   <CardContent className="pt-0">
                     <div className="flex items-center justify-between">
-                      <span className="text-2xl font-bold text-primary">{formatPrice(tour.price)}</span>
+                      <div className="text-2xl font-bold text-primary">
+                        <span className="text-sm font-normal">From </span>
+                        ${Math.round(typeof tour.price === 'string' ? parseFloat(tour.price.replace(/[^0-9.]/g, '')) : tour.price)}
+                      </div>
                       <Button variant="adventure" size="sm" asChild>
                         <Link to={`/tours/${tour.category}/${tour.slug || tour.id}`} className="flex items-center gap-2">
                           Learn More

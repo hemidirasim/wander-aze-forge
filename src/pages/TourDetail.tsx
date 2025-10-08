@@ -94,7 +94,7 @@ const TourDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedParticipants, setSelectedParticipants] = useState<string>('');
-  const [selectedPrice, setSelectedPrice] = useState<string>('');
+  const [selectedPrice, setSelectedPrice] = useState<React.ReactNode>(null);
 
   useEffect(() => {
     const fetchTourDetail = async () => {
@@ -623,12 +623,19 @@ const TourDetail = () => {
               <Card className="sticky top-32">
                 <CardHeader>
                   <CardTitle className="text-3xl text-center">
-                    <span className="text-primary">
-                      {selectedPrice || formatPrice(tour.price)}
-                    </span>
-                    <span className="text-lg text-muted-foreground">
-                      {category === 'group-tours' ? ' / group' : ' / person'}
-                    </span>
+                    <div className="text-primary">
+                      {selectedPrice ? (
+                        selectedPrice
+                      ) : (
+                        <>
+                          <span className="text-sm font-normal">From </span>
+                          ${Math.round(typeof tour.price === 'string' ? parseFloat(tour.price.replace(/[^0-9.]/g, '')) : tour.price)}
+                        </>
+                      )}
+                    </div>
+                    <div className="text-lg text-muted-foreground">
+                      {category === 'group-tours' ? ' / group' : ' / per person'}
+                    </div>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -642,7 +649,9 @@ const TourDetail = () => {
                           setSelectedParticipants(value);
                           const pricing = tour.participant_pricing.find(p => p.minParticipants.toString() === value);
                           if (pricing) {
-                            setSelectedPrice(`From $${Math.round(pricing.pricePerPerson)}`);
+                            setSelectedPrice(
+                              <><span className="text-sm font-normal">From </span>${Math.round(pricing.pricePerPerson)}</>
+                            );
                           }
                         }}
                       >
