@@ -84,7 +84,7 @@ interface ProgramData {
 // Format price helper
 const formatPrice = (price: string | number) => {
   const numPrice = typeof price === 'string' ? parseFloat(price.replace(/[^0-9.]/g, '')) : price;
-  return `From $${Math.round(numPrice)} USD`;
+  return `From $${Math.round(numPrice)}`;
 };
 
 const TourDetail = () => {
@@ -642,7 +642,7 @@ const TourDetail = () => {
                           setSelectedParticipants(value);
                           const pricing = tour.participant_pricing.find(p => p.minParticipants.toString() === value);
                           if (pricing) {
-                            setSelectedPrice(`From $${Math.round(pricing.pricePerPerson)} USD`);
+                            setSelectedPrice(`From $${Math.round(pricing.pricePerPerson)}`);
                           }
                         }}
                       >

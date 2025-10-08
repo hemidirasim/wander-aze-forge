@@ -25,7 +25,7 @@ const heroImage = '/hero-mountain-custom.jpg';
 // Format price helper
 const formatPrice = (price: string | number) => {
   const numPrice = typeof price === 'string' ? parseFloat(price.replace(/[^0-9.]/g, '')) : price;
-  return `From $${Math.round(numPrice)} USD`;
+  return `From $${Math.round(numPrice)}`;
 };
 
 const Index = () => {
