@@ -220,7 +220,9 @@ const TourDetail = () => {
             {/* Left Side - Title and Details */}
             <div className="space-y-6">
               <div className="flex items-center flex-wrap gap-3">
-                <Badge variant="secondary" className="bg-white/90 text-foreground">{tour.difficulty}</Badge>
+                {tour.category?.toLowerCase() !== 'culture' && tour.category?.toLowerCase() !== 'cultural' && (
+                  <Badge variant="secondary" className="bg-white/90 text-foreground">{tour.difficulty}</Badge>
+                )}
                 <Badge variant="secondary" className="bg-white/90 text-foreground">{tour.duration}</Badge>
                 <div className="flex items-center space-x-1">
                   <Star className="w-5 h-5 fill-current text-autumn" />
@@ -338,10 +340,12 @@ const TourDetail = () => {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <h4 className="font-semibold mb-2">Difficulty Level</h4>
-                      <p className="text-muted-foreground whitespace-pre-wrap">{tour.difficulty} - {tour.requirements || 'Suitable for participants with appropriate fitness level'}</p>
-                    </div>
+                    {tour.category?.toLowerCase() !== 'culture' && tour.category?.toLowerCase() !== 'cultural' && (
+                      <div>
+                        <h4 className="font-semibold mb-2">Difficulty Level</h4>
+                        <p className="text-muted-foreground whitespace-pre-wrap">{tour.difficulty} - {tour.requirements || 'Suitable for participants with appropriate fitness level'}</p>
+                      </div>
+                    )}
                     <div>
                       <h4 className="font-semibold mb-2">Best Season</h4>
                       <p className="text-muted-foreground">{tour.best_season || 'May to October (weather dependent)'}</p>
