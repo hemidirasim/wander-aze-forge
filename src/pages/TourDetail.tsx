@@ -212,7 +212,7 @@ const TourDetail = () => {
       <DatabaseNavigation />
       
       {/* Back Button */}
-      <section className="pt-20 px-4">
+      <section className="pt-40 px-4">
         <div className="container mx-auto">
           <Button variant="ghost" asChild className="mb-6">
             <Link to={category ? `/tours/${category}` : '/tours'} className="flex items-center">
