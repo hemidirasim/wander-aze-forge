@@ -41,6 +41,12 @@ interface CategoryData {
   sort_order: number;
 }
 
+// Format price helper
+const formatPrice = (price: string | number) => {
+  const numPrice = typeof price === 'string' ? parseFloat(price.replace(/[^0-9.]/g, '')) : price;
+  return `From $${Math.round(numPrice)} USD`;
+};
+
 const ToursByCategory = () => {
   const { category: categoryId } = useParams<{ category: string }>();
   const [tours, setTours] = useState<TourData[]>([]);
@@ -341,7 +347,7 @@ const ToursByCategory = () => {
                     
                     <CardFooter className="flex items-center justify-between pt-6">
                       <div className="text-2xl font-bold text-primary">
-                        {tour.price}
+                        {formatPrice(tour.price)}
                       </div>
                       <Button variant="adventure" asChild>
                         <Link to={`/tours/${categoryId}/${tour.slug || tour.id}`}>
