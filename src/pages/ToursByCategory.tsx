@@ -347,9 +347,11 @@ const ToursByCategory = () => {
                     
                     <CardFooter className="flex items-center justify-between pt-6">
                       <div>
-                        <div className="text-2xl font-bold text-primary">
-                          <span className="text-sm font-normal">From </span>
-                          ${Math.round(typeof tour.price === 'string' ? parseFloat(tour.price.replace(/[^0-9.]/g, '')) : tour.price)}
+                        <div className="font-bold text-primary">
+                          <span className="text-sm">From </span>
+                          <span className="text-xl">
+                            ${Math.round(typeof tour.price === 'string' ? parseFloat(tour.price.replace(/[^0-9.]/g, '')) : tour.price)}
+                          </span>
                         </div>
                         <div className="text-xs text-muted-foreground mt-1">
                           Price varies by group size

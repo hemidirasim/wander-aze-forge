@@ -622,14 +622,16 @@ const TourDetail = () => {
             <div className="lg:col-span-1">
               <Card className="sticky top-32">
                 <CardHeader>
-                  <CardTitle className="text-3xl text-center">
-                    <div className="text-primary">
+                  <CardTitle className="text-center">
+                    <div className="font-bold text-primary">
                       {selectedPrice ? (
                         selectedPrice
                       ) : (
                         <>
-                          <span className="text-sm font-normal">From </span>
-                          ${Math.round(typeof tour.price === 'string' ? parseFloat(tour.price.replace(/[^0-9.]/g, '')) : tour.price)}
+                          <span className="text-base">From </span>
+                          <span className="text-3xl">
+                            ${Math.round(typeof tour.price === 'string' ? parseFloat(tour.price.replace(/[^0-9.]/g, '')) : tour.price)}
+                          </span>
                         </>
                       )}
                     </div>
@@ -653,7 +655,7 @@ const TourDetail = () => {
                           const pricing = tour.participant_pricing.find(p => p.minParticipants.toString() === value);
                           if (pricing) {
                             setSelectedPrice(
-                              <><span className="text-sm font-normal">From </span>${Math.round(pricing.pricePerPerson)}</>
+                              <><span className="text-base">From </span><span className="text-3xl">${Math.round(pricing.pricePerPerson)}</span></>
                             );
                           }
                         }}
