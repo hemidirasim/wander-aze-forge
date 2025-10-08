@@ -459,37 +459,42 @@ const TourDetail = () => {
 
 
               {/* 3. Accommodation and Food */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-2xl flex items-center gap-2">
-                    <Bed className="w-6 h-6 text-primary" />
-                    Accommodation and Food
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <h4 className="font-semibold mb-2">Accommodation</h4>
-                    <p className="text-muted-foreground whitespace-pre-wrap">
-                      {tour.accommodation_details || (tour.duration.includes('day') && !tour.duration.includes('1 day') 
-                        ? 'Mountain guesthouses, traditional villages, and camping under the stars (weather permitting). All accommodations are clean, comfortable, and provide authentic local experiences.'
-                        : 'Day tour - no overnight accommodation required.'
-                      )}
-                    </p>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold mb-2">Meals</h4>
-                    <p className="text-muted-foreground whitespace-pre-wrap">
-                      {tour.meals_details || 'Traditional Azerbaijani cuisine featuring fresh, local ingredients. Vegetarian and dietary restrictions can be accommodated with advance notice. Includes breakfast, lunch, and dinner for multi-day tours.'}
-                    </p>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold mb-2">Water & Snacks</h4>
-                    <p className="text-muted-foreground whitespace-pre-wrap">
-                      {tour.water_snacks_details || 'Fresh drinking water, energy snacks, and local fruits provided throughout the tour.'}
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
+              {(tour.accommodation_details || tour.meals_details || tour.water_snacks_details) && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-2xl flex items-center gap-2">
+                      <Bed className="w-6 h-6 text-primary" />
+                      Accommodation and Food
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {tour.accommodation_details && (
+                      <div>
+                        <h4 className="font-semibold mb-2">Accommodation</h4>
+                        <p className="text-muted-foreground whitespace-pre-wrap">
+                          {tour.accommodation_details}
+                        </p>
+                      </div>
+                    )}
+                    {tour.meals_details && (
+                      <div>
+                        <h4 className="font-semibold mb-2">Meals</h4>
+                        <p className="text-muted-foreground whitespace-pre-wrap">
+                          {tour.meals_details}
+                        </p>
+                      </div>
+                    )}
+                    {tour.water_snacks_details && (
+                      <div>
+                        <h4 className="font-semibold mb-2">Water & Snacks</h4>
+                        <p className="text-muted-foreground whitespace-pre-wrap">
+                          {tour.water_snacks_details}
+                        </p>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              )}
 
               {/* 4. Clothing / Equipment */}
               <Card>
