@@ -656,8 +656,9 @@ const TourDetail = () => {
                           setIsGroupSelected(true);
                           const pricing = tour.participant_pricing.find(p => p.minParticipants.toString() === value);
                           if (pricing) {
+                            const totalPrice = Math.round(pricing.pricePerPerson * pricing.minParticipants);
                             setSelectedPrice(
-                              <><span className="text-base">Total </span><span className="text-3xl">${Math.round(pricing.pricePerPerson)}</span></>
+                              <><span className="text-base">Total </span><span className="text-3xl">${totalPrice}</span></>
                             );
                           }
                         }}
@@ -668,7 +669,7 @@ const TourDetail = () => {
                         <SelectContent>
                           {tour.participant_pricing.map((pricing, index) => (
                             <SelectItem key={index} value={pricing.minParticipants.toString()}>
-                              {pricing.minParticipants} {pricing.minParticipants === 1 ? 'participant' : 'participants'} - ${Math.round(pricing.pricePerPerson)} per person
+                              {pricing.minParticipants} {pricing.minParticipants === 1 ? 'participant' : 'participants'} - total ${Math.round(pricing.pricePerPerson * pricing.minParticipants)}
                             </SelectItem>
                           ))}
                         </SelectContent>
