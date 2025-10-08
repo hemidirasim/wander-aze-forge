@@ -75,18 +75,18 @@ const Footer = () => {
         <div className="flex flex-col lg:flex-row gap-8 mb-12">
           
           {/* Contact Info - Left */}
-          <div className="lg:w-1/4 space-y-4">
+          <div className="lg:w-1/4 space-y-4 text-center lg:text-left">
             <h4 className="text-lg font-semibold">Contact Us</h4>
             <div className="space-y-3">
-              <div className="flex items-center space-x-3 text-sm text-gray-900">
+              <div className="flex items-center justify-center lg:justify-start space-x-3 text-sm text-gray-900">
                 <Phone className="w-4 h-4 text-primary" />
                 <span>+994 51 400 90 91</span>
               </div>
-              <div className="flex items-center space-x-3 text-sm text-gray-900">
+              <div className="flex items-center justify-center lg:justify-start space-x-3 text-sm text-gray-900">
                 <Mail className="w-4 h-4 text-primary" />
                 <span>info@outtour.az</span>
               </div>
-              <div className="flex items-start space-x-3 text-sm text-gray-900">
+              <div className="flex items-start justify-center lg:justify-start space-x-3 text-sm text-gray-900">
                 <MapPin className="w-4 h-4 text-primary mt-0.5" />
                 <span>Baku, Azerbaijan</span>
               </div>
@@ -95,7 +95,7 @@ const Footer = () => {
             {/* Social Media */}
             <div className="pt-4">
               <h5 className="text-sm font-semibold mb-3">Follow Our Adventures</h5>
-              <div className="flex space-x-3">
+              <div className="flex justify-center lg:justify-start space-x-3">
                 {socialLinks.map((social, index) => (
                   <a
                     key={index}
@@ -160,14 +160,14 @@ const Footer = () => {
           </div>
 
           {/* Company Info - Right */}
-          <div className="lg:w-1/4 space-y-4 text-right">
-            <div className="flex items-center justify-end">
+          <div className="lg:w-1/4 space-y-4 text-center lg:text-right">
+            <div className="flex items-center justify-center lg:justify-end">
               <Logo className="w-28 h-28" />
             </div>
             <p className="text-gray-900 text-sm leading-relaxed">
               Founded in 2014 as Camping Azerbaijan, Outtour Azerbaijan is recognised as the country's first ecotour operator. We specialise in sustainable mountain adventures, cultural immersion and community-led experiences.
             </p>
-            <div className="flex items-center justify-end space-x-2 text-sm text-gray-900">
+            <div className="flex items-center justify-center lg:justify-end space-x-2 text-sm text-gray-900">
               <Heart className="w-4 h-4 text-red-400" />
               <span>Over 700 successful tours</span>
             </div>
