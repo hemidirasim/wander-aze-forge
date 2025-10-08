@@ -284,17 +284,6 @@ const DatabaseTourProgramAccordion: React.FC<DatabaseTourProgramAccordionProps> 
                     </div>
                   )}
 
-                  {category === 'wildlife' && (
-                    <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
-                      <h4 className="font-semibold text-yellow-900 mb-2">Wildlife Information</h4>
-                      <div className="text-sm text-yellow-800">
-                        <p>Best viewing times and wildlife spotting opportunities throughout the day.</p>
-                        <p className="mt-2">
-                          <strong>What to bring:</strong> Binoculars, camera with zoom lens, and comfortable walking shoes.
-                        </p>
-                      </div>
-                    </div>
-                  )}
                 </div>
               </AccordionContent>
             </AccordionItem>
