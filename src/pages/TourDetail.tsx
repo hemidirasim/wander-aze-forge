@@ -95,6 +95,7 @@ const TourDetail = () => {
   const [error, setError] = useState<string | null>(null);
   const [selectedParticipants, setSelectedParticipants] = useState<string>('');
   const [selectedPrice, setSelectedPrice] = useState<React.ReactNode>(null);
+  const [isGroupSelected, setIsGroupSelected] = useState(false);
 
   useEffect(() => {
     const fetchTourDetail = async () => {
@@ -628,7 +629,7 @@ const TourDetail = () => {
                         selectedPrice
                       ) : (
                         <>
-                          <span className="text-base">From </span>
+                          <span className="text-base">{isGroupSelected ? 'Total ' : 'From '}</span>
                           <span className="text-3xl">
                             ${Math.round(typeof tour.price === 'string' ? parseFloat(tour.price.replace(/[^0-9.]/g, '')) : tour.price)}
                           </span>
@@ -652,10 +653,11 @@ const TourDetail = () => {
                         value={selectedParticipants} 
                         onValueChange={(value) => {
                           setSelectedParticipants(value);
+                          setIsGroupSelected(true);
                           const pricing = tour.participant_pricing.find(p => p.minParticipants.toString() === value);
                           if (pricing) {
                             setSelectedPrice(
-                              <><span className="text-base">From </span><span className="text-3xl">${Math.round(pricing.pricePerPerson)}</span></>
+                              <><span className="text-base">Total </span><span className="text-3xl">${Math.round(pricing.pricePerPerson)}</span></>
                             );
                           }
                         }}
@@ -666,7 +668,7 @@ const TourDetail = () => {
                         <SelectContent>
                           {tour.participant_pricing.map((pricing, index) => (
                             <SelectItem key={index} value={pricing.minParticipants.toString()}>
-                              {pricing.minParticipants}+ participants - ${Math.round(pricing.pricePerPerson)} per person
+                              {pricing.minParticipants} {pricing.minParticipants === 1 ? 'participant' : 'participants'} - ${Math.round(pricing.pricePerPerson)} per person
                             </SelectItem>
                           ))}
                         </SelectContent>
