@@ -688,10 +688,13 @@ const TourDetail = () => {
                   </div>
                   
                   <div className="border-t pt-4">
-                    <div className="flex items-center justify-center space-x-2 text-primary">
+                    <a 
+                      href="tel:+994514009091" 
+                      className="flex items-center justify-center space-x-2 text-primary hover:text-primary/80 transition-colors"
+                    >
                       <Phone className="w-5 h-5" />
-                      <span className="font-semibold">{tour.contact_phone || '+994 51 400 90 91'}</span>
-                    </div>
+                      <span className="font-semibold">+994 51 400 90 91</span>
+                    </a>
                     <div className="text-center text-sm text-muted-foreground mt-1">
                       Call for custom arrangements
                     </div>
