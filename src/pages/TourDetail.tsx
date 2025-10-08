@@ -4,10 +4,10 @@ import DatabaseNavigation from '@/components/DatabaseNavigation';
 import Footer from '@/components/Footer';
 import DatabaseTourProgramAccordion from '@/components/DatabaseTourProgramAccordion';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Clock, Users, MapPin, Star, CheckCircle, Calendar, Phone, ArrowLeft, Loader2, Eye, Info, Sparkles, CalendarDays, Bed, Utensils, Shirt, Car, Camera, DollarSign, X } from 'lucide-react';
+import { Clock, Users, MapPin, Star, CheckCircle, Calendar, Phone, ArrowLeft, ArrowRight, Loader2, Eye, Info, Sparkles, CalendarDays, Bed, Utensils, Shirt, Car, Camera, DollarSign, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 // Declare Fancybox for TypeScript
@@ -96,6 +96,7 @@ const TourDetail = () => {
   const [selectedParticipants, setSelectedParticipants] = useState<string>('');
   const [selectedPrice, setSelectedPrice] = useState<string>('');
   const [isGroupSelected, setIsGroupSelected] = useState(false);
+  const [similarTours, setSimilarTours] = useState<TourData[]>([]);
 
   useEffect(() => {
     const fetchTourDetail = async () => {
@@ -143,6 +144,30 @@ const TourDetail = () => {
       fetchTourDetail();
     }
   }, [id, category]);
+
+  // Fetch similar tours
+  useEffect(() => {
+    const fetchSimilarTours = async () => {
+      if (!tour || !category) return;
+      
+      try {
+        const response = await fetch(`/api/tours?category=${category}`);
+        const result = await response.json();
+        
+        if (result.success) {
+          // Filter out current tour and limit to 3
+          const filtered = result.data
+            .filter((t: TourData) => t.id !== tour.id)
+            .slice(0, 3);
+          setSimilarTours(filtered);
+        }
+      } catch (error) {
+        console.error('Error fetching similar tours:', error);
+      }
+    };
+    
+    fetchSimilarTours();
+  }, [tour, category]);
 
   // Initialize Fancybox for gallery images
   useEffect(() => {
@@ -710,6 +735,87 @@ const TourDetail = () => {
           </div>
         </div>
       </section>
+
+      {/* Similar Tours Section */}
+      {similarTours.length > 0 && (
+        <section className="py-16 px-4 bg-muted/20">
+          <div className="container mx-auto">
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="text-3xl font-bold text-foreground">Similar Tours</h2>
+              <Button variant="adventure" asChild>
+                <Link to={`/tours/${category}`} className="flex items-center gap-2">
+                  Explore More
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </Button>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {similarTours.map((similarTour) => (
+                <Card key={similarTour.id} className="group hover:shadow-elevated transition-all duration-300 overflow-hidden">
+                  <div className="relative h-48 overflow-hidden">
+                    <img 
+                      src={similarTour.image_url || 'https://images.unsplash.com/photo-1551632811-561732d1e306?w=600&h=400&fit=crop'} 
+                      alt={similarTour.title}
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                    <div className="absolute top-4 right-4">
+                      <Badge variant="secondary" className="bg-white/90">
+                        {similarTour.difficulty}
+                      </Badge>
+                    </div>
+                  </div>
+                  
+                  <CardHeader>
+                    <CardTitle className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
+                      {similarTour.title}
+                    </CardTitle>
+                    <div 
+                      className="text-muted-foreground text-sm leading-relaxed prose prose-sm max-w-none line-clamp-2"
+                      dangerouslySetInnerHTML={{ __html: similarTour.description }}
+                    />
+                  </CardHeader>
+                  
+                  <CardContent className="space-y-3">
+                    <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                      <Clock className="w-4 h-4" />
+                      <span>{similarTour.duration}</span>
+                    </div>
+                    <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                      <Users className="w-4 h-4" />
+                      <span>Max {similarTour.max_participants} participants</span>
+                    </div>
+                    <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                      <MapPin className="w-4 h-4" />
+                      <span>{similarTour.location || 'Location TBD'}</span>
+                    </div>
+                  </CardContent>
+                  
+                  <CardFooter className="flex items-center justify-between pt-6">
+                    <div>
+                      <div className="font-bold text-primary">
+                        <span className="text-sm">From </span>
+                        <span className="text-xl">
+                          ${Math.round(typeof similarTour.price === 'string' ? parseFloat(similarTour.price.replace(/[^0-9.]/g, '')) : similarTour.price)}
+                        </span>
+                      </div>
+                      <div className="text-xs text-muted-foreground mt-1">
+                        Price varies by group size
+                      </div>
+                    </div>
+                    <Button variant="adventure" asChild>
+                      <Link to={`/tours/${category}/${similarTour.slug || similarTour.id}`}>
+                        View Details
+                      </Link>
+                    </Button>
+                  </CardFooter>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
       
       <Footer />
     </div>
