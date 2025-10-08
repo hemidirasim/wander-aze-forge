@@ -80,6 +80,12 @@ interface ProgramData {
   elevation_gain: string;
 }
 
+// Format price helper
+const formatPrice = (price: string | number) => {
+  const numPrice = typeof price === 'string' ? parseFloat(price.replace(/[^0-9.]/g, '')) : price;
+  return `From $${Math.round(numPrice)} USD`;
+};
+
 const TourDetail = () => {
   const { id, category } = useParams();
   const [tour, setTour] = useState<TourData | null>(null);
@@ -617,7 +623,7 @@ const TourDetail = () => {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="text-center">
-                    <div className="text-4xl font-bold text-primary mb-2">{tour.price}</div>
+                    <div className="text-4xl font-bold text-primary mb-2">{formatPrice(tour.price)}</div>
                     <div className="text-muted-foreground">
                       {category === 'group-tours' ? 'per group' : 'per person'}
                     </div>
@@ -651,7 +657,7 @@ const TourDetail = () => {
               <Card className="sticky top-32">
                 <CardHeader>
                   <CardTitle className="text-3xl text-center">
-                    <span className="text-primary">{tour.price}</span>
+                    <span className="text-primary">{formatPrice(tour.price)}</span>
                     <span className="text-lg text-muted-foreground">
                       {category === 'group-tours' ? ' / group' : ' / person'}
                     </span>
