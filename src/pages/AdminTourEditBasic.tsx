@@ -17,6 +17,8 @@ import {
   Star,
   DollarSign
 } from 'lucide-react';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 interface TourCategory {
   id: number;
@@ -323,13 +325,22 @@ const AdminTourEditBasic: React.FC = () => {
 
                 <div className="space-y-2">
                   <Label htmlFor="description">Description *</Label>
-                  <Textarea
-                    id="description"
+                  <ReactQuill
+                    theme="snow"
                     value={formData.description}
-                    onChange={(e) => handleInputChange('description', e.target.value)}
+                    onChange={(value) => handleInputChange('description', value)}
                     placeholder="Enter tour description"
-                    rows={4}
-                    required
+                    modules={{
+                      toolbar: [
+                        [{ 'header': [1, 2, 3, false] }],
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        [{ 'color': [] }, { 'background': [] }],
+                        ['link'],
+                        ['clean']
+                      ]
+                    }}
+                    style={{ height: '200px', marginBottom: '50px' }}
                   />
                 </div>
 
@@ -472,12 +483,22 @@ const AdminTourEditBasic: React.FC = () => {
               <CardContent className="space-y-6">
                 <div className="space-y-2">
                   <Label htmlFor="overview">Overview</Label>
-                  <Textarea
-                    id="overview"
+                  <ReactQuill
+                    theme="snow"
                     value={formData.overview}
-                    onChange={(e) => handleInputChange('overview', e.target.value)}
+                    onChange={(value) => handleInputChange('overview', value)}
                     placeholder="Enter tour overview"
-                    rows={3}
+                    modules={{
+                      toolbar: [
+                        [{ 'header': [1, 2, 3, false] }],
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        [{ 'color': [] }, { 'background': [] }],
+                        ['link'],
+                        ['clean']
+                      ]
+                    }}
+                    style={{ height: '150px', marginBottom: '50px' }}
                   />
                 </div>
 
