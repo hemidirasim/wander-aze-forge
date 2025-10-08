@@ -6,6 +6,7 @@ import DatabaseTourProgramAccordion from '@/components/DatabaseTourProgramAccord
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Clock, Users, MapPin, Star, CheckCircle, Calendar, Phone, ArrowLeft, Loader2, Eye, Info, Sparkles, CalendarDays, Bed, Utensils, Shirt, Car, Camera, DollarSign, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -92,6 +93,8 @@ const TourDetail = () => {
   const [programs, setPrograms] = useState<ProgramData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedParticipants, setSelectedParticipants] = useState<string>('');
+  const [selectedPrice, setSelectedPrice] = useState<string>('');
 
   useEffect(() => {
     const fetchTourDetail = async () => {
@@ -613,43 +616,6 @@ const TourDetail = () => {
                 </CardContent>
               </Card>
 
-              {/* 7. Tour Price */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-2xl flex items-center gap-2">
-                    <DollarSign className="w-6 h-6 text-primary" />
-                    Tour Price
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="text-center">
-                    <div className="text-4xl font-bold text-primary mb-2">{formatPrice(tour.price)}</div>
-                    <div className="text-muted-foreground">
-                      {category === 'group-tours' ? 'per group' : 'per person'}
-                    </div>
-                  </div>
-                  
-                  {/* Participant-Based Pricing */}
-                  {tour.participant_pricing && tour.participant_pricing.length > 0 && (
-                    <div className="border-t pt-4">
-                      <h4 className="font-semibold mb-3">Group Pricing:</h4>
-                      <div className="space-y-2">
-                        {tour.participant_pricing.map((pricing, index) => (
-                          <div key={index} className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
-                            <span className="text-sm">
-                              {pricing.minParticipants}+ participants
-                            </span>
-                            <span className="font-semibold text-primary">
-                              ${pricing.pricePerPerson} per person
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-
             </div>
 
             {/* Booking Sidebar */}
@@ -657,13 +623,43 @@ const TourDetail = () => {
               <Card className="sticky top-32">
                 <CardHeader>
                   <CardTitle className="text-3xl text-center">
-                    <span className="text-primary">{formatPrice(tour.price)}</span>
+                    <span className="text-primary">
+                      {selectedPrice || formatPrice(tour.price)}
+                    </span>
                     <span className="text-lg text-muted-foreground">
                       {category === 'group-tours' ? ' / group' : ' / person'}
                     </span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
+                  {/* Group Size Selector */}
+                  {tour.participant_pricing && tour.participant_pricing.length > 0 && (
+                    <div className="space-y-2">
+                      <label className="text-sm font-semibold">Select Group Size:</label>
+                      <Select 
+                        value={selectedParticipants} 
+                        onValueChange={(value) => {
+                          setSelectedParticipants(value);
+                          const pricing = tour.participant_pricing.find(p => p.minParticipants.toString() === value);
+                          if (pricing) {
+                            setSelectedPrice(`From $${Math.round(pricing.pricePerPerson)} USD`);
+                          }
+                        }}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Choose number of participants" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {tour.participant_pricing.map((pricing, index) => (
+                            <SelectItem key={index} value={pricing.minParticipants.toString()}>
+                              {pricing.minParticipants}+ participants - ${Math.round(pricing.pricePerPerson)} per person
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  )}
+                  
                   <Button size="lg" variant="adventure" className="w-full" asChild>
                     <Link to={`/book-tour/${tour.id}`}>
                       <Calendar className="w-5 h-5 mr-2" />
