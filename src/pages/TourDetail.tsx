@@ -632,15 +632,17 @@ const TourDetail = () => {
                           `From $${Math.round(typeof tour.price === 'string' ? parseFloat(tour.price.replace(/[^0-9.]/g, '')) : tour.price)}`
                         )}
                       </span>
-                      {!isGroupSelected && (
+                      {!isGroupSelected && category !== 'group-tours' && (
                         <span className="text-xs text-muted-foreground">
-                          {category === 'group-tours' ? '/ group' : '/ per person'}
+                          / per person
                         </span>
                       )}
                     </div>
-                    <div className="text-xs text-muted-foreground mt-2">
-                      Price varies by group size
-                    </div>
+                    {category !== 'group-tours' && (
+                      <div className="text-xs text-muted-foreground mt-2">
+                        Price varies by group size
+                      </div>
+                    )}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
