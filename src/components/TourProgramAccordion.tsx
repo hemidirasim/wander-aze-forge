@@ -109,7 +109,10 @@ const TourProgramAccordion: React.FC<TourProgramAccordionProps> = ({ program, ca
                 <div className="space-y-6">
                   {/* Day Overview */}
                   <div className="bg-muted/30 p-4 rounded-lg">
-                    <p className="text-muted-foreground">{day.overview}</p>
+                    <div 
+                      className="text-muted-foreground prose max-w-none"
+                      dangerouslySetInnerHTML={{ __html: day.overview }}
+                    />
                   </div>
 
                   {/* Activities Timeline */}

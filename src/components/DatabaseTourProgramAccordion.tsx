@@ -101,7 +101,10 @@ const DatabaseTourProgramAccordion: React.FC<DatabaseTourProgramAccordionProps> 
                   {program.description && (
                     <div className="bg-muted/30 p-4 rounded-lg">
                       <h4 className="font-semibold text-foreground mb-2">Day Description</h4>
-                      <p className="text-muted-foreground whitespace-pre-wrap">{program.description}</p>
+                      <div 
+                        className="text-muted-foreground prose max-w-none"
+                        dangerouslySetInnerHTML={{ __html: program.description }}
+                      />
                     </div>
                   )}
 

@@ -19,6 +19,8 @@ import {
   Car,
   Star
 } from 'lucide-react';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 interface TourProgramDay {
   id: string;
@@ -213,12 +215,22 @@ const TourProgramAccordionAdmin: React.FC<TourProgramAccordionAdminProps> = ({
                   {/* Description */}
                   <div className="space-y-2">
                     <Label htmlFor={`description-${program.id}`}>Day Description</Label>
-                    <Textarea
-                      id={`description-${program.id}`}
+                    <ReactQuill
+                      theme="snow"
                       value={program.description}
-                      onChange={(e) => updateDay(program.id, 'description', e.target.value)}
+                      onChange={(value) => updateDay(program.id, 'description', value)}
                       placeholder="Detailed description of the day's activities and experiences..."
-                      rows={4}
+                      modules={{
+                        toolbar: [
+                          [{ 'header': [1, 2, 3, false] }],
+                          ['bold', 'italic', 'underline', 'strike'],
+                          [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                          [{ 'color': [] }, { 'background': [] }],
+                          ['link'],
+                          ['clean']
+                        ]
+                      }}
+                      style={{ height: '150px', marginBottom: '50px' }}
                     />
                   </div>
 

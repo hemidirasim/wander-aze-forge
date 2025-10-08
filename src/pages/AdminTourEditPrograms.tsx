@@ -14,6 +14,8 @@ import {
   Trash2,
   GripVertical
 } from 'lucide-react';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 interface TourProgram {
   day: number;
@@ -350,12 +352,22 @@ const AdminTourEditPrograms: React.FC = () => {
 
                     <div className="space-y-2">
                       <Label htmlFor={`description-${index}`}>Day Description</Label>
-                      <Textarea
-                        id={`description-${index}`}
+                      <ReactQuill
+                        theme="snow"
                         value={program.description}
-                        onChange={(e) => updateProgram(index, 'description', e.target.value)}
+                        onChange={(value) => updateProgram(index, 'description', value)}
                         placeholder="Describe the day's activities and highlights"
-                        rows={3}
+                        modules={{
+                          toolbar: [
+                            [{ 'header': [1, 2, 3, false] }],
+                            ['bold', 'italic', 'underline', 'strike'],
+                            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                            [{ 'color': [] }, { 'background': [] }],
+                            ['link'],
+                            ['clean']
+                          ]
+                        }}
+                        style={{ height: '150px', marginBottom: '50px' }}
                       />
                     </div>
 
