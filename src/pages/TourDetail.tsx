@@ -629,12 +629,15 @@ const TourDetail = () => {
                         {selectedPrice ? (
                           selectedPrice
                         ) : (
-                          `From $${Math.round(typeof tour.price === 'string' ? parseFloat(tour.price.replace(/[^0-9.]/g, '')) : tour.price)}`
+                          <>
+                            {category !== 'group-tours' && 'From '}
+                            ${Math.round(typeof tour.price === 'string' ? parseFloat(tour.price.replace(/[^0-9.]/g, '')) : tour.price)}
+                          </>
                         )}
                       </span>
-                      {!isGroupSelected && category !== 'group-tours' && (
+                      {!isGroupSelected && (
                         <span className="text-xs text-muted-foreground">
-                          / per person
+                          {category === 'group-tours' ? '/ per person' : '/ per person'}
                         </span>
                       )}
                     </div>
