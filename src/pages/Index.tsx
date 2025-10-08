@@ -305,7 +305,7 @@ const Index = () => {
           ) : featuredTours.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {featuredTours.map((tour) => (
-                <Card key={tour.id} className="group hover:shadow-elevated transition-all duration-300 overflow-hidden border-0 bg-card/80 backdrop-blur-sm hover:scale-105 cursor-pointer" onClick={() => navigate(`/tours/${tour.category}/${tour.id}`)}>
+                <Card key={tour.id} className="group hover:shadow-elevated transition-all duration-300 overflow-hidden border-0 bg-card/80 backdrop-blur-sm hover:scale-105 cursor-pointer" onClick={() => navigate(`/tours/${tour.category}/${tour.slug || tour.id}`)}>
                   <div className="relative h-48 overflow-hidden">
                     <img 
                       src={tour.image_url || 'https://images.unsplash.com/photo-1551632811-561732d1e306?w=600&h=400&fit=crop'} 
@@ -338,7 +338,7 @@ const Index = () => {
                     <div className="flex items-center justify-between">
                       <span className="text-2xl font-bold text-primary">{tour.price}</span>
                       <Button variant="adventure" size="sm" asChild>
-                        <Link to={`/tours/${tour.category}/${tour.id}`} className="flex items-center gap-2">
+                        <Link to={`/tours/${tour.category}/${tour.slug || tour.id}`} className="flex items-center gap-2">
                           Learn More
                           <ArrowRight className="w-4 h-4" />
                         </Link>

@@ -140,7 +140,7 @@ const Tours = () => {
                     <div className="flex items-center justify-between">
                       <span className="text-2xl font-bold text-primary">{tour.price}</span>
                       <Button variant="adventure" size="sm" asChild>
-                        <Link to={`/tours/${tour.category}/${tour.id}`} className="flex items-center gap-2">
+                        <Link to={`/tours/${tour.category}/${tour.slug || tour.id}`} className="flex items-center gap-2">
                           Learn More
                           <ArrowRight className="w-4 h-4" />
                         </Link>
