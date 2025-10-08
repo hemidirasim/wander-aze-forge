@@ -98,7 +98,7 @@ const ProjectDetail = () => {
       <DatabaseNavigation />
       
       {/* Back Button */}
-      <section className="pt-20 px-4">
+      <section className="pt-40 px-4">
         <div className="container mx-auto max-w-6xl">
           <Button variant="ghost" asChild className="mb-6">
             <Link to="/projects" className="flex items-center">
