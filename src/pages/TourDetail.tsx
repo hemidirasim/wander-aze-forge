@@ -624,18 +624,18 @@ const TourDetail = () => {
               <Card className="sticky top-32">
                 <CardHeader>
                   <CardTitle className="text-center">
-                    <div className="font-bold text-primary" style={{ fontSize: '1.4rem' }}>
-                      {selectedPrice ? (
-                        selectedPrice
-                      ) : (
-                        <>
-                          From ${Math.round(typeof tour.price === 'string' ? parseFloat(tour.price.replace(/[^0-9.]/g, '')) : tour.price)}
-                          {!isGroupSelected && (
-                            <span className="text-sm font-normal text-muted-foreground">
-                              {category === 'group-tours' ? ' / group' : ' / per person'}
-                            </span>
-                          )}
-                        </>
+                    <div className="flex items-center justify-center gap-2">
+                      <span className="font-bold text-primary" style={{ fontSize: '1.4rem' }}>
+                        {selectedPrice ? (
+                          selectedPrice
+                        ) : (
+                          `From $${Math.round(typeof tour.price === 'string' ? parseFloat(tour.price.replace(/[^0-9.]/g, '')) : tour.price)}`
+                        )}
+                      </span>
+                      {!isGroupSelected && (
+                        <span className="text-xs text-muted-foreground">
+                          {category === 'group-tours' ? '/ group' : '/ per person'}
+                        </span>
                       )}
                     </div>
                     <div className="text-xs text-muted-foreground mt-2">
