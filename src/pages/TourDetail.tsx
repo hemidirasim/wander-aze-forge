@@ -94,7 +94,7 @@ const TourDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedParticipants, setSelectedParticipants] = useState<string>('');
-  const [selectedPrice, setSelectedPrice] = useState<React.ReactNode>(null);
+  const [selectedPrice, setSelectedPrice] = useState<string>('');
   const [isGroupSelected, setIsGroupSelected] = useState(false);
 
   useEffect(() => {
@@ -624,23 +624,16 @@ const TourDetail = () => {
               <Card className="sticky top-32">
                 <CardHeader>
                   <CardTitle className="text-center">
-                    <div className="font-bold text-primary">
+                    <div className="font-bold text-primary" style={{ fontSize: '1.4rem' }}>
                       {selectedPrice ? (
                         selectedPrice
                       ) : (
                         <>
-                          <span className="text-base">{isGroupSelected ? 'Total ' : 'From '}</span>
-                          <span className="text-3xl">
-                            ${Math.round(typeof tour.price === 'string' ? parseFloat(tour.price.replace(/[^0-9.]/g, '')) : tour.price)}
-                          </span>
+                          From ${Math.round(typeof tour.price === 'string' ? parseFloat(tour.price.replace(/[^0-9.]/g, '')) : tour.price)}
+                          {!isGroupSelected && (category === 'group-tours' ? '/group' : '/per person')}
                         </>
                       )}
                     </div>
-                    {!isGroupSelected && (
-                      <div className="text-lg text-muted-foreground mt-1">
-                        {category === 'group-tours' ? ' / group' : ' / per person'}
-                      </div>
-                    )}
                     <div className="text-xs text-muted-foreground mt-2">
                       Price varies by group size
                     </div>
@@ -660,7 +653,7 @@ const TourDetail = () => {
                           if (pricing) {
                             const totalPrice = Math.round(pricing.pricePerPerson);
                             setSelectedPrice(
-                              <><span className="text-base">Total </span><span className="text-3xl">${totalPrice}</span></>
+                              `Total $${totalPrice}`
                             );
                           }
                         }}
