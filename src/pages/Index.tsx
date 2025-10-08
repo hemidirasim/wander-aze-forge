@@ -223,10 +223,10 @@ const Index = () => {
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" variant="hero-outline" asChild className="text-base px-6 py-2.5 sm:px-8 sm:py-3">
+                <Button variant="hero-outline" asChild className="text-sm px-5 py-2 sm:text-base sm:px-6 sm:py-2.5">
                   <Link to={heroData?.button1_link || '/tours'}>{heroData?.button1_text || 'Explore Tours'}</Link>
                 </Button>
-                <Button size="lg" variant="hero-outline" asChild className="text-base px-6 py-2.5 sm:px-8 sm:py-3">
+                <Button variant="hero-outline" asChild className="text-sm px-5 py-2 sm:text-base sm:px-6 sm:py-2.5">
                   <Link to={heroData?.button2_link || '/about'}>{heroData?.button2_text || 'Our Story'}</Link>
                 </Button>
               </div>
