@@ -52,7 +52,7 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
   try {
     let query = `
       SELECT 
-        id, title, description, price, duration, difficulty, rating, 
+        id, title, slug, description, price, duration, difficulty, rating, 
         reviews_count, group_size, location, image_url, category,
         highlights, includes, excludes, is_active, featured,
         tour_programs, overview, best_season, meeting_point, languages,
@@ -69,7 +69,7 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
     if (category && typeof category === 'string') {
       query = `
         SELECT 
-          id, title, description, price, duration, difficulty, rating, 
+          id, title, slug, description, price, duration, difficulty, rating, 
           reviews_count, group_size, location, image_url, category,
           highlights, includes, excludes, is_active, featured,
           tour_programs, overview, best_season, meeting_point, languages,

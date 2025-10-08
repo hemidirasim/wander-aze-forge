@@ -12,6 +12,7 @@ import { Clock, Users, MapPin, Star, ArrowLeft, Loader2 } from 'lucide-react';
 interface TourData {
   id: number;
   title: string;
+  slug?: string;
   description: string;
   price: string;
   duration: string;
@@ -340,7 +341,7 @@ const ToursByCategory = () => {
                         {tour.price}
                       </div>
                       <Button variant="adventure" asChild>
-                        <Link to={`/tours/${categoryId}/${tour.id}`}>
+                        <Link to={`/tours/${categoryId}/${tour.slug || tour.id}`}>
                           View Details
                         </Link>
                       </Button>

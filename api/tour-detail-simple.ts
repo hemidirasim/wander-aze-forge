@@ -6,12 +6,13 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
+    const slug = searchParams.get('slug');
     const category = searchParams.get('category');
 
-    if (!id) {
+    if (!id && !slug) {
       return new Response(JSON.stringify({ 
         success: false, 
-        error: 'Tour ID is required' 
+        error: 'Tour ID or slug is required' 
       }), { 
         status: 400,
         headers: { 'Content-Type': 'application/json' }
@@ -38,10 +39,10 @@ export async function GET(request: Request) {
     // Test connection
     await pool.query('SELECT 1');
 
-    // Get tour details - simplified query
+    // Get tour details - simplified query (support both ID and slug)
     const tourQuery = `
       SELECT 
-        id, title, description, price, duration, difficulty, rating, 
+        id, title, slug, description, price, duration, difficulty, rating, 
         reviews_count, group_size, location, image_url, category,
         highlights, includes, excludes, is_active, featured,
         tour_programs, overview, best_season, meeting_point, languages,
@@ -52,10 +53,10 @@ export async function GET(request: Request) {
         requirements, special_fields, participant_pricing, max_participants,
         total_hiking_distance, total_elevation_gain, total_elevation_loss
       FROM tours 
-      WHERE id = $1
+      WHERE ${slug ? 'slug = $1' : 'id = $1'}
     `;
     
-    const tourResult = await pool.query(tourQuery, [id]);
+    const tourResult = await pool.query(tourQuery, [slug || id]);
     
     if (tourResult.rows.length === 0) {
       return new Response(JSON.stringify({ 

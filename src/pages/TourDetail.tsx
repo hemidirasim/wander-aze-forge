@@ -91,7 +91,10 @@ const TourDetail = () => {
     const fetchTourDetail = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`/api/tour-detail-simple?id=${id}&category=${category}`);
+        // Check if id is numeric (ID) or string (slug)
+        const isNumericId = !isNaN(Number(id));
+        const param = isNumericId ? `id=${id}` : `slug=${id}`;
+        const response = await fetch(`/api/tour-detail-simple?${param}&category=${category}`);
         const result = await response.json();
 
         if (result.success) {

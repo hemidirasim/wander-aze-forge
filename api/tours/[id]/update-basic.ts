@@ -54,8 +54,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     // Extract basic tour data
+    const title = req.body.title?.trim() || '';
+    const slug = title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+    
     const tourData = {
-      title: req.body.title?.trim() || '',
+      title,
+      slug,
       description: req.body.description?.trim() || '',
       category: req.body.category?.trim() || '',
       duration: req.body.duration?.trim() || '',
@@ -86,35 +93,37 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const query = `
       UPDATE tours SET
         title = $1,
-        description = $2,
-        category = $3,
-        duration = $4,
-        difficulty = $5,
-        price = $6,
-        max_participants = $7,
-        min_participants = $8,
-        rating = $9,
-        reviews_count = $10,
-        group_size = $11,
-        location = $12,
-        total_hiking_distance = $13,
-        total_elevation_gain = $14,
-        total_elevation_loss = $15,
-        overview = $16,
-        best_season = $17,
-        meeting_point = $18,
-        languages = $19,
-        start_date = $20,
-        end_date = $21,
-        is_active = $22,
-        featured = $23,
+        slug = $2,
+        description = $3,
+        category = $4,
+        duration = $5,
+        difficulty = $6,
+        price = $7,
+        max_participants = $8,
+        min_participants = $9,
+        rating = $10,
+        reviews_count = $11,
+        group_size = $12,
+        location = $13,
+        total_hiking_distance = $14,
+        total_elevation_gain = $15,
+        total_elevation_loss = $16,
+        overview = $17,
+        best_season = $18,
+        meeting_point = $19,
+        languages = $20,
+        start_date = $21,
+        end_date = $22,
+        is_active = $23,
+        featured = $24,
         updated_at = NOW()
-      WHERE id = $24
+      WHERE id = $25
       RETURNING *
     `;
 
     const values = [
       tourData.title,
+      tourData.slug,
       tourData.description,
       tourData.category,
       tourData.duration,
