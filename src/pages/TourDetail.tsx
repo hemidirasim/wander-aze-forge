@@ -740,14 +740,8 @@ const TourDetail = () => {
       {similarTours.length > 0 && (
         <section className="py-16 px-4 bg-muted/20">
           <div className="container mx-auto">
-            <div className="flex items-center justify-between mb-8">
+            <div className="text-center mb-8">
               <h2 className="text-3xl font-bold text-foreground">Similar Tours</h2>
-              <Button variant="adventure" asChild>
-                <Link to={`/tours/${category}`} className="flex items-center gap-2">
-                  Explore More
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-              </Button>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -812,6 +806,16 @@ const TourDetail = () => {
                   </CardFooter>
                 </Card>
               ))}
+            </div>
+            
+            {/* Explore More Button */}
+            <div className="flex justify-center mt-12">
+              <Button variant="adventure" asChild>
+                <Link to={`/tours/${category}`} className="inline-flex items-center gap-2">
+                  Explore More
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </Button>
             </div>
           </div>
         </section>
