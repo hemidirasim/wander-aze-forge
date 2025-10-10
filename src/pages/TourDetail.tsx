@@ -810,7 +810,7 @@ const TourDetail = () => {
             
             {/* Explore More Button */}
             <div className="flex justify-center mt-12">
-              <Button variant="adventure" asChild>
+              <Button variant="ghost" asChild className="text-foreground hover:bg-primary hover:text-white transition-all duration-300">
                 <Link to={`/tours/${category}`} className="inline-flex items-center gap-2">
                   Explore More
                   <ArrowRight className="w-4 h-4" />
