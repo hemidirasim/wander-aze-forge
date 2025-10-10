@@ -359,13 +359,24 @@ const Index = () => {
                     <div className="flex items-center justify-between">
                       <div>
                         <div className="font-bold text-primary">
-                          <span className="text-sm">From </span>
-                          <span className="text-xl">
-                            ${Math.round(typeof tour.price === 'string' ? parseFloat(tour.price.replace(/[^0-9.]/g, '')) : tour.price)}
-                          </span>
+                          {tour.category === 'group-tours' ? (
+                            <>
+                              <span className="text-xl">
+                                ${Math.round(typeof tour.price === 'string' ? parseFloat(tour.price.replace(/[^0-9.]/g, '')) : tour.price)}
+                              </span>
+                              <span className="text-sm"> / per person</span>
+                            </>
+                          ) : (
+                            <>
+                              <span className="text-sm">From </span>
+                              <span className="text-xl">
+                                ${Math.round(typeof tour.price === 'string' ? parseFloat(tour.price.replace(/[^0-9.]/g, '')) : tour.price)}
+                              </span>
+                            </>
+                          )}
                         </div>
                         <div className="text-xs text-muted-foreground mt-1">
-                          Price varies by group size
+                          {tour.category === 'group-tours' ? 'Fixed group price' : 'Price varies by group size'}
                         </div>
                       </div>
                       <Button variant="adventure" size="sm" asChild>

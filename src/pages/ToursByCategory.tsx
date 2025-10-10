@@ -349,13 +349,24 @@ const ToursByCategory = () => {
                     <CardFooter className="flex items-center justify-between pt-6">
                       <div>
                         <div className="font-bold text-primary">
-                          <span className="text-sm">From </span>
-                          <span className="text-xl">
-                            ${Math.round(typeof tour.price === 'string' ? parseFloat(tour.price.replace(/[^0-9.]/g, '')) : tour.price)}
-                          </span>
+                          {categoryId === 'group-tours' ? (
+                            <>
+                              <span className="text-xl">
+                                ${Math.round(typeof tour.price === 'string' ? parseFloat(tour.price.replace(/[^0-9.]/g, '')) : tour.price)}
+                              </span>
+                              <span className="text-sm"> / per person</span>
+                            </>
+                          ) : (
+                            <>
+                              <span className="text-sm">From </span>
+                              <span className="text-xl">
+                                ${Math.round(typeof tour.price === 'string' ? parseFloat(tour.price.replace(/[^0-9.]/g, '')) : tour.price)}
+                              </span>
+                            </>
+                          )}
                         </div>
                         <div className="text-xs text-muted-foreground mt-1">
-                          Price varies by group size
+                          {categoryId === 'group-tours' ? 'Fixed group price' : 'Price varies by group size'}
                         </div>
                       </div>
                       <Button variant="adventure" asChild>
