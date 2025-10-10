@@ -147,13 +147,13 @@ const Tours = () => {
                     <div className="flex items-center justify-between">
                       <div>
                         <div className="font-bold text-primary">
-                          <span className="text-sm">From </span>
                           <span className="text-xl">
                             ${Math.round(typeof tour.price === 'string' ? parseFloat(tour.price.replace(/[^0-9.]/g, '')) : tour.price)}
                           </span>
+                          <span className="text-sm"> / per person</span>
                         </div>
                         <div className="text-xs text-muted-foreground mt-1">
-                          Price varies by group size
+                          Fixed group price
                         </div>
                       </div>
                       <Button variant="adventure" size="sm" asChild>
