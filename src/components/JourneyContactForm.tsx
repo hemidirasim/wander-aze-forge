@@ -9,6 +9,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { useToast } from '@/components/ui/use-toast';
 import { useTourCategories, TourCategory, Tour } from '@/hooks/useTourCategories';
 import { Send, MapPin, Calendar, Users, Search } from 'lucide-react';
+import DatabaseReviews from '@/components/DatabaseReviews';
 
 const formSchema = z.object({
   firstName: z.string().min(2, 'First name must be at least 2 characters'),
@@ -452,19 +453,20 @@ const JourneyContactForm = () => {
   };
 
   return (
-    <section className="py-24 px-4 bg-gray-100">
-      <div className="container mx-auto">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
-              Plan Your Journey With Us
-            </h2>
-            <p className="text-xl text-gray-900 max-w-3xl mx-auto leading-relaxed">
-              Ready to explore Azerbaijan? Tell us your travel dreams and we'll craft the perfect adventure for you
-            </p>
-          </div>
+    <>
+      <section className="py-24 px-4 bg-gray-100">
+        <div className="container mx-auto">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
+                Plan Your Journey With Us
+              </h2>
+              <p className="text-xl text-gray-900 max-w-3xl mx-auto leading-relaxed">
+                Ready to explore Azerbaijan? Tell us your travel dreams and we'll craft the perfect adventure for you
+              </p>
+            </div>
 
-          <div className="rounded-2xl p-8 md:p-12 border border-gray-200 shadow-lg" style={{ background: 'rgb(215 114 61)' }}>
+            <div className="rounded-2xl p-8 md:p-12 border border-gray-200 shadow-lg" style={{ background: 'rgb(215 114 61)' }}>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6" autoComplete="off">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -723,8 +725,11 @@ const JourneyContactForm = () => {
                       <FormControl>
                         <input 
                           type="checkbox" 
-                          {...field}
                           checked={field.value}
+                          onChange={field.onChange}
+                          onBlur={field.onBlur}
+                          name={field.name}
+                          ref={field.ref}
                           className="rounded"
                         />
                       </FormControl>
@@ -744,8 +749,11 @@ const JourneyContactForm = () => {
                       <FormControl>
                         <input 
                           type="checkbox" 
-                          {...field}
                           checked={field.value}
+                          onChange={field.onChange}
+                          onBlur={field.onBlur}
+                          name={field.name}
+                          ref={field.ref}
                           className="rounded mt-1"
                         />
                       </FormControl>
@@ -785,6 +793,10 @@ const JourneyContactForm = () => {
         </div>
       </div>
     </section>
+
+    {/* Reviews Section */}
+    <DatabaseReviews />
+    </>
   );
 };
 
