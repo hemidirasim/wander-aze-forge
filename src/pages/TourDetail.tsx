@@ -806,7 +806,7 @@ const TourDetail = () => {
                         )}
                       </div>
                       <div className="text-xs text-muted-foreground mt-1">
-                        {category === 'group-tours' ? 'Fixed group price' : 'Price varies by group size'}
+                        {category === 'group-tours' ? 'Fixed price per person' : 'Price varies by group size'}
                       </div>
                     </div>
                     <Button variant="adventure" asChild>

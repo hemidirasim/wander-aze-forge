@@ -376,7 +376,7 @@ const Index = () => {
                           )}
                         </div>
                         <div className="text-xs text-muted-foreground mt-1">
-                          {tour.category === 'group-tours' ? 'Fixed group price' : 'Price varies by group size'}
+                          {tour.category === 'group-tours' ? 'Fixed price per person' : 'Price varies by group size'}
                         </div>
                       </div>
                       <Button variant="adventure" size="sm" asChild>

@@ -366,7 +366,7 @@ const ToursByCategory = () => {
                           )}
                         </div>
                         <div className="text-xs text-muted-foreground mt-1">
-                          {categoryId === 'group-tours' ? 'Fixed group price' : 'Price varies by group size'}
+                          {categoryId === 'group-tours' ? 'Fixed price per person' : 'Price varies by group size'}
                         </div>
                       </div>
                       <Button variant="adventure" asChild>
