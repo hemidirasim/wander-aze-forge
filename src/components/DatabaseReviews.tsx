@@ -108,6 +108,13 @@ const DatabaseReviews = () => {
 
   // Always show the section, even if no reviews
 
+  // Calculate average rating
+  const averageRating = reviews && reviews.length > 0 
+    ? (reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length).toFixed(1)
+    : '5.0';
+  
+  const reviewCount = reviews?.length || 0;
+
   return (
     <section className="py-24 px-4 bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
       <div className="container mx-auto">
@@ -123,6 +130,17 @@ const DatabaseReviews = () => {
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
             Real stories from real adventurers who discovered Azerbaijan's hidden gems with us
           </p>
+          
+          {/* Rating Summary */}
+          <div className="flex items-center justify-center space-x-4 text-muted-foreground mt-8">
+            <div className="flex space-x-1">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} className="w-5 h-5 fill-current text-autumn" />
+              ))}
+            </div>
+            <span className="text-2xl font-bold text-foreground">{averageRating}/5</span>
+            <span>from {reviewCount}+ reviews</span>
+          </div>
         </div>
 
         {reviews && reviews.length > 0 ? (
