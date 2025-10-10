@@ -740,7 +740,7 @@ const TourDetail = () => {
       {similarTours.length > 0 && (
         <section className="py-16 px-4 bg-muted/20">
           <div className="container mx-auto">
-            <div className="text-center mb-8">
+            <div className="mb-8">
               <h2 className="text-3xl font-bold text-foreground">Similar Tours</h2>
             </div>
             
