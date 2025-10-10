@@ -19,6 +19,20 @@ declare global {
   }
 }
 
+interface Review {
+  id: number;
+  name: string;
+  rating: number;
+  review_text: string;
+  source: string;
+  source_logo?: string;
+  source_url?: string;
+  image_url?: string;
+  is_featured: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
 // Using public folder image
 const heroImage = '/hero-mountain-custom.jpg';
 
@@ -39,7 +53,7 @@ const Index = () => {
   const navigate = useNavigate();
   
   // Fetch reviews data
-  const { data: reviews, loading: reviewsLoading } = useApi('/reviews?featured=true');
+  const { data: reviews, loading: reviewsLoading } = useApi<Review[]>('/reviews?featured=true');
 
   useEffect(() => {
     fetchFeaturedTours();
@@ -388,6 +402,24 @@ const Index = () => {
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
               Real stories from real adventurers who discovered Azerbaijan's hidden gems with us
             </p>
+            
+            {/* Rating Summary */}
+            {!reviewsLoading && (
+              <div className="flex items-center justify-center space-x-4 text-muted-foreground mt-8">
+                <div className="flex space-x-1">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-5 h-5 fill-current text-autumn" />
+                  ))}
+                </div>
+                <span className="text-2xl font-bold text-foreground">
+                  {reviews && reviews.length > 0 
+                    ? (reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length).toFixed(1)
+                    : '5.0'
+                  }/5
+                </span>
+                <span>from {reviews?.length || 0}+ reviews</span>
+              </div>
+            )}
           </div>
 
           {reviewsLoading ? (
