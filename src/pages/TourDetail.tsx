@@ -99,6 +99,11 @@ const TourDetail = () => {
   const [similarTours, setSimilarTours] = useState<TourData[]>([]);
 
   useEffect(() => {
+    // Reset pricing state when tour changes
+    setSelectedParticipants('');
+    setSelectedPrice('');
+    setIsGroupSelected(false);
+    
     const fetchTourDetail = async () => {
       try {
         setLoading(true);
