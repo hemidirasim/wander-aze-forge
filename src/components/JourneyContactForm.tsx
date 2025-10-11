@@ -9,7 +9,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { useToast } from '@/components/ui/use-toast';
 import { useTourCategories, TourCategory, Tour } from '@/hooks/useTourCategories';
 import { Send, MapPin, Calendar, Users, Search } from 'lucide-react';
-import DatabaseReviews from '@/components/DatabaseReviews';
 
 const formSchema = z.object({
   firstName: z.string().min(2, 'First name must be at least 2 characters'),
@@ -749,11 +748,8 @@ const JourneyContactForm = () => {
                       <FormControl>
                         <input 
                           type="checkbox" 
+                          {...field}
                           checked={field.value}
-                          onChange={field.onChange}
-                          onBlur={field.onBlur}
-                          name={field.name}
-                          ref={field.ref}
                           className="rounded mt-1"
                         />
                       </FormControl>
@@ -793,9 +789,6 @@ const JourneyContactForm = () => {
         </div>
       </div>
     </section>
-
-    {/* Reviews Section */}
-    <DatabaseReviews />
     </>
   );
 };
