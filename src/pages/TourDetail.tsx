@@ -724,6 +724,7 @@ const TourDetail = () => {
                         groupSize: selectedParticipants || '2',
                         category: tour.category
                       };
+                      console.log('Saving tour data to localStorage:', tourData);
                       localStorage.setItem('selectedTourData', JSON.stringify(tourData));
                     }}
                     asChild
