@@ -90,15 +90,17 @@ const BookTour = () => {
       
       console.log('Tour API response:', data);
       console.log('Tour data structure:', data.data);
-      console.log('Tour title:', data.data?.title);
-      console.log('Tour price:', data.data?.price);
+      console.log('Tour object:', data.data?.tour);
+      console.log('Tour title:', data.data?.tour?.title);
+      console.log('Tour price:', data.data?.tour?.price);
       
       if (data.success) {
-        console.log('Tour data loaded:', data.data);
-        setTour(data.data);
+        const tourData = data.data?.tour;
+        console.log('Tour data loaded:', tourData);
+        setTour(tourData);
         // Pre-fill form with tour data
-        const tourTitle = data.data?.title || 'Tour Name Not Available';
-        const tourPrice = data.data?.price || 0;
+        const tourTitle = tourData?.title || 'Tour Name Not Available';
+        const tourPrice = tourData?.price || 0;
         console.log('Pre-filling form with:', {
           tourName: tourTitle,
           tourPrice: `$${tourPrice}`,
