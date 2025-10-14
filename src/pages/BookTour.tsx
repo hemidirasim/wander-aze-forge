@@ -74,6 +74,25 @@ const BookTour = () => {
       return;
     }
 
+    // Check if tour data is available in localStorage (from TourDetail page)
+    const savedTourData = localStorage.getItem('selectedTourData');
+    if (savedTourData) {
+      try {
+        const tourData = JSON.parse(savedTourData);
+        console.log('Using saved tour data:', tourData);
+        setFormData(prev => ({
+          ...prev,
+          tourName: tourData.title,
+          tourPrice: `$${tourData.price}`,
+          groupSize: tourData.groupSize
+        }));
+        // Clear the saved data after using it
+        localStorage.removeItem('selectedTourData');
+      } catch (error) {
+        console.error('Error parsing saved tour data:', error);
+      }
+    }
+
     fetchTourDetails();
   }, [id, navigate, toast, token]);
 

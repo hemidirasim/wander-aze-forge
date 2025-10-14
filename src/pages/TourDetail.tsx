@@ -711,7 +711,23 @@ const TourDetail = () => {
                     </div>
                   )}
                   
-                  <Button size="lg" variant="adventure" className="w-full" asChild>
+                  <Button 
+                    size="lg" 
+                    variant="adventure" 
+                    className="w-full"
+                    onClick={() => {
+                      // Save selected tour data to localStorage
+                      const tourData = {
+                        id: tour.id,
+                        title: tour.title,
+                        price: selectedPrice || tour.price,
+                        groupSize: selectedParticipants || '2',
+                        category: tour.category
+                      };
+                      localStorage.setItem('selectedTourData', JSON.stringify(tourData));
+                    }}
+                    asChild
+                  >
                     <Link to={`/book-tour/${tour.id}`}>
                       <Calendar className="w-5 h-5 mr-2" />
                       Book This Tour
