@@ -89,9 +89,10 @@ const BookTour = () => {
         tourPrice: price ? `$${price}` : '',
         groupSize: groupSize || '2'
       }));
+    } else {
+      // Only fetch from API if no URL parameters
+      fetchTourDetails();
     }
-
-    fetchTourDetails();
   }, [id, navigate, toast, token]);
 
   // Debug: Log formData changes
