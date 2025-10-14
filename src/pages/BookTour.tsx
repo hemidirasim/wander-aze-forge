@@ -89,20 +89,25 @@ const BookTour = () => {
       const data = await response.json();
       
       console.log('Tour API response:', data);
+      console.log('Tour data structure:', data.data);
+      console.log('Tour title:', data.data?.title);
+      console.log('Tour price:', data.data?.price);
       
       if (data.success) {
         console.log('Tour data loaded:', data.data);
         setTour(data.data);
         // Pre-fill form with tour data
+        const tourTitle = data.data?.title || 'Tour Name Not Available';
+        const tourPrice = data.data?.price || 0;
         console.log('Pre-filling form with:', {
-          tourName: data.data.title,
-          tourPrice: `$${data.data.price}`,
+          tourName: tourTitle,
+          tourPrice: `$${tourPrice}`,
           groupSize: '2'
         });
         setFormData(prev => ({
           ...prev,
-          tourName: data.data.title,
-          tourPrice: `$${data.data.price}`,
+          tourName: tourTitle,
+          tourPrice: `$${tourPrice}`,
           groupSize: '2' // Default group size
         }));
       } else {
