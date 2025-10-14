@@ -79,6 +79,7 @@ const BookTour = () => {
         tourPrice: price ? `$${price}` : '',
         groupSize: groupSize || '2'
       }));
+      setLoading(false); // Stop loading when using URL parameters
     } else {
       // Only fetch from API if no URL parameters
       fetchTourDetails();
