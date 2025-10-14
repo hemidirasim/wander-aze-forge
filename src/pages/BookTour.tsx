@@ -77,6 +77,11 @@ const BookTour = () => {
     fetchTourDetails();
   }, [id, navigate, toast, token]);
 
+  // Debug: Log formData changes
+  useEffect(() => {
+    console.log('Form data updated:', formData);
+  }, [formData]);
+
   const fetchTourDetails = async () => {
     try {
       console.log('Fetching tour details for ID:', id);
@@ -89,6 +94,11 @@ const BookTour = () => {
         console.log('Tour data loaded:', data.data);
         setTour(data.data);
         // Pre-fill form with tour data
+        console.log('Pre-filling form with:', {
+          tourName: data.data.title,
+          tourPrice: `$${data.data.price}`,
+          groupSize: '2'
+        });
         setFormData(prev => ({
           ...prev,
           tourName: data.data.title,
