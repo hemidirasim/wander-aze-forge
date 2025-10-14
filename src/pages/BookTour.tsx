@@ -65,16 +65,6 @@ const BookTour = () => {
   const token = localStorage.getItem('authToken');
 
   useEffect(() => {
-    if (!token) {
-      toast({
-        title: "Authentication Required",
-        description: "Please log in to book a tour.",
-        variant: "destructive"
-      });
-      navigate('/login');
-      return;
-    }
-
     // Check if tour data is available in URL parameters (from TourDetail page)
     const title = searchParams.get('title');
     const price = searchParams.get('price');
@@ -93,7 +83,7 @@ const BookTour = () => {
       // Only fetch from API if no URL parameters
       fetchTourDetails();
     }
-  }, [id, navigate, toast, token]);
+  }, [id, navigate, toast, token, searchParams]);
 
   // Debug: Log formData changes
   useEffect(() => {
