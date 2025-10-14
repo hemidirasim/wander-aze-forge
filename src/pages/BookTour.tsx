@@ -7,8 +7,6 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { 
-  Clock, 
-  MapPin, 
   ArrowLeft, 
   CheckCircle 
 } from 'lucide-react';
@@ -280,57 +278,10 @@ const BookTour = () => {
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Tours
             </Button>
-            <h1 className="text-3xl font-bold text-foreground">Book Your Tour</h1>
-            <p className="text-muted-foreground">Complete your booking for {tour.title}</p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Tour Details */}
-            <div className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-xl">{tour.title}</CardTitle>
-                  <p className="text-sm text-muted-foreground">{tour.category}</p>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {tour.image_url && (
-                    <img 
-                      src={tour.image_url} 
-                      alt={tour.title}
-                      className="w-full h-48 object-cover rounded-lg"
-                    />
-                  )}
-                  
-                  <p className="text-muted-foreground">{tour.description}</p>
-                  
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="flex items-center gap-2">
-                      <Clock className="w-4 h-4 text-primary" />
-                      <span className="text-sm">{tour.duration}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <MapPin className="w-4 h-4 text-primary" />
-                      <span className="text-sm">{tour.category}</span>
-                    </div>
-                  </div>
-
-                  <div className="border-t pt-4">
-                    <div className="bg-primary/10 p-4 rounded-lg">
-                      <div className="flex items-center justify-between">
-                        <span className="text-lg font-semibold">Price per person:</span>
-                        <span className="text-3xl font-bold text-primary">${tour?.price || 0}</span>
-                      </div>
-                      <div className="text-sm text-muted-foreground mt-2">
-                        Total price will be calculated based on number of participants
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Booking Form */}
-            <div className="space-y-6">
+          {/* Booking Form */}
+          <div className="max-w-4xl mx-auto">
               <Card>
                 <CardHeader>
                   <CardTitle>Booking Request</CardTitle>
@@ -621,7 +572,6 @@ const BookTour = () => {
                   </form>
                 </CardContent>
               </Card>
-            </div>
           </div>
         </div>
       </div>
