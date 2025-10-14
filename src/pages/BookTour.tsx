@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -26,6 +26,7 @@ interface Tour {
 const BookTour = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { toast } = useToast();
   
   const [tour, setTour] = useState<Tour | null>(null);
@@ -74,23 +75,20 @@ const BookTour = () => {
       return;
     }
 
-    // Check if tour data is available in localStorage (from TourDetail page)
-    const savedTourData = localStorage.getItem('selectedTourData');
-    if (savedTourData) {
-      try {
-        const tourData = JSON.parse(savedTourData);
-        console.log('Using saved tour data:', tourData);
-        setFormData(prev => ({
-          ...prev,
-          tourName: tourData.title,
-          tourPrice: `$${tourData.price}`,
-          groupSize: tourData.groupSize
-        }));
-        // Clear the saved data after using it
-        localStorage.removeItem('selectedTourData');
-      } catch (error) {
-        console.error('Error parsing saved tour data:', error);
-      }
+    // Check if tour data is available in URL parameters (from TourDetail page)
+    const title = searchParams.get('title');
+    const price = searchParams.get('price');
+    const groupSize = searchParams.get('groupSize');
+    const category = searchParams.get('category');
+    
+    if (title || price || groupSize) {
+      console.log('Using URL parameters:', { title, price, groupSize, category });
+      setFormData(prev => ({
+        ...prev,
+        tourName: title || '',
+        tourPrice: price ? `$${price}` : '',
+        groupSize: groupSize || '2'
+      }));
     }
 
     fetchTourDetails();
