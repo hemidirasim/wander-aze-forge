@@ -66,23 +66,23 @@ const BookTour = () => {
 
   useEffect(() => {
     // Check if tour data is available in URL parameters (from TourDetail page)
-    const title = searchParams.get('title');
+    const slug = searchParams.get('slug');
     const price = searchParams.get('price');
     const groupSize = searchParams.get('groupSize');
     const category = searchParams.get('category');
     
-    if (title || price || groupSize) {
-      console.log('Using URL parameters:', { title, price, groupSize, category });
+    if (slug || price || groupSize) {
+      console.log('Using URL parameters:', { slug, price, groupSize, category });
       setFormData(prev => ({
         ...prev,
-        tourName: title || '',
+        tourName: slug || '',
         tourPrice: price ? `$${price}` : '',
         groupSize: groupSize || '2'
       }));
       // Set tour data from URL parameters
       setTour({
         id: parseInt(id || '0'),
-        title: title || '',
+        title: slug || '',
         description: '',
         image_url: '',
         price: parseFloat(price?.replace(/[^0-9.]/g, '') || '0'),
