@@ -79,6 +79,16 @@ const BookTour = () => {
         tourPrice: price ? `$${price}` : '',
         groupSize: groupSize || '2'
       }));
+      // Set tour data from URL parameters
+      setTour({
+        id: parseInt(id || '0'),
+        title: title || '',
+        description: '',
+        image_url: '',
+        price: parseFloat(price?.replace(/[^0-9.]/g, '') || '0'),
+        duration: '',
+        category: category || ''
+      });
       setLoading(false); // Stop loading when using URL parameters
     } else {
       // Only fetch from API if no URL parameters
