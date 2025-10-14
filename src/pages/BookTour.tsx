@@ -92,7 +92,8 @@ const BookTour = () => {
         setFormData(prev => ({
           ...prev,
           tourName: data.data.title,
-          tourPrice: `$${data.data.price}`
+          tourPrice: `$${data.data.price}`,
+          groupSize: '2' // Default group size
         }));
       } else {
         console.error('Tour not found:', data);
