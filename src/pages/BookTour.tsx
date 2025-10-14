@@ -35,11 +35,32 @@ const BookTour = () => {
   const [booking, setBooking] = useState(false);
   
   const [formData, setFormData] = useState({
-    tourDate: '',
-    participants: 1,
+    // Tour Details
+    tourName: '',
+    groupSize: '2',
+    tourPrice: '',
+    
+    // Additional Services
+    hotelBaku: false,
+    oneWayTransfer: false,
+    roundTripTransfer: false,
+    
+    // Contact Information
+    fullName: '',
+    email: '',
+    phone: '',
+    country: '',
+    
+    // Booking Details
+    preferredDate: '',
+    alternativeDate: '',
+    pickupLocation: '',
+    informLater: false,
     specialRequests: '',
-    emergencyContactName: '',
-    emergencyContactPhone: ''
+    
+    // Agreement
+    bookingRequest: false,
+    terms: false
   });
 
   const token = localStorage.getItem('authToken');
@@ -69,6 +90,12 @@ const BookTour = () => {
       if (data.success) {
         console.log('Tour data loaded:', data.data);
         setTour(data.data);
+        // Pre-fill form with tour data
+        setFormData(prev => ({
+          ...prev,
+          tourName: data.data.title,
+          tourPrice: `$${data.data.price}`
+        }));
       } else {
         console.error('Tour not found:', data);
         toast({
@@ -90,11 +117,11 @@ const BookTour = () => {
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value, type } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: name === 'participants' ? parseInt(value) || 1 : value
+      [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value
     }));
   };
 
@@ -102,20 +129,30 @@ const BookTour = () => {
     e.preventDefault();
     setBooking(true);
 
-    if (!formData.tourDate) {
+    if (!formData.preferredDate) {
       toast({
         title: "Date Required",
-        description: "Please select a tour date.",
+        description: "Please select a preferred tour date.",
         variant: "destructive"
       });
       setBooking(false);
       return;
     }
 
-    if (formData.participants < 1 || formData.participants > 20) {
+    if (!formData.fullName || !formData.email || !formData.phone) {
       toast({
-        title: "Invalid Participants",
-        description: "Number of participants must be between 1 and 20.",
+        title: "Contact Information Required",
+        description: "Please fill in all required contact fields.",
+        variant: "destructive"
+      });
+      setBooking(false);
+      return;
+    }
+
+    if (!formData.bookingRequest || !formData.terms) {
+      toast({
+        title: "Agreement Required",
+        description: "Please accept the booking request and terms & conditions.",
         variant: "destructive"
       });
       setBooking(false);
@@ -137,12 +174,7 @@ const BookTour = () => {
         tourId: tour?.id,
         tourTitle: tour?.title,
         tourCategory: tour?.category,
-        tourDate: formData.tourDate,
-        participants: formData.participants,
-        totalPrice: (tour?.price || 0) * formData.participants,
-        specialRequests: formData.specialRequests,
-        emergencyContactName: formData.emergencyContactName,
-        emergencyContactPhone: formData.emergencyContactPhone
+        formData: formData
       });
 
       const response = await fetch('/api/bookings/create', {
@@ -155,12 +187,7 @@ const BookTour = () => {
           tourId: tour?.id,
           tourTitle: tour?.title,
           tourCategory: tour?.category,
-          tourDate: formData.tourDate,
-          participants: formData.participants,
-          totalPrice: (tour?.price || 0) * formData.participants,
-          specialRequests: formData.specialRequests,
-          emergencyContactName: formData.emergencyContactName,
-          emergencyContactPhone: formData.emergencyContactPhone
+          formData: formData
         })
       });
 
@@ -306,110 +333,290 @@ const BookTour = () => {
             <div className="space-y-6">
               <Card>
                 <CardHeader>
-                  <CardTitle>Booking Details</CardTitle>
+                  <CardTitle>Booking Request</CardTitle>
                   <p className="text-sm text-muted-foreground">
-                    Fill in your booking information
+                    Fill out the form below to book your tour
                   </p>
                 </CardHeader>
                 <CardContent>
-                  <form onSubmit={handleSubmit} className="space-y-4">
-                    <div>
-                      <Label htmlFor="tourDate">Tour Date</Label>
-                      <Input
-                        id="tourDate"
-                        name="tourDate"
-                        type="date"
-                        value={formData.tourDate}
-                        onChange={handleInputChange}
-                        required
-                        min={new Date().toISOString().split('T')[0]}
-                        className="mt-1"
-                      />
-                    </div>
-
-                    <div>
-                      <Label htmlFor="participants">Number of Participants</Label>
-                      <Input
-                        id="participants"
-                        name="participants"
-                        type="number"
-                        min="1"
-                        max="20"
-                        value={formData.participants}
-                        onChange={handleInputChange}
-                        required
-                        className="mt-1"
-                      />
-                    </div>
-
-                    <div>
-                      <Label htmlFor="specialRequests">Special Requests (Optional)</Label>
-                      <Textarea
-                        id="specialRequests"
-                        name="specialRequests"
-                        value={formData.specialRequests}
-                        onChange={handleInputChange}
-                        placeholder="Any special requirements or requests..."
-                        className="mt-1"
-                        rows={3}
-                      />
-                    </div>
-
-                    <div className="border-t pt-4">
-                      <h4 className="font-medium text-foreground mb-3">Emergency Contact</h4>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <form onSubmit={handleSubmit} className="space-y-6">
+                    
+                    {/* Tour Details Section */}
+                    <div className="bg-muted/50 p-4 rounded-lg">
+                      <h3 className="text-lg font-semibold mb-4">Tour Details</h3>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
-                          <Label htmlFor="emergencyContactName">Contact Name</Label>
+                          <Label htmlFor="tourName">Tour Name</Label>
                           <Input
-                            id="emergencyContactName"
-                            name="emergencyContactName"
-                            value={formData.emergencyContactName}
-                            onChange={handleInputChange}
-                            placeholder="Full name"
-                            className="mt-1"
+                            id="tourName"
+                            name="tourName"
+                            value={formData.tourName}
+                            readOnly
+                            className="mt-1 bg-muted"
                           />
                         </div>
+                        
                         <div>
-                          <Label htmlFor="emergencyContactPhone">Contact Phone</Label>
-                          <Input
-                            id="emergencyContactPhone"
-                            name="emergencyContactPhone"
-                            value={formData.emergencyContactPhone}
+                          <Label htmlFor="groupSize">Group Size *</Label>
+                          <select
+                            id="groupSize"
+                            name="groupSize"
+                            value={formData.groupSize}
                             onChange={handleInputChange}
-                            placeholder="+994 50 123 45 67"
+                            className="w-full p-2 border border-input rounded-md bg-background mt-1"
+                          >
+                            <option value="1">1 Person</option>
+                            <option value="2">2 People</option>
+                            <option value="3">3 People</option>
+                            <option value="4">4 People</option>
+                            <option value="5">5 People</option>
+                            <option value="6">6 People</option>
+                            <option value="7">7 People</option>
+                            <option value="8">8 People</option>
+                            <option value="9">9 People</option>
+                            <option value="10">10 People</option>
+                          </select>
+                        </div>
+                        
+                        <div>
+                          <Label htmlFor="tourPrice">Tour Price</Label>
+                          <Input
+                            id="tourPrice"
+                            name="tourPrice"
+                            value={formData.tourPrice}
+                            readOnly
+                            className="mt-1 bg-muted"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Additional Service Requests Section */}
+                    <div className="bg-muted/50 p-4 rounded-lg">
+                      <h3 className="text-lg font-semibold mb-4">Additional Service Requests</h3>
+                      <div className="space-y-3">
+                        <div className="flex items-start space-x-3">
+                          <input
+                            type="checkbox"
+                            id="hotelBaku"
+                            name="hotelBaku"
+                            checked={formData.hotelBaku}
+                            onChange={handleInputChange}
+                            className="mt-1"
+                          />
+                          <Label htmlFor="hotelBaku" className="cursor-pointer">
+                            <strong>Hotel in Baku:</strong> 4-star hotel near the city center, $80 per person per night.
+                          </Label>
+                        </div>
+                        
+                        <div className="flex items-start space-x-3">
+                          <input
+                            type="checkbox"
+                            id="oneWayTransfer"
+                            name="oneWayTransfer"
+                            checked={formData.oneWayTransfer}
+                            onChange={handleInputChange}
+                            className="mt-1"
+                          />
+                          <Label htmlFor="oneWayTransfer" className="cursor-pointer">
+                            <strong>One-way transfer (Airport ↔ Hotel):</strong> $35 to $55 depending on group size and vehicle type.
+                          </Label>
+                        </div>
+                        
+                        <div className="flex items-start space-x-3">
+                          <input
+                            type="checkbox"
+                            id="roundTripTransfer"
+                            name="roundTripTransfer"
+                            checked={formData.roundTripTransfer}
+                            onChange={handleInputChange}
+                            className="mt-1"
+                          />
+                          <Label htmlFor="roundTripTransfer" className="cursor-pointer">
+                            <strong>Round-trip transfer (Airport ↔ Hotel ↔ Airport):</strong> $70 to $110 depending on group size and vehicle type.
+                          </Label>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Contact Information Section */}
+                    <div className="bg-muted/50 p-4 rounded-lg">
+                      <h3 className="text-lg font-semibold mb-4">Contact Information (Primary traveler)</h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="fullName">Full Name *</Label>
+                          <Input
+                            id="fullName"
+                            name="fullName"
+                            value={formData.fullName}
+                            onChange={handleInputChange}
+                            placeholder="Your full name"
+                            className="mt-1"
+                            required
+                          />
+                        </div>
+                        
+                        <div>
+                          <Label htmlFor="email">Email Address *</Label>
+                          <Input
+                            id="email"
+                            name="email"
+                            type="email"
+                            value={formData.email}
+                            onChange={handleInputChange}
+                            placeholder="your.email@example.com"
+                            className="mt-1"
+                            required
+                          />
+                        </div>
+                        
+                        <div>
+                          <Label htmlFor="phone">WhatsApp / Phone Number *</Label>
+                          <Input
+                            id="phone"
+                            name="phone"
+                            type="tel"
+                            value={formData.phone}
+                            onChange={handleInputChange}
+                            placeholder="+994 50 123 4567"
+                            className="mt-1"
+                            required
+                          />
+                        </div>
+                        
+                        <div>
+                          <Label htmlFor="country">Country of Residence (Optional)</Label>
+                          <Input
+                            id="country"
+                            name="country"
+                            value={formData.country}
+                            onChange={handleInputChange}
+                            placeholder="Your country"
                             className="mt-1"
                           />
                         </div>
                       </div>
                     </div>
 
-                    <div className="border-t pt-4">
-                      <div className="bg-primary/10 p-4 rounded-lg mb-4">
-                        <div className="flex items-center justify-between">
-                          <span className="text-lg font-semibold">Total Price:</span>
-                          <span className="text-3xl font-bold text-primary">
-                            ${(tour?.price || 0) * formData.participants}
-                          </span>
+                    {/* Booking Details Section */}
+                    <div className="bg-muted/50 p-4 rounded-lg">
+                      <h3 className="text-lg font-semibold mb-4">Booking Details</h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="preferredDate">Preferred Tour Date *</Label>
+                          <Input
+                            id="preferredDate"
+                            name="preferredDate"
+                            type="date"
+                            value={formData.preferredDate}
+                            onChange={handleInputChange}
+                            min={new Date().toISOString().split('T')[0]}
+                            className="mt-1"
+                            required
+                          />
                         </div>
-                        <div className="text-sm text-muted-foreground mt-2">
-                          ${tour?.price || 0} × {formData.participants} participant{formData.participants > 1 ? 's' : ''}
+                        
+                        <div>
+                          <Label htmlFor="alternativeDate">Alternative Date (Optional)</Label>
+                          <Input
+                            id="alternativeDate"
+                            name="alternativeDate"
+                            type="date"
+                            value={formData.alternativeDate}
+                            onChange={handleInputChange}
+                            min={new Date().toISOString().split('T')[0]}
+                            className="mt-1"
+                          />
+                        </div>
+                        
+                        <div>
+                          <Label htmlFor="pickupLocation">Pickup Location *</Label>
+                          <Input
+                            id="pickupLocation"
+                            name="pickupLocation"
+                            value={formData.pickupLocation}
+                            onChange={handleInputChange}
+                            placeholder="Hotel name or address"
+                            className="mt-1"
+                            required
+                          />
+                        </div>
+                        
+                        <div className="flex items-center space-x-2 mt-6">
+                          <input
+                            type="checkbox"
+                            id="informLater"
+                            name="informLater"
+                            checked={formData.informLater}
+                            onChange={handleInputChange}
+                          />
+                          <Label htmlFor="informLater" className="cursor-pointer">
+                            I will inform you later
+                          </Label>
                         </div>
                       </div>
                       
-                      <div className="space-y-2">
-                        <Button 
-                          type="submit" 
-                          className="w-full h-12 text-base"
-                          disabled={booking}
-                        >
-                          {booking ? (
-                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                          ) : (
-                            <CheckCircle className="w-4 h-4 mr-2" />
-                          )}
-                          {booking ? 'Booking...' : 'Book Tour'}
-                        </Button>
+                      <div className="mt-4">
+                        <Label htmlFor="specialRequests">Special Requests (Optional)</Label>
+                        <Textarea
+                          id="specialRequests"
+                          name="specialRequests"
+                          value={formData.specialRequests}
+                          onChange={handleInputChange}
+                          placeholder="Any dietary restrictions, accessibility needs, etc."
+                          className="mt-1"
+                          rows={3}
+                        />
                       </div>
+                    </div>
+
+                    {/* Agreement Section */}
+                    <div className="space-y-4">
+                      <div className="flex items-start space-x-3">
+                        <input
+                          type="checkbox"
+                          id="bookingRequest"
+                          name="bookingRequest"
+                          checked={formData.bookingRequest}
+                          onChange={handleInputChange}
+                          className="mt-1"
+                          required
+                        />
+                        <Label htmlFor="bookingRequest" className="cursor-pointer">
+                          I understand this is a booking request. Payment will follow after confirmation *
+                        </Label>
+                      </div>
+                      
+                      <div className="flex items-start space-x-3">
+                        <input
+                          type="checkbox"
+                          id="terms"
+                          name="terms"
+                          checked={formData.terms}
+                          onChange={handleInputChange}
+                          className="mt-1"
+                          required
+                        />
+                        <Label htmlFor="terms" className="cursor-pointer">
+                          I agree to the <a href="/terms" className="text-primary hover:underline">Terms & Conditions</a> and <a href="/privacy" className="text-primary hover:underline">Privacy Policy</a> *
+                        </Label>
+                      </div>
+                    </div>
+
+                    {/* Submit Button */}
+                    <div className="pt-4">
+                      <Button 
+                        type="submit" 
+                        className="w-full h-12 text-base bg-primary hover:bg-primary/90"
+                        disabled={booking}
+                      >
+                        {booking ? (
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                        ) : (
+                          <CheckCircle className="w-4 h-4 mr-2" />
+                        )}
+                        {booking ? 'Sending...' : 'Send Booking Request'}
+                      </Button>
                     </div>
                   </form>
                 </CardContent>
