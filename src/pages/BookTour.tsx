@@ -723,26 +723,50 @@ const BookTour = () => {
                             <>
                               <div>
                                 <Label htmlFor="preferredDate">Tour Start Date</Label>
-                                <Input
-                                  id="preferredDate"
-                                  name="preferredDate"
-                                  type="date"
-                                  value={tour.start_date_date || ''}
-                                  readOnly
-                                  className="mt-1 bg-muted"
-                                />
+                                {tour.start_date_date ? (
+                                  <Input
+                                    id="preferredDate"
+                                    name="preferredDate"
+                                    type="date"
+                                    value={tour.start_date_date}
+                                    readOnly
+                                    className="mt-1 bg-muted"
+                                  />
+                                ) : (
+                                  <Input
+                                    id="preferredDate"
+                                    name="preferredDate"
+                                    type="text"
+                                    value="Date not set"
+                                    readOnly
+                                    className="mt-1 bg-muted"
+                                  />
+                                )}
+                                {console.log('Tour start date:', tour.start_date_date)}
                               </div>
                               
                               <div>
                                 <Label htmlFor="alternativeDate">Tour End Date</Label>
-                                <Input
-                                  id="alternativeDate"
-                                  name="alternativeDate"
-                                  type="date"
-                                  value={tour.end_date_date || ''}
-                                  readOnly
-                                  className="mt-1 bg-muted"
-                                />
+                                {tour.end_date_date ? (
+                                  <Input
+                                    id="alternativeDate"
+                                    name="alternativeDate"
+                                    type="date"
+                                    value={tour.end_date_date}
+                                    readOnly
+                                    className="mt-1 bg-muted"
+                                  />
+                                ) : (
+                                  <Input
+                                    id="alternativeDate"
+                                    name="alternativeDate"
+                                    type="text"
+                                    value="Date not set"
+                                    readOnly
+                                    className="mt-1 bg-muted"
+                                  />
+                                )}
+                                {console.log('Tour end date:', tour.end_date_date)}
                               </div>
                             </>
                           )
