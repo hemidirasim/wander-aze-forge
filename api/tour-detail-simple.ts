@@ -51,7 +51,8 @@ export async function GET(request: Request) {
         gallery_images, photography_service, price_includes, group_discounts,
         early_bird_discount, contact_phone, booking_terms, itinerary,
         requirements, special_fields, participant_pricing, max_participants,
-        total_hiking_distance, total_elevation_gain, total_elevation_loss
+        total_hiking_distance, total_elevation_gain, total_elevation_loss,
+        start_date_date, end_date_date, available_dates
       FROM tours 
       WHERE ${slug ? 'slug = $1' : 'id = $1'}
     `;
@@ -82,6 +83,7 @@ export async function GET(request: Request) {
       gallery_images: tour.gallery_images ? (typeof tour.gallery_images === 'string' ? JSON.parse(tour.gallery_images) : tour.gallery_images) : [tour.image_url || '/placeholder-tour.jpg'],
       price_includes: tour.price_includes ? (typeof tour.price_includes === 'string' ? JSON.parse(tour.price_includes) : tour.price_includes) : [],
       participant_pricing: tour.participant_pricing ? (typeof tour.participant_pricing === 'string' ? JSON.parse(tour.participant_pricing) : tour.participant_pricing) : [],
+      available_dates: tour.available_dates ? (typeof tour.available_dates === 'string' ? JSON.parse(tour.available_dates) : tour.available_dates) : [],
       // Use actual database values or defaults
       overview: tour.overview || tour.description,
       best_season: tour.best_season || 'All year round',
