@@ -712,7 +712,7 @@ const TourDetail = () => {
                   )}
                   
                   <Button size="lg" variant="adventure" className="w-full" asChild>
-                    <Link to={`/book-tour/${tour.id}?slug=${encodeURIComponent(tour.slug || tour.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''))}&price=${encodeURIComponent(selectedPrice || tour.price)}&groupSize=${encodeURIComponent(selectedParticipants || '2')}&category=${encodeURIComponent(tour.category)}`}>
+                    <Link to={`/book-tour/${tour.id}?slug=${encodeURIComponent(tour.slug || tour.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''))}&price=${encodeURIComponent(selectedPrice || tour.price)}&groupSize=${encodeURIComponent(selectedParticipants || '1')}&category=${encodeURIComponent(tour.category)}`}>
                       <Calendar className="w-5 h-5 mr-2" />
                       Book This Tour
                     </Link>

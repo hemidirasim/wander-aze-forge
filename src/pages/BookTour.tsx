@@ -36,7 +36,7 @@ const BookTour = () => {
   const [formData, setFormData] = useState({
     // Tour Details
     tourName: '',
-    groupSize: '2',
+    groupSize: '1',
     tourPrice: '',
     
     // Additional Services
@@ -62,6 +62,8 @@ const BookTour = () => {
     terms: false
   });
 
+  const [basePricePerPerson, setBasePricePerPerson] = useState(0);
+
   const token = localStorage.getItem('authToken');
 
   useEffect(() => {
@@ -73,11 +75,16 @@ const BookTour = () => {
     
     if (slug || price || groupSize) {
       console.log('Using URL parameters:', { slug, price, groupSize, category });
+      const priceValue = parseFloat(price?.replace(/[^0-9.]/g, '') || '0');
+      const groupSizeValue = groupSize || '1';
+      const pricePerPerson = priceValue / parseInt(groupSizeValue);
+      
+      setBasePricePerPerson(pricePerPerson);
       setFormData(prev => ({
         ...prev,
         tourName: slug || '',
         tourPrice: price ? `$${price}` : '',
-        groupSize: groupSize || '2'
+        groupSize: groupSizeValue
       }));
       // Set tour data from URL parameters
       setTour({
@@ -85,7 +92,7 @@ const BookTour = () => {
         title: slug || '',
         description: '',
         image_url: '',
-        price: parseFloat(price?.replace(/[^0-9.]/g, '') || '0'),
+        price: priceValue,
         duration: '',
         category: category || ''
       });
@@ -120,16 +127,17 @@ const BookTour = () => {
         // Pre-fill form with tour data
         const tourTitle = tourData?.title || 'Tour Name Not Available';
         const tourPrice = tourData?.price || 0;
+        setBasePricePerPerson(tourPrice); // Assume API returns per-person price
         console.log('Pre-filling form with:', {
           tourName: tourTitle,
           tourPrice: `$${tourPrice}`,
-          groupSize: '2'
+          groupSize: '1'
         });
         setFormData(prev => ({
           ...prev,
           tourName: tourTitle,
           tourPrice: `$${tourPrice}`,
-          groupSize: '2' // Default group size
+          groupSize: '1' // Default group size
         }));
       } else {
         console.error('Tour not found:', data);
@@ -154,10 +162,22 @@ const BookTour = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value
-    }));
+    
+    // If group size changes, recalculate the total price
+    if (name === 'groupSize' && basePricePerPerson > 0) {
+      const newGroupSize = parseInt(value) || 1;
+      const newTotalPrice = basePricePerPerson * newGroupSize;
+      setFormData(prev => ({
+        ...prev,
+        groupSize: value,
+        tourPrice: `$${newTotalPrice.toFixed(2)}`
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value
+      }));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
