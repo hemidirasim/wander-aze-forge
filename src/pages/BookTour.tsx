@@ -670,17 +670,7 @@ const BookTour = () => {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {tour?.category === 'group-tours' ? (
                           // For group tours: show tour dates from database
-                          (() => {
-                            console.log('Group tour date check:', {
-                              availableDatesLength: availableDates.length,
-                              startDate: tour?.start_date_date,
-                              endDate: tour?.end_date_date,
-                              hasStartDate: !!tour?.start_date_date,
-                              hasEndDate: !!tour?.end_date_date,
-                              condition: availableDates.length > 0 || (tour?.start_date_date && tour?.end_date_date)
-                            });
-                            return availableDates.length > 0 || (tour?.start_date_date && tour?.end_date_date);
-                          })() ? (
+                          (availableDates.length > 0 || (tour?.start_date_date && tour?.end_date_date)) ? (
                             <div className="md:col-span-2">
                               <Label htmlFor="preferredDate">Select Tour Date *</Label>
                               <select
@@ -731,22 +721,37 @@ const BookTour = () => {
                             </div>
                           ) : (
                             <div className="md:col-span-2">
-                              <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-md">
-                                <p className="text-yellow-800 font-medium">Tour dates not yet scheduled</p>
-                                <p className="text-yellow-700 text-sm mt-1">
-                                  This group tour doesn't have scheduled dates yet. Please contact us to arrange a date.
-                                </p>
-                                <Input
-                                  id="preferredDate"
-                                  name="preferredDate"
-                                  type="text"
-                                  value={formData.preferredDate}
-                                  onChange={handleInputChange}
-                                  placeholder="Please contact us for available dates"
-                                  className="mt-2"
-                                  required
-                                />
-                              </div>
+                              <Label htmlFor="preferredDate">Select Tour Date *</Label>
+                              <select
+                                id="preferredDate"
+                                name="preferredDate"
+                                value={formData.preferredDate}
+                                onChange={handleInputChange}
+                                className="w-full p-2 border border-input rounded-md bg-background mt-1"
+                                required
+                              >
+                                <option value="">Choose a date</option>
+                                {tour.start_date_date && (
+                                  <option value={tour.start_date_date}>
+                                    {new Date(tour.start_date_date).toLocaleDateString('en-US', { 
+                                      weekday: 'long', 
+                                      year: 'numeric', 
+                                      month: 'long', 
+                                      day: 'numeric' 
+                                    })} (Start Date)
+                                  </option>
+                                )}
+                                {tour.end_date_date && (
+                                  <option value={tour.end_date_date}>
+                                    {new Date(tour.end_date_date).toLocaleDateString('en-US', { 
+                                      weekday: 'long', 
+                                      year: 'numeric', 
+                                      month: 'long', 
+                                      day: 'numeric' 
+                                    })} (End Date)
+                                  </option>
+                                )}
+                              </select>
                             </div>
                           )
                         ) : (
