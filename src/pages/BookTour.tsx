@@ -23,8 +23,8 @@ interface Tour {
   category: string;
   participant_pricing?: Array<{minParticipants: number, pricePerPerson: number}>;
   available_dates?: string[];
-  start_date_date?: string;
-  end_date_date?: string;
+  start_date?: string;
+  end_date?: string;
 }
 
 const BookTour = () => {
@@ -156,8 +156,8 @@ const BookTour = () => {
         category: category || '',
         participant_pricing: parsedPricing,
         available_dates: parsedDates,
-        start_date_date: startDateParam || '',
-        end_date_date: endDateParam || ''
+        start_date: startDateParam || '',
+        end_date: endDateParam || ''
       });
       setLoading(false); // Stop loading when using URL parameters
     } else {
@@ -186,8 +186,8 @@ const BookTour = () => {
       if (data.success) {
         const tourData = data.data?.tour;
         console.log('Tour data loaded:', tourData);
-        console.log('Start date from API:', tourData?.start_date_date);
-        console.log('End date from API:', tourData?.end_date_date);
+        console.log('Start date from API:', tourData?.start_date);
+        console.log('End date from API:', tourData?.end_date);
         setTour(tourData);
         
         // Store pricing data if available
@@ -670,7 +670,7 @@ const BookTour = () => {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {tour?.category === 'group-tours' ? (
                           // For group tours: show tour dates from database
-                          (availableDates.length > 0 || (tour?.start_date_date && tour?.end_date_date)) ? (
+                          (availableDates.length > 0 || (tour?.start_date && tour?.end_date)) ? (
                             <div className="md:col-span-2">
                               <Label htmlFor="preferredDate">Select Tour Date *</Label>
                               <select
@@ -723,12 +723,12 @@ const BookTour = () => {
                             <>
                               <div>
                                 <Label htmlFor="preferredDate">Tour Start Date</Label>
-                                {tour.start_date_date ? (
+                                {tour.start_date ? (
                                   <Input
                                     id="preferredDate"
                                     name="preferredDate"
                                     type="date"
-                                    value={tour.start_date_date}
+                                    value={tour.start_date}
                                     readOnly
                                     className="mt-1 bg-muted"
                                   />
@@ -742,17 +742,17 @@ const BookTour = () => {
                                     className="mt-1 bg-muted"
                                   />
                                 )}
-                                {console.log('Tour start date:', tour.start_date_date)}
+                                {console.log('Tour start date:', tour.start_date)}
                               </div>
                               
                               <div>
                                 <Label htmlFor="alternativeDate">Tour End Date</Label>
-                                {tour.end_date_date ? (
+                                {tour.end_date ? (
                                   <Input
                                     id="alternativeDate"
                                     name="alternativeDate"
                                     type="date"
-                                    value={tour.end_date_date}
+                                    value={tour.end_date}
                                     readOnly
                                     className="mt-1 bg-muted"
                                   />
@@ -766,7 +766,7 @@ const BookTour = () => {
                                     className="mt-1 bg-muted"
                                   />
                                 )}
-                                {console.log('Tour end date:', tour.end_date_date)}
+                                {console.log('Tour end date:', tour.end_date)}
                               </div>
                             </>
                           )

@@ -52,7 +52,7 @@ export async function GET(request: Request) {
         early_bird_discount, contact_phone, booking_terms, itinerary,
         requirements, special_fields, participant_pricing, max_participants,
         total_hiking_distance, total_elevation_gain, total_elevation_loss,
-        start_date_date, end_date_date, available_dates
+        start_date, end_date, available_dates
       FROM tours 
       WHERE ${slug ? 'slug = $1' : 'id = $1'}
     `;
