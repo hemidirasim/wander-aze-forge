@@ -226,11 +226,24 @@ const BookTour = () => {
           }));
         }
       } else {
-        // No pricing data available
-        setFormData(prev => ({
-          ...prev,
-          groupSize: value
-        }));
+        // No pricing data available - try to use tour.price as fallback
+        console.log('No pricing data available - using fallback price calculation');
+        if (tour?.price && isGroupTour) {
+          // If it's a group tour and we have a base price, multiply by group size
+          const totalPrice = Math.round(tour.price * newGroupSize);
+          console.log(`Fallback group tour: ${newGroupSize} people × $${tour.price} = $${totalPrice}`);
+          setFormData(prev => ({
+            ...prev,
+            groupSize: value,
+            tourPrice: `Total $${totalPrice}`
+          }));
+        } else {
+          // Just update group size without changing price
+          setFormData(prev => ({
+            ...prev,
+            groupSize: value
+          }));
+        }
       }
     } else {
       setFormData(prev => ({
