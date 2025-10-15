@@ -721,37 +721,41 @@ const BookTour = () => {
                             </div>
                           ) : (
                             <div className="md:col-span-2">
-                              <Label htmlFor="preferredDate">Select Tour Date *</Label>
-                              <select
-                                id="preferredDate"
-                                name="preferredDate"
-                                value={formData.preferredDate}
-                                onChange={handleInputChange}
-                                className="w-full p-2 border border-input rounded-md bg-background mt-1"
-                                required
-                              >
-                                <option value="">Choose a date</option>
-                                {tour.start_date_date && (
-                                  <option value={tour.start_date_date}>
-                                    {new Date(tour.start_date_date).toLocaleDateString('en-US', { 
-                                      weekday: 'long', 
-                                      year: 'numeric', 
-                                      month: 'long', 
-                                      day: 'numeric' 
-                                    })} (Start Date)
-                                  </option>
-                                )}
-                                {tour.end_date_date && (
-                                  <option value={tour.end_date_date}>
-                                    {new Date(tour.end_date_date).toLocaleDateString('en-US', { 
-                                      weekday: 'long', 
-                                      year: 'numeric', 
-                                      month: 'long', 
-                                      day: 'numeric' 
-                                    })} (End Date)
-                                  </option>
-                                )}
-                              </select>
+                              <div className="space-y-2">
+                                <Label>Tour Dates</Label>
+                                <div className="p-3 bg-blue-50 border border-blue-200 rounded-md">
+                                  {tour.start_date_date && (
+                                    <p className="text-blue-800 font-medium">
+                                      Start Date: {new Date(tour.start_date_date).toLocaleDateString('en-US', { 
+                                        weekday: 'long', 
+                                        year: 'numeric', 
+                                        month: 'long', 
+                                        day: 'numeric' 
+                                      })}
+                                    </p>
+                                  )}
+                                  {tour.end_date_date && (
+                                    <p className="text-blue-800 font-medium">
+                                      End Date: {new Date(tour.end_date_date).toLocaleDateString('en-US', { 
+                                        weekday: 'long', 
+                                        year: 'numeric', 
+                                        month: 'long', 
+                                        day: 'numeric' 
+                                      })}
+                                    </p>
+                                  )}
+                                </div>
+                                <Input
+                                  id="preferredDate"
+                                  name="preferredDate"
+                                  type="text"
+                                  value={formData.preferredDate}
+                                  onChange={handleInputChange}
+                                  placeholder="Confirm your participation"
+                                  className="mt-2"
+                                  required
+                                />
+                              </div>
                             </div>
                           )
                         ) : (
