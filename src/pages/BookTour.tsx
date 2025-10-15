@@ -22,6 +22,7 @@ interface Tour {
   duration: string;
   category: string;
   participant_pricing?: Array<{minParticipants: number, pricePerPerson: number}>;
+  available_dates?: string[];
 }
 
 const BookTour = () => {
@@ -34,6 +35,7 @@ const BookTour = () => {
   const [loading, setLoading] = useState(true);
   const [booking, setBooking] = useState(false);
   const [pricingData, setPricingData] = useState<Array<{minParticipants: number, pricePerPerson: number}>>([]);
+  const [availableDates, setAvailableDates] = useState<string[]>([]);
   
   const [formData, setFormData] = useState({
     // Tour Details
@@ -74,14 +76,16 @@ const BookTour = () => {
     const groupSize = searchParams.get('groupSize');
     const category = searchParams.get('category');
     const pricingParam = searchParams.get('pricing');
+    const datesParam = searchParams.get('dates');
     
     if (title || slug || price || groupSize) {
-      console.log('Using URL parameters:', { title, slug, price, groupSize, category, pricingParam });
+      console.log('Using URL parameters:', { title, slug, price, groupSize, category, pricingParam, datesParam });
       const priceValue = parseFloat(price?.replace(/[^0-9.]/g, '') || '0');
       const groupSizeValue = groupSize || '1';
       
       // Parse pricing data from URL
       let parsedPricing: Array<{minParticipants: number, pricePerPerson: number}> = [];
+      let parsedDates: string[] = [];
       let basePriceForTour = priceValue;
       
       if (pricingParam) {
@@ -97,6 +101,17 @@ const BookTour = () => {
           }
         } catch (e) {
           console.error('Error parsing pricing data:', e);
+        }
+      }
+      
+      // Parse available dates from URL
+      if (datesParam) {
+        try {
+          parsedDates = JSON.parse(decodeURIComponent(datesParam));
+          setAvailableDates(parsedDates);
+          console.log('Parsed available dates:', parsedDates);
+        } catch (e) {
+          console.error('Error parsing dates:', e);
         }
       }
       
@@ -124,7 +139,8 @@ const BookTour = () => {
         price: basePriceForTour,
         duration: '',
         category: category || '',
-        participant_pricing: parsedPricing
+        participant_pricing: parsedPricing,
+        available_dates: parsedDates
       });
       setLoading(false); // Stop loading when using URL parameters
     } else {
@@ -159,6 +175,12 @@ const BookTour = () => {
         if (tourData?.participant_pricing) {
           setPricingData(tourData.participant_pricing);
           console.log('Pricing data from API:', tourData.participant_pricing);
+        }
+        
+        // Store available dates if available
+        if (tourData?.available_dates) {
+          setAvailableDates(tourData.available_dates);
+          console.log('Available dates from API:', tourData.available_dates);
         }
         
         // Pre-fill form with tour data
@@ -627,32 +649,62 @@ const BookTour = () => {
                     <div className="bg-muted/50 p-4 rounded-lg">
                       <h3 className="text-lg font-semibold mb-4">Booking Details</h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                          <Label htmlFor="preferredDate">Preferred Tour Date *</Label>
-                          <Input
-                            id="preferredDate"
-                            name="preferredDate"
-                            type="date"
-                            value={formData.preferredDate}
-                            onChange={handleInputChange}
-                            min={new Date().toISOString().split('T')[0]}
-                            className="mt-1"
-                            required
-                          />
-                        </div>
-                        
-                        <div>
-                          <Label htmlFor="alternativeDate">Alternative Date (Optional)</Label>
-                          <Input
-                            id="alternativeDate"
-                            name="alternativeDate"
-                            type="date"
-                            value={formData.alternativeDate}
-                            onChange={handleInputChange}
-                            min={new Date().toISOString().split('T')[0]}
-                            className="mt-1"
-                          />
-                        </div>
+                        {tour?.category === 'group-tours' && availableDates.length > 0 ? (
+                          // For group tours: show dropdown with available dates
+                          <div className="md:col-span-2">
+                            <Label htmlFor="preferredDate">Select Tour Date *</Label>
+                            <select
+                              id="preferredDate"
+                              name="preferredDate"
+                              value={formData.preferredDate}
+                              onChange={handleInputChange}
+                              className="w-full p-2 border border-input rounded-md bg-background mt-1"
+                              required
+                            >
+                              <option value="">Choose a date</option>
+                              {availableDates.map((date, index) => (
+                                <option key={index} value={date}>
+                                  {new Date(date).toLocaleDateString('en-US', { 
+                                    weekday: 'long', 
+                                    year: 'numeric', 
+                                    month: 'long', 
+                                    day: 'numeric' 
+                                  })}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        ) : (
+                          // For private tours: show date inputs
+                          <>
+                            <div>
+                              <Label htmlFor="preferredDate">Preferred Tour Date *</Label>
+                              <Input
+                                id="preferredDate"
+                                name="preferredDate"
+                                type="date"
+                                value={formData.preferredDate}
+                                onChange={handleInputChange}
+                                min={new Date().toISOString().split('T')[0]}
+                                className="mt-1"
+                                required
+                              />
+                            </div>
+                            
+                            <div>
+                              <Label htmlFor="alternativeDate">Alternative Date (Optional)</Label>
+                              <Input
+                                id="alternativeDate"
+                                name="alternativeDate"
+                                type="date"
+                                value={formData.alternativeDate}
+                                onChange={handleInputChange}
+                                min={new Date().toISOString().split('T')[0]}
+                                className="mt-1"
+                              />
+                            </div>
+                          </>
+                        )}
                         
                         <div>
                           <Label htmlFor="pickupLocation">Pickup Location *</Label>
