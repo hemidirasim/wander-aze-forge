@@ -84,6 +84,8 @@ const BookTour = () => {
     
     if (title || slug || price || groupSize) {
       console.log('Using URL parameters:', { title, slug, price, groupSize, category, pricingParam, datesParam, startDateParam, endDateParam });
+      console.log('Start date from URL:', startDateParam);
+      console.log('End date from URL:', endDateParam);
       const priceValue = parseFloat(price?.replace(/[^0-9.]/g, '') || '0');
       const groupSizeValue = groupSize || '1';
       
@@ -184,6 +186,8 @@ const BookTour = () => {
       if (data.success) {
         const tourData = data.data?.tour;
         console.log('Tour data loaded:', tourData);
+        console.log('Start date from API:', tourData?.start_date_date);
+        console.log('End date from API:', tourData?.end_date_date);
         setTour(tourData);
         
         // Store pricing data if available
@@ -666,7 +670,17 @@ const BookTour = () => {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {tour?.category === 'group-tours' ? (
                           // For group tours: show tour dates from database
-                          (availableDates.length > 0 || (tour.start_date_date && tour.end_date_date)) ? (
+                          (() => {
+                            console.log('Group tour date check:', {
+                              availableDatesLength: availableDates.length,
+                              startDate: tour?.start_date_date,
+                              endDate: tour?.end_date_date,
+                              hasStartDate: !!tour?.start_date_date,
+                              hasEndDate: !!tour?.end_date_date,
+                              condition: availableDates.length > 0 || (tour?.start_date_date && tour?.end_date_date)
+                            });
+                            return availableDates.length > 0 || (tour?.start_date_date && tour?.end_date_date);
+                          })() ? (
                             <div className="md:col-span-2">
                               <Label htmlFor="preferredDate">Select Tour Date *</Label>
                               <select
