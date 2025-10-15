@@ -81,20 +81,37 @@ const BookTour = () => {
       
       // Parse pricing data from URL
       let parsedPricing: Array<{minParticipants: number, pricePerPerson: number}> = [];
+      let basePriceForTour = priceValue;
+      
       if (pricingParam) {
         try {
           parsedPricing = JSON.parse(decodeURIComponent(pricingParam));
           setPricingData(parsedPricing);
           console.log('Parsed pricing data:', parsedPricing);
+          
+          // For group tours, use the first pricing entry as base price per person
+          if (category === 'group-tours' && parsedPricing.length > 0) {
+            basePriceForTour = parsedPricing[0].pricePerPerson;
+            console.log('Group tour detected - using base price per person:', basePriceForTour);
+          }
         } catch (e) {
           console.error('Error parsing pricing data:', e);
         }
       }
       
+      // Calculate initial price based on tour type
+      let initialPrice = price || '';
+      if (category === 'group-tours' && parsedPricing.length > 0) {
+        const groupSizeNum = parseInt(groupSizeValue);
+        const totalPrice = Math.round(basePriceForTour * groupSizeNum);
+        initialPrice = `Total $${totalPrice}`;
+        console.log('Initial price for group tour:', initialPrice);
+      }
+      
       setFormData(prev => ({
         ...prev,
         tourName: slug || '',
-        tourPrice: price || '',
+        tourPrice: initialPrice,
         groupSize: groupSizeValue
       }));
       // Set tour data from URL parameters
@@ -103,7 +120,7 @@ const BookTour = () => {
         title: slug || '',
         description: '',
         image_url: '',
-        price: priceValue,
+        price: basePriceForTour,
         duration: '',
         category: category || '',
         participant_pricing: parsedPricing
