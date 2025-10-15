@@ -406,7 +406,7 @@ const BookTour = () => {
                               // If pricing data is available, show only available group sizes
                               pricingData.map((pricing, index) => (
                                 <option key={index} value={pricing.minParticipants.toString()}>
-                                  {pricing.minParticipants} {pricing.minParticipants === 1 ? 'Person' : 'People'} - Total ${Math.round(pricing.pricePerPerson)}
+                                  {pricing.minParticipants} {pricing.minParticipants === 1 ? 'Person' : 'People'}
                                 </option>
                               ))
                             ) : (
