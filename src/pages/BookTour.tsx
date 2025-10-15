@@ -21,6 +21,7 @@ interface Tour {
   price: number;
   duration: string;
   category: string;
+  participant_pricing?: Array<{minParticipants: number, pricePerPerson: number}>;
 }
 
 const BookTour = () => {
@@ -32,6 +33,7 @@ const BookTour = () => {
   const [tour, setTour] = useState<Tour | null>(null);
   const [loading, setLoading] = useState(true);
   const [booking, setBooking] = useState(false);
+  const [pricingData, setPricingData] = useState<Array<{minParticipants: number, pricePerPerson: number}>>([]);
   
   const [formData, setFormData] = useState({
     // Tour Details
@@ -62,8 +64,6 @@ const BookTour = () => {
     terms: false
   });
 
-  const [basePricePerPerson, setBasePricePerPerson] = useState(0);
-
   const token = localStorage.getItem('authToken');
 
   useEffect(() => {
@@ -72,18 +72,29 @@ const BookTour = () => {
     const price = searchParams.get('price');
     const groupSize = searchParams.get('groupSize');
     const category = searchParams.get('category');
+    const pricingParam = searchParams.get('pricing');
     
     if (slug || price || groupSize) {
-      console.log('Using URL parameters:', { slug, price, groupSize, category });
+      console.log('Using URL parameters:', { slug, price, groupSize, category, pricingParam });
       const priceValue = parseFloat(price?.replace(/[^0-9.]/g, '') || '0');
       const groupSizeValue = groupSize || '1';
-      const pricePerPerson = priceValue / parseInt(groupSizeValue);
       
-      setBasePricePerPerson(pricePerPerson);
+      // Parse pricing data from URL
+      let parsedPricing: Array<{minParticipants: number, pricePerPerson: number}> = [];
+      if (pricingParam) {
+        try {
+          parsedPricing = JSON.parse(decodeURIComponent(pricingParam));
+          setPricingData(parsedPricing);
+          console.log('Parsed pricing data:', parsedPricing);
+        } catch (e) {
+          console.error('Error parsing pricing data:', e);
+        }
+      }
+      
       setFormData(prev => ({
         ...prev,
         tourName: slug || '',
-        tourPrice: price ? `$${price}` : '',
+        tourPrice: price || '',
         groupSize: groupSizeValue
       }));
       // Set tour data from URL parameters
@@ -94,7 +105,8 @@ const BookTour = () => {
         image_url: '',
         price: priceValue,
         duration: '',
-        category: category || ''
+        category: category || '',
+        participant_pricing: parsedPricing
       });
       setLoading(false); // Stop loading when using URL parameters
     } else {
@@ -124,10 +136,16 @@ const BookTour = () => {
         const tourData = data.data?.tour;
         console.log('Tour data loaded:', tourData);
         setTour(tourData);
+        
+        // Store pricing data if available
+        if (tourData?.participant_pricing) {
+          setPricingData(tourData.participant_pricing);
+          console.log('Pricing data from API:', tourData.participant_pricing);
+        }
+        
         // Pre-fill form with tour data
         const tourTitle = tourData?.title || 'Tour Name Not Available';
         const tourPrice = tourData?.price || 0;
-        setBasePricePerPerson(tourPrice); // Assume API returns per-person price
         console.log('Pre-filling form with:', {
           tourName: tourTitle,
           tourPrice: `$${tourPrice}`,
@@ -163,15 +181,26 @@ const BookTour = () => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
     
-    // If group size changes, recalculate the total price
-    if (name === 'groupSize' && basePricePerPerson > 0) {
+    // If group size changes, find the corresponding price from pricing data
+    if (name === 'groupSize' && pricingData.length > 0) {
       const newGroupSize = parseInt(value) || 1;
-      const newTotalPrice = basePricePerPerson * newGroupSize;
-      setFormData(prev => ({
-        ...prev,
-        groupSize: value,
-        tourPrice: `$${newTotalPrice.toFixed(2)}`
-      }));
+      const pricing = pricingData.find(p => p.minParticipants === newGroupSize);
+      
+      if (pricing) {
+        const totalPrice = Math.round(pricing.pricePerPerson);
+        console.log(`Group size changed to ${newGroupSize}, new price: $${totalPrice}`);
+        setFormData(prev => ({
+          ...prev,
+          groupSize: value,
+          tourPrice: `Total $${totalPrice}`
+        }));
+      } else {
+        // If no pricing found for this group size, just update group size
+        setFormData(prev => ({
+          ...prev,
+          groupSize: value
+        }));
+      }
     } else {
       setFormData(prev => ({
         ...prev,
@@ -373,16 +402,28 @@ const BookTour = () => {
                             onChange={handleInputChange}
                             className="w-full p-2 border border-input rounded-md bg-background mt-1"
                           >
-                            <option value="1">1 Person</option>
-                            <option value="2">2 People</option>
-                            <option value="3">3 People</option>
-                            <option value="4">4 People</option>
-                            <option value="5">5 People</option>
-                            <option value="6">6 People</option>
-                            <option value="7">7 People</option>
-                            <option value="8">8 People</option>
-                            <option value="9">9 People</option>
-                            <option value="10">10 People</option>
+                            {pricingData.length > 0 ? (
+                              // If pricing data is available, show only available group sizes
+                              pricingData.map((pricing, index) => (
+                                <option key={index} value={pricing.minParticipants.toString()}>
+                                  {pricing.minParticipants} {pricing.minParticipants === 1 ? 'Person' : 'People'} - Total ${Math.round(pricing.pricePerPerson)}
+                                </option>
+                              ))
+                            ) : (
+                              // Fallback to default options if no pricing data
+                              <>
+                                <option value="1">1 Person</option>
+                                <option value="2">2 People</option>
+                                <option value="3">3 People</option>
+                                <option value="4">4 People</option>
+                                <option value="5">5 People</option>
+                                <option value="6">6 People</option>
+                                <option value="7">7 People</option>
+                                <option value="8">8 People</option>
+                                <option value="9">9 People</option>
+                                <option value="10">10 People</option>
+                              </>
+                            )}
                           </select>
                         </div>
                         
