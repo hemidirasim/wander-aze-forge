@@ -658,33 +658,54 @@ const BookTour = () => {
                     <div className="bg-muted/50 p-4 rounded-lg">
                       <h3 className="text-lg font-semibold mb-4">Booking Details</h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {availableDates.length > 0 ? (
-                          // If available dates exist: show dropdown with specific dates
-                          <div className="md:col-span-2">
-                            <Label htmlFor="preferredDate">Select Tour Date *</Label>
-                            <select
-                              id="preferredDate"
-                              name="preferredDate"
-                              value={formData.preferredDate}
-                              onChange={handleInputChange}
-                              className="w-full p-2 border border-input rounded-md bg-background mt-1"
-                              required
-                            >
-                              <option value="">Choose a date</option>
-                              {availableDates.map((date, index) => (
-                                <option key={index} value={date}>
-                                  {new Date(date).toLocaleDateString('en-US', { 
-                                    weekday: 'long', 
-                                    year: 'numeric', 
-                                    month: 'long', 
-                                    day: 'numeric' 
-                                  })}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
+                        {tour?.category === 'group-tours' ? (
+                          // For group tours: show admin-defined dates or message
+                          availableDates.length > 0 ? (
+                            <div className="md:col-span-2">
+                              <Label htmlFor="preferredDate">Select Tour Date *</Label>
+                              <select
+                                id="preferredDate"
+                                name="preferredDate"
+                                value={formData.preferredDate}
+                                onChange={handleInputChange}
+                                className="w-full p-2 border border-input rounded-md bg-background mt-1"
+                                required
+                              >
+                                <option value="">Choose a date</option>
+                                {availableDates.map((date, index) => (
+                                  <option key={index} value={date}>
+                                    {new Date(date).toLocaleDateString('en-US', { 
+                                      weekday: 'long', 
+                                      year: 'numeric', 
+                                      month: 'long', 
+                                      day: 'numeric' 
+                                    })}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+                          ) : (
+                            <div className="md:col-span-2">
+                              <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-md">
+                                <p className="text-yellow-800 font-medium">Tour dates not yet scheduled</p>
+                                <p className="text-yellow-700 text-sm mt-1">
+                                  This group tour doesn't have scheduled dates yet. Please contact us to arrange a date.
+                                </p>
+                                <Input
+                                  id="preferredDate"
+                                  name="preferredDate"
+                                  type="text"
+                                  value={formData.preferredDate}
+                                  onChange={handleInputChange}
+                                  placeholder="Please contact us for available dates"
+                                  className="mt-2"
+                                  required
+                                />
+                              </div>
+                            </div>
+                          )
                         ) : (
-                          // If no available dates: show date input fields
+                          // For private tours: show date input fields
                           <>
                             <div>
                               <Label htmlFor="preferredDate">Preferred Tour Date *</Label>
