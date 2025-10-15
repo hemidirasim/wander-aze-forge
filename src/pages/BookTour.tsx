@@ -145,6 +145,32 @@ const BookTour = () => {
         tourPrice: initialPrice,
         groupSize: groupSizeValue
       }));
+      // Parse dates from URL parameters (handle ISO format)
+      let parsedStartDate = '';
+      let parsedEndDate = '';
+      
+      if (startDateParam) {
+        try {
+          const startDate = new Date(startDateParam);
+          parsedStartDate = startDate.toISOString().split('T')[0]; // Convert to YYYY-MM-DD format
+          console.log('Parsed start date:', parsedStartDate);
+        } catch (e) {
+          console.error('Error parsing start date:', e);
+          parsedStartDate = startDateParam;
+        }
+      }
+      
+      if (endDateParam) {
+        try {
+          const endDate = new Date(endDateParam);
+          parsedEndDate = endDate.toISOString().split('T')[0]; // Convert to YYYY-MM-DD format
+          console.log('Parsed end date:', parsedEndDate);
+        } catch (e) {
+          console.error('Error parsing end date:', e);
+          parsedEndDate = endDateParam;
+        }
+      }
+      
       // Set tour data from URL parameters
       setTour({
         id: parseInt(id || '0'),
@@ -156,8 +182,8 @@ const BookTour = () => {
         category: category || '',
         participant_pricing: parsedPricing,
         available_dates: parsedDates,
-        start_date: startDateParam || '',
-        end_date: endDateParam || ''
+        start_date: parsedStartDate,
+        end_date: parsedEndDate
       });
       setLoading(false); // Stop loading when using URL parameters
     } else {
