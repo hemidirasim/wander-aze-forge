@@ -117,11 +117,20 @@ const BookTour = () => {
       
       // Calculate initial price based on tour type
       let initialPrice = price || '';
-      if (category === 'group-tours' && parsedPricing.length > 0) {
+      if (category === 'group-tours') {
         const groupSizeNum = parseInt(groupSizeValue);
-        const totalPrice = Math.round(basePriceForTour * groupSizeNum);
-        initialPrice = `Total $${totalPrice}`;
-        console.log('Initial price for group tour:', initialPrice);
+        // If pricing data exists, use it; otherwise use the price from URL
+        if (parsedPricing.length > 0) {
+          const totalPrice = Math.round(basePriceForTour * groupSizeNum);
+          initialPrice = `Total $${totalPrice}`;
+          console.log('Initial price for group tour (from pricing data):', initialPrice);
+        } else if (priceValue > 0) {
+          // Use URL price as per-person price for group tours
+          const totalPrice = Math.round(priceValue * groupSizeNum);
+          initialPrice = `Total $${totalPrice}`;
+          basePriceForTour = priceValue; // Set base price for future calculations
+          console.log('Initial price for group tour (from URL price):', initialPrice);
+        }
       }
       
       setFormData(prev => ({
@@ -649,8 +658,8 @@ const BookTour = () => {
                     <div className="bg-muted/50 p-4 rounded-lg">
                       <h3 className="text-lg font-semibold mb-4">Booking Details</h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {tour?.category === 'group-tours' && availableDates.length > 0 ? (
-                          // For group tours: show dropdown with available dates
+                        {availableDates.length > 0 ? (
+                          // If available dates exist: show dropdown with specific dates
                           <div className="md:col-span-2">
                             <Label htmlFor="preferredDate">Select Tour Date *</Label>
                             <select
@@ -675,7 +684,7 @@ const BookTour = () => {
                             </select>
                           </div>
                         ) : (
-                          // For private tours: show date inputs
+                          // If no available dates: show date input fields
                           <>
                             <div>
                               <Label htmlFor="preferredDate">Preferred Tour Date *</Label>
