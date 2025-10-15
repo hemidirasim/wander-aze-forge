@@ -187,6 +187,13 @@ const BookTour = () => {
       
       // Check if this is a group tour
       const isGroupTour = tour?.category === 'group-tours';
+      console.log('Group size change:', { 
+        newGroupSize, 
+        category: tour?.category, 
+        isGroupTour, 
+        pricingDataLength: pricingData.length,
+        pricingData
+      });
       
       if (isGroupTour && pricingData.length > 0) {
         // For group tours: multiply per-person price by number of participants
@@ -426,8 +433,22 @@ const BookTour = () => {
                             onChange={handleInputChange}
                             className="w-full p-2 border border-input rounded-md bg-background mt-1"
                           >
-                            {pricingData.length > 0 ? (
-                              // If pricing data is available, show only available group sizes
+                            {tour?.category === 'group-tours' ? (
+                              // For group tours, show all options 1-10 since pricing is per person
+                              <>
+                                <option value="1">1 Person</option>
+                                <option value="2">2 People</option>
+                                <option value="3">3 People</option>
+                                <option value="4">4 People</option>
+                                <option value="5">5 People</option>
+                                <option value="6">6 People</option>
+                                <option value="7">7 People</option>
+                                <option value="8">8 People</option>
+                                <option value="9">9 People</option>
+                                <option value="10">10 People</option>
+                              </>
+                            ) : pricingData.length > 0 ? (
+                              // For private tours, show only available group sizes from pricing data
                               pricingData.map((pricing, index) => (
                                 <option key={index} value={pricing.minParticipants.toString()}>
                                   {pricing.minParticipants} {pricing.minParticipants === 1 ? 'Person' : 'People'}
