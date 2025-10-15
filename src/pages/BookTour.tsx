@@ -720,43 +720,31 @@ const BookTour = () => {
                               </select>
                             </div>
                           ) : (
-                            <div className="md:col-span-2">
-                              <div className="space-y-2">
-                                <Label>Tour Dates</Label>
-                                <div className="p-3 bg-blue-50 border border-blue-200 rounded-md">
-                                  {tour.start_date_date && (
-                                    <p className="text-blue-800 font-medium">
-                                      Start Date: {new Date(tour.start_date_date).toLocaleDateString('en-US', { 
-                                        weekday: 'long', 
-                                        year: 'numeric', 
-                                        month: 'long', 
-                                        day: 'numeric' 
-                                      })}
-                                    </p>
-                                  )}
-                                  {tour.end_date_date && (
-                                    <p className="text-blue-800 font-medium">
-                                      End Date: {new Date(tour.end_date_date).toLocaleDateString('en-US', { 
-                                        weekday: 'long', 
-                                        year: 'numeric', 
-                                        month: 'long', 
-                                        day: 'numeric' 
-                                      })}
-                                    </p>
-                                  )}
-                                </div>
+                            <>
+                              <div>
+                                <Label htmlFor="preferredDate">Tour Start Date</Label>
                                 <Input
                                   id="preferredDate"
                                   name="preferredDate"
-                                  type="text"
-                                  value={formData.preferredDate}
-                                  onChange={handleInputChange}
-                                  placeholder="Confirm your participation"
-                                  className="mt-2"
-                                  required
+                                  type="date"
+                                  value={tour.start_date_date || ''}
+                                  readOnly
+                                  className="mt-1 bg-muted"
                                 />
                               </div>
-                            </div>
+                              
+                              <div>
+                                <Label htmlFor="alternativeDate">Tour End Date</Label>
+                                <Input
+                                  id="alternativeDate"
+                                  name="alternativeDate"
+                                  type="date"
+                                  value={tour.end_date_date || ''}
+                                  readOnly
+                                  className="mt-1 bg-muted"
+                                />
+                              </div>
+                            </>
                           )
                         ) : (
                           // For private tours: show date input fields
