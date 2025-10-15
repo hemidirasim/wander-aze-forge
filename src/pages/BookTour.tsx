@@ -70,6 +70,9 @@ const BookTour = () => {
 
   const token = localStorage.getItem('authToken');
 
+  // Store slug for back navigation
+  const [tourSlug, setTourSlug] = useState<string>('');
+
   useEffect(() => {
     // Check if tour data is available in URL parameters (from TourDetail page)
     const title = searchParams.get('title');
@@ -81,6 +84,11 @@ const BookTour = () => {
     const datesParam = searchParams.get('dates');
     const startDateParam = searchParams.get('startDate');
     const endDateParam = searchParams.get('endDate');
+    
+    // Store slug for back navigation
+    if (slug) {
+      setTourSlug(slug);
+    }
     
     if (title || slug || price || groupSize) {
       console.log('Using URL parameters:', { title, slug, price, groupSize, category, pricingParam, datesParam, startDateParam, endDateParam });
@@ -468,9 +476,9 @@ const BookTour = () => {
           <div className="container mx-auto text-center">
             <h1 className="text-2xl font-bold text-foreground mb-4">Tour Not Found</h1>
             <p className="text-muted-foreground mb-6">The tour you're looking for doesn't exist.</p>
-            <Button onClick={() => navigate('/tours')}>
+            <Button onClick={() => navigate(tourSlug ? `/tour/${tourSlug}` : '/tours')}>
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Tours
+              {tourSlug ? 'Back to Tour' : 'Back to Tours'}
             </Button>
           </div>
         </div>
@@ -487,11 +495,11 @@ const BookTour = () => {
           <div className="mb-6">
             <Button 
               variant="outline" 
-              onClick={() => navigate('/tours')}
+              onClick={() => navigate(tourSlug ? `/tour/${tourSlug}` : '/tours')}
               className="mb-4"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Tours
+              {tourSlug ? 'Back to Tour' : 'Back to Tours'}
             </Button>
           </div>
 
