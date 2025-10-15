@@ -696,56 +696,7 @@ const BookTour = () => {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {tour?.category === 'group-tours' ? (
                           // For group tours: show tour dates from database
-                          (availableDates.length > 0 || (tour?.start_date && tour?.end_date)) ? (
-                            <div className="md:col-span-2">
-                              <Label htmlFor="preferredDate">Select Tour Date *</Label>
-                              <select
-                                id="preferredDate"
-                                name="preferredDate"
-                                value={formData.preferredDate}
-                                onChange={handleInputChange}
-                                className="w-full p-2 border border-input rounded-md bg-background mt-1"
-                                required
-                              >
-                                <option value="">Choose a date</option>
-                                {availableDates.length > 0 ? (
-                                  // Use available_dates if available
-                                  availableDates.map((date, index) => (
-                                    <option key={index} value={date}>
-                                      {new Date(date).toLocaleDateString('en-US', { 
-                                        weekday: 'long', 
-                                        year: 'numeric', 
-                                        month: 'long', 
-                                        day: 'numeric' 
-                                      })}
-                                    </option>
-                                  ))
-                                ) : (
-                                  // Use start_date_date and end_date_date from database
-                                  tour.start_date_date && tour.end_date_date && (
-                                    <>
-                                      <option value={tour.start_date_date}>
-                                        {new Date(tour.start_date_date).toLocaleDateString('en-US', { 
-                                          weekday: 'long', 
-                                          year: 'numeric', 
-                                          month: 'long', 
-                                          day: 'numeric' 
-                                        })} (Start Date)
-                                      </option>
-                                      <option value={tour.end_date_date}>
-                                        {new Date(tour.end_date_date).toLocaleDateString('en-US', { 
-                                          weekday: 'long', 
-                                          year: 'numeric', 
-                                          month: 'long', 
-                                          day: 'numeric' 
-                                        })} (End Date)
-                                      </option>
-                                    </>
-                                  )
-                                )}
-                              </select>
-                            </div>
-                          ) : (
+                          (tour?.start_date && tour?.end_date) ? (
                             <>
                               <div>
                                 <Label htmlFor="preferredDate">Tour Start Date</Label>
@@ -795,6 +746,15 @@ const BookTour = () => {
                                 {console.log('Tour end date:', tour.end_date)}
                               </div>
                             </>
+                          ) : (
+                            <div className="md:col-span-2">
+                              <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-md">
+                                <p className="text-yellow-800 font-medium">Tour dates not available</p>
+                                <p className="text-yellow-700 text-sm mt-1">
+                                  This group tour doesn't have start and end dates set.
+                                </p>
+                              </div>
+                            </div>
                           )
                         ) : (
                           // For private tours: show date input fields
