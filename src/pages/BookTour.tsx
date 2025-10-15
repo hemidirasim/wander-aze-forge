@@ -23,6 +23,8 @@ interface Tour {
   category: string;
   participant_pricing?: Array<{minParticipants: number, pricePerPerson: number}>;
   available_dates?: string[];
+  start_date_date?: string;
+  end_date_date?: string;
 }
 
 const BookTour = () => {
@@ -77,9 +79,11 @@ const BookTour = () => {
     const category = searchParams.get('category');
     const pricingParam = searchParams.get('pricing');
     const datesParam = searchParams.get('dates');
+    const startDateParam = searchParams.get('startDate');
+    const endDateParam = searchParams.get('endDate');
     
     if (title || slug || price || groupSize) {
-      console.log('Using URL parameters:', { title, slug, price, groupSize, category, pricingParam, datesParam });
+      console.log('Using URL parameters:', { title, slug, price, groupSize, category, pricingParam, datesParam, startDateParam, endDateParam });
       const priceValue = parseFloat(price?.replace(/[^0-9.]/g, '') || '0');
       const groupSizeValue = groupSize || '1';
       
@@ -149,7 +153,9 @@ const BookTour = () => {
         duration: '',
         category: category || '',
         participant_pricing: parsedPricing,
-        available_dates: parsedDates
+        available_dates: parsedDates,
+        start_date_date: startDateParam || '',
+        end_date_date: endDateParam || ''
       });
       setLoading(false); // Stop loading when using URL parameters
     } else {
@@ -659,8 +665,8 @@ const BookTour = () => {
                       <h3 className="text-lg font-semibold mb-4">Booking Details</h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {tour?.category === 'group-tours' ? (
-                          // For group tours: show admin-defined dates or message
-                          availableDates.length > 0 ? (
+                          // For group tours: show tour dates from database
+                          (availableDates.length > 0 || (tour.start_date_date && tour.end_date_date)) ? (
                             <div className="md:col-span-2">
                               <Label htmlFor="preferredDate">Select Tour Date *</Label>
                               <select
@@ -672,16 +678,41 @@ const BookTour = () => {
                                 required
                               >
                                 <option value="">Choose a date</option>
-                                {availableDates.map((date, index) => (
-                                  <option key={index} value={date}>
-                                    {new Date(date).toLocaleDateString('en-US', { 
-                                      weekday: 'long', 
-                                      year: 'numeric', 
-                                      month: 'long', 
-                                      day: 'numeric' 
-                                    })}
-                                  </option>
-                                ))}
+                                {availableDates.length > 0 ? (
+                                  // Use available_dates if available
+                                  availableDates.map((date, index) => (
+                                    <option key={index} value={date}>
+                                      {new Date(date).toLocaleDateString('en-US', { 
+                                        weekday: 'long', 
+                                        year: 'numeric', 
+                                        month: 'long', 
+                                        day: 'numeric' 
+                                      })}
+                                    </option>
+                                  ))
+                                ) : (
+                                  // Use start_date_date and end_date_date from database
+                                  tour.start_date_date && tour.end_date_date && (
+                                    <>
+                                      <option value={tour.start_date_date}>
+                                        {new Date(tour.start_date_date).toLocaleDateString('en-US', { 
+                                          weekday: 'long', 
+                                          year: 'numeric', 
+                                          month: 'long', 
+                                          day: 'numeric' 
+                                        })} (Start Date)
+                                      </option>
+                                      <option value={tour.end_date_date}>
+                                        {new Date(tour.end_date_date).toLocaleDateString('en-US', { 
+                                          weekday: 'long', 
+                                          year: 'numeric', 
+                                          month: 'long', 
+                                          day: 'numeric' 
+                                        })} (End Date)
+                                      </option>
+                                    </>
+                                  )
+                                )}
                               </select>
                             </div>
                           ) : (
