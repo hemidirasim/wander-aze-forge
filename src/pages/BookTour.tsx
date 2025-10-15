@@ -181,21 +181,45 @@ const BookTour = () => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
     
-    // If group size changes, find the corresponding price from pricing data
-    if (name === 'groupSize' && pricingData.length > 0) {
+    // If group size changes, calculate price based on tour category
+    if (name === 'groupSize') {
       const newGroupSize = parseInt(value) || 1;
-      const pricing = pricingData.find(p => p.minParticipants === newGroupSize);
       
-      if (pricing) {
-        const totalPrice = Math.round(pricing.pricePerPerson);
-        console.log(`Group size changed to ${newGroupSize}, new price: $${totalPrice}`);
+      // Check if this is a group tour
+      const isGroupTour = tour?.category === 'group-tours';
+      
+      if (isGroupTour && pricingData.length > 0) {
+        // For group tours: multiply per-person price by number of participants
+        // Get the base price per person (usually from first pricing entry)
+        const basePricePerPerson = pricingData[0]?.pricePerPerson || 0;
+        const totalPrice = Math.round(basePricePerPerson * newGroupSize);
+        console.log(`Group tour: ${newGroupSize} people × $${basePricePerPerson} = $${totalPrice}`);
         setFormData(prev => ({
           ...prev,
           groupSize: value,
           tourPrice: `Total $${totalPrice}`
         }));
+      } else if (pricingData.length > 0) {
+        // For private tours: use predefined pricing for each group size
+        const pricing = pricingData.find(p => p.minParticipants === newGroupSize);
+        
+        if (pricing) {
+          const totalPrice = Math.round(pricing.pricePerPerson);
+          console.log(`Private tour: ${newGroupSize} people = $${totalPrice}`);
+          setFormData(prev => ({
+            ...prev,
+            groupSize: value,
+            tourPrice: `Total $${totalPrice}`
+          }));
+        } else {
+          // If no pricing found for this group size, just update group size
+          setFormData(prev => ({
+            ...prev,
+            groupSize: value
+          }));
+        }
       } else {
-        // If no pricing found for this group size, just update group size
+        // No pricing data available
         setFormData(prev => ({
           ...prev,
           groupSize: value
