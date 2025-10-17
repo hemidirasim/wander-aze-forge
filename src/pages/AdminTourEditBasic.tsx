@@ -36,6 +36,7 @@ interface Tour {
   difficulty: string;
   price: number;
   max_participants: number;
+  booked_seats: number;
   min_participants: number;
   rating: number;
   reviews_count: number;
@@ -73,6 +74,7 @@ const AdminTourEditBasic: React.FC = () => {
     difficulty: '',
     price: '',
     maxParticipants: '',
+    bookedSeats: '0',
     minParticipants: '',
     rating: '4.5',
     reviewsCount: '0',
@@ -115,6 +117,7 @@ const AdminTourEditBasic: React.FC = () => {
           difficulty: tourData.difficulty || '',
           price: tourData.price?.toString() || '',
           maxParticipants: tourData.max_participants?.toString() || '',
+          bookedSeats: tourData.booked_seats?.toString() || '0',
           minParticipants: tourData.min_participants?.toString() || '',
           rating: tourData.rating?.toString() || '4.5',
           reviewsCount: tourData.reviews_count?.toString() || '0',
@@ -396,6 +399,20 @@ const AdminTourEditBasic: React.FC = () => {
                       placeholder="Enter max participants"
                       required
                     />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="bookedSeats">Booked Seats</Label>
+                    <Input
+                      id="bookedSeats"
+                      type="number"
+                      min="0"
+                      value={formData.bookedSeats}
+                      onChange={(e) => handleInputChange('bookedSeats', e.target.value)}
+                      placeholder="0"
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      Available: {parseInt(formData.maxParticipants || '0') - parseInt(formData.bookedSeats || '0')} seats
+                    </p>
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="minParticipants">Min Participants</Label>
