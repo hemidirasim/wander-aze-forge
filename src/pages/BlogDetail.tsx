@@ -257,23 +257,18 @@ const BlogDetail = () => {
         </div>
       </section>
 
-      {/* Related Posts / Newsletter */}
-      <section className="py-20 px-4 bg-gradient-forest">
+      {/* Newsletter Section */}
+      <section className="py-20 px-4">
         <div className="container mx-auto text-center">
-          <h2 className="text-4xl font-bold text-white mb-6">
+          <h2 className="text-4xl font-bold text-foreground mb-6">
             Stay Updated
           </h2>
-          <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
+          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
             Get the latest adventure stories, trail updates, and conservation news delivered to your inbox
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" variant="outline" className="bg-white text-forest hover:bg-white/90">
-              Subscribe to Newsletter
-            </Button>
-            <Button size="lg" variant="ghost" asChild className="text-white hover:text-white/80">
-              <Link to="/blog">Read More Stories</Link>
-            </Button>
-          </div>
+          <Button size="lg" variant="adventure" asChild>
+            <Link to="/contact">Get Travel Updates</Link>
+          </Button>
         </div>
       </section>
       
