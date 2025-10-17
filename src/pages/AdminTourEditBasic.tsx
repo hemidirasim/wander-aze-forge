@@ -189,6 +189,10 @@ const AdminTourEditBasic: React.FC = () => {
     setIsSubmitting(true);
 
     try {
+      console.log('Submitting form data:', formData);
+      console.log('Start Date:', formData.startDate);
+      console.log('End Date:', formData.endDate);
+      
       const response = await fetch(`/api/tours/${id}/update-basic`, {
         method: 'PUT',
         headers: {
