@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { ArrowLeft, Save } from 'lucide-react';
 import GalleryUpload from '@/components/GalleryUpload';
+import SummernoteEditor from '@/components/SummernoteEditor';
 
 interface UploadedImage {
   url: string;
@@ -220,13 +221,11 @@ const AdminBlogForm = () => {
 
             <div>
               <Label htmlFor="content">Content *</Label>
-              <Textarea
-                id="content"
+              <SummernoteEditor
                 value={formData.content}
-                onChange={(e) => handleInputChange('content', e.target.value)}
+                onChange={(content) => handleInputChange('content', content)}
                 placeholder="Write your blog post content here..."
-                rows={10}
-                required
+                height={400}
               />
             </div>
           </CardContent>
