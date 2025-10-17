@@ -229,7 +229,7 @@ const Blog = () => {
       )}
 
       {/* All Posts */}
-      <section className="py-16 px-4 bg-muted/20">
+      <section className="pt-36 pb-16 px-4 bg-muted/20">
         <div className="container mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-foreground mb-4">All Stories</h2>
