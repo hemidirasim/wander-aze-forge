@@ -55,6 +55,16 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
   const { id } = req.query;
   
   try {
+    // Ensure booked_seats column exists
+    try {
+      await pool.query(`
+        ALTER TABLE tours 
+        ADD COLUMN IF NOT EXISTS booked_seats INTEGER DEFAULT 0
+      `);
+    } catch (columnError) {
+      console.log('Column might already exist:', columnError);
+    }
+    
     console.log('Fetching tour with ID:', id);
     
     const result = await pool.query(`

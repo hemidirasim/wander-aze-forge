@@ -39,6 +39,16 @@ export async function GET(request: Request) {
     // Test connection
     await pool.query('SELECT 1');
 
+    // Ensure booked_seats column exists
+    try {
+      await pool.query(`
+        ALTER TABLE tours 
+        ADD COLUMN IF NOT EXISTS booked_seats INTEGER DEFAULT 0
+      `);
+    } catch (columnError) {
+      console.log('Column might already exist:', columnError);
+    }
+
     // Get tour details - simplified query (support both ID and slug)
     const tourQuery = `
       SELECT 
