@@ -93,6 +93,7 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
       price_includes: result.rows[0].price_includes ? (typeof result.rows[0].price_includes === 'string' ? JSON.parse(result.rows[0].price_includes) : result.rows[0].price_includes) : [],
       participant_pricing: result.rows[0].participant_pricing ? (typeof result.rows[0].participant_pricing === 'string' ? JSON.parse(result.rows[0].participant_pricing) : result.rows[0].participant_pricing) : [],
       max_participants: result.rows[0].max_participants || null,
+      booked_seats: result.rows[0].booked_seats || 0,
       total_hiking_distance: result.rows[0].total_hiking_distance || null,
       total_elevation_gain: result.rows[0].total_elevation_gain || null,
       total_elevation_loss: result.rows[0].total_elevation_loss || null

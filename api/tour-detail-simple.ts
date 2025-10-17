@@ -101,6 +101,8 @@ export async function GET(request: Request) {
       itinerary: tour.itinerary || 'Detailed itinerary will be provided',
       requirements: tour.requirements || 'Basic fitness level required',
       special_fields: tour.special_fields || {},
+      max_participants: tour.max_participants || null,
+      booked_seats: tour.booked_seats || 0,
       total_hiking_distance: tour.total_hiking_distance || null,
       total_elevation_gain: tour.total_elevation_gain || null,
       total_elevation_loss: tour.total_elevation_loss || null
