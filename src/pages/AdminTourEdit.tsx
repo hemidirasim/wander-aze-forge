@@ -59,6 +59,7 @@ interface ExtendedTourForm {
   difficulty: string;
   price: string;
   maxParticipants: string;
+  bookedSeats: string;
   rating: string;
   reviewsCount: string;
   groupSize: string;
@@ -145,6 +146,7 @@ const AdminTourEdit: React.FC = () => {
     difficulty: '',
     price: '',
     maxParticipants: '',
+    bookedSeats: '0',
     rating: '4.5',
     reviewsCount: '0',
     groupSize: '',
@@ -259,6 +261,7 @@ const AdminTourEdit: React.FC = () => {
             difficulty: tour.difficulty || '',
             price: tour.price?.toString() || '',
             maxParticipants: tour.max_participants?.toString() || '',
+            bookedSeats: tour.booked_seats?.toString() || '0',
             rating: tour.rating?.toString() || '4.5',
             reviewsCount: tour.reviews_count?.toString() || '0',
             groupSize: tour.group_size || '',
@@ -391,6 +394,7 @@ const AdminTourEdit: React.FC = () => {
         difficulty: formData.difficulty,
         price: parseFloat(formData.price),
         maxParticipants: parseInt(formData.maxParticipants),
+        bookedSeats: parseInt(formData.bookedSeats),
         
         // Extended fields
         rating: parseFloat(formData.rating),
@@ -577,6 +581,20 @@ const AdminTourEdit: React.FC = () => {
                     placeholder="Enter max participants"
                     required
                   />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="bookedSeats">Booked Seats</Label>
+                  <Input
+                    id="bookedSeats"
+                    type="number"
+                    min="0"
+                    value={formData.bookedSeats}
+                    onChange={(e) => handleInputChange('bookedSeats', e.target.value)}
+                    placeholder="0"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Available: {parseInt(formData.maxParticipants || '0') - parseInt(formData.bookedSeats || '0')} seats
+                  </p>
                 </div>
               <div className="space-y-2">
                   <Label htmlFor="rating">Rating</Label>

@@ -50,7 +50,7 @@ export async function GET(request: Request) {
         provided_equipment, what_to_bring, transport_details, pickup_service,
         gallery_images, photography_service, price_includes, group_discounts,
         early_bird_discount, contact_phone, booking_terms, itinerary,
-        requirements, special_fields, participant_pricing, max_participants,
+        requirements, special_fields, participant_pricing, max_participants, booked_seats,
         total_hiking_distance, total_elevation_gain, total_elevation_loss,
         start_date, end_date
       FROM tours 
