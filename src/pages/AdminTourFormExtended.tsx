@@ -57,6 +57,7 @@ interface ExtendedTourForm {
   difficulty: string;
   price: string;
   maxParticipants: string;
+  bookedSeats: string;
   rating: string;
   reviewsCount: string;
   groupSize: string;
@@ -138,6 +139,7 @@ const AdminTourFormExtended: React.FC = () => {
     difficulty: 'Medium',
     price: '250',
     maxParticipants: '12',
+    bookedSeats: '0',
     rating: '4.8',
     reviewsCount: '47',
     groupSize: '6-12 people',
@@ -342,6 +344,7 @@ const AdminTourFormExtended: React.FC = () => {
         difficulty: formData.difficulty,
         price: parseFloat(formData.price),
         maxParticipants: parseInt(formData.maxParticipants),
+        bookedSeats: parseInt(formData.bookedSeats),
         
         // Extended fields
         rating: parseFloat(formData.rating),
@@ -585,6 +588,20 @@ const AdminTourFormExtended: React.FC = () => {
                     placeholder="Enter max participants"
                     required
                   />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="bookedSeats">Booked Seats</Label>
+                  <Input
+                    id="bookedSeats"
+                    type="number"
+                    min="0"
+                    value={formData.bookedSeats}
+                    onChange={(e) => handleInputChange('bookedSeats', e.target.value)}
+                    placeholder="0"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Available: {parseInt(formData.maxParticipants || '0') - parseInt(formData.bookedSeats || '0')} seats
+                  </p>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="rating">Rating</Label>

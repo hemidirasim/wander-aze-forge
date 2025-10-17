@@ -64,7 +64,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         ALTER TABLE tours 
         ADD COLUMN IF NOT EXISTS tour_programs JSONB DEFAULT '[]',
         ADD COLUMN IF NOT EXISTS pricing_type VARCHAR(20) DEFAULT 'fixed',
-        ADD COLUMN IF NOT EXISTS participant_pricing JSONB DEFAULT '[]'::jsonb
+        ADD COLUMN IF NOT EXISTS participant_pricing JSONB DEFAULT '[]'::jsonb,
+        ADD COLUMN IF NOT EXISTS booked_seats INTEGER DEFAULT 0
       `);
       console.log('Required columns ensured');
     } catch (columnError) {
@@ -92,6 +93,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       difficulty: req.body.difficulty?.trim() || '',
       price: parseFloat(req.body.price) || 0,
       maxParticipants: parseInt(req.body.maxParticipants) || 0,
+      bookedSeats: parseInt(req.body.bookedSeats) || 0,
       
       // Optional fields with defaults
       highlights: req.body.highlights || [],
@@ -198,8 +200,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           is_active = $22,
           featured = $23,
           pricing_type = $24,
-          participant_pricing = $25
-        WHERE id = $26
+          participant_pricing = $25,
+          booked_seats = $26
+        WHERE id = $27
         RETURNING *
       `;
       
@@ -229,6 +232,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         tourData.featured,
         tourData.pricing_type,
         JSON.stringify(tourData.participant_pricing || []),
+        tourData.bookedSeats,
         result.rows[0].id
       ];
       
