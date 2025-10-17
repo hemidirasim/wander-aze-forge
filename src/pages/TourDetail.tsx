@@ -303,6 +303,36 @@ const TourDetail = () => {
                 {tour.title}
               </h1>
               
+              {/* Tour Dates */}
+              {(tour.start_date || tour.end_date) && (
+                <div className="flex flex-wrap items-center gap-4 mb-6">
+                  {tour.start_date && (
+                    <div className="flex items-center space-x-2 text-muted-foreground">
+                      <Calendar className="w-5 h-5" />
+                      <span className="font-medium">Start:</span>
+                      <span>{new Date(tour.start_date).toLocaleDateString('en-US', { 
+                        weekday: 'long', 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                      })}</span>
+                    </div>
+                  )}
+                  {tour.end_date && (
+                    <div className="flex items-center space-x-2 text-muted-foreground">
+                      <Calendar className="w-5 h-5" />
+                      <span className="font-medium">End:</span>
+                      <span>{new Date(tour.end_date).toLocaleDateString('en-US', { 
+                        weekday: 'long', 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                      })}</span>
+                    </div>
+                  )}
+                </div>
+              )}
+              
               <div 
                 className="text-lg md:text-xl text-muted-foreground leading-relaxed prose prose-lg max-w-none"
                 dangerouslySetInnerHTML={{ __html: tour.description }}
