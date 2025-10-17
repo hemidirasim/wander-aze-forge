@@ -11,6 +11,7 @@ import { ArrowLeft, Save } from 'lucide-react';
 import GalleryUpload from '@/components/GalleryUpload';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import ImageUploader from 'quill-image-uploader';
 
 interface UploadedImage {
   url: string;
@@ -55,6 +56,30 @@ const AdminBlogForm = () => {
 
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+
+  // Image upload handler for ReactQuill
+  const handleImageUpload = async (file: File) => {
+    try {
+      const formData = new FormData();
+      formData.append('image', file);
+
+      const response = await fetch('/api/upload/image', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        if (result.success && result.url) {
+          return result.url;
+        }
+      }
+      throw new Error('Image upload failed');
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      throw error;
+    }
+  };
 
 
   useEffect(() => {
@@ -234,14 +259,17 @@ const AdminBlogForm = () => {
                     ['bold', 'italic', 'underline', 'strike'],
                     [{ 'list': 'ordered'}, { 'list': 'bullet' }],
                     [{ 'color': [] }, { 'background': [] }],
-                    ['link'],
+                    ['link', 'image'],
                     ['clean']
-                  ]
+                  ],
+                  imageUploader: {
+                    upload: handleImageUpload
+                  }
                 }}
                 style={{ height: '300px', marginBottom: '50px' }}
                 formats={[
                   'header', 'bold', 'italic', 'underline', 'strike',
-                  'list', 'bullet', 'color', 'background', 'link'
+                  'list', 'bullet', 'color', 'background', 'link', 'image'
                 ]}
               />
             </div>
