@@ -9,6 +9,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { ArrowLeft, Save } from 'lucide-react';
 import GalleryUpload from '@/components/GalleryUpload';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 interface UploadedImage {
   url: string;
@@ -220,13 +222,22 @@ const AdminBlogForm = () => {
 
             <div>
               <Label htmlFor="content">Content *</Label>
-              <Textarea
-                id="content"
+              <ReactQuill
+                theme="snow"
                 value={formData.content}
-                onChange={(e) => handleInputChange('content', e.target.value)}
+                onChange={(value) => handleInputChange('content', value)}
                 placeholder="Write your blog post content here..."
-                rows={15}
-                required
+                modules={{
+                  toolbar: [
+                    [{ 'header': [1, 2, 3, false] }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    [{ 'color': [] }, { 'background': [] }],
+                    ['link', 'image'],
+                    ['clean']
+                  ]
+                }}
+                style={{ height: '300px', marginBottom: '50px' }}
               />
             </div>
           </CardContent>
