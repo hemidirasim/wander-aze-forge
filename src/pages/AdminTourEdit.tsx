@@ -1201,4 +1201,4 @@ const AdminTourEdit: React.FC = () => {
   );
 };
 
-export default AdminTourEdit;
+export default AdminTourEdit;console.log('Booked Seats field should be visible');
