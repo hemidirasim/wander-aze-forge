@@ -582,20 +582,22 @@ const AdminTourEdit: React.FC = () => {
                     required
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="bookedSeats">Booked Seats</Label>
-                  <Input
-                    id="bookedSeats"
-                    type="number"
-                    min="0"
-                    value={formData.bookedSeats}
-                    onChange={(e) => handleInputChange('bookedSeats', e.target.value)}
-                    placeholder="0"
-                  />
-                  <p className="text-xs text-muted-foreground">
-                    Available: {parseInt(formData.maxParticipants || '0') - parseInt(formData.bookedSeats || '0')} seats
-                  </p>
-                </div>
+                {formData.category === 'group-tours' && (
+                  <div className="space-y-2">
+                    <Label htmlFor="bookedSeats">Booked Seats</Label>
+                    <Input
+                      id="bookedSeats"
+                      type="number"
+                      min="0"
+                      value={formData.bookedSeats}
+                      onChange={(e) => handleInputChange('bookedSeats', e.target.value)}
+                      placeholder="0"
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      Available: {parseInt(formData.maxParticipants || '0') - parseInt(formData.bookedSeats || '0')} seats
+                    </p>
+                  </div>
+                )}
               <div className="space-y-2">
                   <Label htmlFor="rating">Rating</Label>
                   <Input
