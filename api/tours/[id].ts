@@ -77,7 +77,7 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
         provided_equipment, what_to_bring, transport_details, pickup_service,
         gallery_images, photography_service, price_includes, participant_pricing,
         group_discounts, early_bird_discount, contact_phone, booking_terms, itinerary,
-        requirements, special_fields, max_participants, booked_seats, created_at, updated_at,
+        requirements, special_fields, max_participants, booked_seats, start_date, end_date, created_at, updated_at,
         total_hiking_distance, total_elevation_gain, total_elevation_loss
       FROM tours 
       WHERE id = $1
