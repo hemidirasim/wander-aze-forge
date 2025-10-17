@@ -143,7 +143,7 @@ const BlogDetail = () => {
       <DatabaseNavigation />
       
       {/* Back Button */}
-      <section className="pt-20 px-4">
+      <section className="pt-32 px-4">
         <div className="container mx-auto">
           <Button variant="ghost" asChild className="mb-6">
             <Link to="/blog" className="flex items-center">
