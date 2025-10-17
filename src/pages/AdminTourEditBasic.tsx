@@ -133,8 +133,8 @@ const AdminTourEditBasic: React.FC = () => {
           bestSeason: tourData.best_season || 'May to October',
           meetingPoint: tourData.meeting_point || '',
           languages: tourData.languages || 'English, Azerbaijani, Russian',
-          startDate: tourData.start_date || '',
-          endDate: tourData.end_date || '',
+          startDate: tourData.start_date ? new Date(tourData.start_date).toISOString().split('T')[0] : '',
+          endDate: tourData.end_date ? new Date(tourData.end_date).toISOString().split('T')[0] : '',
           isActive: tourData.is_active !== false,
           featured: tourData.featured === true
         });
