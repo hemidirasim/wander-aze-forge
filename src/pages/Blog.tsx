@@ -162,7 +162,7 @@ const Blog = () => {
 
       {/* Featured Post */}
       {featuredPost && (
-        <section className="pt-32 pb-16 px-4">
+        <section className="pt-40 pb-16 px-4">
           <div className="container mx-auto">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-bold text-foreground mb-4">Featured Story</h2>
