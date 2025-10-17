@@ -33,6 +33,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     console.log('=== UPDATE BASIC TOUR API CALLED ===');
     console.log('Tour ID:', id);
     console.log('Request body:', req.body);
+    console.log('Start Date from request:', req.body.startDate);
+    console.log('End Date from request:', req.body.endDate);
 
     if (!id) {
       return res.status(400).json({
@@ -89,6 +91,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     };
 
     console.log('Processed tour data:', tourData);
+    console.log('Start Date in tourData:', tourData.startDate);
+    console.log('End Date in tourData:', tourData.endDate);
 
     // Update tour in database
     const query = `
