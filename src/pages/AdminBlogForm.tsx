@@ -55,6 +55,35 @@ const AdminBlogForm = () => {
 
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [quillRef, setQuillRef] = useState<any>(null);
+
+  // Image upload handler for ReactQuill
+  const handleImageUpload = async (file: File) => {
+    try {
+      const formData = new FormData();
+      formData.append('image', file);
+
+      const response = await fetch('/api/upload/image', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        if (result.success && result.url) {
+          // Insert image into editor
+          const range = quillRef.getSelection();
+          quillRef.insertEmbed(range.index, 'image', result.url);
+          quillRef.setSelection(range.index + 1);
+          return result.url;
+        }
+      }
+      throw new Error('Image upload failed');
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      throw error;
+    }
+  };
 
 
 
@@ -229,20 +258,42 @@ const AdminBlogForm = () => {
                 value={formData.content}
                 onChange={(value) => handleInputChange('content', value)}
                 placeholder="Write your blog post content here..."
+                ref={setQuillRef}
                 modules={{
-                  toolbar: [
-                    [{ 'header': [1, 2, 3, false] }],
-                    ['bold', 'italic', 'underline', 'strike'],
-                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                    [{ 'color': [] }, { 'background': [] }],
-                    ['link'],
-                    ['clean']
-                  ]
+                  toolbar: {
+                    container: [
+                      [{ 'header': [1, 2, 3, false] }],
+                      ['bold', 'italic', 'underline', 'strike'],
+                      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                      [{ 'color': [] }, { 'background': [] }],
+                      ['link', 'image'],
+                      ['clean']
+                    ],
+                    handlers: {
+                      image: function() {
+                        const input = document.createElement('input');
+                        input.setAttribute('type', 'file');
+                        input.setAttribute('accept', 'image/*');
+                        input.click();
+
+                        input.onchange = async () => {
+                          const file = input.files?.[0];
+                          if (file) {
+                            try {
+                              await handleImageUpload(file);
+                            } catch (error) {
+                              console.error('Image upload failed:', error);
+                            }
+                          }
+                        };
+                      }
+                    }
+                  }
                 }}
                 style={{ height: '300px', marginBottom: '50px' }}
                 formats={[
                   'header', 'bold', 'italic', 'underline', 'strike',
-                  'list', 'bullet', 'color', 'background', 'link'
+                  'list', 'bullet', 'color', 'background', 'link', 'image'
                 ]}
               />
             </div>
