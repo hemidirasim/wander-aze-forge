@@ -108,6 +108,9 @@ const AdminTourEditBasic: React.FC = () => {
 
       if (data.success) {
         const tourData = data.data;
+        console.log('Tour data from API:', tourData);
+        console.log('Start date from API:', tourData.start_date);
+        console.log('End date from API:', tourData.end_date);
         setTour(tourData);
         setFormData({
           title: tourData.title || '',
