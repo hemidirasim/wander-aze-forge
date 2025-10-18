@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { put } from '@vercel/blob';
 import formidable from 'formidable';
+import { readFile, unlink } from 'fs/promises';
 
 export const config = {
   api: {
@@ -55,14 +56,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           return res.status(400).json({ error: 'No file provided in FormData' });
         }
 
-        fileData = await require('fs').promises.readFile(file.filepath);
+        fileData = await readFile(file.filepath);
         filename = file.originalFilename || 'uploaded-image';
         fileType = file.mimetype || 'image/jpeg';
         fileSize = file.size || 0;
         category = fields.type?.[0] || 'tours';
 
         // Clean up temporary file
-        await require('fs').promises.unlink(file.filepath).catch(() => {});
+        await unlink(file.filepath).catch(() => {});
         
       } catch (formError) {
         console.error('Formidable parsing error:', formError);
