@@ -100,6 +100,37 @@ const SummernoteEditor: React.FC<SummernoteEditorProps> = ({
             }
           });
 
+          // Add custom image button handler
+          window.$(editorRef.current).on('summernote.init', function() {
+            const toolbar = window.$(editorRef.current).next('.note-toolbar');
+            const pictureBtn = toolbar.find('[data-event="showImageDialog"]');
+            
+            pictureBtn.off('click').on('click', function(e) {
+              e.preventDefault();
+              const input = document.createElement('input');
+              input.setAttribute('type', 'file');
+              input.setAttribute('accept', 'image/*');
+              input.click();
+
+              input.onchange = async () => {
+                const file = input.files?.[0];
+                if (file) {
+                  try {
+                    const imageUrl = await handleImageUpload(file);
+                    if (imageUrl) {
+                      // Insert image into editor
+                      const range = summernoteRef.current.summernote('createRange');
+                      summernoteRef.current.summernote('insertImage', imageUrl);
+                    }
+                  } catch (error) {
+                    console.error('Image upload failed:', error);
+                    alert('Image upload failed. Please try again.');
+                  }
+                }
+              };
+            });
+          });
+
           // Set initial value
           if (value) {
             window.$(editorRef.current).summernote('code', value);
