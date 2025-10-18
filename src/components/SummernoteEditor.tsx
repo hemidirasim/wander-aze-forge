@@ -164,7 +164,7 @@ const SummernoteEditor: React.FC<SummernoteEditorProps> = ({
   };
 
   return (
-    <div className="space-y-2">
+    <div>
       {!isLoaded && (
         <div className="border rounded-md p-4 text-center text-muted-foreground">
           Loading editor...
