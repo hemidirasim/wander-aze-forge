@@ -428,10 +428,10 @@ const TourDetail = () => {
                           <div className="text-muted-foreground">
                             {tour.booked_seats !== undefined && tour.max_participants ? (
                               <>
-                                <span className="font-bold">{tour.max_participants - tour.booked_seats}</span>
-                                {' spots available ('}
-                                <span className="font-bold text-green-600">{tour.booked_seats}</span>
-                                {' booked)'}
+                                <span className="font-bold">{tour.max_participants - tour.booked_seats} spots</span>
+                                {' available ('}
+                                <span className="font-bold">{tour.booked_seats} booked</span>
+                                {')'}
                               </>
                             ) : (
                               'Spots available'
