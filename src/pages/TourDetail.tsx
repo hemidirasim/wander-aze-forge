@@ -430,7 +430,7 @@ const TourDetail = () => {
                               <>
                                 <span className="font-semibold">{tour.max_participants - tour.booked_seats}</span>
                                 {' seats available '}
-                                <span className="text-muted-foreground">({tour.booked_seats} booked)</span>
+                                <span className="text-green-600">({tour.booked_seats} booked)</span>
                               </>
                             ) : (
                               'Seats available'
