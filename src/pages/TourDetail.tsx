@@ -513,12 +513,12 @@ const TourDetail = () => {
                 </CardContent>
               </Card>
 
-              {/* 2. Detailed Tour Program */}
+              {/* 2. Tour Program */}
               <div className="space-y-4">
-                <div className="text-center mb-6">
-                  <h2 className="text-3xl font-bold text-foreground mb-2 flex items-center justify-center gap-3">
-                    <CalendarDays className="w-8 h-8 text-primary" />
-                    Detailed Tour Program
+                <div className="mb-6">
+                  <h2 className="text-2xl font-bold text-foreground mb-2 flex items-center gap-2">
+                    <CalendarDays className="w-6 h-6 text-primary" />
+                    Tour Program
                   </h2>
                 </div>
 
