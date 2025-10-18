@@ -281,29 +281,39 @@ const BlogDetail = () => {
       {post.gallery_images && post.gallery_images.length > 0 && (
         <section className="py-16 px-4 bg-muted/20">
           <div className="container mx-auto">
-            <h3 className="text-2xl font-bold text-center mb-8">Gallery</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
               {post.gallery_images.map((image: any, index: number) => (
-                <a
-                  key={index}
-                  href={image.url}
-                  data-fancybox="gallery"
-                  data-caption={image.description || image.alt || `Gallery image ${index + 1}`}
-                  className="group relative overflow-hidden rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
-                >
-                  <img 
-                    src={image.url} 
-                    alt={image.alt || `Gallery image ${index + 1}`}
-                    className="w-full h-32 object-cover transition-transform duration-300 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300 flex items-center justify-center">
-                    <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
-                      </svg>
+                <div key={index} className="group">
+                  <a
+                    href={image.url}
+                    data-fancybox="gallery"
+                    data-caption={image.description || image.alt || `Gallery image ${index + 1}`}
+                    className="relative overflow-hidden rounded-lg shadow-md hover:shadow-lg transition-all duration-300 block"
+                  >
+                    <img 
+                      src={image.url} 
+                      alt={image.alt || `Gallery image ${index + 1}`}
+                      className="w-full h-32 object-cover transition-transform duration-300 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300 flex items-center justify-center">
+                      <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+                        </svg>
+                      </div>
                     </div>
-                  </div>
-                </a>
+                  </a>
+                  {(image.title || image.description) && (
+                    <div className="mt-2 text-center">
+                      {image.title && (
+                        <h4 className="text-sm font-semibold text-foreground mb-1">{image.title}</h4>
+                      )}
+                      {image.description && (
+                        <p className="text-xs text-muted-foreground">{image.description}</p>
+                      )}
+                    </div>
+                  )}
+                </div>
               ))}
             </div>
           </div>
