@@ -20,6 +20,7 @@
     "server": "tsx src/server/index.ts"
   },
   "dependencies": {
+    "@fancyapps/ui": "^6.0.34",
     "@hookform/resolvers": "^3.10.0",
     "@radix-ui/react-accordion": "^1.2.11",
     "@radix-ui/react-alert-dialog": "^1.1.14",
