@@ -93,7 +93,7 @@ const DatabaseBlog: React.FC = () => {
 
   // Featured post (sol tərəf) və digər post'lar (sağ tərəf)
   const featuredPost = posts[0]; // İlk post featured olaraq
-  const otherPosts = posts.slice(1, 6); // Sonrakı 5 post
+  const otherPosts = posts.slice(1, 3); // Sonrakı 2 post
 
   return (
     <section className="py-16 px-4 bg-background">

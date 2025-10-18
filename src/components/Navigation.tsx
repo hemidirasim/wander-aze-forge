@@ -61,7 +61,7 @@ const Navigation = () => {
             <Logo className="w-28 h-28" />
           </Link>
 
-          {/* Search Button - Center */}
+          {/* Search Button - Center (Desktop) */}
           <div 
             className="hidden md:flex justify-center flex-1 max-w-md"
             onMouseEnter={() => setIsToursOpen(false)}
@@ -78,6 +78,16 @@ const Navigation = () => {
               </div>
             </Button>
           </div>
+
+          {/* Search Button - Mobile (Icon Only) */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsSearchOpen(true)}
+            className="md:hidden"
+          >
+            <Search className="w-5 h-5" />
+          </Button>
 
           {/* Desktop Navigation */}
           <div 

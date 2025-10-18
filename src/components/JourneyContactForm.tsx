@@ -457,10 +457,10 @@ const JourneyContactForm = () => {
         <div className="container mx-auto">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-16">
-              <h2 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
                 Plan Your Journey With Us
               </h2>
-              <p className="text-xl text-gray-900 max-w-3xl mx-auto leading-relaxed">
+              <p className="text-lg md:text-xl text-gray-900 max-w-3xl mx-auto leading-relaxed">
                 Ready to explore Azerbaijan? Tell us your travel dreams and we'll craft the perfect adventure for you
               </p>
             </div>
@@ -774,7 +774,7 @@ const JourneyContactForm = () => {
                     ) : (
                       <>
                         <Send className="w-5 h-5 mr-2" />
-                        Start Planning My Adventure
+                        Plan My Trip
                       </>
                     )}
                   </Button>

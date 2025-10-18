@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import DatabaseNavigation from '@/components/DatabaseNavigation';
 import Footer from '@/components/Footer';
 import DatabaseTourProgramAccordion from '@/components/DatabaseTourProgramAccordion';
@@ -101,6 +101,8 @@ const TourDetail = () => {
   const [selectedPrice, setSelectedPrice] = useState<string>('');
   const [isGroupSelected, setIsGroupSelected] = useState(false);
   const [similarTours, setSimilarTours] = useState<TourData[]>([]);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const galleryRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Reset pricing state when tour changes
@@ -201,6 +203,24 @@ const TourDetail = () => {
         window.Fancybox.destroy();
       }
     };
+  }, [tour?.gallery_images]);
+
+  // Handle gallery scroll for mobile carousel
+  useEffect(() => {
+    const handleScroll = () => {
+      if (galleryRef.current) {
+        const scrollLeft = galleryRef.current.scrollLeft;
+        const width = galleryRef.current.offsetWidth;
+        const newIndex = Math.round(scrollLeft / width);
+        setCurrentImageIndex(newIndex);
+      }
+    };
+
+    const gallery = galleryRef.current;
+    if (gallery) {
+      gallery.addEventListener('scroll', handleScroll);
+      return () => gallery.removeEventListener('scroll', handleScroll);
+    }
   }, [tour?.gallery_images]);
 
   if (loading) {
@@ -672,23 +692,70 @@ const TourDetail = () => {
                 </CardHeader>
                 <CardContent>
                   {tour && tour.gallery_images && tour.gallery_images.length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      {tour.gallery_images.map((image, index) => (
-                        <a
-                          key={index}
-                          href={image}
-                          data-fancybox="tour-gallery"
-                          data-caption={`${tour.title} - Image ${index + 1}`}
-                          className="block"
+                    <>
+                      {/* Mobile Carousel */}
+                      <div className="md:hidden relative">
+                        <div 
+                          ref={galleryRef}
+                          className="overflow-x-auto snap-x snap-mandatory flex gap-2 scrollbar-hide"
+                          style={{ scrollBehavior: 'smooth' }}
                         >
-                          <img
-                            src={image}
-                            alt={`Gallery image ${index + 1}`}
-                            className="w-full h-48 object-cover rounded-lg hover:scale-105 transition-transform duration-300 cursor-pointer"
-                          />
-                        </a>
-                      ))}
-                    </div>
+                          {tour.gallery_images.map((image, index) => (
+                            <a
+                              key={index}
+                              href={image}
+                              data-fancybox="tour-gallery"
+                              data-caption={`${tour.title} - Image ${index + 1}`}
+                              className="flex-shrink-0 w-full snap-start"
+                            >
+                              <img
+                                src={image}
+                                alt={`Gallery image ${index + 1}`}
+                                className="w-full h-64 object-cover rounded-lg cursor-pointer"
+                              />
+                            </a>
+                          ))}
+                        </div>
+                        
+                        {/* Navigation Dots */}
+                        <div className="flex justify-center gap-2 mt-4">
+                          {tour.gallery_images.map((_, index) => (
+                            <button
+                              key={index}
+                              onClick={() => {
+                                if (galleryRef.current) {
+                                  const scrollLeft = index * galleryRef.current.offsetWidth;
+                                  galleryRef.current.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+                                  setCurrentImageIndex(index);
+                                }
+                              }}
+                              className={`w-2 h-2 rounded-full transition-all ${
+                                currentImageIndex === index ? 'bg-primary w-8' : 'bg-muted-foreground/30'
+                              }`}
+                            />
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Desktop Grid */}
+                      <div className="hidden md:grid grid-cols-3 gap-4">
+                        {tour.gallery_images.map((image, index) => (
+                          <a
+                            key={index}
+                            href={image}
+                            data-fancybox="tour-gallery"
+                            data-caption={`${tour.title} - Image ${index + 1}`}
+                            className="block"
+                          >
+                            <img
+                              src={image}
+                              alt={`Gallery image ${index + 1}`}
+                              className="w-full h-48 object-cover rounded-lg hover:scale-105 transition-transform duration-300 cursor-pointer"
+                            />
+                          </a>
+                        ))}
+                      </div>
+                    </>
                   ) : (
                     <div className="text-center py-8">
                       <p className="text-muted-foreground">Gallery images will be available soon.</p>

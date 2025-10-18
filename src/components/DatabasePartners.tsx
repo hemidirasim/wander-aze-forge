@@ -90,10 +90,10 @@ const DatabasePartners: React.FC = () => {
     <section className="py-24 px-4 bg-background">
       <div className="container mx-auto">
         <div className="text-center mb-20">
-          <h2 className="text-5xl md:text-6xl font-bold text-foreground mb-6">
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
             Our Business Partners
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+          <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
             We collaborate with trusted organizations to ensure exceptional experiences and sustainable tourism practices
           </p>
         </div>

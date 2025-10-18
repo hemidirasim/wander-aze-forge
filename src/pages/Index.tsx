@@ -209,28 +209,29 @@ const Index = () => {
             <>
               <h1 className="font-bold mb-8 leading-tight">
                 <span 
+                  className="text-3xl md:text-5xl lg:text-6xl"
                   style={{ 
                     color: heroData?.title_color || '#ffffff',
-                    fontSize: `${heroData?.title_size || '48'}px`
+                    fontSize: window.innerWidth >= 1024 ? `${heroData?.title_size || '48'}px` : window.innerWidth >= 768 ? `${Math.round((heroData?.title_size || 48) * 0.7)}px` : `${Math.round((heroData?.title_size || 48) * 0.5)}px`
                   }}
                 >
                   {heroData?.title || 'Discover'}
                 </span>
                 <span 
-                  className="block"
+                  className="block text-2xl md:text-3xl lg:text-4xl"
                   style={{ 
                     color: heroData?.subtitle_color || '#d46e39',
-                    fontSize: `${heroData?.subtitle_size || '32'}px`
+                    fontSize: window.innerWidth >= 1024 ? `${heroData?.subtitle_size || '32'}px` : window.innerWidth >= 768 ? `${Math.round((heroData?.subtitle_size || 32) * 0.7)}px` : `${Math.round((heroData?.subtitle_size || 32) * 0.5)}px`
                   }}
                 >
                   {heroData?.subtitle || 'Azerbaijan'}
                 </span>
               </h1>
               <p 
-                className="mb-12 leading-relaxed"
+                className="mb-12 leading-relaxed text-sm md:text-base lg:text-lg"
                 style={{ 
                   color: heroData?.description_color || '#ffffff',
-                  fontSize: `${heroData?.description_size || '20'}px`
+                  fontSize: window.innerWidth >= 1024 ? `${heroData?.description_size || '20'}px` : window.innerWidth >= 768 ? `${Math.round((heroData?.description_size || 20) * 0.8)}px` : `${Math.round((heroData?.description_size || 20) * 0.7)}px`
                 }}
               >
                 {heroData?.description || 'Authentic mountain adventures • Sustainable tourism • Cultural immersion'}
