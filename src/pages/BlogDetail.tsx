@@ -205,22 +205,10 @@ const BlogDetail = () => {
         </div>
       </section>
 
-      {/* Article Content */}
-      <section className="py-16 px-4">
-        <div className="container mx-auto max-w-4xl">
-          <div className="prose prose-lg max-w-none">
-            <div 
-              className="text-muted-foreground leading-relaxed"
-              dangerouslySetInnerHTML={{ __html: post.content }}
-            />
-          </div>
-        </div>
-      </section>
-
       {/* Gallery Images */}
       {post.gallery_images && post.gallery_images.length > 0 && (
         <section className="py-16 px-4 bg-muted/20">
-          <div className="container mx-auto max-w-6xl">
+          <div className="container mx-auto">
             <h3 className="text-2xl font-bold text-center mb-8">Gallery</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {post.gallery_images.map((image: any, index: number) => (
@@ -237,6 +225,18 @@ const BlogDetail = () => {
           </div>
         </section>
       )}
+
+      {/* Article Content */}
+      <section className="py-16 px-4">
+        <div className="container mx-auto">
+          <div className="prose prose-lg max-w-none">
+            <div 
+              className="text-muted-foreground leading-relaxed"
+              dangerouslySetInnerHTML={{ __html: post.content }}
+            />
+          </div>
+        </div>
+      </section>
 
       {/* Tags */}
       {post.tags && post.tags.length > 0 && (
