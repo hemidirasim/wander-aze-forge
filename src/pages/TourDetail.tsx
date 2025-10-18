@@ -328,8 +328,8 @@ const TourDetail = () => {
                 <div className="flex flex-wrap items-center gap-4 mb-6">
                   {tour.start_date && (
                     <div className="flex items-center space-x-2 text-muted-foreground">
-                      <Calendar className="w-5 h-5" />
-                      <span className="font-medium">Start:</span>
+                      <Calendar className="w-5 h-5 text-primary" />
+                      <span className="font-bold">Start:</span>
                       <span>{new Date(tour.start_date).toLocaleDateString('en-US', { 
                         weekday: 'long', 
                         year: 'numeric', 
@@ -340,8 +340,8 @@ const TourDetail = () => {
                   )}
                   {tour.end_date && (
                     <div className="flex items-center space-x-2 text-muted-foreground">
-                      <Calendar className="w-5 h-5" />
-                      <span className="font-medium">End:</span>
+                      <Calendar className="w-5 h-5 text-primary" />
+                      <span className="font-bold">End:</span>
                       <span>{new Date(tour.end_date).toLocaleDateString('en-US', { 
                         weekday: 'long', 
                         year: 'numeric', 
