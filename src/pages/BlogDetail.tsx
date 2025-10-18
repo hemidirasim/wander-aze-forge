@@ -9,6 +9,13 @@ import { Calendar, User, Clock, ArrowLeft, Share2, BookOpen } from 'lucide-react
 import { useApi } from '@/hooks/useApi';
 import { useEffect } from 'react';
 
+// Extend Window interface for Fancybox
+declare global {
+  interface Window {
+    Fancybox: any;
+  }
+}
+
 interface BlogPost {
   id: number;
   title: string;
@@ -32,6 +39,12 @@ const BlogDetail = () => {
   useEffect(() => {
     const loadFancybox = async () => {
       try {
+        // Check if already loaded
+        if (window.Fancybox) {
+          initializeFancybox();
+          return;
+        }
+
         // Load CSS
         const link = document.createElement('link');
         link.rel = 'stylesheet';
@@ -42,24 +55,35 @@ const BlogDetail = () => {
         const script = document.createElement('script');
         script.src = 'https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js';
         script.onload = () => {
-          if (window.Fancybox) {
-            window.Fancybox.bind('[data-fancybox="gallery"]', {
-              Toolbar: {
-                display: {
-                  left: ["infobar"],
-                  middle: ["zoomIn", "zoomOut", "toggle1to1", "rotateCCW", "rotateCW", "flipX", "flipY"],
-                  right: ["slideshow", "thumbs", "close"]
-                }
-              },
-              Thumbs: {
-                autoStart: false,
-              }
-            });
-          }
+          console.log('Fancybox loaded');
+          setTimeout(() => {
+            initializeFancybox();
+          }, 100);
+        };
+        script.onerror = () => {
+          console.error('Failed to load Fancybox');
         };
         document.head.appendChild(script);
       } catch (error) {
         console.error('Error loading Fancybox:', error);
+      }
+    };
+
+    const initializeFancybox = () => {
+      if (window.Fancybox) {
+        console.log('Initializing Fancybox');
+        window.Fancybox.bind('[data-fancybox="gallery"]', {
+          Toolbar: {
+            display: {
+              left: ["infobar"],
+              middle: ["zoomIn", "zoomOut", "toggle1to1", "rotateCCW", "rotateCW", "flipX", "flipY"],
+              right: ["slideshow", "thumbs", "close"]
+            }
+          },
+          Thumbs: {
+            autoStart: false,
+          }
+        });
       }
     };
 
