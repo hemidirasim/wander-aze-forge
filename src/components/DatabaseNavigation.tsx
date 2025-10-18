@@ -23,6 +23,7 @@ const DatabaseNavigation = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isToursOpen, setIsToursOpen] = useState(false);
+  const [isMobileToursOpen, setIsMobileToursOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [categories, setCategories] = useState<DatabaseTourCategory[]>([]);
   const [loading, setLoading] = useState(true);
@@ -431,13 +432,13 @@ const DatabaseNavigation = () => {
                   className={`w-full flex items-center justify-between py-2 text-foreground hover:text-primary transition-smooth font-medium ${
                     location.pathname.startsWith('/tours') ? 'text-primary' : ''
                   }`}
-                  onClick={() => setIsToursOpen(!isToursOpen)}
+                  onClick={() => setIsMobileToursOpen(!isMobileToursOpen)}
                 >
                   <span>Tours</span>
-                  <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isToursOpen ? 'rotate-180' : ''}`} />
+                  <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isMobileToursOpen ? 'rotate-180' : ''}`} />
                 </button>
                 
-                {isToursOpen && (
+                {isMobileToursOpen && (
                   <div className="ml-4 mt-2 space-y-2">
                     {/* All Tours Link */}
                     <Link
@@ -447,6 +448,7 @@ const DatabaseNavigation = () => {
                       }`}
                       onClick={() => {
                         setIsMenuOpen(false);
+                        setIsMobileToursOpen(false);
                         scrollToTopInstant();
                       }}
                     >
@@ -465,6 +467,7 @@ const DatabaseNavigation = () => {
                           }`}
                           onClick={() => {
                             setIsMenuOpen(false);
+                            setIsMobileToursOpen(false);
                             scrollToTopInstant();
                           }}
                         >
