@@ -217,6 +217,27 @@ const BlogDetail = () => {
         </div>
       </section>
 
+      {/* Gallery Images */}
+      {post.gallery_images && post.gallery_images.length > 0 && (
+        <section className="py-16 px-4 bg-muted/20">
+          <div className="container mx-auto max-w-6xl">
+            <h3 className="text-2xl font-bold text-center mb-8">Gallery</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {post.gallery_images.map((image: any, index: number) => (
+                <div key={index} className="group relative overflow-hidden rounded-lg shadow-lg">
+                  <img 
+                    src={image.url} 
+                    alt={image.alt || `Gallery image ${index + 1}`}
+                    className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Tags */}
       {post.tags && post.tags.length > 0 && (
         <section className="py-8 px-4 bg-muted/20">
