@@ -28,6 +28,7 @@ interface TourData {
   reviews_count: number;
   group_size: string;
   max_participants: number;
+  min_participants: number;
   booked_seats: number;
   location: string;
   total_hiking_distance: string;
@@ -408,8 +409,13 @@ const TourDetail = () => {
                       <div>
                         <div className="font-semibold">Group Size</div>
                         <div className="text-muted-foreground">
-                          {tour.max_participants ? `max ${tour.max_participants} participants` : 
-                           tour.group_size || 'Small group (4-8 people)'}
+                          {tour.min_participants && tour.max_participants ? (
+                            `${tour.min_participants}-${tour.max_participants} participants`
+                          ) : tour.max_participants ? (
+                            `max ${tour.max_participants} participants`
+                          ) : (
+                            tour.group_size || 'Small group (4-8 people)'
+                          )}
                         </div>
                       </div>
                     </div>
