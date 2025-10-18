@@ -137,7 +137,7 @@ const DatabaseNavigation = () => {
             <Logo className="w-28 h-28" />
           </Link>
 
-          {/* Search Button - Center */}
+          {/* Search Button - Center (Desktop) */}
           <div 
             className="hidden md:flex justify-center flex-1 max-w-md"
             onMouseEnter={() => setIsToursOpen(false)}
@@ -154,6 +154,26 @@ const DatabaseNavigation = () => {
                 <span className="text-xs text-muted-foreground">Search...</span>
               </div>
             </Button>
+          </div>
+
+          {/* Mobile Right Section: Search + Menu */}
+          <div className="flex items-center gap-2 md:hidden">
+            {/* Search Button - Mobile (Icon Only) */}
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setIsSearchOpen(true)}
+            >
+              <Search className="w-5 h-5" />
+            </Button>
+
+            {/* Mobile Menu Button */}
+            <button
+              className="p-2 text-foreground hover:text-primary transition-smooth"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
           </div>
 
           {/* Desktop Navigation */}
@@ -399,14 +419,6 @@ const DatabaseNavigation = () => {
               </div>
             )}
           </div>
-
-          {/* Mobile Menu Button */}
-          <button
-            className="md:hidden p-2 text-foreground hover:text-primary transition-smooth"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
         </div>
 
         {/* Mobile Navigation */}
@@ -481,21 +493,6 @@ const DatabaseNavigation = () => {
                   {item.label}
                 </Link>
               ))}
-              
-              {/* Mobile Search Button */}
-              <Button 
-                variant="ghost" 
-                className="w-fit flex items-center gap-1.5"
-                onClick={() => {
-                  setIsMenuOpen(false);
-                  setIsSearchOpen(true);
-                }}
-              >
-                <div className="flex items-center gap-1.5">
-                  <Search className="w-3.5 h-3.5" />
-                  <span className="text-sm">Search</span>
-                </div>
-              </Button>
               
               {/* Book Now Button */}
               <Button variant="adventure" className="w-fit mt-4" asChild>
