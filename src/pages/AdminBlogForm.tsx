@@ -283,7 +283,7 @@ const AdminBlogForm = () => {
               <GalleryUpload
                 initialImages={formData.galleryImages}
                 onImagesChange={(images) => handleInputChange('galleryImages', images)}
-                maxImages={10}
+                maxImages={50}
                 allowMultiple={true}
               />
             </div>
