@@ -410,7 +410,7 @@ const TourDetail = () => {
                         <div className="font-semibold">Group Size</div>
                         <div className="text-muted-foreground">
                           {tour.min_participants && tour.max_participants ? (
-                            `min ${tour.min_participants} - max ${tour.max_participants}`
+                            `min ${tour.min_participants}, max ${tour.max_participants}`
                           ) : tour.max_participants ? (
                             `max ${tour.max_participants}`
                           ) : (
