@@ -422,15 +422,15 @@ const TourDetail = () => {
                     </div>
                     {tour.category === 'group-tours' && (
                       <div className="flex items-center space-x-3">
-                        <CheckCircle className="w-5 h-5 text-green-600" />
+                        <CheckCircle className="w-5 h-5 text-primary" />
                         <div>
                           <div className="font-semibold">Availability</div>
                           <div className="text-muted-foreground">
                             {tour.booked_seats !== undefined && tour.max_participants ? (
                               <>
-                                <span className="font-semibold text-green-600">{tour.max_participants - tour.booked_seats}</span>
+                                <span className="font-semibold">{tour.max_participants - tour.booked_seats}</span>
                                 {' seats available '}
-                                <span className="text-xs text-muted-foreground">({tour.booked_seats} booked)</span>
+                                <span className="text-muted-foreground">({tour.booked_seats} booked)</span>
                               </>
                             ) : (
                               'Seats available'
