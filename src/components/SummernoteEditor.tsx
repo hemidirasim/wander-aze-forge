@@ -172,8 +172,7 @@ const SummernoteEditor: React.FC<SummernoteEditorProps> = ({
       )}
       <div 
         ref={editorRef}
-        className="border rounded-md"
-        style={{ minHeight: `${height}px`, display: isLoaded ? 'block' : 'none' }}
+        style={{ display: isLoaded ? 'block' : 'none' }}
       />
     </div>
   );
