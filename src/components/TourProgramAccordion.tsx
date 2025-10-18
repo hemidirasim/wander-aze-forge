@@ -118,7 +118,7 @@ const TourProgramAccordion: React.FC<TourProgramAccordionProps> = ({ program, ca
                   {/* Activities Timeline */}
                   {day.activities && (
                     <div className="space-y-4">
-                      <h4 className="font-semibold text-foreground">Daily Schedule</h4>
+                      {/* <h4 className="font-semibold text-foreground">Daily Schedule</h4> */}
                       <div className="space-y-3">
                         {Array.isArray(day.activities) ? (
                           day.activities.map((activity, activityIndex) => (

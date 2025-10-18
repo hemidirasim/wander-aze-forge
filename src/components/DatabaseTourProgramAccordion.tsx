@@ -119,7 +119,7 @@ const DatabaseTourProgramAccordion: React.FC<DatabaseTourProgramAccordionProps> 
                   {/* Activities Timeline */}
                   {program.activities && (
                     <div className="space-y-4">
-                      <h4 className="font-semibold text-foreground">Daily Schedule</h4>
+                      {/* <h4 className="font-semibold text-foreground">Daily Schedule</h4> */}
                       <div className="space-y-3">
                         {(() => {
                           let activities = program.activities;
