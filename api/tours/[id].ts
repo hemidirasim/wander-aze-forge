@@ -55,11 +55,15 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
   const { id } = req.query;
   
   try {
-    // Ensure booked_seats column exists
+    // Ensure booked_seats and min_participants columns exist
     try {
       await pool.query(`
         ALTER TABLE tours 
         ADD COLUMN IF NOT EXISTS booked_seats INTEGER DEFAULT 0
+      `);
+      await pool.query(`
+        ALTER TABLE tours 
+        ADD COLUMN IF NOT EXISTS min_participants INTEGER DEFAULT NULL
       `);
     } catch (columnError) {
       console.log('Column might already exist:', columnError);
@@ -77,7 +81,7 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
         provided_equipment, what_to_bring, transport_details, pickup_service,
         gallery_images, photography_service, price_includes, participant_pricing,
         group_discounts, early_bird_discount, contact_phone, booking_terms, itinerary,
-        requirements, special_fields, max_participants, booked_seats, start_date, end_date, created_at, updated_at,
+        requirements, special_fields, max_participants, min_participants, booked_seats, start_date, end_date, created_at, updated_at,
         total_hiking_distance, total_elevation_gain, total_elevation_loss
       FROM tours 
       WHERE id = $1
@@ -103,6 +107,7 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
       price_includes: result.rows[0].price_includes ? (typeof result.rows[0].price_includes === 'string' ? JSON.parse(result.rows[0].price_includes) : result.rows[0].price_includes) : [],
       participant_pricing: result.rows[0].participant_pricing ? (typeof result.rows[0].participant_pricing === 'string' ? JSON.parse(result.rows[0].participant_pricing) : result.rows[0].participant_pricing) : [],
       max_participants: result.rows[0].max_participants || null,
+      min_participants: result.rows[0].min_participants || null,
       booked_seats: result.rows[0].booked_seats || 0,
       total_hiking_distance: result.rows[0].total_hiking_distance || null,
       total_elevation_gain: result.rows[0].total_elevation_gain || null,

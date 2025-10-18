@@ -39,11 +39,15 @@ export async function GET(request: Request) {
     // Test connection
     await pool.query('SELECT 1');
 
-    // Ensure booked_seats column exists
+    // Ensure booked_seats and min_participants columns exist
     try {
       await pool.query(`
         ALTER TABLE tours 
         ADD COLUMN IF NOT EXISTS booked_seats INTEGER DEFAULT 0
+      `);
+      await pool.query(`
+        ALTER TABLE tours 
+        ADD COLUMN IF NOT EXISTS min_participants INTEGER DEFAULT NULL
       `);
     } catch (columnError) {
       console.log('Column might already exist:', columnError);
@@ -60,7 +64,7 @@ export async function GET(request: Request) {
         provided_equipment, what_to_bring, transport_details, pickup_service,
         gallery_images, photography_service, price_includes, group_discounts,
         early_bird_discount, contact_phone, booking_terms, itinerary,
-        requirements, special_fields, participant_pricing, max_participants, booked_seats,
+        requirements, special_fields, participant_pricing, max_participants, min_participants, booked_seats,
         total_hiking_distance, total_elevation_gain, total_elevation_loss,
         start_date, end_date
       FROM tours 
