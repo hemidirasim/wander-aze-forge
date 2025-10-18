@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useApi } from '@/hooks/useApi';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -24,6 +24,17 @@ interface BlogPost {
 
 const DatabaseBlog: React.FC = () => {
   const { data: posts, loading, error } = useApi<BlogPost[]>('/blog');
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   if (loading) {
     return (
@@ -93,7 +104,7 @@ const DatabaseBlog: React.FC = () => {
 
   // Featured post (sol tərəf) və digər post'lar (sağ tərəf)
   const featuredPost = posts[0]; // İlk post featured olaraq
-  const otherPosts = posts.slice(1, 3); // Sonrakı 2 post
+  const otherPosts = posts.slice(1, isMobile ? 3 : 6); // Mobile-da 2, Desktop-da 5 post
 
   return (
     <section className="py-16 px-4 bg-background">
