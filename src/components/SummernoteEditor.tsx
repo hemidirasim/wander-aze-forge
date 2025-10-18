@@ -167,16 +167,22 @@ const SummernoteEditor: React.FC<SummernoteEditorProps> = ({
 
   const handleImageUpload = async (file: File) => {
     try {
+      console.log('Uploading image:', file.name, file.size, file.type);
+      
       const formData = new FormData();
       formData.append('image', file);
+      formData.append('type', 'blog'); // Add category
 
       const response = await fetch('/api/upload/image', {
         method: 'POST',
         body: formData
       });
 
+      console.log('Upload response status:', response.status);
+      
       if (response.ok) {
         const result = await response.json();
+        console.log('Upload result:', result);
         if (result.success && result.url) {
           // Insert image into editor
           const img = `<img src="${result.url}" alt="${file.name}" style="max-width: 100%; height: auto;">`;
@@ -185,12 +191,16 @@ const SummernoteEditor: React.FC<SummernoteEditorProps> = ({
           } catch (error) {
             console.error('Error inserting image:', error);
           }
+          return result.url;
         }
       } else {
-        console.error('Image upload failed');
+        const errorText = await response.text();
+        console.error('Upload failed:', response.status, errorText);
+        alert(`Image upload failed: ${response.status} ${errorText}`);
       }
     } catch (error) {
       console.error('Error uploading image:', error);
+      alert('Image upload failed. Please try again.');
     }
   };
 
