@@ -127,6 +127,12 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
     }
   };
 
+  const stripHtml = (html: string) => {
+    const tmp = document.createElement('DIV');
+    tmp.innerHTML = html;
+    return tmp.textContent || tmp.innerText || '';
+  };
+
   const handleResultClick = (result: SearchResult) => {
     const baseUrl = window.location.origin;
     let url = '';
@@ -229,7 +235,7 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
                           </Badge>
                         </div>
                         <p className="text-xs text-muted-foreground line-clamp-2">
-                          {result.excerpt || result.description}
+                          {stripHtml(result.excerpt || result.description || '')}
                         </p>
                       </div>
                     </div>
