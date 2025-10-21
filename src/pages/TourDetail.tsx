@@ -453,7 +453,9 @@ const TourDetail = () => {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {tour.category?.toLowerCase() !== 'culture' && 
+                    {category?.toLowerCase() !== 'culture-tours' && 
+                     category?.toLowerCase() !== 'wildlife' && 
+                     tour.category?.toLowerCase() !== 'culture' && 
                      tour.category?.toLowerCase() !== 'cultural' && 
                      tour.category?.toLowerCase() !== 'wildlife' && (
                       <div>
