@@ -41,10 +41,15 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
     const client = await pool.connect();
     
     try {
-      // Ensure published_date column exists
+      // Ensure columns exist
       await client.query(`
         ALTER TABLE blog_posts 
-        ADD COLUMN IF NOT EXISTS published_date DATE DEFAULT CURRENT_DATE
+        ADD COLUMN IF NOT EXISTS published_date DATE DEFAULT CURRENT_DATE,
+        ADD COLUMN IF NOT EXISTS author_bio TEXT,
+        ADD COLUMN IF NOT EXISTS author_avatar TEXT,
+        ADD COLUMN IF NOT EXISTS author_twitter TEXT,
+        ADD COLUMN IF NOT EXISTS author_linkedin TEXT,
+        ADD COLUMN IF NOT EXISTS author_instagram TEXT
       `);
 
       const { id } = req.query;
@@ -98,6 +103,11 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
         content,
         excerpt,
         author,
+        author_bio,
+        author_avatar,
+        author_twitter,
+        author_linkedin,
+        author_instagram,
         category,
         tags,
         featured_image,
@@ -142,11 +152,13 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
       if (_method === 'PUT' && id) {
         const updateResult = await client.query(
           `UPDATE blog_posts SET 
-            title = $1, content = $2, excerpt = $3, author = $4, category = $5, 
-            tags = $6, featured_image = $7, gallery_images = $8, status = $9, featured = $10,
-            published_date = $11, updated_at = CURRENT_TIMESTAMP
-          WHERE id = $12 RETURNING *`,
-          [title, content, excerpt, author, category, tags, featured_image, 
+            title = $1, content = $2, excerpt = $3, author = $4, author_bio = $5, 
+            author_avatar = $6, author_twitter = $7, author_linkedin = $8, author_instagram = $9,
+            category = $10, tags = $11, featured_image = $12, gallery_images = $13, 
+            status = $14, featured = $15, published_date = $16, updated_at = CURRENT_TIMESTAMP
+          WHERE id = $17 RETURNING *`,
+          [title, content, excerpt, author, author_bio, author_avatar, author_twitter, 
+           author_linkedin, author_instagram, category, tags, featured_image, 
            JSON.stringify(gallery_images || []), status, featured, published_date, id]
         );
         
@@ -165,10 +177,13 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
       // Handle CREATE request
       const result = await client.query(
         `INSERT INTO blog_posts (
-          title, content, excerpt, author, category, tags, featured_image, gallery_images, status, featured, published_date
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+          title, content, excerpt, author, author_bio, author_avatar, author_twitter, 
+          author_linkedin, author_instagram, category, tags, featured_image, 
+          gallery_images, status, featured, published_date
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
         RETURNING *`,
-        [title, content, excerpt, author, category, tags, featured_image, 
+        [title, content, excerpt, author, author_bio, author_avatar, author_twitter, 
+         author_linkedin, author_instagram, category, tags, featured_image, 
          JSON.stringify(gallery_images || []), status, featured, published_date]
       );
 

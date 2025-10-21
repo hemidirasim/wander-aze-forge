@@ -26,6 +26,11 @@ interface BlogFormData {
   content: string;
   excerpt: string;
   author: string;
+  author_bio: string;
+  author_avatar: string;
+  author_twitter: string;
+  author_linkedin: string;
+  author_instagram: string;
   category: string;
   tags: string;
   featured_image: string;
@@ -45,6 +50,11 @@ const AdminBlogForm = () => {
     content: '',
     excerpt: '',
     author: '',
+    author_bio: '',
+    author_avatar: '',
+    author_twitter: '',
+    author_linkedin: '',
+    author_instagram: '',
     category: '',
     tags: '',
     featured_image: '',
@@ -94,6 +104,11 @@ const AdminBlogForm = () => {
             content: post.content || '',
             excerpt: post.excerpt || '',
             author: post.author || '',
+            author_bio: post.author_bio || '',
+            author_avatar: post.author_avatar || '',
+            author_twitter: post.author_twitter || '',
+            author_linkedin: post.author_linkedin || '',
+            author_instagram: post.author_instagram || '',
             category: post.category || '',
             tags: post.tags ? post.tags.join(', ') : '',
             featured_image: post.featured_image || '',
@@ -139,6 +154,11 @@ const AdminBlogForm = () => {
         content: formData.content,
         excerpt: formData.excerpt,
         author: formData.author,
+        author_bio: formData.author_bio,
+        author_avatar: formData.author_avatar,
+        author_twitter: formData.author_twitter,
+        author_linkedin: formData.author_linkedin,
+        author_instagram: formData.author_instagram,
         category: formData.category,
         tags: tagsArray,
         featured_image: featuredImage,
@@ -299,6 +319,66 @@ const AdminBlogForm = () => {
                 maxImages={50}
                 allowMultiple={true}
               />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Author Information</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <Label htmlFor="author_bio">Author Bio</Label>
+              <Textarea
+                id="author_bio"
+                value={formData.author_bio}
+                onChange={(e) => handleInputChange('author_bio', e.target.value)}
+                placeholder="Brief biography of the author"
+                rows={3}
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="author_avatar">Author Avatar URL</Label>
+              <Input
+                id="author_avatar"
+                value={formData.author_avatar}
+                onChange={(e) => handleInputChange('author_avatar', e.target.value)}
+                placeholder="https://example.com/avatar.jpg"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <Label htmlFor="author_twitter">Twitter Handle</Label>
+                <Input
+                  id="author_twitter"
+                  value={formData.author_twitter}
+                  onChange={(e) => handleInputChange('author_twitter', e.target.value)}
+                  placeholder="@username"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="author_linkedin">LinkedIn URL</Label>
+                <Input
+                  id="author_linkedin"
+                  value={formData.author_linkedin}
+                  onChange={(e) => handleInputChange('author_linkedin', e.target.value)}
+                  placeholder="https://linkedin.com/in/username"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="author_instagram">Instagram Handle</Label>
+                <Input
+                  id="author_instagram"
+                  value={formData.author_instagram}
+                  onChange={(e) => handleInputChange('author_instagram', e.target.value)}
+                  placeholder="@username"
+                />
+              </div>
             </div>
           </CardContent>
         </Card>
