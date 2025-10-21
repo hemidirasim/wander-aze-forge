@@ -284,7 +284,11 @@ const TourDetail = () => {
             {/* Left Side - Title and Details */}
             <div className="space-y-6">
               <div className="flex items-center flex-wrap gap-3">
-                {tour.category?.toLowerCase() !== 'culture' && tour.category?.toLowerCase() !== 'cultural' && (
+                {category?.toLowerCase() !== 'culture-tours' && 
+                 category?.toLowerCase() !== 'wildlife' && 
+                 tour.category?.toLowerCase() !== 'culture' && 
+                 tour.category?.toLowerCase() !== 'cultural' && 
+                 tour.category?.toLowerCase() !== 'wildlife' && (
                   <Badge variant="secondary" className="bg-white/90 text-foreground">{tour.difficulty}</Badge>
                 )}
                 <Badge variant="secondary" className="bg-white/90 text-foreground">{tour.duration}</Badge>
