@@ -323,15 +323,26 @@ const BlogDetail = () => {
 
       {/* Article Content */}
       <section className="py-16 px-4">
-        <div className="mx-auto max-w-[800px]">
+        <div className="container mx-auto">
           <div className="prose prose-lg max-w-none">
             <div 
-              className="text-muted-foreground leading-relaxed"
+              className="text-muted-foreground leading-relaxed blog-content"
               dangerouslySetInnerHTML={{ __html: post.content }}
             />
           </div>
         </div>
       </section>
+
+      <style>{`
+        .blog-content img {
+          width: 100% !important;
+          height: auto !important;
+          max-width: 100% !important;
+          display: block;
+          margin: 2rem auto;
+          border-radius: 0.5rem;
+        }
+      `}</style>
 
       {/* Tags */}
       {post.tags && post.tags.length > 0 && (
