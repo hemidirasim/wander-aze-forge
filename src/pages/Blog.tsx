@@ -19,6 +19,7 @@ interface BlogPost {
   featured_image?: string;
   status: string;
   featured: boolean;
+  published_date?: string;
   created_at: string;
   updated_at: string;
 }
@@ -198,7 +199,7 @@ const Blog = () => {
                       </div>
                       <div className="flex items-center space-x-1">
                         <Calendar className="w-4 h-4" />
-                        <span>{new Date(featuredPost.created_at).toLocaleDateString()}</span>
+                        <span>{new Date(featuredPost.published_date || featuredPost.created_at).toLocaleDateString()}</span>
                       </div>
                       <div className="flex items-center space-x-1">
                         <Clock className="w-4 h-4" />
@@ -265,7 +266,7 @@ const Blog = () => {
                     </div>
                     <div className="flex items-center space-x-1">
                       <Calendar className="w-4 h-4" />
-                      <span>{new Date(post.created_at).toLocaleDateString()}</span>
+                      <span>{new Date(post.published_date || post.created_at).toLocaleDateString()}</span>
                     </div>
                   </div>
                 </CardHeader>

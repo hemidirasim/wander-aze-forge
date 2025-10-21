@@ -18,6 +18,7 @@ interface BlogPost {
   featured_image?: string;
   status: string;
   featured: boolean;
+  published_date?: string;
   created_at: string;
   updated_at: string;
 }
@@ -152,7 +153,7 @@ const DatabaseBlog: React.FC = () => {
                       </div>
                       <div className="flex items-center space-x-1">
                         <Calendar className="w-4 h-4" />
-                        <span>{new Date(featuredPost.created_at).toLocaleDateString()}</span>
+                        <span>{new Date(featuredPost.published_date || featuredPost.created_at).toLocaleDateString()}</span>
                       </div>
                     </div>
                   </CardHeader>
@@ -201,7 +202,7 @@ const DatabaseBlog: React.FC = () => {
                   <div className="flex items-center space-x-2 text-xs text-muted-foreground">
                     <span>{post.author}</span>
                     <span>•</span>
-                    <span>{new Date(post.created_at).toLocaleDateString()}</span>
+                    <span>{new Date(post.published_date || post.created_at).toLocaleDateString()}</span>
                     {post.category && (
                       <>
                         <span>•</span>

@@ -52,7 +52,7 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
       if (id) {
         // Get single blog post
         const result = await client.query(
-          'SELECT * FROM blog_posts WHERE id = $1 ORDER BY created_at DESC',
+          'SELECT * FROM blog_posts WHERE id = $1',
           [id]
         );
         
@@ -66,9 +66,9 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
           data: result.rows[0]
         });
       } else {
-        // Get all blog posts
+        // Get all blog posts - Order by published_date first, then created_at
         const result = await client.query(
-          'SELECT * FROM blog_posts ORDER BY created_at DESC'
+          'SELECT * FROM blog_posts ORDER BY COALESCE(published_date, created_at::date) DESC, created_at DESC'
         );
         
         res.status(200).json({
