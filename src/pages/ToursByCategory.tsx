@@ -309,11 +309,17 @@ const ToursByCategory = () => {
                           target.src = '/placeholder-tour.jpg';
                         }}
                       />
-                      <div className="absolute top-4 right-4">
-                        <Badge variant="secondary" className="bg-white/90 text-foreground">
-                          {tour.difficulty}
-                        </Badge>
-                      </div>
+                      {categoryId?.toLowerCase() !== 'culture-tours' && 
+                       categoryId?.toLowerCase() !== 'wildlife' && 
+                       tour.category?.toLowerCase() !== 'culture' && 
+                       tour.category?.toLowerCase() !== 'cultural' && 
+                       tour.category?.toLowerCase() !== 'wildlife' && (
+                        <div className="absolute top-4 right-4">
+                          <Badge variant="secondary" className="bg-white/90 text-foreground">
+                            {tour.difficulty}
+                          </Badge>
+                        </div>
+                      )}
                       <div className="absolute bottom-4 left-4 flex items-center space-x-1 text-white">
                         <Star className="w-4 h-4 fill-current text-autumn" />
                         <span className="text-sm font-medium">{tour.reviews_count > 0 ? tour.rating : '5.0'}</span>
