@@ -88,7 +88,7 @@ const BlogDetail = () => {
       }
     };
 
-    if (post && post.gallery_images && post.gallery_images.length > 0) {
+    if (post && post.gallery_images && post.gallery_images.length > 1) {
       loadFancybox();
     }
 
@@ -279,7 +279,7 @@ const BlogDetail = () => {
       </section>
 
       {/* Gallery Images */}
-      {post.gallery_images && post.gallery_images.length > 0 && (
+      {post.gallery_images && post.gallery_images.length > 1 && (
         <section className="py-16 px-4 bg-muted/20">
           <div className="container mx-auto">
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
