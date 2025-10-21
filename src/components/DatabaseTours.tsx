@@ -109,9 +109,13 @@ const DatabaseTours: React.FC = () => {
                 <Badge className={getCategoryColor(tour.category)}>
                   {tour.category}
                 </Badge>
-                <Badge className={getDifficultyColor(tour.difficulty)}>
-                  {tour.difficulty}
-                </Badge>
+                {tour.category?.toLowerCase() !== 'culture' && 
+                 tour.category?.toLowerCase() !== 'cultural' && 
+                 tour.category?.toLowerCase() !== 'wildlife' && (
+                  <Badge className={getDifficultyColor(tour.difficulty)}>
+                    {tour.difficulty}
+                  </Badge>
+                )}
               </div>
               <CardTitle className="text-xl">{tour.title}</CardTitle>
               <div className="flex justify-between text-sm text-gray-500">
