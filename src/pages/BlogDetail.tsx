@@ -323,7 +323,7 @@ const BlogDetail = () => {
 
       {/* Article Content */}
       <section className="py-16 px-4">
-        <div className="container mx-auto max-w-[800px]">
+        <div className="mx-auto max-w-[800px]">
           <div className="prose prose-lg max-w-none">
             <div 
               className="text-muted-foreground leading-relaxed"
