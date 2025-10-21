@@ -342,7 +342,7 @@ const BlogDetail = () => {
         .blog-content img {
           width: 100% !important;
           height: auto !important;
-          max-width: 100% !important;
+          max-width: 800px !important;
           display: block;
           margin: 2rem auto;
           border-radius: 0.5rem;
