@@ -28,7 +28,6 @@ interface TourData {
   reviews_count: number;
   group_size: string;
   max_participants: number;
-  min_participants: number;
   booked_seats: number;
   location: string;
   total_hiking_distance: string;
@@ -329,8 +328,8 @@ const TourDetail = () => {
                 <div className="flex flex-wrap items-center gap-4 mb-6">
                   {tour.start_date && (
                     <div className="flex items-center space-x-2 text-muted-foreground">
-                      <Calendar className="w-5 h-5 text-primary" />
-                      <span className="font-bold">Start:</span>
+                      <Calendar className="w-5 h-5" />
+                      <span className="font-medium">Start:</span>
                       <span>{new Date(tour.start_date).toLocaleDateString('en-US', { 
                         weekday: 'long', 
                         year: 'numeric', 
@@ -341,8 +340,8 @@ const TourDetail = () => {
                   )}
                   {tour.end_date && (
                     <div className="flex items-center space-x-2 text-muted-foreground">
-                      <Calendar className="w-5 h-5 text-primary" />
-                      <span className="font-bold">End:</span>
+                      <Calendar className="w-5 h-5" />
+                      <span className="font-medium">End:</span>
                       <span>{new Date(tour.end_date).toLocaleDateString('en-US', { 
                         weekday: 'long', 
                         year: 'numeric', 
@@ -409,13 +408,8 @@ const TourDetail = () => {
                       <div>
                         <div className="font-semibold">Group Size</div>
                         <div className="text-muted-foreground">
-                          {tour.min_participants && tour.max_participants ? (
-                            `min ${tour.min_participants}, max ${tour.max_participants}`
-                          ) : tour.max_participants ? (
-                            `max ${tour.max_participants}`
-                          ) : (
-                            tour.group_size || 'Small group (4-8 people)'
-                          )}
+                          {tour.max_participants ? `max ${tour.max_participants} participants` : 
+                           tour.group_size || 'Small group (4-8 people)'}
                         </div>
                       </div>
                     </div>
@@ -428,19 +422,18 @@ const TourDetail = () => {
                     </div>
                     {tour.category === 'group-tours' && (
                       <div className="flex items-center space-x-3">
-                        <CheckCircle className="w-5 h-5 text-primary" />
+                        <CheckCircle className="w-5 h-5 text-green-600" />
                         <div>
                           <div className="font-semibold">Availability</div>
                           <div className="text-muted-foreground">
                             {tour.booked_seats !== undefined && tour.max_participants ? (
                               <>
-                                <span className="font-bold">{tour.max_participants - tour.booked_seats} spots</span>
-                                {' available ('}
-                                <span className="font-bold">{tour.booked_seats} booked</span>
-                                {')'}
+                                <span className="font-semibold text-green-600">{tour.max_participants - tour.booked_seats}</span>
+                                {' seats available '}
+                                <span className="text-xs text-muted-foreground">({tour.booked_seats} booked)</span>
                               </>
                             ) : (
-                              'Spots available'
+                              'Seats available'
                             )}
                           </div>
                         </div>
@@ -460,7 +453,9 @@ const TourDetail = () => {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {tour.category?.toLowerCase() !== 'culture' && tour.category?.toLowerCase() !== 'cultural' && (
+                    {tour.category?.toLowerCase() !== 'culture' && 
+                     tour.category?.toLowerCase() !== 'cultural' && 
+                     tour.category?.toLowerCase() !== 'wildlife' && (
                       <div>
                         <h4 className="font-semibold mb-2">Difficulty Level</h4>
                         <p className="text-muted-foreground whitespace-pre-wrap">{tour.difficulty} - {tour.requirements || 'Suitable for participants with appropriate fitness level'}</p>
