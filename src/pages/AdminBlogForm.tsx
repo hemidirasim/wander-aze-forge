@@ -31,6 +31,7 @@ interface BlogFormData {
   featured_image: string;
   status: string;
   featured: boolean;
+  published_date: string;
   galleryImages: UploadedImage[];
 }
 
@@ -49,6 +50,7 @@ const AdminBlogForm = () => {
     featured_image: '',
     status: 'draft',
     featured: false,
+    published_date: new Date().toISOString().split('T')[0], // Default to today
     galleryImages: []
   });
 
@@ -97,6 +99,7 @@ const AdminBlogForm = () => {
             featured_image: post.featured_image || '',
             status: post.status || 'draft',
             featured: post.featured || false,
+            published_date: post.published_date ? new Date(post.published_date).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
             galleryImages: galleryImages
           });
         }
@@ -142,6 +145,7 @@ const AdminBlogForm = () => {
         gallery_images: formData.galleryImages,
         status: formData.status,
         featured: formData.featured,
+        published_date: formData.published_date,
         ...(isEditing && { id: parseInt(id!), _method: 'PUT' })
       };
 
@@ -238,7 +242,7 @@ const AdminBlogForm = () => {
             <CardTitle>Post Details</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <Label htmlFor="author">Author</Label>
                 <Input
@@ -264,6 +268,16 @@ const AdminBlogForm = () => {
                     <SelectItem value="news">News</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
+
+              <div>
+                <Label htmlFor="published_date">Published Date</Label>
+                <Input
+                  id="published_date"
+                  type="date"
+                  value={formData.published_date}
+                  onChange={(e) => handleInputChange('published_date', e.target.value)}
+                />
               </div>
             </div>
 

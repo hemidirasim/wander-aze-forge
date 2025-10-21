@@ -41,6 +41,12 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
     const client = await pool.connect();
     
     try {
+      // Ensure published_date column exists
+      await client.query(`
+        ALTER TABLE blog_posts 
+        ADD COLUMN IF NOT EXISTS published_date DATE DEFAULT CURRENT_DATE
+      `);
+
       const { id } = req.query;
       
       if (id) {
@@ -98,6 +104,7 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
         gallery_images,
         status = 'published',
         featured = false,
+        published_date,
         id,
         _method
       } = req.body;
@@ -137,10 +144,10 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
           `UPDATE blog_posts SET 
             title = $1, content = $2, excerpt = $3, author = $4, category = $5, 
             tags = $6, featured_image = $7, gallery_images = $8, status = $9, featured = $10,
-            updated_at = CURRENT_TIMESTAMP
-          WHERE id = $11 RETURNING *`,
+            published_date = $11, updated_at = CURRENT_TIMESTAMP
+          WHERE id = $12 RETURNING *`,
           [title, content, excerpt, author, category, tags, featured_image, 
-           JSON.stringify(gallery_images || []), status, featured, id]
+           JSON.stringify(gallery_images || []), status, featured, published_date, id]
         );
         
         if (updateResult.rows.length === 0) {
@@ -158,11 +165,11 @@ async function handlePost(req: VercelRequest, res: VercelResponse) {
       // Handle CREATE request
       const result = await client.query(
         `INSERT INTO blog_posts (
-          title, content, excerpt, author, category, tags, featured_image, gallery_images, status, featured
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+          title, content, excerpt, author, category, tags, featured_image, gallery_images, status, featured, published_date
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
         RETURNING *`,
         [title, content, excerpt, author, category, tags, featured_image, 
-         JSON.stringify(gallery_images || []), status, featured]
+         JSON.stringify(gallery_images || []), status, featured, published_date]
       );
 
       res.status(201).json({
