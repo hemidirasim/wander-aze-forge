@@ -265,7 +265,7 @@ const ProjectDetail = () => {
                       </div>
                     </div>
                     <div className="flex items-center space-x-3">
-                      <Users className="w-5 h-5 text-primary" />
+                      <MapPin className="w-5 h-5 text-primary" />
                       <div>
                         <div className="font-semibold">Location</div>
                         <div className="text-muted-foreground">{project.location}</div>
