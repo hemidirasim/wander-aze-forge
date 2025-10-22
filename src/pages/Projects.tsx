@@ -127,7 +127,7 @@ const Projects = () => {
                 
                 <CardFooter>
                   <Button variant="ghost" asChild className="w-full group-hover:bg-primary group-hover:text-primary-foreground">
-                    <Link to={`/projects/${project.slug || project.id}`} className="flex items-center justify-center">
+                    <Link to={`/projects/${project.slug || project.id}?id=${project.id}`} className="flex items-center justify-center">
                       Learn More
                       <ArrowRight className="w-4 h-4 ml-2" />
                     </Link>
