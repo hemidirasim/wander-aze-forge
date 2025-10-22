@@ -38,9 +38,13 @@ const ProjectDetail = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log('ProjectDetail - URL params:', { id, slug });
+    
     if (id) {
+      console.log('Fetching project by ID:', id);
       fetchProject(parseInt(id));
     } else if (slug) {
+      console.log('Fetching project by slug:', slug);
       fetchProjectBySlug(slug);
     }
   }, [id, slug]);
@@ -48,13 +52,19 @@ const ProjectDetail = () => {
   const fetchProject = async (projectId: number) => {
     try {
       setLoading(true);
+      console.log('Fetching project with ID:', projectId);
       const response = await fetch('/api/projects');
       const result = await response.json();
       
+      console.log('Projects API response:', result);
+      
       if (result.success) {
         const foundProject = result.data.projects.find((p: Project) => p.id === projectId);
+        console.log('Found project:', foundProject);
         if (foundProject) {
           setProject(foundProject);
+        } else {
+          console.log('Project not found in list');
         }
       }
     } catch (error) {
