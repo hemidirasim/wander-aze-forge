@@ -4,7 +4,6 @@ import DatabaseNavigation from '@/components/DatabaseNavigation';
 import Footer from '@/components/Footer';
 import TourCategoryDropdown from '@/components/TourCategoryDropdown';
 import TailorMadeForm from '@/components/TailorMadeForm';
-import DatabaseReviews from '@/components/DatabaseReviews';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -389,9 +388,6 @@ const ToursByCategory = () => {
         </div>
       </section>
 
-      {/* Reviews Section */}
-      <DatabaseReviews />
-      
       <Footer />
     </div>
   );
