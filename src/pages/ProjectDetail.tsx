@@ -37,6 +37,64 @@ const ProjectDetail = () => {
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Initialize Fancybox
+  useEffect(() => {
+    const loadFancybox = async () => {
+      try {
+        // Load Fancybox CSS
+        if (!document.querySelector('link[href*="fancybox"]')) {
+          const link = document.createElement('link');
+          link.rel = 'stylesheet';
+          link.href = 'https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css';
+          document.head.appendChild(link);
+        }
+
+        // Load Fancybox JS
+        if (!window.Fancybox) {
+          const script = document.createElement('script');
+          script.src = 'https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js';
+          script.onload = () => {
+            if (window.Fancybox) {
+              window.Fancybox.bind('[data-fancybox="project-gallery"]', {
+                Toolbar: {
+                  display: {
+                    left: ["infobar"],
+                    middle: ["zoomIn", "zoomOut", "toggle1to1", "rotateCCW", "rotateCW", "flipX", "flipY"],
+                    right: ["slideshow", "fullscreen", "thumbs", "close"]
+                  }
+                }
+              });
+            }
+          };
+          document.head.appendChild(script);
+        } else {
+          window.Fancybox.bind('[data-fancybox="project-gallery"]', {
+            Toolbar: {
+              display: {
+                left: ["infobar"],
+                middle: ["zoomIn", "zoomOut", "toggle1to1", "rotateCCW", "rotateCW", "flipX", "flipY"],
+                right: ["slideshow", "fullscreen", "thumbs", "close"]
+              }
+            }
+          });
+        }
+      } catch (error) {
+        console.error('Error loading Fancybox:', error);
+      }
+    };
+
+    if (project && project.gallery_urls && project.gallery_urls.length > 0) {
+      loadFancybox();
+    }
+
+    // Cleanup
+    return () => {
+      if (window.Fancybox) {
+        window.Fancybox.destroy();
+      }
+    };
+  }, [project]);
+
   useEffect(() => {
     console.log('ProjectDetail - URL params:', { id, slug });
     console.log('Current URL:', window.location.href);
