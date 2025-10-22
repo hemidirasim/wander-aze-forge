@@ -190,9 +190,10 @@ const ProjectDetail = () => {
                   <CardTitle className="text-2xl">Project Overview</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-                    {project.description}
-                  </p>
+                  <div 
+                    className="text-lg text-muted-foreground leading-relaxed mb-6 prose prose-lg max-w-none"
+                    dangerouslySetInnerHTML={{ __html: project.description }}
+                  />
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="flex items-center space-x-3">
