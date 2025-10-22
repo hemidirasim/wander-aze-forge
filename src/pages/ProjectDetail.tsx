@@ -39,9 +39,18 @@ const ProjectDetail = () => {
 
   useEffect(() => {
     console.log('ProjectDetail - URL params:', { id, slug });
+    console.log('Current URL:', window.location.href);
     
-    if (id) {
-      console.log('Fetching project by ID:', id);
+    // Check if we have both id and slug from URL params
+    const urlParams = new URLSearchParams(window.location.search);
+    const idFromQuery = urlParams.get('id');
+    console.log('ID from query params:', idFromQuery);
+    
+    if (idFromQuery) {
+      console.log('Fetching project by ID from query:', idFromQuery);
+      fetchProject(parseInt(idFromQuery));
+    } else if (id) {
+      console.log('Fetching project by ID from path:', id);
       fetchProject(parseInt(id));
     } else if (slug) {
       console.log('Fetching project by slug:', slug);
