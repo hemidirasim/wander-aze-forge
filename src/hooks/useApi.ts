@@ -18,13 +18,19 @@ export function useApi<T>(endpoint: string): ApiResponse<T> {
       try {
         setLoading(true);
         setError(null);
-        const response = await fetch(`${API_BASE_URL}${endpoint}`);
+        const url = `${API_BASE_URL}${endpoint}`;
+        console.log('Fetching from URL:', url);
+        const response = await fetch(url);
+        
+        console.log('Response status:', response.status);
+        console.log('Response headers:', response.headers);
         
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         
         const result = await response.json();
+        console.log('API response:', result);
         
         // Handle API response format: {success: true, data: ...}
         if (result.success && result.data !== undefined) {
@@ -36,6 +42,7 @@ export function useApi<T>(endpoint: string): ApiResponse<T> {
           throw new Error(result.error || 'API response error');
         }
       } catch (err) {
+        console.error('API fetch error:', err);
         setError(err instanceof Error ? err.message : 'An error occurred');
       } finally {
         setLoading(false);
