@@ -61,9 +61,15 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
         if (slug) {
           query = 'SELECT * FROM blog_posts WHERE slug = $1';
           params = [slug];
-        } else {
+        } else if (id) {
+          // Check if id is numeric
+          const numericId = parseInt(id as string);
+          if (isNaN(numericId)) {
+            res.status(400).json({ error: 'Invalid ID format' });
+            return;
+          }
           query = 'SELECT * FROM blog_posts WHERE id = $1';
-          params = [id];
+          params = [numericId];
         }
         
         const result = await client.query(query, params);
