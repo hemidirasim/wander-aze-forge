@@ -6,8 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Calendar, User, Clock, ArrowLeft, Share2, BookOpen } from 'lucide-react';
-import { useApi } from '@/hooks/useApi';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 // Extend Window interface for Fancybox
 declare global {
@@ -39,7 +38,47 @@ interface BlogPost {
 
 const BlogDetail = () => {
   const { id, slug } = useParams();
-  const { data: post, loading, error } = useApi<BlogPost>(slug ? `/blog?slug=${slug}` : `/blog?id=${id}`);
+  const [post, setPost] = useState<BlogPost | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchPost = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const url = slug 
+          ? `https://outtour.az/api/blog?slug=${slug}`
+          : `https://outtour.az/api/blog?id=${id}`;
+        
+        console.log('Fetching blog post from:', url);
+        const response = await fetch(url);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const result = await response.json();
+        console.log('Blog API response:', result);
+        
+        if (result.success && result.data) {
+          setPost(result.data);
+        } else {
+          throw new Error('Blog post not found');
+        }
+      } catch (err) {
+        console.error('Error fetching blog post:', err);
+        setError(err instanceof Error ? err.message : 'An error occurred');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id || slug) {
+      fetchPost();
+    }
+  }, [id, slug]);
 
   // Initialize Fancybox
   useEffect(() => {
