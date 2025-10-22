@@ -37,6 +37,7 @@ interface BlogFormData {
   status: string;
   featured: boolean;
   published_date: string;
+  slug: string;
   galleryImages: UploadedImage[];
 }
 
@@ -61,6 +62,7 @@ const AdminBlogForm = () => {
     status: 'draft',
     featured: false,
     published_date: new Date().toISOString().split('T')[0], // Default to today
+    slug: '',
     galleryImages: []
   });
 
@@ -232,6 +234,20 @@ const AdminBlogForm = () => {
                 placeholder="Enter blog post title"
                 required
               />
+            </div>
+
+            <div>
+              <Label htmlFor="slug">Slug *</Label>
+              <Input
+                id="slug"
+                value={formData.slug}
+                onChange={(e) => handleInputChange('slug', e.target.value)}
+                placeholder="Enter URL slug (e.g., my-blog-post)"
+                required
+              />
+              <p className="text-sm text-muted-foreground mt-1">
+                URL: /blog/{formData.slug || 'your-slug'}
+              </p>
             </div>
 
             <div>

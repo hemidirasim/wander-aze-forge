@@ -52,14 +52,21 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
         ADD COLUMN IF NOT EXISTS author_instagram TEXT
       `);
 
-      const { id } = req.query;
+      const { id, slug } = req.query;
       
-      if (id) {
-        // Get single blog post
-        const result = await client.query(
-          'SELECT * FROM blog_posts WHERE id = $1',
-          [id]
-        );
+      if (id || slug) {
+        // Get single blog post by ID or slug
+        let query, params;
+        
+        if (slug) {
+          query = 'SELECT * FROM blog_posts WHERE slug = $1';
+          params = [slug];
+        } else {
+          query = 'SELECT * FROM blog_posts WHERE id = $1';
+          params = [id];
+        }
+        
+        const result = await client.query(query, params);
         
         if (result.rows.length === 0) {
           res.status(404).json({ error: 'Blog post not found' });

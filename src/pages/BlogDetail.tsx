@@ -38,8 +38,8 @@ interface BlogPost {
 }
 
 const BlogDetail = () => {
-  const { id } = useParams();
-  const { data: post, loading, error } = useApi<BlogPost>(`/blog?id=${id}`);
+  const { id, slug } = useParams();
+  const { data: post, loading, error } = useApi<BlogPost>(slug ? `/blog?slug=${slug}` : `/blog?id=${id}`);
 
   // Initialize Fancybox
   useEffect(() => {

@@ -16,7 +16,7 @@ declare global {
 }
 
 const ProjectDetail = () => {
-  const { id } = useParams();
+  const { id, slug } = useParams();
 
   interface Project {
     id: number;
@@ -40,8 +40,10 @@ const ProjectDetail = () => {
   useEffect(() => {
     if (id) {
       fetchProject(parseInt(id));
+    } else if (slug) {
+      fetchProjectBySlug(slug);
     }
-  }, [id]);
+  }, [id, slug]);
 
   const fetchProject = async (projectId: number) => {
     try {
@@ -57,6 +59,22 @@ const ProjectDetail = () => {
       }
     } catch (error) {
       console.error('Error fetching project:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchProjectBySlug = async (projectSlug: string) => {
+    try {
+      setLoading(true);
+      const response = await fetch(`/api/projects?slug=${projectSlug}`);
+      const result = await response.json();
+      
+      if (result.success) {
+        setProject(result.data);
+      }
+    } catch (error) {
+      console.error('Error fetching project by slug:', error);
     } finally {
       setLoading(false);
     }

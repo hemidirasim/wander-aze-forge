@@ -48,6 +48,7 @@ interface ProjectFormData {
   gallery_urls: string[];
   gallery_images: any[];
   galleryImages: UploadedImage[];
+  slug: string;
 }
 
 const AdminProjectForm: React.FC = () => {
@@ -67,7 +68,8 @@ const AdminProjectForm: React.FC = () => {
     image_url: '',
     gallery_urls: [],
     gallery_images: [],
-    galleryImages: []
+    galleryImages: [],
+    slug: ''
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -242,6 +244,20 @@ const AdminProjectForm: React.FC = () => {
                 placeholder="Enter project title"
                 required
               />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="slug">Slug</Label>
+              <Input
+                id="slug"
+                value={formData.slug}
+                onChange={(e) => handleInputChange('slug', e.target.value)}
+                placeholder="Enter URL slug (e.g., my-project)"
+                required
+              />
+              <p className="text-sm text-muted-foreground">
+                URL: /projects/{formData.slug || 'your-slug'}
+              </p>
             </div>
 
             <div className="space-y-2">

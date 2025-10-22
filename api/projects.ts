@@ -20,26 +20,75 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   if (req.method === 'GET') {
     try {
-      console.log('Fetching all projects...');
+      const { id, slug } = req.query;
       
-      const result = await pool.query(`
-        SELECT 
-          id, title, description, category, location, 
-          start_date, end_date, budget, status, 
-          image_url, gallery_urls, gallery_images, created_at, updated_at
-        FROM projects 
-        ORDER BY created_at DESC
-      `);
-      
-      const projects = result.rows.map(row => ({
-        ...row,
-        gallery_urls: row.gallery_urls || []
-      }));
+      if (id || slug) {
+        // Get single project by ID or slug
+        let query, params;
+        
+        if (slug) {
+          query = `
+            SELECT 
+              id, title, description, category, location, 
+              start_date, end_date, budget, status, 
+              image_url, gallery_urls, gallery_images, created_at, updated_at
+            FROM projects 
+            WHERE slug = $1
+          `;
+          params = [slug];
+        } else {
+          query = `
+            SELECT 
+              id, title, description, category, location, 
+              start_date, end_date, budget, status, 
+              image_url, gallery_urls, gallery_images, created_at, updated_at
+            FROM projects 
+            WHERE id = $1
+          `;
+          params = [id];
+        }
+        
+        const result = await pool.query(query, params);
+        
+        if (result.rows.length === 0) {
+          return res.status(404).json({
+            success: false,
+            error: 'Project not found'
+          });
+        }
+        
+        const project = {
+          ...result.rows[0],
+          gallery_urls: result.rows[0].gallery_urls || []
+        };
+        
+        return res.status(200).json({
+          success: true,
+          data: project
+        });
+      } else {
+        // Get all projects
+        console.log('Fetching all projects...');
+        
+        const result = await pool.query(`
+          SELECT 
+            id, title, description, category, location, 
+            start_date, end_date, budget, status, 
+            image_url, gallery_urls, gallery_images, created_at, updated_at
+          FROM projects 
+          ORDER BY created_at DESC
+        `);
+        
+        const projects = result.rows.map(row => ({
+          ...row,
+          gallery_urls: row.gallery_urls || []
+        }));
 
-      return res.status(200).json({
-        success: true,
-        data: { projects }
-      });
+        return res.status(200).json({
+          success: true,
+          data: { projects }
+        });
+      }
     } catch (error: any) {
       console.error('Database error:', error);
       return res.status(500).json({
