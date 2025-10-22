@@ -55,24 +55,29 @@ const BlogDetail = () => {
           : `https://outtour.az/api/blog?id=${id}`;
         
         console.log('Fetching blog post from:', url);
-        const response = await fetch(url);
         
-        console.log('Response status:', response.status);
-        console.log('Response ok:', response.ok);
-        
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error('Error response:', errorText);
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const result = await response.json();
-        console.log('Blog API response:', result);
-        
-        if (result.success && result.data) {
-          setPost(result.data);
-        } else {
-          throw new Error('Blog post not found');
+        try {
+          const response = await fetch(url);
+          console.log('Response status:', response.status);
+          console.log('Response ok:', response.ok);
+          
+          if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Error response:', errorText);
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          
+          const result = await response.json();
+          console.log('Blog API response:', result);
+          
+          if (result.success && result.data) {
+            setPost(result.data);
+          } else {
+            throw new Error('Blog post not found');
+          }
+        } catch (fetchError) {
+          console.error('Fetch error:', fetchError);
+          throw fetchError;
         }
       } catch (err) {
         console.error('Error fetching blog post:', err);
