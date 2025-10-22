@@ -572,6 +572,12 @@ const Contact = () => {
                           <p className="text-sm text-muted-foreground">{faqData.contact_info.faq_3_answer}</p>
                         </div>
                       )}
+                      {faqData.contact_info.faq_4_question && faqData.contact_info.faq_4_answer && (
+                        <div>
+                          <h4 className="font-semibold text-foreground mb-2">{faqData.contact_info.faq_4_question}</h4>
+                          <p className="text-sm text-muted-foreground">{faqData.contact_info.faq_4_answer}</p>
+                        </div>
+                      )}
                     </>
                   ) : (
                     <>
@@ -586,6 +592,10 @@ const Contact = () => {
                       <div>
                         <h4 className="font-semibold text-foreground mb-2">Do you offer private tours?</h4>
                         <p className="text-sm text-muted-foreground">Yes! We can customize any tour for private groups. Contact us for personalized itineraries and pricing.</p>
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-foreground mb-2">What should I bring on the tour?</h4>
+                        <p className="text-sm text-muted-foreground">We'll provide a detailed packing list, but essentials include comfortable hiking boots, weather-appropriate clothing, and a sense of adventure!</p>
                       </div>
                     </>
                   )}

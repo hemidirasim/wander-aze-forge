@@ -105,6 +105,8 @@ const AdminContact = () => {
         faq_2_answer: contactInfo.faq_2_answer || '',
         faq_3_question: contactInfo.faq_3_question || '',
         faq_3_answer: contactInfo.faq_3_answer || '',
+        faq_4_question: contactInfo.faq_4_question || '',
+        faq_4_answer: contactInfo.faq_4_answer || '',
         // Social media fields
         facebook: contactInfo.facebook || '',
         instagram: contactInfo.instagram || '',
@@ -187,6 +189,8 @@ const AdminContact = () => {
         faq_2_answer: '',
         faq_3_question: '',
         faq_3_answer: '',
+        faq_4_question: '',
+        faq_4_answer: '',
         // Social media fields
         facebook: '',
         instagram: '',
@@ -369,6 +373,22 @@ const AdminContact = () => {
                           value={formData.contact_info.faq_3_answer || ''}
                           onChange={(e) => handleContactInfoChange('faq_3_answer', e.target.value)}
                           placeholder="Answer to third question"
+                          rows={2}
+                          className="mt-2"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="faq_4_question">Question 4</Label>
+                        <Input
+                          id="faq_4_question"
+                          value={formData.contact_info.faq_4_question || ''}
+                          onChange={(e) => handleContactInfoChange('faq_4_question', e.target.value)}
+                          placeholder="Fourth question"
+                        />
+                        <Textarea
+                          value={formData.contact_info.faq_4_answer || ''}
+                          onChange={(e) => handleContactInfoChange('faq_4_answer', e.target.value)}
+                          placeholder="Answer to fourth question"
                           rows={2}
                           className="mt-2"
                         />

@@ -339,10 +339,10 @@ const BookTour = () => {
         }
       }
     } else {
-      setFormData(prev => ({
-        ...prev,
+    setFormData(prev => ({
+      ...prev,
         [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value
-      }));
+    }));
     }
   };
 
@@ -501,9 +501,9 @@ const BookTour = () => {
               <ArrowLeft className="w-4 h-4 mr-2" />
               {tourSlug ? 'Back to Tour' : 'Back to Tours'}
             </Button>
-          </div>
+            </div>
 
-          {/* Booking Form */}
+            {/* Booking Form */}
           <div className="max-w-4xl mx-auto">
               <Card>
                 <CardHeader>
@@ -519,18 +519,18 @@ const BookTour = () => {
                     <div className="bg-muted/50 p-4 rounded-lg">
                       <h3 className="text-lg font-semibold mb-4">Tour Details</h3>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div>
+                    <div>
                           <Label htmlFor="tourName">Tour Name</Label>
-                          <Input
+                      <Input
                             id="tourName"
                             name="tourName"
                             value={formData.tourName}
                             readOnly
                             className="mt-1 bg-muted"
-                          />
-                        </div>
-                        
-                        <div>
+                      />
+                    </div>
+
+                    <div>
                           <Label htmlFor="groupSize">Group Size *</Label>
                           <select
                             id="groupSize"
@@ -580,7 +580,7 @@ const BookTour = () => {
                         
                         <div>
                           <Label htmlFor="tourPrice">Tour Price</Label>
-                          <Input
+                      <Input
                             id="tourPrice"
                             name="tourPrice"
                             value={formData.tourPrice}
@@ -629,9 +629,9 @@ const BookTour = () => {
                             id="roundTripTransfer"
                             name="roundTripTransfer"
                             checked={formData.roundTripTransfer}
-                            onChange={handleInputChange}
-                            className="mt-1"
-                          />
+                        onChange={handleInputChange}
+                        className="mt-1"
+                      />
                           <Label htmlFor="roundTripTransfer" className="cursor-pointer">
                             <strong>Round-trip transfer (Airport ↔ Hotel ↔ Airport):</strong> $70 to $110 depending on group size and vehicle type.
                           </Label>
@@ -872,18 +872,18 @@ const BookTour = () => {
 
                     {/* Submit Button */}
                     <div className="pt-4">
-                      <Button 
-                        type="submit" 
+                        <Button 
+                          type="submit" 
                         className="w-full h-12 text-base bg-primary hover:bg-primary/90"
-                        disabled={booking}
-                      >
-                        {booking ? (
-                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                        ) : (
-                          <CheckCircle className="w-4 h-4 mr-2" />
-                        )}
+                          disabled={booking}
+                        >
+                          {booking ? (
+                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                          ) : (
+                            <CheckCircle className="w-4 h-4 mr-2" />
+                          )}
                         {booking ? 'Sending...' : 'Send Booking Request'}
-                      </Button>
+                        </Button>
                     </div>
                   </form>
                 </CardContent>
