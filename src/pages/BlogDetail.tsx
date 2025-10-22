@@ -55,7 +55,12 @@ const BlogDetail = () => {
         console.log('Fetching blog post from:', url);
         const response = await fetch(url);
         
+        console.log('Response status:', response.status);
+        console.log('Response ok:', response.ok);
+        
         if (!response.ok) {
+          const errorText = await response.text();
+          console.error('Error response:', errorText);
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         
