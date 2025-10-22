@@ -31,7 +31,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             SELECT 
               id, title, description, category, location, 
               start_date, end_date, budget, status, 
-              image_url, gallery_urls, gallery_images, created_at, updated_at
+              image_url, gallery_urls, gallery_images, created_at, updated_at, slug
             FROM projects 
             WHERE slug = $1
           `;
@@ -41,7 +41,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             SELECT 
               id, title, description, category, location, 
               start_date, end_date, budget, status, 
-              image_url, gallery_urls, gallery_images, created_at, updated_at
+              image_url, gallery_urls, gallery_images, created_at, updated_at, slug
             FROM projects 
             WHERE id = $1
           `;
@@ -74,7 +74,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           SELECT 
             id, title, description, category, location, 
             start_date, end_date, budget, status, 
-            image_url, gallery_urls, gallery_images, created_at, updated_at
+            image_url, gallery_urls, gallery_images, created_at, updated_at, slug
           FROM projects 
           ORDER BY created_at DESC
         `);
