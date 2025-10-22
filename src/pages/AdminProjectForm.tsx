@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import GalleryUpload from '@/components/GalleryUpload';
+import SummernoteEditor from '@/components/SummernoteEditor';
 import { 
   ArrowLeft,
   Save,
@@ -245,13 +246,11 @@ const AdminProjectForm: React.FC = () => {
 
             <div className="space-y-2">
               <Label htmlFor="description">Project Description</Label>
-              <Textarea
-                id="description"
+              <SummernoteEditor
                 value={formData.description}
-                onChange={(e) => handleInputChange('description', e.target.value)}
-                placeholder="Describe the project goals, activities, and expected outcomes"
-                rows={6}
-                required
+                onChange={(content) => handleInputChange('description', content)}
+                placeholder="Describe the project goals, activities, and expected outcomes..."
+                height={400}
               />
             </div>
 
