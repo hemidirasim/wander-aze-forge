@@ -48,6 +48,8 @@ const BlogDetail = () => {
         setLoading(true);
         setError(null);
         
+        console.log('URL params - id:', id, 'slug:', slug);
+        
         const url = slug 
           ? `https://outtour.az/api/blog?slug=${slug}`
           : `https://outtour.az/api/blog?id=${id}`;
