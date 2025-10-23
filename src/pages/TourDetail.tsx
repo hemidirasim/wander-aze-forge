@@ -434,7 +434,7 @@ const TourDetail = () => {
                               <>
                                 <span className="font-semibold text-green-600">{tour.max_participants - tour.booked_seats}</span>
                                 <span className="font-semibold"> seats available </span>
-                                <span className="text-xs text-muted-foreground">(<span className="font-semibold">{tour.booked_seats}</span> booked)</span>
+                                <span className="text-xs text-muted-foreground">(<span className="font-semibold">{tour.booked_seats}</span> <span className="font-semibold">booked</span>)</span>
                               </>
                             ) : (
                               <span className="font-semibold">Seats available</span>
