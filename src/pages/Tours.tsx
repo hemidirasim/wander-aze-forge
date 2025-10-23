@@ -125,7 +125,8 @@ const Tours = () => {
                      tour.category?.toLowerCase() !== 'cultural' && 
                      tour.category?.toLowerCase() !== 'wildlife' &&
                      tour.category?.toLowerCase() !== 'cultural tours' &&
-                     tour.category?.toLowerCase() !== 'wildlife tours' && (
+                     tour.category?.toLowerCase() !== 'wildlife tours' &&
+                     tour.category?.toLowerCase() !== 'culture-tours' && (
                       <div className="absolute top-4 left-4">
                         <Badge variant="secondary" className="bg-white/90 text-foreground">
                           {tour.difficulty}
