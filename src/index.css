@@ -158,4 +158,15 @@
     padding-left: 0 !important;
     padding-right: 0 !important;
   }
+
+  /* Header and Footer padding with !important */
+  .header-padding {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+
+  .footer-padding {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
 }
