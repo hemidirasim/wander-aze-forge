@@ -404,7 +404,7 @@ const Index = () => {
       </section>
 
       {/* Customer Reviews - Carousel */}
-      <section className="py-24 px-0 md:px-4 bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900" style={{ paddingLeft: '0', paddingRight: '0' }}>
+      <section className="py-24 px-4 bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
         <div className="container mx-auto">
           {/* Modern Header */}
           <div className="text-center mb-20">
