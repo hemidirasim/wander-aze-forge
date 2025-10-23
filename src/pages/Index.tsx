@@ -190,7 +190,7 @@ const Index = () => {
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent" />
         
         {/* Hero Content */}
-        <div className="relative z-10 text-center text-white max-w-5xl px-0 md:px-4" style={{ paddingLeft: '0', paddingRight: '0' }}>
+        <div className="relative z-10 text-center text-white max-w-5xl px-4">
           {heroLoading ? (
             // Loading state
             <div className="space-y-8">
@@ -258,7 +258,7 @@ const Index = () => {
       </section>
 
       {/* What Makes Us Special */}
-      <section className="py-24 px-0 md:px-4" style={{ paddingLeft: '0', paddingRight: '0' }}>
+      <section className="py-24 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-20">
             <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
@@ -293,7 +293,7 @@ const Index = () => {
       </section>
 
       {/* Our Most Popular Tours */}
-      <section className="py-24 px-0 md:px-4 bg-muted/20" style={{ paddingLeft: '0', paddingRight: '0' }}>
+      <section className="py-24 px-4 bg-muted/20">
         <div className="container mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
