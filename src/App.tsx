@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ScrollToTop from "@/components/ScrollToTop";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
+import CookieConsent from "@/components/CookieConsent";
 import Index from "./pages/Index";
 import Tours from "./pages/Tours";
 import ToursByCategory from "./pages/ToursByCategory";
@@ -129,6 +130,7 @@ const App = () => (
         </Routes>
         <ScrollToTop />
         <ScrollToTopButton />
+        <CookieConsent />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
