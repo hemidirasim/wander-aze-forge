@@ -102,11 +102,14 @@ const Projects = () => {
                   <CardTitle className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
                     {project.title}
                   </CardTitle>
-                  <p className="text-muted-foreground text-sm">
-                    {project.description && project.description.length > 100 
-                      ? `${project.description.substring(0, 100)}...` 
-                      : project.description}
-                  </p>
+                  <div 
+                    className="text-muted-foreground text-sm prose prose-sm max-w-none line-clamp-3"
+                    dangerouslySetInnerHTML={{ 
+                      __html: project.description && project.description.length > 100 
+                        ? `${project.description.substring(0, 100)}...` 
+                        : project.description 
+                    }}
+                  />
                 </CardHeader>
                 
                 <CardContent className="space-y-3">
