@@ -145,11 +145,11 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
         url = `${baseUrl}/projects/${result.id}`;
         break;
       case 'tour':
-        // Use category slug if available, otherwise fallback to direct tour ID
+        // Use category slug and tour slug if available, otherwise fallback to IDs
         if (result.category) {
-          url = `${baseUrl}/tours/${result.category}/${result.id}`;
+          url = `${baseUrl}/tours/${result.category}/${result.slug || result.id}`;
         } else {
-          url = `${baseUrl}/tours/${result.id}`;
+          url = `${baseUrl}/tours/${result.slug || result.id}`;
         }
         break;
     }
