@@ -104,6 +104,11 @@ const TourDetail = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const galleryRef = useRef<HTMLDivElement>(null);
 
+  // Get ID from query parameters if available
+  const urlParams = new URLSearchParams(window.location.search);
+  const queryId = urlParams.get('id');
+  const finalId = queryId || id;
+
   useEffect(() => {
     // Reset pricing state when tour changes
     setSelectedParticipants('');
@@ -113,9 +118,12 @@ const TourDetail = () => {
     const fetchTourDetail = async () => {
       try {
         setLoading(true);
-        // Check if id is numeric (ID) or string (slug)
-        const isNumericId = !isNaN(Number(id));
-        const param = isNumericId ? `id=${id}` : `slug=${id}`;
+        console.log('TourDetail - URL params:', { id, category, queryId, finalId });
+        console.log('Current URL:', window.location.href);
+        
+        // Use finalId (from query params or path params)
+        const isNumericId = !isNaN(Number(finalId));
+        const param = isNumericId ? `id=${finalId}` : `slug=${finalId}`;
         const response = await fetch(`/api/tour-detail-simple?${param}&category=${category}`);
         const result = await response.json();
 
@@ -154,7 +162,7 @@ const TourDetail = () => {
     if (id) {
       fetchTourDetail();
     }
-  }, [id, category]);
+  }, [finalId, category]);
 
   // Fetch similar tours
   useEffect(() => {
