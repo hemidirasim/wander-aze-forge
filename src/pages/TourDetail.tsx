@@ -674,29 +674,35 @@ const TourDetail = () => {
                 </CardContent>
               </Card>
 
-              {/* 5. Transport */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-2xl flex items-center gap-2">
-                    <Car className="w-6 h-6 text-primary" />
-                    Transport
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <h4 className="font-semibold mb-2">Included Transportation</h4>
-                    <p className="text-muted-foreground whitespace-pre-wrap">
-                      {tour.transport_details || 'Comfortable, air-conditioned vehicles from Baku to the tour starting point and return. Professional drivers familiar with mountain roads ensure safe and scenic journeys.'}
-                    </p>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold mb-2">Pick-up Service</h4>
-                    <p className="text-muted-foreground whitespace-pre-wrap">
-                      {tour.pickup_service || 'Pick-up from central Baku locations or your hotel (within city limits). Exact pick-up time and location will be confirmed 24 hours before departure.'}
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
+              {/* 5. Transport - Only show if transport details exist */}
+              {(tour.transport_details || tour.pickup_service) && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-2xl flex items-center gap-2">
+                      <Car className="w-6 h-6 text-primary" />
+                      Transport
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {tour.transport_details && (
+                      <div>
+                        <h4 className="font-semibold mb-2">Included Transportation</h4>
+                        <p className="text-muted-foreground whitespace-pre-wrap">
+                          {tour.transport_details}
+                        </p>
+                      </div>
+                    )}
+                    {tour.pickup_service && (
+                      <div>
+                        <h4 className="font-semibold mb-2">Pick-up Service</h4>
+                        <p className="text-muted-foreground whitespace-pre-wrap">
+                          {tour.pickup_service}
+                        </p>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              )}
 
               {/* 6. Media */}
               <Card>
