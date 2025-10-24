@@ -736,15 +736,6 @@ const TourDetail = () => {
                     <>
                       {/* Mobile Carousel */}
                       <div className="md:hidden relative">
-                        {/* Auto-play controls */}
-                        <div className="flex justify-center mb-4">
-                          <button
-                            onClick={() => setIsAutoPlaying(!isAutoPlaying)}
-                            className="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors"
-                          >
-                            {isAutoPlaying ? 'Pause' : 'Play'} Auto-slide
-                          </button>
-                        </div>
                         <div 
                           ref={galleryRef}
                           className="overflow-x-auto snap-x snap-mandatory flex gap-2 scrollbar-hide"
