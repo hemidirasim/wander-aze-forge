@@ -103,6 +103,7 @@ const TourDetail = () => {
   const [similarTours, setSimilarTours] = useState<TourData[]>([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const galleryRef = useRef<HTMLDivElement>(null);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
   // Get ID from query parameters if available
   const urlParams = new URLSearchParams(window.location.search);
@@ -230,6 +231,24 @@ const TourDetail = () => {
       return () => gallery.removeEventListener('scroll', handleScroll);
     }
   }, [tour?.gallery_images]);
+
+  // Auto-play slider for mobile
+  useEffect(() => {
+    if (!tour?.gallery_images || tour.gallery_images.length <= 1) return;
+    
+    const interval = setInterval(() => {
+      if (isAutoPlaying && galleryRef.current) {
+        setCurrentImageIndex(prev => {
+          const nextIndex = (prev + 1) % tour.gallery_images.length;
+          const scrollLeft = nextIndex * galleryRef.current.offsetWidth;
+          galleryRef.current.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+          return nextIndex;
+        });
+      }
+    }, 3000); // Change image every 3 seconds
+
+    return () => clearInterval(interval);
+  }, [tour?.gallery_images, isAutoPlaying]);
 
   if (loading) {
     return (
@@ -717,10 +736,21 @@ const TourDetail = () => {
                     <>
                       {/* Mobile Carousel */}
                       <div className="md:hidden relative">
+                        {/* Auto-play controls */}
+                        <div className="flex justify-center mb-4">
+                          <button
+                            onClick={() => setIsAutoPlaying(!isAutoPlaying)}
+                            className="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors"
+                          >
+                            {isAutoPlaying ? 'Pause' : 'Play'} Auto-slide
+                          </button>
+                        </div>
                         <div 
                           ref={galleryRef}
                           className="overflow-x-auto snap-x snap-mandatory flex gap-2 scrollbar-hide"
                           style={{ scrollBehavior: 'smooth' }}
+                          onMouseEnter={() => setIsAutoPlaying(false)}
+                          onMouseLeave={() => setIsAutoPlaying(true)}
                         >
                           {tour.gallery_images.map((image, index) => (
                             <a
