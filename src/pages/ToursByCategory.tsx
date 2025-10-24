@@ -379,7 +379,7 @@ const ToursByCategory = () => {
                         </div>
                       </div>
                       <Button variant="adventure" asChild>
-                        <Link to={`/tours/${categoryId}/${tour.slug || tour.id}`}>
+                        <Link to={`/tours/${categoryId}/${tour.slug || tour.id}`} onClick={() => console.log('Tour link clicked:', { id: tour.id, title: tour.title, slug: tour.slug, link: `/tours/${categoryId}/${tour.slug || tour.id}` })}>
                           View Details
                         </Link>
                       </Button>
