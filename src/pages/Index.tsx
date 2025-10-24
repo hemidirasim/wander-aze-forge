@@ -209,7 +209,7 @@ const Index = () => {
             <>
               <h1 className="font-bold mb-8 leading-tight">
                 <span 
-                  className="text-3xl md:text-5xl lg:text-6xl"
+                  className="text-3xl md:text-5xl lg:text-6xl block mb-4"
                   style={{ 
                     color: heroData?.title_color || '#ffffff',
                     fontSize: window.innerWidth >= 1024 ? `${heroData?.title_size || '48'}px` : window.innerWidth >= 768 ? `${Math.round((heroData?.title_size || 48) * 0.7)}px` : `${Math.round((heroData?.title_size || 48) * 0.5)}px`
