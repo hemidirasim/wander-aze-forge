@@ -108,6 +108,10 @@ const ToursByCategory = () => {
             tour.category === categoryId
           );
           
+          // Debug: Log tour data to check if slugs are present
+          console.log('ToursByCategory - Sample tour data:', categoryTours[0]);
+          console.log('ToursByCategory - Tour slugs:', categoryTours.map(t => ({ id: t.id, title: t.title, slug: t.slug })));
+          
           setTours(categoryTours);
           console.log(`Found ${categoryTours.length} tours for category ${categoryId}`);
         } else {
