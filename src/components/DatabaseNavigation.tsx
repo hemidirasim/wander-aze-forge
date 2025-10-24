@@ -424,8 +424,8 @@ const DatabaseNavigation = () => {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden py-4 border-t border-border">
-            <div className="flex flex-col space-y-2">
+          <div className="md:hidden py-4 border-t border-border px-4">
+            <div className="flex flex-col space-y-2 max-w-full">
               {/* Tours Section */}
               <div>
                 <button
@@ -439,7 +439,7 @@ const DatabaseNavigation = () => {
                 </button>
                 
                 {isMobileToursOpen && (
-                  <div className="ml-4 mt-2 space-y-2">
+                  <div className="ml-2 mt-2 space-y-2 max-w-full overflow-hidden">
                     {/* All Tours Link */}
                     <Link
                       to="/tours"
