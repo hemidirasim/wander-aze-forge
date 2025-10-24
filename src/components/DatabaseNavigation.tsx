@@ -209,7 +209,7 @@ const DatabaseNavigation = () => {
                   
                   {/* Dropdown Menu */}
                   <div 
-                    className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 w-64 max-w-[calc(100vw-2rem)] bg-background border border-border rounded-lg shadow-elevated z-30 overflow-hidden"
+                    className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[calc(100vw-2rem)] max-w-sm bg-background border border-border rounded-lg shadow-elevated z-30 overflow-hidden md:absolute md:top-full md:left-1/2 md:transform md:-translate-x-1/2 md:mt-2 md:w-64 md:max-w-none"
                     onMouseEnter={() => setIsToursOpen(true)}
                     onMouseLeave={() => setIsToursOpen(false)}
                   >
