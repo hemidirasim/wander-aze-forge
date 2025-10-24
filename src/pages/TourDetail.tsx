@@ -943,7 +943,7 @@ const TourDetail = () => {
                       </div>
                     </div>
                     <Button variant="adventure" asChild>
-                      <Link to={`/tours/${category}/${similarTour.slug || similarTour.id}`}>
+                      <Link to={`/tours/${category}/${similarTour.slug || similarTour.title.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').trim()}?id=${similarTour.id}`}>
                         View Details
                       </Link>
                     </Button>

@@ -108,12 +108,27 @@ const ToursByCategory = () => {
             tour.category === categoryId
           );
           
-          // Debug: Log tour data to check if slugs are present
-          console.log('ToursByCategory - Sample tour data:', categoryTours[0]);
-          console.log('ToursByCategory - Tour slugs:', categoryTours.map(t => ({ id: t.id, title: t.title, slug: t.slug })));
+          // Generate slugs from titles if not present
+          const toursWithSlugs = categoryTours.map(tour => {
+            const slug = tour.slug || tour.title
+              .toLowerCase()
+              .replace(/[^a-z0-9\s-]/g, '') // Remove special characters
+              .replace(/\s+/g, '-') // Replace spaces with hyphens
+              .replace(/-+/g, '-') // Replace multiple hyphens with single
+              .trim();
+            
+            return {
+              ...tour,
+              generatedSlug: slug
+            };
+          });
           
-          setTours(categoryTours);
-          console.log(`Found ${categoryTours.length} tours for category ${categoryId}`);
+          // Debug: Log tour data to check if slugs are present
+          console.log('ToursByCategory - Sample tour data:', toursWithSlugs[0]);
+          console.log('ToursByCategory - Tour slugs:', toursWithSlugs.map(t => ({ id: t.id, title: t.title, slug: t.slug, generatedSlug: t.generatedSlug })));
+          
+          setTours(toursWithSlugs);
+          console.log(`Found ${toursWithSlugs.length} tours for category ${categoryId}`);
         } else {
           setError(result.error || 'Failed to load tours');
         }
@@ -379,7 +394,7 @@ const ToursByCategory = () => {
                         </div>
                       </div>
                       <Button variant="adventure" asChild>
-                        <Link to={`/tours/${categoryId}/${tour.slug || tour.id}`} onClick={() => console.log('Tour link clicked:', { id: tour.id, title: tour.title, slug: tour.slug, link: `/tours/${categoryId}/${tour.slug || tour.id}` })}>
+                        <Link to={`/tours/${categoryId}/${tour.generatedSlug}?id=${tour.id}`} onClick={() => console.log('Tour link clicked:', { id: tour.id, title: tour.title, slug: tour.slug, generatedSlug: tour.generatedSlug, link: `/tours/${categoryId}/${tour.generatedSlug}?id=${tour.id}` })}>
                           View Details
                         </Link>
                       </Button>
