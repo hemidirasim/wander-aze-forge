@@ -147,9 +147,11 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
       case 'tour':
         // Use category slug and tour slug if available, otherwise fallback to IDs
         if (result.category) {
-          url = `${baseUrl}/tours/${result.category}/${result.slug || result.id}`;
+          const tourSlug = result.slug || result.title?.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').trim();
+          url = `${baseUrl}/tours/${result.category}/${tourSlug}?id=${result.id}`;
         } else {
-          url = `${baseUrl}/tours/${result.slug || result.id}`;
+          const tourSlug = result.slug || result.title?.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').trim();
+          url = `${baseUrl}/tours/${tourSlug}?id=${result.id}`;
         }
         break;
     }

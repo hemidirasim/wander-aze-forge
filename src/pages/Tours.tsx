@@ -175,7 +175,7 @@ const Tours = () => {
                         </div>
                       </div>
                       <Button variant="adventure" size="sm" asChild>
-                        <Link to={`/tours/${tour.category}/${tour.slug || tour.id}`} className="flex items-center gap-2">
+                        <Link to={`/tours/${tour.category}/${tour.slug || tour.title.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').trim()}?id=${tour.id}`} className="flex items-center gap-2">
                           Learn More
                           <ArrowRight className="w-4 h-4" />
                         </Link>
