@@ -68,7 +68,7 @@ const TourCategoryDropdown = () => {
           />
           
           {/* Dropdown Menu */}
-          <div className="absolute top-full left-0 mt-2 w-64 bg-background border border-border rounded-lg shadow-elevated z-40 overflow-hidden">
+          <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[calc(100vw-2rem)] max-w-sm bg-background border border-border rounded-lg shadow-elevated z-40 overflow-hidden">
             <div className="py-2">
               {/* All Tours Link */}
               <Link
