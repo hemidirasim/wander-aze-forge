@@ -49,8 +49,19 @@ const TourReview = () => {
   useEffect(() => {
     if (id) {
       fetchTour(parseInt(id));
+      // Ensure database table exists
+      ensureDatabaseTable();
     }
   }, [id]);
+
+  const ensureDatabaseTable = async () => {
+    try {
+      await fetch('https://outtour.az/api/create-tour-reviews-table');
+      console.log('Database table check completed');
+    } catch (error) {
+      console.log('Database table check failed:', error);
+    }
+  };
 
   const fetchTour = async (tourId: number) => {
     try {
@@ -152,16 +163,60 @@ const TourReview = () => {
 
       console.log('Submitting review:', reviewData);
 
-      // Submit to API
-      const response = await fetch('https://outtour.az/api/tour-reviews', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(reviewData)
-      });
+      // Try multiple API endpoints
+      const endpoints = [
+        'https://outtour.az/api/tour-reviews',
+        '/api/tour-reviews'
+      ];
 
-      const result = await response.json();
+      let response;
+      let lastError;
+
+      for (const endpoint of endpoints) {
+        try {
+          console.log('Trying endpoint:', endpoint);
+          response = await fetch(endpoint, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(reviewData)
+          });
+
+          if (response.ok) {
+            console.log('Success with endpoint:', endpoint);
+            break;
+          } else {
+            console.log(`Endpoint ${endpoint} failed with status:`, response.status);
+          }
+        } catch (endpointError) {
+          console.log(`Endpoint ${endpoint} error:`, endpointError);
+          lastError = endpointError;
+          continue;
+        }
+      }
+
+      if (!response || !response.ok) {
+        throw new Error(`All endpoints failed. Last error: ${lastError?.message || 'Unknown error'}`);
+      }
+
+      console.log('Response status:', response.status);
+      console.log('Response headers:', response.headers);
+
+      let result;
+      try {
+        const responseText = await response.text();
+        console.log('Raw response:', responseText);
+        
+        if (responseText.trim() === '') {
+          throw new Error('Empty response from server');
+        }
+        
+        result = JSON.parse(responseText);
+      } catch (parseError) {
+        console.error('JSON parse error:', parseError);
+        throw new Error(`Server response error: ${response.status} ${response.statusText}`);
+      }
 
       if (result.success) {
         alert('Review submitted successfully!');
