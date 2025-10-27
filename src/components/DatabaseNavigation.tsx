@@ -127,9 +127,9 @@ const DatabaseNavigation = () => {
       onMouseLeave={() => setIsToursOpen(false)}
     >
       <div className="container mx-auto header-padding">
-        <div className="grid grid-cols-3 items-center h-24">
+        <div className="flex items-center justify-between h-24">
           {/* Left Section - Logo */}
-          <div className="flex justify-start">
+          <div className="flex-shrink-0">
             <Link 
               to="/" 
               className="flex items-center text-foreground hover:text-primary transition-smooth"
@@ -142,14 +142,14 @@ const DatabaseNavigation = () => {
 
           {/* Center Section - Search (Desktop) */}
           <div 
-            className="hidden md:flex justify-center"
+            className="hidden md:flex justify-center flex-1 max-w-md mx-8"
             onMouseEnter={() => setIsToursOpen(false)}
           >
             <Button
               variant="ghost" 
               size="sm"
               onClick={() => setIsSearchOpen(true)}
-              className="flex items-center justify-start gap-1.5 px-3 py-1.5"
+              className="flex items-center justify-start gap-1.5 px-3 py-1.5 w-full"
               style={{ maxWidth: '192px' }}
             >
               <div className="flex items-center gap-1.5">
@@ -160,7 +160,7 @@ const DatabaseNavigation = () => {
           </div>
 
           {/* Mobile Right Section: Search + Menu */}
-          <div className="col-span-2 md:hidden flex items-center justify-end gap-2">
+          <div className="flex items-center gap-2 md:hidden">
             {/* Search Button - Mobile (Icon Only) */}
             <Button
               variant="ghost"
@@ -181,7 +181,7 @@ const DatabaseNavigation = () => {
 
           {/* Right Section - Desktop Navigation */}
           <div 
-            className="hidden md:flex items-center space-x-8"
+            className="hidden md:flex items-center space-x-4 flex-shrink-0"
             onMouseEnter={() => setIsToursOpen(false)}
           >
             {/* Tours Dropdown */}
