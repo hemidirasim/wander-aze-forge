@@ -153,10 +153,11 @@
     display: none;
   }
 
-  /* Override container default padding */
+  /* Override container default padding and set max-width */
   .container {
     padding-left: 0 !important;
     padding-right: 0 !important;
+    max-width: 1440px !important;
   }
 
   /* Header and Footer padding with !important */
