@@ -277,20 +277,6 @@ const Blog = () => {
         </div>
       </section>
 
-      {/* Newsletter Section */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto text-center">
-          <h2 className="text-4xl font-bold text-foreground mb-6">
-            Stay Updated
-          </h2>
-          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Get the latest adventure stories, trail updates, and conservation news delivered to your inbox
-          </p>
-          <Button size="lg" variant="adventure" asChild>
-            <Link to="/contact">Get Travel Updates</Link>
-          </Button>
-        </div>
-      </section>
       
       <Footer />
     </div>
