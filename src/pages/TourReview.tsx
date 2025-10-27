@@ -55,15 +55,59 @@ const TourReview = () => {
   const fetchTour = async (tourId: number) => {
     try {
       setLoading(true);
-      const response = await fetch('/api/tours');
-      const result = await response.json();
+      console.log('Fetching tour with ID:', tourId);
       
-      if (result.success) {
-        const foundTour = result.data.tours.find((t: Tour) => t.id === tourId);
-        if (foundTour) {
-          setTour(foundTour);
+      // Try different API endpoints
+      const endpoints = [
+        `https://outtour.az/api/tours?id=${tourId}`,
+        `https://outtour.az/api/tours/${tourId}`,
+        '/api/tours'
+      ];
+      
+      let tourFound = false;
+      
+      for (const endpoint of endpoints) {
+        try {
+          console.log('Trying endpoint:', endpoint);
+          const response = await fetch(endpoint);
+          
+          if (!response.ok) {
+            console.log(`Endpoint ${endpoint} failed with status:`, response.status);
+            continue;
+          }
+          
+          const result = await response.json();
+          console.log('API response:', result);
+          
+          if (result.success && result.data) {
+            // Handle different response structures
+            let tours = [];
+            if (Array.isArray(result.data)) {
+              tours = result.data;
+            } else if (result.data.tours) {
+              tours = result.data.tours;
+            } else if (result.data.tour) {
+              tours = [result.data.tour];
+            }
+            
+            const foundTour = tours.find((t: Tour) => t.id === tourId);
+            if (foundTour) {
+              console.log('Tour found:', foundTour);
+              setTour(foundTour);
+              tourFound = true;
+              break;
+            }
+          }
+        } catch (endpointError) {
+          console.log(`Endpoint ${endpoint} error:`, endpointError);
+          continue;
         }
       }
+      
+      if (!tourFound) {
+        console.log('Tour not found in any endpoint');
+      }
+      
     } catch (error) {
       console.error('Error fetching tour:', error);
     } finally {
