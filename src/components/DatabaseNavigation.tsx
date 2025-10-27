@@ -408,15 +408,18 @@ const DatabaseNavigation = () => {
               </div>
             ) : (
               <div className="flex items-center gap-2">
-                <Button variant="outline" className="hover:bg-primary hover:text-white transition-colors" asChild>
-                  <Link to="/login" onClick={() => {
-                    scrollToTopInstant();
-                    setIsToursOpen(false);
-                  }}>
-                    <User className="w-4 h-4 mr-2" />
-                    Login
-                  </Link>
-                </Button>
+                {/* Login Button - HIDDEN FOR NOW */}
+                {false && (
+                  <Button variant="outline" className="hover:bg-primary hover:text-white transition-colors" asChild>
+                    <Link to="/login" onClick={() => {
+                      scrollToTopInstant();
+                      setIsToursOpen(false);
+                    }}>
+                      <User className="w-4 h-4 mr-2" />
+                      Login
+                    </Link>
+                  </Button>
+                )}
               </div>
             )}
           </div>
@@ -571,15 +574,18 @@ const DatabaseNavigation = () => {
                 </div>
               ) : (
                 <div className="flex flex-col gap-2 mt-4">
-                  <Button variant="outline" className="w-fit hover:bg-primary hover:text-white transition-colors" asChild>
-                    <Link to="/login" onClick={() => {
-                      setIsMenuOpen(false);
-                      scrollToTopInstant();
-                    }}>
-                      <User className="w-4 h-4 mr-2" />
-                      Login
-                    </Link>
-                  </Button>
+                  {/* Mobile Login Button - HIDDEN FOR NOW */}
+                  {false && (
+                    <Button variant="outline" className="w-fit hover:bg-primary hover:text-white transition-colors" asChild>
+                      <Link to="/login" onClick={() => {
+                        setIsMenuOpen(false);
+                        scrollToTopInstant();
+                      }}>
+                        <User className="w-4 h-4 mr-2" />
+                        Login
+                      </Link>
+                    </Button>
+                  )}
                 </div>
               )}
             </div>
