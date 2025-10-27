@@ -129,7 +129,7 @@ const DatabaseNavigation = () => {
       <div className="container mx-auto md:px-4">
         <div className="flex items-center justify-between h-24">
           {/* Left Section - Logo */}
-          <div className="flex-shrink-0">
+          <div className="flex-shrink-0 pl-2.5 md:pl-0">
             <Link 
               to="/" 
               className="flex items-center text-foreground hover:text-primary transition-smooth"
