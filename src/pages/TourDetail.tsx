@@ -108,9 +108,10 @@ const TourDetail = () => {
   const urlId = urlParams.get('id');
   console.log('ID from URL search params:', urlId);
   
-  // Use the correct ID
-  const finalTourId = id || urlId;
+  // Use the correct ID - prioritize URL search params over path params
+  const finalTourId = urlId || id;
   console.log('Final tour ID to use:', finalTourId);
+  console.log('Priority: URL search param (urlId) =', urlId, '| Path param (id) =', id);
   
   const [tour, setTour] = useState<TourData | null>(null);
   const [programs, setPrograms] = useState<ProgramData[]>([]);
