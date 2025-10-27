@@ -145,10 +145,6 @@ const ToursByCategory = () => {
     }
   }, [categoryId]);
 
-  if (!category) {
-    return <div>Category not found</div>;
-  }
-
   // Loading state
   if (loading) {
     return (
@@ -160,6 +156,25 @@ const ToursByCategory = () => {
             <p className="text-muted-foreground">Loading {category.name} tours...</p>
           </div>
         </div>
+      </div>
+    );
+  }
+
+  // Category not found state (only when not loading and category is null)
+  if (!loading && !category && !error) {
+    return (
+      <div className="min-h-screen bg-background">
+        <DatabaseNavigation />
+        <div className="pt-32 px-4">
+          <div className="container mx-auto max-w-4xl text-center">
+            <h1 className="text-4xl font-bold text-foreground mb-4">Category Not Found</h1>
+            <p className="text-muted-foreground mb-8">The category you're looking for doesn't exist.</p>
+            <Button asChild>
+              <Link to="/tours">Browse All Tours</Link>
+            </Button>
+          </div>
+        </div>
+        <Footer />
       </div>
     );
   }
