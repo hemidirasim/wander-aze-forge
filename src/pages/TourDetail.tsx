@@ -93,6 +93,13 @@ const formatPrice = (price: string | number) => {
 
 const TourDetail = () => {
   const { id, category } = useParams();
+  
+  // Debug logging
+  console.log('TourDetail component mounted');
+  console.log('URL params:', { id, category });
+  console.log('ID type:', typeof id);
+  console.log('ID value:', id);
+  
   const [tour, setTour] = useState<TourData | null>(null);
   const [programs, setPrograms] = useState<ProgramData[]>([]);
   const [reviews, setReviews] = useState<any[]>([]);
