@@ -132,13 +132,6 @@ const DatabaseBlog: React.FC = () => {
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                  {featuredPost.category && (
-                    <div className="absolute top-4 left-4">
-                      <Badge variant="secondary" className="bg-background/90">
-                        {featuredPost.category}
-                      </Badge>
-                    </div>
-                  )}
                 </div>
                 
                 <div className="p-6">
@@ -203,14 +196,6 @@ const DatabaseBlog: React.FC = () => {
                     <span>{post.author}</span>
                     <span>•</span>
                     <span>{new Date(post.published_date || post.created_at).toLocaleDateString()}</span>
-                    {post.category && (
-                      <>
-                        <span>•</span>
-                        <Badge variant="secondary" className="text-xs px-1 py-0">
-                          {post.category}
-                        </Badge>
-                      </>
-                    )}
                   </div>
                 </div>
               </div>
