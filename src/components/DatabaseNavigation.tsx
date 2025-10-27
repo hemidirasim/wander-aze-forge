@@ -323,8 +323,8 @@ const DatabaseNavigation = () => {
               }}>Book Now</Link>
             </Button>
 
-            {/* Desktop Profile Button */}
-            {isLoggedIn ? (
+            {/* Desktop Profile Button - HIDDEN FOR NOW */}
+            {false && isLoggedIn ? (
               <div className="relative" data-profile-dropdown>
                 <Button 
                   variant="outline" 
@@ -505,8 +505,8 @@ const DatabaseNavigation = () => {
                 }}>Book Now</Link>
               </Button>
               
-              {/* Mobile Profile Section */}
-              {isLoggedIn ? (
+              {/* Mobile Profile Section - HIDDEN FOR NOW */}
+              {false && isLoggedIn ? (
                 <div className="mt-4">
                   <div className="p-4 bg-gray-50 rounded-lg mb-4">
                     <div className="flex items-center space-x-3">
