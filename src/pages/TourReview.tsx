@@ -135,32 +135,52 @@ const TourReview = () => {
     setSubmitting(true);
     
     try {
-      // Here you would typically submit to your API
-      console.log('Submitting review:', {
-        tourId: id,
+      // Prepare photo data (for now, just file names - in real app you'd upload to storage)
+      const photoData = photos.map(photo => ({
+        name: photo.name,
+        size: photo.size,
+        type: photo.type
+      }));
+
+      const reviewData = {
+        tourId: parseInt(id!),
         reviewerName,
         rating,
         comment,
-        photos: photos.length
+        photos: photoData
+      };
+
+      console.log('Submitting review:', reviewData);
+
+      // Submit to API
+      const response = await fetch('https://outtour.az/api/tour-reviews', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(reviewData)
       });
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      alert('Review submitted successfully!');
-      
-      // Reset form
-      setReviewerName('');
-      setRating(0);
-      setComment('');
-      setPhotos([]);
-      
-      // Redirect back to tour detail
-      window.location.href = `/tours/${id}`;
+
+      const result = await response.json();
+
+      if (result.success) {
+        alert('Review submitted successfully!');
+        
+        // Reset form
+        setReviewerName('');
+        setRating(0);
+        setComment('');
+        setPhotos([]);
+        
+        // Redirect back to tour detail
+        window.location.href = `/tours/${id}`;
+      } else {
+        throw new Error(result.error || 'Failed to submit review');
+      }
       
     } catch (error) {
       console.error('Error submitting review:', error);
-      alert('Error submitting review. Please try again.');
+      alert(`Error submitting review: ${error instanceof Error ? error.message : 'Please try again.'}`);
     } finally {
       setSubmitting(false);
     }

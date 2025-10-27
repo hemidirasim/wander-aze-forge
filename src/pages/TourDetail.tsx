@@ -95,6 +95,7 @@ const TourDetail = () => {
   const { id, category } = useParams();
   const [tour, setTour] = useState<TourData | null>(null);
   const [programs, setPrograms] = useState<ProgramData[]>([]);
+  const [reviews, setReviews] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedParticipants, setSelectedParticipants] = useState<string>('');
@@ -188,6 +189,26 @@ const TourDetail = () => {
     
     fetchSimilarTours();
   }, [tour, category]);
+
+  // Fetch reviews for this tour
+  useEffect(() => {
+    const fetchReviews = async () => {
+      if (!tour?.id) return;
+      
+      try {
+        const response = await fetch(`https://outtour.az/api/tour-reviews?tourId=${tour.id}`);
+        const result = await response.json();
+        
+        if (result.success) {
+          setReviews(result.data || []);
+        }
+      } catch (error) {
+        console.error('Error fetching reviews:', error);
+      }
+    };
+
+    fetchReviews();
+  }, [tour?.id]);
 
   // Initialize Fancybox for gallery images
   useEffect(() => {
@@ -823,37 +844,47 @@ const TourDetail = () => {
                   <div className="space-y-4">
                     <h3 className="text-lg font-semibold">What People Say</h3>
                     <div className="space-y-4">
-                      {/* Sample Review - Replace with actual data */}
-                      <div className="border-l-4 border-primary pl-4 py-2">
-                        <div className="flex items-center gap-2 mb-2">
-                          <div className="flex">
-                            {[...Array(5)].map((_, i) => (
-                              <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                            ))}
+                      {reviews.length > 0 ? (
+                        reviews.map((review) => (
+                          <div key={review.id} className="border-l-4 border-primary pl-4 py-2">
+                            <div className="flex items-center gap-2 mb-2">
+                              <div className="flex">
+                                {[...Array(5)].map((_, i) => (
+                                  <Star 
+                                    key={i} 
+                                    className={`w-4 h-4 ${
+                                      i < review.rating 
+                                        ? 'fill-yellow-400 text-yellow-400' 
+                                        : 'text-gray-300'
+                                    }`} 
+                                  />
+                                ))}
+                              </div>
+                              <span className="font-semibold">{review.reviewerName}</span>
+                              <span className="text-sm text-muted-foreground">
+                                {new Date(review.createdAt).toLocaleDateString()}
+                              </span>
+                            </div>
+                            <p className="text-muted-foreground">{review.comment}</p>
+                            {review.photos && review.photos.length > 0 && (
+                              <div className="mt-2 flex gap-2">
+                                {review.photos.map((photo: any, index: number) => (
+                                  <img
+                                    key={index}
+                                    src={photo.url || photo.name}
+                                    alt={`Review photo ${index + 1}`}
+                                    className="w-16 h-16 object-cover rounded"
+                                  />
+                                ))}
+                              </div>
+                            )}
                           </div>
-                          <span className="font-semibold">Sarah Johnson</span>
-                          <span className="text-sm text-muted-foreground">2 days ago</span>
-                        </div>
-                        <p className="text-muted-foreground">
-                          "Amazing experience! The guide was knowledgeable and the scenery was breathtaking. Highly recommended!"
+                        ))
+                      ) : (
+                        <p className="text-muted-foreground text-center py-4">
+                          No reviews yet. Be the first to share your experience!
                         </p>
-                      </div>
-                      
-                      <div className="border-l-4 border-primary pl-4 py-2">
-                        <div className="flex items-center gap-2 mb-2">
-                          <div className="flex">
-                            {[...Array(4)].map((_, i) => (
-                              <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                            ))}
-                            <Star className="w-4 h-4 text-gray-300" />
-                          </div>
-                          <span className="font-semibold">Mike Chen</span>
-                          <span className="text-sm text-muted-foreground">1 week ago</span>
-                        </div>
-                        <p className="text-muted-foreground">
-                          "Great tour with excellent organization. The hiking was challenging but rewarding."
-                        </p>
-                      </div>
+                      )}
                     </div>
                   </div>
 
