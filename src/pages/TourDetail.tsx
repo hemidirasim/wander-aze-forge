@@ -99,6 +99,18 @@ const TourDetail = () => {
   console.log('URL params:', { id, category });
   console.log('ID type:', typeof id);
   console.log('ID value:', id);
+  console.log('Full URL:', window.location.href);
+  console.log('URL pathname:', window.location.pathname);
+  console.log('URL search:', window.location.search);
+  
+  // Extract ID from URL if needed
+  const urlParams = new URLSearchParams(window.location.search);
+  const urlId = urlParams.get('id');
+  console.log('ID from URL search params:', urlId);
+  
+  // Use the correct ID
+  const finalTourId = id || urlId;
+  console.log('Final tour ID to use:', finalTourId);
   
   const [tour, setTour] = useState<TourData | null>(null);
   const [programs, setPrograms] = useState<ProgramData[]>([]);
@@ -144,7 +156,7 @@ const TourDetail = () => {
       }));
 
       const reviewData = {
-        tourId: parseInt(id!),
+        tourId: parseInt(finalTourId!),
         reviewerName,
         rating,
         comment,
@@ -153,8 +165,12 @@ const TourDetail = () => {
 
       console.log('Submitting review:', reviewData);
       console.log('Tour ID from params:', id);
-      console.log('Parsed tour ID:', parseInt(id!));
+      console.log('Tour ID from URL search:', urlId);
+      console.log('Final tour ID used:', finalTourId);
+      console.log('Parsed tour ID:', parseInt(finalTourId!));
       console.log('Current tour object:', tour);
+      console.log('URL search params:', window.location.search);
+      console.log('URL pathname:', window.location.pathname);
 
       // Try multiple API endpoints
       const endpoints = [
