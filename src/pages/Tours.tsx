@@ -90,19 +90,19 @@ const Tours = () => {
           {loading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {[...Array(6)].map((_, i) => (
-                <Card key={i} className="overflow-hidden border-0 bg-card/80 backdrop-blur-sm">
+                <Card key={i} className="overflow-hidden border-0 bg-card/80 backdrop-blur-sm flex flex-col h-full">
                   <Skeleton className="h-48 w-full" />
-                  <CardHeader>
-                    <Skeleton className="h-6 w-3/4 mb-2" />
-                    <Skeleton className="h-4 w-full" />
-                    <Skeleton className="h-4 w-2/3" />
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center justify-between">
+                  <div className="flex flex-col flex-grow p-6">
+                    <div className="flex-grow">
+                      <Skeleton className="h-6 w-3/4 mb-3" />
+                      <Skeleton className="h-4 w-full mb-2" />
+                      <Skeleton className="h-4 w-2/3" />
+                    </div>
+                    <div className="flex items-center justify-between pt-6 mt-auto">
                       <Skeleton className="h-6 w-20" />
                       <Skeleton className="h-8 w-24" />
                     </div>
-                  </CardContent>
+                  </div>
                 </Card>
               ))}
             </div>
@@ -113,7 +113,7 @@ const Tours = () => {
           ) : tours.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {tours.map((tour) => (
-                <Card key={tour.id} className="group hover:shadow-elevated transition-all duration-300 overflow-hidden border-0 bg-card/80 backdrop-blur-sm hover:scale-105 cursor-pointer">
+                <Card key={tour.id} className="group hover:shadow-elevated transition-all duration-300 overflow-hidden border-0 bg-card/80 backdrop-blur-sm hover:scale-105 cursor-pointer flex flex-col h-full">
                   <div className="relative h-48 overflow-hidden">
                     <img 
                       src={tour.image_url || 'https://images.unsplash.com/photo-1551632811-561732d1e306?w=600&h=400&fit=crop'} 
@@ -140,18 +140,18 @@ const Tours = () => {
                     </div>
                   </div>
                   
-                  <CardHeader>
-                    <CardTitle className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
-                      {tour.title}
-                    </CardTitle>
-                    <div 
-                      className="text-muted-foreground text-sm leading-relaxed prose prose-sm max-w-none line-clamp-2"
-                      dangerouslySetInnerHTML={{ __html: tour.description }}
-                    />
-                  </CardHeader>
-                  
-                  <CardContent className="pt-0">
-                    <div className="flex items-center justify-between">
+                  <div className="flex flex-col flex-grow p-6">
+                    <div className="flex-grow">
+                      <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors mb-3">
+                        {tour.title}
+                      </h3>
+                      <div 
+                        className="text-muted-foreground text-sm leading-relaxed prose prose-sm max-w-none line-clamp-2"
+                        dangerouslySetInnerHTML={{ __html: tour.description }}
+                      />
+                    </div>
+                    
+                    <div className="flex items-center justify-between pt-6 mt-auto">
                       <div>
                         <div className="font-bold text-primary">
                           {tour.category === 'group-tours' ? (
@@ -181,7 +181,7 @@ const Tours = () => {
                         </Link>
                       </Button>
                     </div>
-                  </CardContent>
+                  </div>
                 </Card>
               ))}
             </div>
