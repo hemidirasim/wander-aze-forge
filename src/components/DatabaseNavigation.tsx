@@ -181,7 +181,7 @@ const DatabaseNavigation = () => {
 
           {/* Right Section - Desktop Navigation */}
           <div 
-            className="hidden md:flex items-center justify-end space-x-8"
+            className="hidden md:flex items-center space-x-8"
             onMouseEnter={() => setIsToursOpen(false)}
           >
             {/* Tours Dropdown */}
