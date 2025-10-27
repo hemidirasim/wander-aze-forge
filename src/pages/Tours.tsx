@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Link } from 'react-router-dom';
-import { Clock, Users, MapPin, Star, ArrowRight } from 'lucide-react';
+import { Clock, Users, MapPin, Star, ArrowRight, Filter } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import toursHero from '@/assets/tours-hero.jpg';
 
@@ -30,8 +30,11 @@ const formatPrice = (price: string | number) => {
 
 const Tours = () => {
   const [tours, setTours] = useState<Tour[]>([]);
+  const [filteredTours, setFilteredTours] = useState<Tour[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [categories, setCategories] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchTours = async () => {
@@ -42,6 +45,11 @@ const Tours = () => {
         
         if (data.success) {
           setTours(data.data);
+          setFilteredTours(data.data);
+          
+          // Extract unique categories
+          const uniqueCategories = [...new Set(data.data.map((tour: Tour) => tour.category))];
+          setCategories(uniqueCategories);
         } else {
           setError('Failed to fetch tours');
         }
@@ -55,6 +63,15 @@ const Tours = () => {
 
     fetchTours();
   }, []);
+
+  // Filter tours based on selected category
+  useEffect(() => {
+    if (selectedCategory === 'all') {
+      setFilteredTours(tours);
+    } else {
+      setFilteredTours(tours.filter(tour => tour.category === selectedCategory));
+    }
+  }, [selectedCategory, tours]);
 
 
   return (
@@ -82,8 +99,37 @@ const Tours = () => {
             <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
               All Tours
             </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
               Browse through all our adventure tours and find the perfect one for you
+            </p>
+            
+            {/* Category Filter */}
+            <div className="flex flex-wrap justify-center gap-3 mb-8">
+              <Button
+                variant={selectedCategory === 'all' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setSelectedCategory('all')}
+                className="flex items-center gap-2"
+              >
+                <Filter className="w-4 h-4" />
+                All Tours
+              </Button>
+              {categories.map((category) => (
+                <Button
+                  key={category}
+                  variant={selectedCategory === category ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setSelectedCategory(category)}
+                  className="capitalize"
+                >
+                  {category.replace(/-/g, ' ')}
+                </Button>
+              ))}
+            </div>
+            
+            {/* Results count */}
+            <p className="text-sm text-muted-foreground">
+              {filteredTours.length} tour{filteredTours.length !== 1 ? 's' : ''} found
             </p>
           </div>
 
@@ -110,9 +156,9 @@ const Tours = () => {
             <div className="text-center py-12">
               <p className="text-muted-foreground text-lg">{error}</p>
             </div>
-          ) : tours.length > 0 ? (
+          ) : filteredTours.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {tours.map((tour) => (
+              {filteredTours.map((tour) => (
                 <Card key={tour.id} className="group hover:shadow-elevated transition-all duration-300 overflow-hidden border-0 bg-card/80 backdrop-blur-sm hover:scale-105 cursor-pointer flex flex-col h-full">
                   <div className="relative h-48 overflow-hidden">
                     <img 
