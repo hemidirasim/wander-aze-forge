@@ -316,6 +316,7 @@ const DatabaseNavigation = () => {
             {/* Book Now Button */}
             <Button 
               variant="adventure" 
+              size="sm"
               asChild
               onMouseEnter={() => setIsToursOpen(false)}
             >
