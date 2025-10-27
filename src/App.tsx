@@ -10,6 +10,7 @@ import Index from "./pages/Index";
 import Tours from "./pages/Tours";
 import ToursByCategory from "./pages/ToursByCategory";
 import TourDetail from "./pages/TourDetail";
+import TourReview from "./pages/TourReview";
 import Projects from "./pages/Projects";
 import ProjectDetail from "./pages/ProjectDetail";
 import Blog from "./pages/Blog";
@@ -72,6 +73,7 @@ const App = () => (
           <Route path="/tours" element={<Tours />} />
           <Route path="/tours/:category" element={<ToursByCategory />} />
           <Route path="/tours/:category/:id" element={<TourDetail />} />
+          <Route path="/tours/:id/review" element={<TourReview />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/projects/:id" element={<ProjectDetail />} />
           <Route path="/projects/:slug" element={<ProjectDetail />} />

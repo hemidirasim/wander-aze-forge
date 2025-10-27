@@ -810,6 +810,66 @@ const TourDetail = () => {
                 </CardContent>
               </Card>
 
+              {/* Reviews Section */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-2xl flex items-center gap-2">
+                    <Star className="w-6 h-6 text-primary" />
+                    Reviews
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  {/* Existing Reviews */}
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold">What People Say</h3>
+                    <div className="space-y-4">
+                      {/* Sample Review - Replace with actual data */}
+                      <div className="border-l-4 border-primary pl-4 py-2">
+                        <div className="flex items-center gap-2 mb-2">
+                          <div className="flex">
+                            {[...Array(5)].map((_, i) => (
+                              <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                            ))}
+                          </div>
+                          <span className="font-semibold">Sarah Johnson</span>
+                          <span className="text-sm text-muted-foreground">2 days ago</span>
+                        </div>
+                        <p className="text-muted-foreground">
+                          "Amazing experience! The guide was knowledgeable and the scenery was breathtaking. Highly recommended!"
+                        </p>
+                      </div>
+                      
+                      <div className="border-l-4 border-primary pl-4 py-2">
+                        <div className="flex items-center gap-2 mb-2">
+                          <div className="flex">
+                            {[...Array(4)].map((_, i) => (
+                              <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                            ))}
+                            <Star className="w-4 h-4 text-gray-300" />
+                          </div>
+                          <span className="font-semibold">Mike Chen</span>
+                          <span className="text-sm text-muted-foreground">1 week ago</span>
+                        </div>
+                        <p className="text-muted-foreground">
+                          "Great tour with excellent organization. The hiking was challenging but rewarding."
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Write Review Button */}
+                  <div className="pt-4 border-t">
+                    <Button 
+                      size="lg" 
+                      className="w-full"
+                      onClick={() => window.location.href = `/tours/${tour.id}/review`}
+                    >
+                      Write a Review
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+
             </div>
 
             {/* Booking Sidebar */}
