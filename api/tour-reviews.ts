@@ -234,13 +234,8 @@ export async function GET(request: Request) {
       console.log('Executing query for tour ID:', tourId);
       const result = await client.query(query, [tourId]);
       console.log('Query result:', result.rows.length, 'reviews found');
-      console.log('Raw rows data:', result.rows);
 
       const reviews = result.rows.map(row => {
-        console.log('Processing row:', row);
-        console.log('Photos field type:', typeof row.photos);
-        console.log('Photos field value:', row.photos);
-        
         let photos = [];
         try {
           if (row.photos) {
@@ -254,7 +249,6 @@ export async function GET(request: Request) {
           }
         } catch (parseError) {
           console.error('Error parsing photos for review', row.id, ':', parseError);
-          console.error('Photos value that failed:', row.photos);
           photos = [];
         }
 
@@ -281,16 +275,9 @@ export async function GET(request: Request) {
 
     } catch (dbError) {
       console.error('Database error:', dbError);
-      console.error('Error stack:', dbError.stack);
-      console.error('Error details:', {
-        message: dbError.message,
-        name: dbError.name,
-        code: dbError.code
-      });
       return new Response(JSON.stringify({
         success: false,
-        error: `Database error: ${dbError.message}`,
-        details: dbError.stack
+        error: `Database error: ${dbError.message}`
       }), { 
         status: 500,
         headers: { 'Content-Type': 'application/json' }
