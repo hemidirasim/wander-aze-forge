@@ -742,7 +742,8 @@ const BookTour = () => {
                             onChange={handleInputChange}
                             placeholder="Hotel name or address"
                             className="mt-1"
-                            required
+                            required={!formData.informLater}
+                            disabled={formData.informLater}
                           />
                         </div>
                         
