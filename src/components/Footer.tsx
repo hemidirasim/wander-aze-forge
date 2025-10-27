@@ -162,7 +162,7 @@ const Footer = () => {
           {/* Company Info - Right */}
           <div className="lg:w-1/4 space-y-4 text-center lg:text-right">
             <div className="flex items-center justify-center lg:justify-end">
-              <Logo className="w-28 h-28" />
+              <Logo className="w-28" />
             </div>
             <p className="text-gray-900 text-sm leading-relaxed">
               Founded in 2014 as Camping Azerbaijan, Outtour Azerbaijan is recognised as the country's first ecotour operator. We specialise in sustainable mountain adventures, cultural immersion and community-led experiences.
