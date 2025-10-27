@@ -181,12 +181,12 @@ const DatabaseNavigation = () => {
 
           {/* Right Section - Desktop Navigation */}
           <div 
-            className="hidden md:flex items-center justify-end space-x-4 flex-shrink-0"
+            className="hidden md:flex items-center justify-end flex-shrink-0"
             onMouseEnter={() => setIsToursOpen(false)}
           >
             {/* Tours Dropdown */}
             <div 
-              className="relative"
+              className="relative mr-4"
               data-tours-dropdown
               onMouseEnter={() => setIsToursOpen(true)}
               onMouseLeave={() => setIsToursOpen(false)}
@@ -295,7 +295,7 @@ const DatabaseNavigation = () => {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`text-foreground hover:text-primary transition-smooth font-medium ${
+                className={`text-foreground hover:text-primary transition-smooth font-medium mr-4 ${
                   location.pathname === item.path ? 'text-primary' : ''
                 }`}
                 onClick={() => {
@@ -317,6 +317,7 @@ const DatabaseNavigation = () => {
             <Button 
               variant="adventure" 
               size="sm"
+              className="ml-4"
               asChild
               onMouseEnter={() => setIsToursOpen(false)}
             >
