@@ -70,10 +70,6 @@ const BookTour = () => {
 
   const token = localStorage.getItem('authToken');
 
-  // Store slug and category for back navigation
-  const [tourSlug, setTourSlug] = useState<string>('');
-  const [tourCategory, setTourCategory] = useState<string>('');
-
   useEffect(() => {
     // Check if tour data is available in URL parameters (from TourDetail page)
     const title = searchParams.get('title');
@@ -85,14 +81,6 @@ const BookTour = () => {
     const datesParam = searchParams.get('dates');
     const startDateParam = searchParams.get('startDate');
     const endDateParam = searchParams.get('endDate');
-    
-    // Store slug and category for back navigation
-    if (slug) {
-      setTourSlug(slug);
-    }
-    if (category) {
-      setTourCategory(category);
-    }
     
     if (title || slug || price || groupSize) {
       console.log('Using URL parameters:', { title, slug, price, groupSize, category, pricingParam, datesParam, startDateParam, endDateParam });
@@ -480,9 +468,9 @@ const BookTour = () => {
           <div className="container mx-auto text-center">
             <h1 className="text-2xl font-bold text-foreground mb-4">Tour Not Found</h1>
             <p className="text-muted-foreground mb-6">The tour you're looking for doesn't exist.</p>
-            <Button onClick={() => navigate(tourSlug && tourCategory ? `/tours/${tourCategory}/${tourSlug}` : '/tours')}>
+            <Button onClick={() => navigate(-1)}>
               <ArrowLeft className="w-4 h-4 mr-2" />
-              {tourSlug && tourCategory ? 'Back to Tour' : 'Back to Tours'}
+              Back
             </Button>
           </div>
         </div>
@@ -499,11 +487,11 @@ const BookTour = () => {
           <div className="mb-6">
             <Button 
               variant="outline" 
-              onClick={() => navigate(tourSlug && tourCategory ? `/tours/${tourCategory}/${tourSlug}` : '/tours')}
+              onClick={() => navigate(-1)}
               className="mb-4"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
-              {tourSlug && tourCategory ? 'Back to Tour' : 'Back to Tours'}
+              Back
             </Button>
             </div>
 
