@@ -235,16 +235,34 @@ export async function GET(request: Request) {
       const result = await client.query(query, [tourId]);
       console.log('Query result:', result.rows.length, 'reviews found');
 
-      const reviews = result.rows.map(row => ({
-        id: row.id,
-        tourId: row.tour_id,
-        reviewerName: row.reviewer_name,
-        rating: row.rating,
-        comment: row.comment,
-        photos: row.photos ? JSON.parse(row.photos) : [],
-        createdAt: row.created_at,
-        updatedAt: row.updated_at
-      }));
+      const reviews = result.rows.map(row => {
+        let photos = [];
+        try {
+          if (row.photos) {
+            // If photos is already an object/array, use it directly
+            if (typeof row.photos === 'object') {
+              photos = row.photos;
+            } else {
+              // If it's a string, try to parse it
+              photos = JSON.parse(row.photos);
+            }
+          }
+        } catch (parseError) {
+          console.error('Error parsing photos for review', row.id, ':', parseError);
+          photos = [];
+        }
+
+        return {
+          id: row.id,
+          tourId: row.tour_id,
+          reviewerName: row.reviewer_name,
+          rating: row.rating,
+          comment: row.comment,
+          photos: photos,
+          createdAt: row.created_at,
+          updatedAt: row.updated_at
+        };
+      });
 
       console.log('Processed reviews:', reviews);
 
