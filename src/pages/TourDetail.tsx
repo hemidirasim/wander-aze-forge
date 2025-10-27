@@ -279,12 +279,12 @@ const TourDetail = () => {
     const fetchTourDetail = async () => {
       try {
         setLoading(true);
-        console.log('TourDetail - URL params:', { id, category, queryId, finalId });
+        console.log('TourDetail - URL params:', { id, category, urlId, finalTourId });
         console.log('Current URL:', window.location.href);
         
-        // Use finalId (from query params or path params)
-        const isNumericId = !isNaN(Number(finalId));
-        const param = isNumericId ? `id=${finalId}` : `slug=${finalId}`;
+        // Use finalTourId (from query params or path params)
+        const isNumericId = !isNaN(Number(finalTourId));
+        const param = isNumericId ? `id=${finalTourId}` : `slug=${finalTourId}`;
         const response = await fetch(`/api/tour-detail-simple?${param}&category=${category}`);
         const result = await response.json();
 
@@ -320,10 +320,10 @@ const TourDetail = () => {
       }
     };
 
-    if (id) {
+    if (finalTourId) {
       fetchTourDetail();
     }
-  }, [finalId, category]);
+  }, [finalTourId, category]);
 
   // Fetch similar tours
   useEffect(() => {
