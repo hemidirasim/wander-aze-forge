@@ -270,11 +270,6 @@ const TourDetail = () => {
   const galleryRef = useRef<HTMLDivElement>(null);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
-  // Get ID from query parameters if available
-  const urlParams = new URLSearchParams(window.location.search);
-  const queryId = urlParams.get('id');
-  const finalId = queryId || id;
-
   useEffect(() => {
     // Reset pricing state when tour changes
     setSelectedParticipants('');
