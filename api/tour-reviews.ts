@@ -74,16 +74,27 @@ export async function POST(request: Request) {
 
       // Check if tour exists
       console.log('Checking if tour exists:', tourId);
+      console.log('Tour ID type:', typeof tourId);
+      console.log('Tour ID value:', tourId);
+      
       const tourCheck = await client.query(
         'SELECT id, title FROM tours WHERE id = $1',
         [tourId]
       );
 
+      console.log('Tour check result:', tourCheck.rows);
+      console.log('Number of tours found:', tourCheck.rows.length);
+
       if (tourCheck.rows.length === 0) {
         console.log('Tour not found:', tourId);
+        
+        // Let's also check what tours exist
+        const allTours = await client.query('SELECT id, title FROM tours LIMIT 10');
+        console.log('Available tours:', allTours.rows);
+        
         return new Response(JSON.stringify({
           success: false,
-          error: 'Tour not found'
+          error: `Tour not found. Available tours: ${allTours.rows.map(t => `${t.id}: ${t.title}`).join(', ')}`
         }), { 
           status: 404,
           headers: { 'Content-Type': 'application/json' }

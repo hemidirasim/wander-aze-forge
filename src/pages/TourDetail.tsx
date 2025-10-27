@@ -145,6 +145,9 @@ const TourDetail = () => {
       };
 
       console.log('Submitting review:', reviewData);
+      console.log('Tour ID from params:', id);
+      console.log('Parsed tour ID:', parseInt(id!));
+      console.log('Current tour object:', tour);
 
       // Try multiple API endpoints
       const endpoints = [
