@@ -489,16 +489,18 @@ const BlogDetail = () => {
         </div>
       </section>
 
-      <style>{`
-        .blog-content img {
-          width: 100% !important;
-          height: auto !important;
-          max-width: 800px !important;
-          display: block;
-          margin: 2rem auto;
-          border-radius: 0.5rem;
-        }
-      `}</style>
+      <style dangerouslySetInnerHTML={{
+        __html: `
+          .blog-content img {
+            width: 100% !important;
+            height: auto !important;
+            max-width: 800px !important;
+            display: block;
+            margin: 2rem auto;
+            border-radius: 0.5rem;
+          }
+        `
+      }} />
       
       <Footer />
     </div>
