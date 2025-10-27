@@ -390,11 +390,6 @@ const BlogDetail = () => {
                   </CardContent>
                 </Card>
               )}
-            </div>
-
-          </div>
-        </div>
-      </section>
 
               {/* Tags */}
               {post.tags && post.tags.length > 0 && (
