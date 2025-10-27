@@ -45,11 +45,6 @@ const BookTour = () => {
     groupSize: '1',
     tourPrice: '',
     
-    // Additional Services
-    hotelBaku: false,
-    oneWayTransfer: false,
-    roundTripTransfer: false,
-    
     // Contact Information
     fullName: '',
     email: '',
@@ -579,54 +574,6 @@ const BookTour = () => {
                             readOnly
                             className="mt-1 bg-muted"
                           />
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Additional Service Requests Section */}
-                    <div className="bg-muted/50 p-4 rounded-lg">
-                      <h3 className="text-lg font-semibold mb-4">Additional Service Requests</h3>
-                      <div className="space-y-3">
-                        <div className="flex items-start space-x-3">
-                          <input
-                            type="checkbox"
-                            id="hotelBaku"
-                            name="hotelBaku"
-                            checked={formData.hotelBaku}
-                            onChange={handleInputChange}
-                            className="mt-1"
-                          />
-                          <Label htmlFor="hotelBaku" className="cursor-pointer">
-                            <strong>Hotel in Baku:</strong> 4-star hotel near the city center, $80 per person per night.
-                          </Label>
-                        </div>
-                        
-                        <div className="flex items-start space-x-3">
-                          <input
-                            type="checkbox"
-                            id="oneWayTransfer"
-                            name="oneWayTransfer"
-                            checked={formData.oneWayTransfer}
-                            onChange={handleInputChange}
-                            className="mt-1"
-                          />
-                          <Label htmlFor="oneWayTransfer" className="cursor-pointer">
-                            <strong>One-way transfer (Airport ↔ Hotel):</strong> $35 to $55 depending on group size and vehicle type.
-                          </Label>
-                        </div>
-                        
-                        <div className="flex items-start space-x-3">
-                          <input
-                            type="checkbox"
-                            id="roundTripTransfer"
-                            name="roundTripTransfer"
-                            checked={formData.roundTripTransfer}
-                        onChange={handleInputChange}
-                        className="mt-1"
-                      />
-                          <Label htmlFor="roundTripTransfer" className="cursor-pointer">
-                            <strong>Round-trip transfer (Airport ↔ Hotel ↔ Airport):</strong> $70 to $110 depending on group size and vehicle type.
-                          </Label>
                         </div>
                       </div>
                     </div>
