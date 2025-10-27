@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Clock, Users, MapPin, Star, CheckCircle, Calendar, Phone, ArrowLeft, ArrowRight, Loader2, Eye, Info, Sparkles, CalendarDays, Bed, Utensils, Shirt, Car, Camera, DollarSign, X } from 'lucide-react';
+import { Clock, Users, MapPin, Star, CheckCircle, Calendar, Phone, ArrowLeft, ArrowRight, Loader2, Eye, Info, Sparkles, CalendarDays, Bed, Utensils, Shirt, Car, Camera, DollarSign, X, Upload } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 // Declare Fancybox for TypeScript
@@ -98,6 +98,134 @@ const TourDetail = () => {
   const [reviews, setReviews] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showReviewModal, setShowReviewModal] = useState(false);
+  
+  // Review form state
+  const [reviewerName, setReviewerName] = useState('');
+  const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState('');
+  const [photos, setPhotos] = useState<File[]>([]);
+  const [hoveredStar, setHoveredStar] = useState(0);
+  const [submittingReview, setSubmittingReview] = useState(false);
+  
+  // Review form functions
+  const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files || []);
+    setPhotos(prev => [...prev, ...files].slice(0, 5)); // Max 5 photos
+  };
+
+  const removePhoto = (index: number) => {
+    setPhotos(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const handleReviewSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!reviewerName || rating === 0 || !comment) {
+      alert('Please fill in all required fields');
+      return;
+    }
+
+    setSubmittingReview(true);
+    
+    try {
+      // Prepare photo data
+      const photoData = photos.map(photo => ({
+        name: photo.name,
+        size: photo.size,
+        type: photo.type
+      }));
+
+      const reviewData = {
+        tourId: parseInt(id!),
+        reviewerName,
+        rating,
+        comment,
+        photos: photoData
+      };
+
+      console.log('Submitting review:', reviewData);
+
+      // Try multiple API endpoints
+      const endpoints = [
+        'https://outtour.az/api/tour-reviews',
+        '/api/tour-reviews'
+      ];
+
+      let response;
+      let lastError;
+
+      for (const endpoint of endpoints) {
+        try {
+          console.log('Trying endpoint:', endpoint);
+          response = await fetch(endpoint, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(reviewData)
+          });
+
+          if (response.ok) {
+            console.log('Success with endpoint:', endpoint);
+            break;
+          } else {
+            console.log(`Endpoint ${endpoint} failed with status:`, response.status);
+          }
+        } catch (endpointError) {
+          console.log(`Endpoint ${endpoint} error:`, endpointError);
+          lastError = endpointError;
+          continue;
+        }
+      }
+
+      if (!response || !response.ok) {
+        throw new Error(`All endpoints failed. Last error: ${lastError?.message || 'Unknown error'}`);
+      }
+
+      let result;
+      try {
+        const responseText = await response.text();
+        console.log('Raw response:', responseText);
+        
+        if (responseText.trim() === '') {
+          throw new Error('Empty response from server');
+        }
+        
+        result = JSON.parse(responseText);
+      } catch (parseError) {
+        console.error('JSON parse error:', parseError);
+        throw new Error(`Server response error: ${response.status} ${response.statusText}`);
+      }
+
+      if (result.success) {
+        alert('Review submitted successfully!');
+        
+        // Reset form
+        setReviewerName('');
+        setRating(0);
+        setComment('');
+        setPhotos([]);
+        setShowReviewModal(false);
+        
+        // Refresh reviews
+        const reviewsResponse = await fetch(`https://outtour.az/api/tour-reviews?tourId=${tour?.id}`);
+        const reviewsResult = await reviewsResponse.json();
+        if (reviewsResult.success) {
+          setReviews(reviewsResult.data || []);
+        }
+      } else {
+        throw new Error(result.error || 'Failed to submit review');
+      }
+      
+    } catch (error) {
+      console.error('Error submitting review:', error);
+      alert(`Error submitting review: ${error instanceof Error ? error.message : 'Please try again.'}`);
+    } finally {
+      setSubmittingReview(false);
+    }
+  };
+  
   const [selectedParticipants, setSelectedParticipants] = useState<string>('');
   const [selectedPrice, setSelectedPrice] = useState<string>('');
   const [isGroupSelected, setIsGroupSelected] = useState(false);
@@ -893,7 +1021,7 @@ const TourDetail = () => {
                     <Button 
                       size="lg" 
                       className="w-full"
-                      onClick={() => window.location.href = `/tours/${tour.id}/review`}
+                      onClick={() => setShowReviewModal(true)}
                     >
                       Write a Review
                     </Button>
@@ -1091,6 +1219,155 @@ const TourDetail = () => {
         </section>
       )}
       
+      {/* Review Modal */}
+      {showReviewModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-background rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold">Write a Review</h2>
+                <button
+                  onClick={() => setShowReviewModal(false)}
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+              
+              <form onSubmit={handleReviewSubmit} className="space-y-6">
+                {/* Tour Name (Auto-filled) */}
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Tour Name</label>
+                  <input
+                    value={tour?.title || ''}
+                    disabled
+                    className="w-full p-3 border border-border rounded-lg bg-muted text-muted-foreground"
+                  />
+                </div>
+
+                {/* Reviewer Name */}
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Your Name *</label>
+                  <input
+                    value={reviewerName}
+                    onChange={(e) => setReviewerName(e.target.value)}
+                    placeholder="Enter your name"
+                    required
+                    className="w-full p-3 border border-border rounded-lg"
+                  />
+                </div>
+
+                {/* Rating */}
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Rating *</label>
+                  <div className="flex items-center gap-2">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        type="button"
+                        onClick={() => setRating(star)}
+                        onMouseEnter={() => setHoveredStar(star)}
+                        onMouseLeave={() => setHoveredStar(0)}
+                        className="focus:outline-none"
+                      >
+                        <Star
+                          className={`w-8 h-8 ${
+                            star <= (hoveredStar || rating)
+                              ? 'fill-yellow-400 text-yellow-400'
+                              : 'text-gray-300'
+                          } transition-colors`}
+                        />
+                      </button>
+                    ))}
+                    <span className="ml-2 text-sm text-muted-foreground">
+                      {rating > 0 && `${rating} star${rating > 1 ? 's' : ''}`}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Comment */}
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Your Review *</label>
+                  <textarea
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                    placeholder="Tell us about your experience..."
+                    rows={6}
+                    required
+                    className="w-full p-3 border border-border rounded-lg"
+                  />
+                </div>
+
+                {/* Photos */}
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Photos (Optional)</label>
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-4">
+                      <label className="cursor-pointer">
+                        <div className="flex items-center gap-2 px-4 py-2 border border-dashed border-gray-300 rounded-lg hover:border-primary transition-colors">
+                          <Upload className="w-4 h-4" />
+                          <span>Upload Photos</span>
+                        </div>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          multiple
+                          onChange={handlePhotoUpload}
+                          className="hidden"
+                        />
+                      </label>
+                      <span className="text-sm text-muted-foreground">
+                        Max 5 photos, {photos.length}/5 selected
+                      </span>
+                    </div>
+                    
+                    {photos.length > 0 && (
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        {photos.map((photo, index) => (
+                          <div key={index} className="relative">
+                            <img
+                              src={URL.createObjectURL(photo)}
+                              alt={`Preview ${index + 1}`}
+                              className="w-full h-32 object-cover rounded-lg"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => removePhoto(index)}
+                              className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+                            >
+                              <X className="w-4 h-4" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Submit Button */}
+                <div className="pt-6 flex gap-4">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setShowReviewModal(false)}
+                    className="flex-1"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    className="flex-1"
+                    disabled={submittingReview || !reviewerName || rating === 0 || !comment}
+                  >
+                    {submittingReview ? 'Submitting...' : 'Submit Review'}
+                  </Button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
+
       <Footer />
     </div>
   );
