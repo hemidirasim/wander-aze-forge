@@ -1,4 +1,3 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { Pool } from 'pg';
 
 const pool = new Pool({
@@ -14,7 +13,7 @@ export async function GET() {
       const createTableQuery = `
         CREATE TABLE IF NOT EXISTS tour_reviews (
           id SERIAL PRIMARY KEY,
-          tour_id INTEGER NOT NULL REFERENCES tours(id) ON DELETE CASCADE,
+          tour_id INTEGER NOT NULL,
           reviewer_name VARCHAR(255) NOT NULL,
           rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
           comment TEXT NOT NULL,
@@ -42,9 +41,11 @@ export async function GET() {
 
       await client.query(createRatingIndexQuery);
 
-      return NextResponse.json({
+      return new Response(JSON.stringify({
         success: true,
         message: 'Tour reviews table created successfully'
+      }), {
+        headers: { 'Content-Type': 'application/json' }
       });
 
     } finally {
@@ -53,9 +54,12 @@ export async function GET() {
 
   } catch (error) {
     console.error('Error creating tour_reviews table:', error);
-    return NextResponse.json({
+    return new Response(JSON.stringify({
       success: false,
       error: 'Failed to create tour_reviews table'
-    }, { status: 500 });
+    }), { 
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
 }

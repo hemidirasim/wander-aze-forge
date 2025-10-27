@@ -1,11 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { Pool } from 'pg';
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
 });
 
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   console.log('POST /api/tour-reviews called');
   
   try {
@@ -16,10 +15,13 @@ export async function POST(request: NextRequest) {
       console.log('Request body:', body);
     } catch (parseError) {
       console.error('JSON parse error:', parseError);
-      return NextResponse.json({
+      return new Response(JSON.stringify({
         success: false,
         error: 'Invalid JSON in request body'
-      }, { status: 400 });
+      }), { 
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      });
     }
 
     const { tourId, reviewerName, rating, comment, photos } = body;
@@ -27,19 +29,25 @@ export async function POST(request: NextRequest) {
     // Validate required fields
     if (!tourId || !reviewerName || !rating || !comment) {
       console.log('Missing required fields:', { tourId, reviewerName, rating, comment });
-      return NextResponse.json({
+      return new Response(JSON.stringify({
         success: false,
         error: 'Missing required fields: tourId, reviewerName, rating, comment'
-      }, { status: 400 });
+      }), { 
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      });
     }
 
     // Validate rating
     if (rating < 1 || rating > 5) {
       console.log('Invalid rating:', rating);
-      return NextResponse.json({
+      return new Response(JSON.stringify({
         success: false,
         error: 'Rating must be between 1 and 5'
-      }, { status: 400 });
+      }), { 
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      });
     }
 
     console.log('Connecting to database...');
@@ -73,10 +81,13 @@ export async function POST(request: NextRequest) {
 
       if (tourCheck.rows.length === 0) {
         console.log('Tour not found:', tourId);
-        return NextResponse.json({
+        return new Response(JSON.stringify({
           success: false,
           error: 'Tour not found'
-        }, { status: 404 });
+        }), { 
+          status: 404,
+          headers: { 'Content-Type': 'application/json' }
+        });
       }
 
       console.log('Tour found:', tourCheck.rows[0]);
@@ -110,7 +121,7 @@ export async function POST(request: NextRequest) {
       const createdAt = result.rows[0].created_at;
       console.log('Review inserted successfully:', { reviewId, createdAt });
 
-      return NextResponse.json({
+      return new Response(JSON.stringify({
         success: true,
         data: {
           reviewId,
@@ -122,14 +133,19 @@ export async function POST(request: NextRequest) {
           createdAt
         },
         message: 'Review submitted successfully'
+      }), {
+        headers: { 'Content-Type': 'application/json' }
       });
 
     } catch (dbError) {
       console.error('Database error:', dbError);
-      return NextResponse.json({
+      return new Response(JSON.stringify({
         success: false,
         error: `Database error: ${dbError.message}`
-      }, { status: 500 });
+      }), { 
+        status: 500,
+        headers: { 'Content-Type': 'application/json' }
+      });
     } finally {
       client.release();
       console.log('Database connection released');
@@ -137,27 +153,33 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('General error submitting review:', error);
-    return NextResponse.json({
+    return new Response(JSON.stringify({
       success: false,
       error: `Internal server error: ${error.message}`
-    }, { status: 500 });
+    }), { 
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET(request: Request) {
   console.log('GET /api/tour-reviews called');
   
   try {
-    const { searchParams } = new URL(request.url);
-    const tourId = searchParams.get('tourId');
+    const url = new URL(request.url);
+    const tourId = url.searchParams.get('tourId');
     console.log('Tour ID from params:', tourId);
 
     if (!tourId) {
       console.log('No tour ID provided');
-      return NextResponse.json({
+      return new Response(JSON.stringify({
         success: false,
         error: 'Tour ID is required'
-      }, { status: 400 });
+      }), { 
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      });
     }
 
     console.log('Connecting to database...');
@@ -215,17 +237,22 @@ export async function GET(request: NextRequest) {
 
       console.log('Processed reviews:', reviews);
 
-      return NextResponse.json({
+      return new Response(JSON.stringify({
         success: true,
         data: reviews
+      }), {
+        headers: { 'Content-Type': 'application/json' }
       });
 
     } catch (dbError) {
       console.error('Database error:', dbError);
-      return NextResponse.json({
+      return new Response(JSON.stringify({
         success: false,
         error: `Database error: ${dbError.message}`
-      }, { status: 500 });
+      }), { 
+        status: 500,
+        headers: { 'Content-Type': 'application/json' }
+      });
     } finally {
       client.release();
       console.log('Database connection released');
@@ -233,9 +260,12 @@ export async function GET(request: NextRequest) {
 
   } catch (error) {
     console.error('General error fetching reviews:', error);
-    return NextResponse.json({
+    return new Response(JSON.stringify({
       success: false,
       error: `Internal server error: ${error.message}`
-    }, { status: 500 });
+    }), { 
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
 }
