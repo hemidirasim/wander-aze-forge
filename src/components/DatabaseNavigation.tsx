@@ -127,27 +127,29 @@ const DatabaseNavigation = () => {
       onMouseLeave={() => setIsToursOpen(false)}
     >
       <div className="container mx-auto header-padding">
-        <div className="flex items-center justify-between h-24">
-          {/* Logo */}
-          <Link 
-            to="/" 
-            className="flex items-center text-foreground hover:text-primary transition-smooth"
-            onClick={scrollToTopInstant}
-            onMouseEnter={() => setIsToursOpen(false)}
-          >
-            <Logo className="w-28 h-28" />
-          </Link>
+        <div className="grid grid-cols-3 items-center h-24">
+          {/* Left Section - Logo */}
+          <div className="flex justify-start">
+            <Link 
+              to="/" 
+              className="flex items-center text-foreground hover:text-primary transition-smooth"
+              onClick={scrollToTopInstant}
+              onMouseEnter={() => setIsToursOpen(false)}
+            >
+              <Logo className="w-28 h-28" />
+            </Link>
+          </div>
 
-          {/* Search Button - Center (Desktop) */}
+          {/* Center Section - Search (Desktop) */}
           <div 
-            className="hidden md:flex justify-center flex-1 max-w-md"
+            className="hidden md:flex justify-center"
             onMouseEnter={() => setIsToursOpen(false)}
           >
             <Button
               variant="ghost" 
               size="sm"
               onClick={() => setIsSearchOpen(true)}
-              className="flex items-center justify-start gap-1.5 w-full px-3 py-1.5"
+              className="flex items-center justify-start gap-1.5 px-3 py-1.5"
               style={{ maxWidth: '192px' }}
             >
               <div className="flex items-center gap-1.5">
@@ -158,7 +160,7 @@ const DatabaseNavigation = () => {
           </div>
 
           {/* Mobile Right Section: Search + Menu */}
-          <div className="flex items-center gap-2 md:hidden">
+          <div className="col-span-2 md:hidden flex items-center justify-end gap-2">
             {/* Search Button - Mobile (Icon Only) */}
             <Button
               variant="ghost"
@@ -177,9 +179,9 @@ const DatabaseNavigation = () => {
             </button>
           </div>
 
-          {/* Desktop Navigation */}
+          {/* Right Section - Desktop Navigation */}
           <div 
-            className="hidden md:flex items-center space-x-8"
+            className="hidden md:flex items-center justify-end space-x-8"
             onMouseEnter={() => setIsToursOpen(false)}
           >
             {/* Tours Dropdown */}
