@@ -294,16 +294,6 @@ const BlogDetail = () => {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
             <div className="absolute bottom-6 left-6">
-              <div className="flex items-center space-x-4 mb-4">
-                {post.category && (
-                  <Badge variant="outline" className="bg-background/90">
-                    {post.category}
-                  </Badge>
-                )}
-                <Badge variant="secondary" className="bg-primary/20 text-primary">
-                  Blog Post
-                </Badge>
-              </div>
               <h1 className="text-4xl md:text-5xl font-bold text-white">
                 {post.title}
               </h1>
