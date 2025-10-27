@@ -153,7 +153,7 @@ const ToursByCategory = () => {
         <div className="pt-32 px-4">
           <div className="container mx-auto max-w-4xl text-center">
             <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4" />
-            <p className="text-muted-foreground">Loading {category.name} tours...</p>
+            <p className="text-muted-foreground">Loading tours...</p>
           </div>
         </div>
       </div>

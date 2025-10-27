@@ -1,6 +1,5 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 import DatabaseNavigation from '@/components/DatabaseNavigation';
 import Footer from '@/components/Footer';
 import DatabaseTourProgramAccordion from '@/components/DatabaseTourProgramAccordion';
@@ -10,7 +9,6 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Clock, Users, MapPin, Star, CheckCircle, Calendar, Phone, ArrowLeft, ArrowRight, Loader2, Eye, Info, Sparkles, CalendarDays, Bed, Utensils, Shirt, Car, Camera, DollarSign, X, Upload } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useToast } from '@/hooks/use-toast';
 
 // Declare Fancybox for TypeScript
 declare global {
@@ -95,8 +93,6 @@ const formatPrice = (price: string | number) => {
 
 const TourDetail = () => {
   const { id, category } = useParams();
-  const navigate = useNavigate();
-  const { toast } = useToast();
   
   // Debug logging
   console.log('TourDetail component mounted');
@@ -307,20 +303,6 @@ const TourDetail = () => {
   const galleryRef = useRef<HTMLDivElement>(null);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
-  // Function to handle booking validation
-  const handleBookTour = () => {
-    // Check if participant pricing exists and no participants selected
-    if (tour?.participant_pricing && tour.participant_pricing.length > 0 && !selectedParticipants) {
-      toast({
-        title: "Selection Required",
-        description: "Please select the number of people first.",
-        variant: "destructive",
-      });
-      return false;
-    }
-    return true;
-  };
-
   useEffect(() => {
     // Reset pricing state when tour changes
     setSelectedParticipants('');
@@ -423,22 +405,7 @@ const TourDetail = () => {
   // Initialize Fancybox for gallery images
   useEffect(() => {
     if (window.Fancybox && tour && tour.gallery_images && tour.gallery_images.length > 0) {
-      // Bind desktop gallery
       window.Fancybox.bind('[data-fancybox="tour-gallery"]', {
-        Thumbs: {
-          autoStart: false,
-        },
-        Toolbar: {
-          display: {
-            left: ["infobar"],
-            middle: ["zoomIn", "zoomOut", "toggle1to1", "rotateCCW", "rotateCW", "flipX", "flipY"],
-            right: ["slideshow", "thumbs", "close"]
-          }
-        }
-      });
-      
-      // Bind mobile gallery
-      window.Fancybox.bind('[data-fancybox="tour-gallery-mobile"]', {
         Thumbs: {
           autoStart: false,
         },
@@ -541,13 +508,11 @@ const TourDetail = () => {
       {/* Back Button */}
       <section className="pt-40 px-4">
         <div className="container mx-auto">
-          <Button 
-            variant="ghost" 
-            onClick={() => navigate(-1)}
-            className="mb-6"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back
+          <Button variant="ghost" asChild className="mb-6">
+            <Link to={category ? `/tours/${category}` : '/tours'} className="flex items-center">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to {category || 'Tours'}
+            </Link>
           </Button>
         </div>
       </section>
@@ -995,7 +960,7 @@ const TourDetail = () => {
                             <a
                               key={index}
                               href={image}
-                              data-fancybox="tour-gallery-mobile"
+                              data-fancybox="tour-gallery"
                               data-caption={`${tour.title} - Image ${index + 1}`}
                               className="flex-shrink-0 w-full snap-start"
                             >
@@ -1192,19 +1157,11 @@ const TourDetail = () => {
                     </div>
                   )}
                   
-                  <Button 
-                    size="lg" 
-                    variant="adventure" 
-                    className="w-full"
-                    onClick={() => {
-                      if (handleBookTour()) {
-                        const bookingUrl = `/book-tour/${tour.id}?title=${encodeURIComponent(tour.title)}&slug=${encodeURIComponent(tour.slug || tour.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''))}&price=${encodeURIComponent(selectedPrice || tour.price)}&groupSize=${encodeURIComponent(selectedParticipants || '1')}&category=${encodeURIComponent(tour.category)}&pricing=${encodeURIComponent(JSON.stringify(tour.participant_pricing || []))}&dates=${encodeURIComponent(JSON.stringify(tour.available_dates || []))}&startDate=${encodeURIComponent(tour.start_date || '')}&endDate=${encodeURIComponent(tour.end_date || '')}`;
-                        window.location.href = bookingUrl;
-                      }
-                    }}
-                  >
-                    <Calendar className="w-5 h-5 mr-2" />
-                    Book This Tour
+                  <Button size="lg" variant="adventure" className="w-full" asChild>
+                    <Link to={`/book-tour/${tour.id}?title=${encodeURIComponent(tour.title)}&slug=${encodeURIComponent(tour.slug || tour.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''))}&price=${encodeURIComponent(selectedPrice || tour.price)}&groupSize=${encodeURIComponent(selectedParticipants || '1')}&category=${encodeURIComponent(tour.category)}&pricing=${encodeURIComponent(JSON.stringify(tour.participant_pricing || []))}&dates=${encodeURIComponent(JSON.stringify(tour.available_dates || []))}&startDate=${encodeURIComponent(tour.start_date || '')}&endDate=${encodeURIComponent(tour.end_date || '')}`}>
+                      <Calendar className="w-5 h-5 mr-2" />
+                      Book This Tour
+                    </Link>
                   </Button>
                   
                   <div className="text-center text-sm text-muted-foreground whitespace-pre-wrap">
