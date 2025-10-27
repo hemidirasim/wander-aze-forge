@@ -423,7 +423,22 @@ const TourDetail = () => {
   // Initialize Fancybox for gallery images
   useEffect(() => {
     if (window.Fancybox && tour && tour.gallery_images && tour.gallery_images.length > 0) {
+      // Bind desktop gallery
       window.Fancybox.bind('[data-fancybox="tour-gallery"]', {
+        Thumbs: {
+          autoStart: false,
+        },
+        Toolbar: {
+          display: {
+            left: ["infobar"],
+            middle: ["zoomIn", "zoomOut", "toggle1to1", "rotateCCW", "rotateCW", "flipX", "flipY"],
+            right: ["slideshow", "thumbs", "close"]
+          }
+        }
+      });
+      
+      // Bind mobile gallery
+      window.Fancybox.bind('[data-fancybox="tour-gallery-mobile"]', {
         Thumbs: {
           autoStart: false,
         },
@@ -980,7 +995,7 @@ const TourDetail = () => {
                             <a
                               key={index}
                               href={image}
-                              data-fancybox="tour-gallery"
+                              data-fancybox="tour-gallery-mobile"
                               data-caption={`${tour.title} - Image ${index + 1}`}
                               className="flex-shrink-0 w-full snap-start"
                             >
