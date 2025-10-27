@@ -6,12 +6,27 @@ const pool = new Pool({
 });
 
 export async function POST(request: NextRequest) {
+  console.log('POST /api/tour-reviews called');
+  
   try {
-    const body = await request.json();
+    // Parse request body
+    let body;
+    try {
+      body = await request.json();
+      console.log('Request body:', body);
+    } catch (parseError) {
+      console.error('JSON parse error:', parseError);
+      return NextResponse.json({
+        success: false,
+        error: 'Invalid JSON in request body'
+      }, { status: 400 });
+    }
+
     const { tourId, reviewerName, rating, comment, photos } = body;
 
     // Validate required fields
     if (!tourId || !reviewerName || !rating || !comment) {
+      console.log('Missing required fields:', { tourId, reviewerName, rating, comment });
       return NextResponse.json({
         success: false,
         error: 'Missing required fields: tourId, reviewerName, rating, comment'
@@ -20,27 +35,51 @@ export async function POST(request: NextRequest) {
 
     // Validate rating
     if (rating < 1 || rating > 5) {
+      console.log('Invalid rating:', rating);
       return NextResponse.json({
         success: false,
         error: 'Rating must be between 1 and 5'
       }, { status: 400 });
     }
 
+    console.log('Connecting to database...');
     const client = await pool.connect();
+    console.log('Database connected successfully');
 
     try {
+      // First, ensure table exists
+      console.log('Ensuring tour_reviews table exists...');
+      const createTableQuery = `
+        CREATE TABLE IF NOT EXISTS tour_reviews (
+          id SERIAL PRIMARY KEY,
+          tour_id INTEGER NOT NULL,
+          reviewer_name VARCHAR(255) NOT NULL,
+          rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
+          comment TEXT NOT NULL,
+          photos JSONB,
+          created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+          updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+        );
+      `;
+      await client.query(createTableQuery);
+      console.log('Table creation/check completed');
+
       // Check if tour exists
+      console.log('Checking if tour exists:', tourId);
       const tourCheck = await client.query(
         'SELECT id, title FROM tours WHERE id = $1',
         [tourId]
       );
 
       if (tourCheck.rows.length === 0) {
+        console.log('Tour not found:', tourId);
         return NextResponse.json({
           success: false,
           error: 'Tour not found'
         }, { status: 404 });
       }
+
+      console.log('Tour found:', tourCheck.rows[0]);
 
       // Insert review into database
       const insertQuery = `
@@ -57,6 +96,7 @@ export async function POST(request: NextRequest) {
       `;
 
       const photosJson = photos && photos.length > 0 ? JSON.stringify(photos) : null;
+      console.log('Inserting review with data:', { tourId, reviewerName, rating, comment, photosJson });
 
       const result = await client.query(insertQuery, [
         tourId,
@@ -68,6 +108,7 @@ export async function POST(request: NextRequest) {
 
       const reviewId = result.rows[0].id;
       const createdAt = result.rows[0].created_at;
+      console.log('Review inserted successfully:', { reviewId, createdAt });
 
       return NextResponse.json({
         success: true,
@@ -83,34 +124,64 @@ export async function POST(request: NextRequest) {
         message: 'Review submitted successfully'
       });
 
+    } catch (dbError) {
+      console.error('Database error:', dbError);
+      return NextResponse.json({
+        success: false,
+        error: `Database error: ${dbError.message}`
+      }, { status: 500 });
     } finally {
       client.release();
+      console.log('Database connection released');
     }
 
   } catch (error) {
-    console.error('Error submitting review:', error);
+    console.error('General error submitting review:', error);
     return NextResponse.json({
       success: false,
-      error: 'Internal server error'
+      error: `Internal server error: ${error.message}`
     }, { status: 500 });
   }
 }
 
 export async function GET(request: NextRequest) {
+  console.log('GET /api/tour-reviews called');
+  
   try {
     const { searchParams } = new URL(request.url);
     const tourId = searchParams.get('tourId');
+    console.log('Tour ID from params:', tourId);
 
     if (!tourId) {
+      console.log('No tour ID provided');
       return NextResponse.json({
         success: false,
         error: 'Tour ID is required'
       }, { status: 400 });
     }
 
+    console.log('Connecting to database...');
     const client = await pool.connect();
+    console.log('Database connected successfully');
 
     try {
+      // First, ensure table exists
+      console.log('Ensuring tour_reviews table exists...');
+      const createTableQuery = `
+        CREATE TABLE IF NOT EXISTS tour_reviews (
+          id SERIAL PRIMARY KEY,
+          tour_id INTEGER NOT NULL,
+          reviewer_name VARCHAR(255) NOT NULL,
+          rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
+          comment TEXT NOT NULL,
+          photos JSONB,
+          created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+          updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+        );
+      `;
+      await client.query(createTableQuery);
+      console.log('Table creation/check completed');
+
       // Get reviews for specific tour
       const query = `
         SELECT 
@@ -127,7 +198,9 @@ export async function GET(request: NextRequest) {
         ORDER BY created_at DESC
       `;
 
+      console.log('Executing query for tour ID:', tourId);
       const result = await client.query(query, [tourId]);
+      console.log('Query result:', result.rows.length, 'reviews found');
 
       const reviews = result.rows.map(row => ({
         id: row.id,
@@ -140,20 +213,29 @@ export async function GET(request: NextRequest) {
         updatedAt: row.updated_at
       }));
 
+      console.log('Processed reviews:', reviews);
+
       return NextResponse.json({
         success: true,
         data: reviews
       });
 
+    } catch (dbError) {
+      console.error('Database error:', dbError);
+      return NextResponse.json({
+        success: false,
+        error: `Database error: ${dbError.message}`
+      }, { status: 500 });
     } finally {
       client.release();
+      console.log('Database connection released');
     }
 
   } catch (error) {
-    console.error('Error fetching reviews:', error);
+    console.error('General error fetching reviews:', error);
     return NextResponse.json({
       success: false,
-      error: 'Internal server error'
+      error: `Internal server error: ${error.message}`
     }, { status: 500 });
   }
 }

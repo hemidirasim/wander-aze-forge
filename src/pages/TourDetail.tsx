@@ -154,6 +154,7 @@ const TourDetail = () => {
 
       let response;
       let lastError;
+      let successfulEndpoint;
 
       for (const endpoint of endpoints) {
         try {
@@ -166,11 +167,15 @@ const TourDetail = () => {
             body: JSON.stringify(reviewData)
           });
 
+          console.log(`Response from ${endpoint}:`, response.status, response.statusText);
+
           if (response.ok) {
             console.log('Success with endpoint:', endpoint);
+            successfulEndpoint = endpoint;
             break;
           } else {
-            console.log(`Endpoint ${endpoint} failed with status:`, response.status);
+            const errorText = await response.text();
+            console.log(`Endpoint ${endpoint} failed with response:`, errorText);
           }
         } catch (endpointError) {
           console.log(`Endpoint ${endpoint} error:`, endpointError);
@@ -186,13 +191,14 @@ const TourDetail = () => {
       let result;
       try {
         const responseText = await response.text();
-        console.log('Raw response:', responseText);
+        console.log('Raw response from', successfulEndpoint, ':', responseText);
         
         if (responseText.trim() === '') {
           throw new Error('Empty response from server');
         }
         
         result = JSON.parse(responseText);
+        console.log('Parsed result:', result);
       } catch (parseError) {
         console.error('JSON parse error:', parseError);
         throw new Error(`Server response error: ${response.status} ${response.statusText}`);
@@ -209,10 +215,14 @@ const TourDetail = () => {
         setShowReviewModal(false);
         
         // Refresh reviews
-        const reviewsResponse = await fetch(`https://outtour.az/api/tour-reviews?tourId=${tour?.id}`);
-        const reviewsResult = await reviewsResponse.json();
-        if (reviewsResult.success) {
-          setReviews(reviewsResult.data || []);
+        try {
+          const reviewsResponse = await fetch(`https://outtour.az/api/tour-reviews?tourId=${tour?.id}`);
+          const reviewsResult = await reviewsResponse.json();
+          if (reviewsResult.success) {
+            setReviews(reviewsResult.data || []);
+          }
+        } catch (refreshError) {
+          console.error('Error refreshing reviews:', refreshError);
         }
       } else {
         throw new Error(result.error || 'Failed to submit review');
