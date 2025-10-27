@@ -70,8 +70,9 @@ const BookTour = () => {
 
   const token = localStorage.getItem('authToken');
 
-  // Store slug for back navigation
+  // Store slug and category for back navigation
   const [tourSlug, setTourSlug] = useState<string>('');
+  const [tourCategory, setTourCategory] = useState<string>('');
 
   useEffect(() => {
     // Check if tour data is available in URL parameters (from TourDetail page)
@@ -85,9 +86,12 @@ const BookTour = () => {
     const startDateParam = searchParams.get('startDate');
     const endDateParam = searchParams.get('endDate');
     
-    // Store slug for back navigation
+    // Store slug and category for back navigation
     if (slug) {
       setTourSlug(slug);
+    }
+    if (category) {
+      setTourCategory(category);
     }
     
     if (title || slug || price || groupSize) {
@@ -476,9 +480,9 @@ const BookTour = () => {
           <div className="container mx-auto text-center">
             <h1 className="text-2xl font-bold text-foreground mb-4">Tour Not Found</h1>
             <p className="text-muted-foreground mb-6">The tour you're looking for doesn't exist.</p>
-            <Button onClick={() => navigate(tourSlug ? `/tour/${tourSlug}` : '/tours')}>
+            <Button onClick={() => navigate(tourSlug && tourCategory ? `/tours/${tourCategory}/${tourSlug}` : '/tours')}>
               <ArrowLeft className="w-4 h-4 mr-2" />
-              {tourSlug ? 'Back to Tour' : 'Back to Tours'}
+              {tourSlug && tourCategory ? 'Back to Tour' : 'Back to Tours'}
             </Button>
           </div>
         </div>
@@ -495,11 +499,11 @@ const BookTour = () => {
           <div className="mb-6">
             <Button 
               variant="outline" 
-              onClick={() => navigate(tourSlug ? `/tour/${tourSlug}` : '/tours')}
+              onClick={() => navigate(tourSlug && tourCategory ? `/tours/${tourCategory}/${tourSlug}` : '/tours')}
               className="mb-4"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
-              {tourSlug ? 'Back to Tour' : 'Back to Tours'}
+              {tourSlug && tourCategory ? 'Back to Tour' : 'Back to Tours'}
             </Button>
             </div>
 
@@ -727,7 +731,6 @@ const BookTour = () => {
                                     className="mt-1 bg-muted"
                                   />
                                 )}
-                                {console.log('Tour start date:', tour.start_date)}
                               </div>
                               
                               <div>
@@ -751,7 +754,6 @@ const BookTour = () => {
                                     className="mt-1 bg-muted"
                                   />
                                 )}
-                                {console.log('Tour end date:', tour.end_date)}
                               </div>
                             </>
                           ) : (
