@@ -255,74 +255,53 @@ const FileUpload: React.FC<FileUploadProps> = ({
   };
 
   return (
-    <div className={`space-y-4 ${className}`}>
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Upload className="w-5 h-5" />
-            Upload {type} {multiple ? 'images' : 'image'}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept={accept}
-            multiple={multiple}
-            onChange={handleFileSelect}
-            className="hidden"
-          />
-          
-          {/* Drag and Drop Zone */}
-          <div
-            ref={dropZoneRef}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDrop}
-            className={`
-              relative border-2 border-dashed rounded-lg p-8 text-center transition-colors cursor-pointer
-              ${isDragOver 
-                ? 'border-primary bg-primary/5' 
-                : 'border-gray-300 hover:border-primary hover:bg-gray-50'
-              }
-              ${isUploading ? 'pointer-events-none opacity-50' : ''}
-            `}
-            onClick={triggerFileSelect}
-          >
-            <div className="flex flex-col items-center gap-4">
-              <div className={`
-                w-16 h-16 rounded-full flex items-center justify-center transition-colors
-                ${isDragOver ? 'bg-primary text-white' : 'bg-gray-100 text-gray-400'}
-              `}>
-                <Upload className="w-8 h-8" />
-              </div>
-              
-              <div>
-                <p className="text-lg font-medium text-gray-900">
-                  {isDragOver ? 'Drop images here' : 'Drag & drop images here'}
-                </p>
-                <p className="text-sm text-gray-500 mt-1">
-                  or <span className="text-primary font-medium">click to browse</span>
-                </p>
-                <p className="text-xs text-gray-400 mt-2">
-                  {multiple ? 'Multiple images supported' : 'Single image only'} • Max {maxSizeMB}MB each
-                </p>
-              </div>
-            </div>
+    <div className={`space-y-3 ${className}`}>
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept={accept}
+        multiple={multiple}
+        onChange={handleFileSelect}
+        className="hidden"
+      />
+      
+      {/* Compact Drag and Drop Zone */}
+      <div
+        ref={dropZoneRef}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+        className={`
+          relative border-2 border-dashed rounded-lg p-4 text-center transition-colors cursor-pointer
+          ${isDragOver 
+            ? 'border-primary bg-primary/5' 
+            : 'border-gray-300 hover:border-primary hover:bg-gray-50'
+          }
+          ${isUploading ? 'pointer-events-none opacity-50' : ''}
+        `}
+        onClick={triggerFileSelect}
+      >
+        <div className="flex items-center justify-center gap-3">
+          <div className={`
+            w-8 h-8 rounded-full flex items-center justify-center transition-colors
+            ${isDragOver ? 'bg-primary text-white' : 'bg-gray-100 text-gray-400'}
+          `}>
+            <Upload className="w-4 h-4" />
           </div>
-
-          {isUploading && (
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span>Uploading...</span>
-                <span>{uploadProgress}%</span>
-              </div>
-              <Progress value={uploadProgress} className="w-full" />
-            </div>
-          )}
+          
+          <div className="text-left">
+            <p className="text-sm font-medium text-gray-900">
+              {isDragOver ? 'Drop images here' : 'Drag & drop or click to upload'}
+            </p>
+            <p className="text-xs text-gray-500">
+              Max {maxSizeMB}MB each
+            </p>
+          </div>
+        </div>
+      </div>
 
           {error && (
-            <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-md">
+            <div className="flex items-center gap-2 p-2 bg-red-50 border border-red-200 rounded-md">
               <AlertCircle className="w-4 h-4 text-red-500" />
               <span className="text-red-700 text-sm">{error}</span>
             </div>
@@ -330,8 +309,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
 
           {previewFiles.length > 0 && (
             <div className="space-y-2">
-              <h4 className="font-medium text-sm">Selected Images:</h4>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                 {previewFiles.map((previewFile) => (
                   <div
                     key={previewFile.id}
@@ -340,31 +318,31 @@ const FileUpload: React.FC<FileUploadProps> = ({
                     <img
                       src={previewFile.preview}
                       alt="Preview"
-                      className="w-full h-32 object-cover"
+                      className="w-full h-24 object-cover"
                     />
                     
                     {/* Status overlay */}
                     <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
                       {previewFile.status === 'uploading' && (
                         <div className="text-center text-white">
-                          <div className="w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
+                          <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto mb-1"></div>
                           <p className="text-xs">{previewFile.progress}%</p>
                         </div>
                       )}
                       {previewFile.status === 'completed' && (
-                        <CheckCircle className="w-8 h-8 text-green-400" />
+                        <CheckCircle className="w-6 h-6 text-green-400" />
                       )}
                       {previewFile.status === 'error' && (
-                        <AlertCircle className="w-8 h-8 text-red-400" />
+                        <AlertCircle className="w-6 h-6 text-red-400" />
                       )}
                     </div>
 
                     {/* Remove button */}
                     <button
                       onClick={() => removePreviewFile(previewFile.id)}
-                      className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
                     >
-                      <X className="w-4 h-4" />
+                      <X className="w-3 h-3" />
                     </button>
 
                     {/* Error message */}
@@ -378,14 +356,9 @@ const FileUpload: React.FC<FileUploadProps> = ({
               </div>
             </div>
           )}
-
-          <p className="text-xs text-gray-500">
-            Max file size: {maxSizeMB}MB. Supported formats: JPEG, PNG, WebP
-          </p>
-        </CardContent>
-      </Card>
-    </div>
-  );
-};
+        </div>
+      </div>
+    );
+  };
 
 export default FileUpload;
