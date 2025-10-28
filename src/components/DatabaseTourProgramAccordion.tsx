@@ -224,7 +224,13 @@ const DatabaseTourProgramAccordion: React.FC<DatabaseTourProgramAccordionProps> 
                             // Parse meals if it's a string
                             if (typeof meals === 'string') {
                               try {
-                                meals = JSON.parse(meals);
+                                // Check if it looks like JSON (starts with [ or {)
+                                if (meals.trim().startsWith('[') || meals.trim().startsWith('{')) {
+                                  meals = JSON.parse(meals);
+                                } else {
+                                  // It's a plain string, treat as single meal
+                                  meals = [meals];
+                                }
                               } catch (e) {
                                 console.error('Error parsing meals:', e);
                                 meals = [program.meals]; // Fallback to original string
