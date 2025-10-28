@@ -1350,26 +1350,6 @@ const TourDetail = () => {
                     className="w-full"
                   />
                   
-                  {uploadedPhotos.length > 0 && (
-                    <div className="grid grid-cols-3 md:grid-cols-4 gap-2 mt-4">
-                      {uploadedPhotos.map((photoUrl, index) => (
-                        <div key={index} className="relative">
-                          <img
-                            src={photoUrl}
-                            alt={`Uploaded photo ${index + 1}`}
-                            className="w-full h-20 object-cover rounded-lg"
-                          />
-                          <button
-                            type="button"
-                            onClick={() => removePhoto(index)}
-                            className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full p-0.5 hover:bg-red-600"
-                          >
-                            <X className="w-3 h-3" />
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
                 </div>
 
                 {/* Submit Button */}
