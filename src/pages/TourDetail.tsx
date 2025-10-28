@@ -556,11 +556,7 @@ const TourDetail = () => {
                     <span className="font-semibold">{calculateAverageRating()}</span>
                     <span className="text-muted-foreground text-sm">({reviews.length} reviews)</span>
                   </div>
-            ) : (
-              <div className="flex items-center space-x-1">
-                <Star className="w-5 h-5 text-gray-300" />
-              </div>
-            )}
+            ) : null}
               </div>
               
               {/* Hiking Details */}
