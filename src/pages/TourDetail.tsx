@@ -547,14 +547,21 @@ const TourDetail = () => {
                   <Badge variant="secondary" className="bg-white/90 text-foreground">{tour.difficulty}</Badge>
                 )}
                 <Badge variant="secondary" className="bg-white/90 text-foreground">{tour.duration}</Badge>
-                <div 
-                  className="flex items-center space-x-1 cursor-pointer hover:opacity-80 transition-opacity"
-                  onClick={() => setShowReviewsModal(true)}
-                >
-                  <Star className="w-5 h-5 fill-current text-autumn" />
-                  <span className="font-semibold">{calculateAverageRating()}</span>
-                  <span className="text-muted-foreground text-sm">({reviews.length} reviews)</span>
-                </div>
+                {reviews.length > 0 ? (
+                  <div 
+                    className="flex items-center space-x-1 cursor-pointer hover:opacity-80 transition-opacity"
+                    onClick={() => setShowReviewsModal(true)}
+                  >
+                    <Star className="w-5 h-5 fill-current text-autumn" />
+                    <span className="font-semibold">{calculateAverageRating()}</span>
+                    <span className="text-muted-foreground text-sm">({reviews.length} reviews)</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center space-x-1">
+                    <Star className="w-5 h-5 text-gray-300" />
+                    <span className="font-semibold text-gray-400">No reviews yet</span>
+                  </div>
+                )}
               </div>
               
               {/* Hiking Details */}
@@ -1041,7 +1048,8 @@ const TourDetail = () => {
                 </CardContent>
               </Card>
 
-              {/* Reviews Section */}
+            {/* Reviews Section - Only show if there are reviews */}
+            {reviews.length > 0 && (
               <Card>
                 <CardHeader>
                   <CardTitle className="text-2xl flex items-center gap-2">
@@ -1132,6 +1140,7 @@ const TourDetail = () => {
                   </div>
                 </CardContent>
               </Card>
+            )}
 
             </div>
 
