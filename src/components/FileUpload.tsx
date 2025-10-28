@@ -356,9 +356,8 @@ const FileUpload: React.FC<FileUploadProps> = ({
               </div>
             </div>
           )}
-        </div>
-      </div>
-    );
-  };
+    </div>
+  );
+};
 
 export default FileUpload;
