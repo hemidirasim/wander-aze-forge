@@ -9,6 +9,8 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Clock, Users, MapPin, Star, CheckCircle, Calendar, Phone, ArrowLeft, ArrowRight, Loader2, Eye, Info, Sparkles, CalendarDays, Bed, Utensils, Shirt, Car, Camera, DollarSign, X, Upload } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
+import FileUpload from '@/components/FileUpload';
 
 // Declare Fancybox for TypeScript
 declare global {
@@ -124,18 +126,21 @@ const TourDetail = () => {
   const [reviewerName, setReviewerName] = useState('');
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
-  const [photos, setPhotos] = useState<File[]>([]);
+  const [uploadedPhotos, setUploadedPhotos] = useState<string[]>([]);
   const [hoveredStar, setHoveredStar] = useState(0);
   const [submittingReview, setSubmittingReview] = useState(false);
   
   // Review form functions
-  const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(event.target.files || []);
-    setPhotos(prev => [...prev, ...files].slice(0, 5)); // Max 5 photos
+  const handlePhotoUpload = (url: string) => {
+    setUploadedPhotos(prev => [...prev, url]);
+  };
+
+  const handlePhotoUploadError = (error: string) => {
+    console.error('Photo upload error:', error);
   };
 
   const removePhoto = (index: number) => {
-    setPhotos(prev => prev.filter((_, i) => i !== index));
+    setUploadedPhotos(prev => prev.filter((_, i) => i !== index));
   };
 
   const handleReviewSubmit = async (e: React.FormEvent) => {
@@ -149,51 +154,19 @@ const TourDetail = () => {
     setSubmittingReview(true);
     
     try {
-      // Upload photos first and get URLs
-      const photoUrls = [];
-      
-      if (photos.length > 0) {
-        console.log('Uploading', photos.length, 'photos...');
-        
-        for (const photo of photos) {
-          try {
-            const formData = new FormData();
-            formData.append('file', photo);
-            
-            const uploadResponse = await fetch('https://outtour.az/api/upload-image', {
-              method: 'POST',
-              body: formData
-            });
-            
-            if (!uploadResponse.ok) {
-              throw new Error(`Upload failed: ${uploadResponse.statusText}`);
-            }
-            
-            const uploadResult = await uploadResponse.json();
-            
-            if (uploadResult.success) {
-              photoUrls.push({
-                url: uploadResult.data.url,
-                filename: uploadResult.data.filename,
-                originalName: uploadResult.data.originalName
-              });
-              console.log('Photo uploaded successfully:', uploadResult.data.url);
-            } else {
-              console.error('Upload failed:', uploadResult.error);
-            }
-          } catch (uploadError) {
-            console.error('Error uploading photo:', uploadError);
-            // Continue with other photos even if one fails
-          }
-        }
-      }
+      // Prepare photo data from already uploaded photos
+      const photoData = uploadedPhotos.map(url => ({
+        url: url,
+        filename: url.split('/').pop() || 'photo',
+        originalName: url.split('/').pop() || 'photo'
+      }));
 
       const reviewData = {
         tourId: parseInt(finalTourId!),
         reviewerName,
         rating,
         comment,
-        photos: photoUrls
+        photos: photoData
       };
 
       console.log('Submitting review:', reviewData);
@@ -1367,47 +1340,36 @@ const TourDetail = () => {
                 {/* Photos */}
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Photos (Optional)</label>
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-4">
-                      <label className="cursor-pointer">
-                        <div className="flex items-center gap-2 px-4 py-2 border border-dashed border-gray-300 rounded-lg hover:border-primary transition-colors">
-                          <Upload className="w-4 h-4" />
-                          <span>Upload Photos</span>
+                  <FileUpload
+                    onUploadComplete={handlePhotoUpload}
+                    onUploadError={handlePhotoUploadError}
+                    type="review"
+                    accept="image/*"
+                    multiple={true}
+                    maxSizeMB={5}
+                    className="w-full"
+                  />
+                  
+                  {uploadedPhotos.length > 0 && (
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
+                      {uploadedPhotos.map((photoUrl, index) => (
+                        <div key={index} className="relative">
+                          <img
+                            src={photoUrl}
+                            alt={`Uploaded photo ${index + 1}`}
+                            className="w-full h-32 object-cover rounded-lg"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => removePhoto(index)}
+                            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
                         </div>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          multiple
-                          onChange={handlePhotoUpload}
-                          className="hidden"
-                        />
-                      </label>
-                      <span className="text-sm text-muted-foreground">
-                        Max 5 photos, {photos.length}/5 selected
-                      </span>
+                      ))}
                     </div>
-                    
-                    {photos.length > 0 && (
-                      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                        {photos.map((photo, index) => (
-                          <div key={index} className="relative">
-                            <img
-                              src={URL.createObjectURL(photo)}
-                              alt={`Preview ${index + 1}`}
-                              className="w-full h-32 object-cover rounded-lg"
-                            />
-                            <button
-                              type="button"
-                              onClick={() => removePhoto(index)}
-                              className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
-                            >
-                              <X className="w-4 h-4" />
-                            </button>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
+                  )}
                 </div>
 
                 {/* Submit Button */}
