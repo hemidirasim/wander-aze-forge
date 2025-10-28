@@ -46,7 +46,9 @@ const FileUpload: React.FC<FileUploadProps> = ({
   const [uploadedFiles, setUploadedFiles] = useState<UploadResult[]>([]);
   const [previewFiles, setPreviewFiles] = useState<PreviewFile[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [isDragOver, setIsDragOver] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const dropZoneRef = useRef<HTMLDivElement>(null);
 
   const createPreview = (file: File): Promise<string> => {
     return new Promise((resolve) => {
@@ -54,6 +56,85 @@ const FileUpload: React.FC<FileUploadProps> = ({
       reader.onload = (e) => resolve(e.target?.result as string);
       reader.readAsDataURL(file);
     });
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(false);
+
+    const files = Array.from(e.dataTransfer.files);
+    if (files.length > 0) {
+      handleFiles(files);
+    }
+  };
+
+  const handleFiles = async (files: File[]) => {
+    if (files.length === 0) return;
+
+    setError(null);
+    setIsUploading(true);
+
+    try {
+      // Create preview files immediately
+      const newPreviewFiles: PreviewFile[] = [];
+      
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const preview = await createPreview(file);
+        const id = `${Date.now()}-${i}`;
+        
+        newPreviewFiles.push({
+          id,
+          file,
+          preview,
+          status: 'uploading',
+          progress: 0
+        });
+      }
+
+      setPreviewFiles(prev => [...prev, ...newPreviewFiles]);
+
+      // Upload files immediately
+      for (const previewFile of newPreviewFiles) {
+        // Simulate progress
+        const progressInterval = setInterval(() => {
+          setPreviewFiles(prev => prev.map(pf => 
+            pf.id === previewFile.id 
+              ? { ...pf, progress: Math.min(pf.progress + 10, 90) }
+              : pf
+          ));
+        }, 100);
+
+        try {
+          if (multiple) {
+            await uploadMultipleFiles(previewFile);
+          } else {
+            await uploadSingleFile(previewFile);
+          }
+        } finally {
+          clearInterval(progressInterval);
+        }
+      }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Upload failed';
+      setError(errorMessage);
+      onUploadError?.(errorMessage);
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const uploadSingleFile = async (previewFile: PreviewFile) => {
@@ -139,60 +220,11 @@ const FileUpload: React.FC<FileUploadProps> = ({
     const files = event.target.files;
     if (!files || files.length === 0) return;
 
-    setError(null);
-    setIsUploading(true);
+    await handleFiles(Array.from(files));
 
-    try {
-      // Create preview files immediately
-      const newPreviewFiles: PreviewFile[] = [];
-      
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        const preview = await createPreview(file);
-        const id = `${Date.now()}-${i}`;
-        
-        newPreviewFiles.push({
-          id,
-          file,
-          preview,
-          status: 'uploading',
-          progress: 0
-        });
-      }
-
-      setPreviewFiles(prev => [...prev, ...newPreviewFiles]);
-
-      // Upload files immediately
-      for (const previewFile of newPreviewFiles) {
-        // Simulate progress
-        const progressInterval = setInterval(() => {
-          setPreviewFiles(prev => prev.map(pf => 
-            pf.id === previewFile.id 
-              ? { ...pf, progress: Math.min(pf.progress + 10, 90) }
-              : pf
-          ));
-        }, 100);
-
-        try {
-          if (multiple) {
-            await uploadMultipleFiles(previewFile);
-          } else {
-            await uploadSingleFile(previewFile);
-          }
-        } finally {
-          clearInterval(progressInterval);
-        }
-      }
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Upload failed';
-      setError(errorMessage);
-      onUploadError?.(errorMessage);
-    } finally {
-      setIsUploading(false);
-      // Reset file input
-      if (fileInputRef.current) {
-        fileInputRef.current.value = '';
-      }
+    // Reset file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
     }
   };
 
@@ -241,24 +273,43 @@ const FileUpload: React.FC<FileUploadProps> = ({
             className="hidden"
           />
           
-          <Button
+          {/* Drag and Drop Zone */}
+          <div
+            ref={dropZoneRef}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            className={`
+              relative border-2 border-dashed rounded-lg p-8 text-center transition-colors cursor-pointer
+              ${isDragOver 
+                ? 'border-primary bg-primary/5' 
+                : 'border-gray-300 hover:border-primary hover:bg-gray-50'
+              }
+              ${isUploading ? 'pointer-events-none opacity-50' : ''}
+            `}
             onClick={triggerFileSelect}
-            disabled={isUploading}
-            className="w-full"
-            variant="outline"
           >
-            {isUploading ? (
-              <>
-                <Upload className="w-4 h-4 mr-2 animate-spin" />
-                Uploading...
-              </>
-            ) : (
-              <>
-                <Upload className="w-4 h-4 mr-2" />
-                Choose {multiple ? 'Images' : 'Image'}
-              </>
-            )}
-          </Button>
+            <div className="flex flex-col items-center gap-4">
+              <div className={`
+                w-16 h-16 rounded-full flex items-center justify-center transition-colors
+                ${isDragOver ? 'bg-primary text-white' : 'bg-gray-100 text-gray-400'}
+              `}>
+                <Upload className="w-8 h-8" />
+              </div>
+              
+              <div>
+                <p className="text-lg font-medium text-gray-900">
+                  {isDragOver ? 'Drop images here' : 'Drag & drop images here'}
+                </p>
+                <p className="text-sm text-gray-500 mt-1">
+                  or <span className="text-primary font-medium">click to browse</span>
+                </p>
+                <p className="text-xs text-gray-400 mt-2">
+                  {multiple ? 'Multiple images supported' : 'Single image only'} • Max {maxSizeMB}MB each
+                </p>
+              </div>
+            </div>
+          </div>
 
           {isUploading && (
             <div className="space-y-2">
