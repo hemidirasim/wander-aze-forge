@@ -243,7 +243,7 @@ const TourDetail = () => {
         setReviewerName('');
         setRating(0);
         setComment('');
-        setPhotos([]);
+        setUploadedPhotos([]);
         setShowReviewModal(false);
         
         // Refresh reviews
