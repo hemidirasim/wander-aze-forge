@@ -96,6 +96,7 @@ const formatPrice = (price: string | number) => {
 const TourDetail = () => {
   const { id, category } = useParams();
   const navigate = useNavigate();
+  const { toast } = useToast();
   
   // Debug logging
   console.log('TourDetail component mounted');
