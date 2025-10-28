@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import DatabaseNavigation from '@/components/DatabaseNavigation';
 import Footer from '@/components/Footer';
@@ -95,6 +95,7 @@ const formatPrice = (price: string | number) => {
 
 const TourDetail = () => {
   const { id, category } = useParams();
+  const navigate = useNavigate();
   
   // Debug logging
   console.log('TourDetail component mounted');
@@ -1210,11 +1211,24 @@ const TourDetail = () => {
                     </div>
                   )}
                   
-                  <Button size="lg" variant="adventure" className="w-full" asChild>
-                    <Link to={`/book-tour/${tour.id}?title=${encodeURIComponent(tour.title)}&slug=${encodeURIComponent(tour.slug || tour.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''))}&price=${encodeURIComponent(selectedPrice || tour.price)}&groupSize=${encodeURIComponent(selectedParticipants || '1')}&category=${encodeURIComponent(tour.category)}&pricing=${encodeURIComponent(JSON.stringify(tour.participant_pricing || []))}&dates=${encodeURIComponent(JSON.stringify(tour.available_dates || []))}&startDate=${encodeURIComponent(tour.start_date || '')}&endDate=${encodeURIComponent(tour.end_date || '')}`}>
-                      <Calendar className="w-5 h-5 mr-2" />
-                      Book This Tour
-                    </Link>
+                  <Button 
+                    size="lg" 
+                    variant="adventure" 
+                    className="w-full"
+                    onClick={() => {
+                      if (!selectedParticipants && tour.participant_pricing && tour.participant_pricing.length > 0) {
+                        toast({
+                          title: "Please select the number of people first.",
+                          description: "Choose the number of participants before booking.",
+                          variant: "destructive",
+                        });
+                        return;
+                      }
+                      navigate(`/book-tour/${tour.id}?title=${encodeURIComponent(tour.title)}&slug=${encodeURIComponent(tour.slug || tour.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''))}&price=${encodeURIComponent(selectedPrice || tour.price)}&groupSize=${encodeURIComponent(selectedParticipants || '1')}&category=${encodeURIComponent(tour.category)}&pricing=${encodeURIComponent(JSON.stringify(tour.participant_pricing || []))}&dates=${encodeURIComponent(JSON.stringify(tour.available_dates || []))}&startDate=${encodeURIComponent(tour.start_date || '')}&endDate=${encodeURIComponent(tour.end_date || '')}`);
+                    }}
+                  >
+                    <Calendar className="w-5 h-5 mr-2" />
+                    Book This Tour
                   </Button>
                   
                   <div className="text-center text-sm text-muted-foreground whitespace-pre-wrap">
