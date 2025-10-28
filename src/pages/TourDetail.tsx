@@ -1228,7 +1228,13 @@ const TourDetail = () => {
                     variant="adventure" 
                     className="w-full"
                     onClick={() => {
+                      console.log('Book This Tour clicked');
+                      console.log('selectedParticipants:', selectedParticipants);
+                      console.log('tour.participant_pricing:', tour.participant_pricing);
+                      console.log('tour.participant_pricing.length:', tour.participant_pricing?.length);
+                      
                       if (!selectedParticipants && tour.participant_pricing && tour.participant_pricing.length > 0) {
+                        console.log('Showing validation toast');
                         toast({
                           title: "Please select the number of people first.",
                           description: "Choose the number of participants before booking.",
@@ -1236,6 +1242,7 @@ const TourDetail = () => {
                         });
                         return;
                       }
+                      console.log('Proceeding to booking page');
                       navigate(`/book-tour/${tour.id}?title=${encodeURIComponent(tour.title)}&slug=${encodeURIComponent(tour.slug || tour.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''))}&price=${encodeURIComponent(selectedPrice || tour.price)}&groupSize=${encodeURIComponent(selectedParticipants || '1')}&category=${encodeURIComponent(tour.category)}&pricing=${encodeURIComponent(JSON.stringify(tour.participant_pricing || []))}&dates=${encodeURIComponent(JSON.stringify(tour.available_dates || []))}&startDate=${encodeURIComponent(tour.start_date || '')}&endDate=${encodeURIComponent(tour.end_date || '')}`);
                     }}
                   >
