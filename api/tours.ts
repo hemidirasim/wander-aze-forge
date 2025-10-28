@@ -60,9 +60,10 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
         provided_equipment, what_to_bring, transport_details, pickup_service,
         gallery_images, photography_service, price_includes, group_discounts,
         early_bird_discount, contact_phone, booking_terms, itinerary,
-        requirements, special_fields, max_participants, created_at, updated_at
+        requirements, special_fields, max_participants, created_at, updated_at,
+        COALESCE(display_order, 0) as display_order
       FROM tours 
-      ORDER BY COALESCE(display_order, 0) ASC, created_at DESC
+      ORDER BY display_order ASC, created_at DESC
     `;
     let params: any[] = [];
 
@@ -80,7 +81,7 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
           requirements, special_fields, max_participants, created_at, updated_at
         FROM tours 
         WHERE category = $1 
-        ORDER BY COALESCE(display_order, 0) ASC, created_at DESC
+        ORDER BY display_order ASC, created_at DESC
       `;
       params = [category];
     }
