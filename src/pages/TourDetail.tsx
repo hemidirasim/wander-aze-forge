@@ -122,6 +122,7 @@ const TourDetail = () => {
   const [error, setError] = useState<string | null>(null);
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [showReviewsModal, setShowReviewsModal] = useState(false);
+  const [reviewsToShow, setReviewsToShow] = useState(3);
   
   // Review form state
   const [reviewerName, setReviewerName] = useState('');
@@ -376,10 +377,41 @@ const TourDetail = () => {
     fetchReviews();
   }, [tour?.id]);
 
-  // Initialize Fancybox for gallery images
+  // Initialize Fancybox for gallery images and review photos
   useEffect(() => {
-    if (window.Fancybox && tour && tour.gallery_images && tour.gallery_images.length > 0) {
-      window.Fancybox.bind('[data-fancybox="tour-gallery"]', {
+    if (window.Fancybox) {
+      // Bind tour gallery
+      if (tour && tour.gallery_images && tour.gallery_images.length > 0) {
+        window.Fancybox.bind('[data-fancybox="tour-gallery"]', {
+          Thumbs: {
+            autoStart: false,
+          },
+          Toolbar: {
+            display: {
+              left: ["infobar"],
+              middle: ["zoomIn", "zoomOut", "toggle1to1", "rotateCCW", "rotateCW", "flipX", "flipY"],
+              right: ["slideshow", "thumbs", "close"]
+            }
+          }
+        });
+      }
+
+      // Bind review photos
+      window.Fancybox.bind('[data-fancybox^="review-gallery-"]', {
+        Thumbs: {
+          autoStart: false,
+        },
+        Toolbar: {
+          display: {
+            left: ["infobar"],
+            middle: ["zoomIn", "zoomOut", "toggle1to1", "rotateCCW", "rotateCW", "flipX", "flipY"],
+            right: ["slideshow", "thumbs", "close"]
+          }
+        }
+      });
+
+      // Bind modal review photos
+      window.Fancybox.bind('[data-fancybox^="modal-review-gallery-"]', {
         Thumbs: {
           autoStart: false,
         },
@@ -399,7 +431,7 @@ const TourDetail = () => {
         window.Fancybox.destroy();
       }
     };
-  }, [tour?.gallery_images]);
+  }, [tour?.gallery_images, reviews]);
 
   // Handle gallery scroll for mobile carousel
   useEffect(() => {
@@ -1015,20 +1047,20 @@ const TourDetail = () => {
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <h3 className="text-lg font-semibold">What People Say</h3>
-                      {reviews.length > 0 && (
+                      {reviews.length > reviewsToShow && (
                         <Button 
                           variant="outline" 
                           size="sm"
-                          onClick={() => setShowReviewsModal(true)}
+                          onClick={() => setReviewsToShow(prev => Math.min(prev + 3, reviews.length))}
                           className="text-primary hover:text-primary"
                         >
-                          View All ({reviews.length})
+                          Load More ({reviews.length - reviewsToShow} remaining)
                         </Button>
                       )}
                     </div>
                     <div className="space-y-4">
                       {reviews.length > 0 ? (
-                        reviews.slice(0, 3).map((review) => (
+                        reviews.slice(0, reviewsToShow).map((review) => (
                           <div key={review.id} className="border-l-4 border-primary pl-4 py-2">
                             <div className="flex items-center gap-2 mb-2">
                               <div className="flex">
@@ -1052,12 +1084,18 @@ const TourDetail = () => {
                             {review.photos && review.photos.length > 0 && (
                               <div className="mt-2 flex gap-2">
                                 {review.photos.map((photo: any, index: number) => (
-                                  <img
+                                  <a
                                     key={index}
-                                    src={photo.url || photo.name}
-                                    alt={`Review photo ${index + 1}`}
-                                    className="w-16 h-16 object-cover rounded"
-                                  />
+                                    href={photo.url || photo.name}
+                                    data-fancybox={`review-gallery-${review.id}`}
+                                    data-caption={`${review.reviewerName} - Review Photo ${index + 1}`}
+                                  >
+                                    <img
+                                      src={photo.url || photo.name}
+                                      alt={`Review photo ${index + 1}`}
+                                      className="w-16 h-16 object-cover rounded cursor-pointer hover:opacity-80 transition-opacity"
+                                    />
+                                  </a>
                                 ))}
                               </div>
                             )}
@@ -1066,11 +1104,6 @@ const TourDetail = () => {
                       ) : (
                         <p className="text-muted-foreground text-center py-4">
                           No reviews yet. Be the first to share your experience!
-                        </p>
-                      )}
-                      {reviews.length > 3 && (
-                        <p className="text-center text-sm text-muted-foreground">
-                          ... and {reviews.length - 3} more reviews
                         </p>
                       )}
                     </div>
@@ -1444,13 +1477,18 @@ const TourDetail = () => {
                       {review.photos && review.photos.length > 0 && (
                         <div className="flex gap-2 flex-wrap">
                           {review.photos.map((photo: any, index: number) => (
-                            <img
+                            <a
                               key={index}
-                              src={photo.url || photo.name}
-                              alt={`Review photo ${index + 1}`}
-                              className="w-20 h-20 object-cover rounded cursor-pointer hover:opacity-80 transition-opacity"
-                              onClick={() => window.open(photo.url || photo.name, '_blank')}
-                            />
+                              href={photo.url || photo.name}
+                              data-fancybox={`modal-review-gallery-${review.id}`}
+                              data-caption={`${review.reviewerName} - Review Photo ${index + 1}`}
+                            >
+                              <img
+                                src={photo.url || photo.name}
+                                alt={`Review photo ${index + 1}`}
+                                className="w-20 h-20 object-cover rounded cursor-pointer hover:opacity-80 transition-opacity"
+                              />
+                            </a>
                           ))}
                         </div>
                       )}
