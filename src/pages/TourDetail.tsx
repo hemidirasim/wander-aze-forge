@@ -1085,8 +1085,8 @@ const TourDetail = () => {
                   {/* Write Review Button */}
                   <div className="pt-4 border-t">
                     <Button 
-                      size="sm" 
-                      className="w-full"
+                      size="xs" 
+                      className="w-auto"
                       onClick={() => setShowReviewModal(true)}
                     >
                       Write a Review
