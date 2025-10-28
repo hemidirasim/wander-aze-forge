@@ -402,6 +402,20 @@ const TourDetail = () => {
             }
           }
         });
+
+        // Bind desktop gallery separately
+        window.Fancybox.bind('[data-fancybox="tour-gallery-desktop"]', {
+          Thumbs: {
+            autoStart: false,
+          },
+          Toolbar: {
+            display: {
+              left: ["infobar"],
+              middle: ["zoomIn", "zoomOut", "toggle1to1", "rotateCCW", "rotateCW", "flipX", "flipY"],
+              right: ["slideshow", "thumbs", "close"]
+            }
+          }
+        });
       }
 
       // Bind review photos
@@ -1030,9 +1044,9 @@ const TourDetail = () => {
                       <div className="hidden md:grid grid-cols-3 gap-4">
                         {tour.gallery_images.map((image, index) => (
                           <a
-                            key={index}
+                            key={`desktop-${index}`}
                             href={image}
-                            data-fancybox="tour-gallery"
+                            data-fancybox="tour-gallery-desktop"
                             data-caption={`${tour.title} - Image ${index + 1}`}
                             className="block"
                           >
