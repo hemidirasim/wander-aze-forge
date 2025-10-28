@@ -25,8 +25,28 @@ import {
   Utensils,
   Car,
   Camera,
-  DollarSign
+  DollarSign,
+  GripVertical
 } from 'lucide-react';
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import {
+  useSortable,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 interface Tour {
   id: number;
@@ -72,6 +92,95 @@ interface Tour {
   created_at: string;
   updated_at: string;
 }
+
+// Sortable Tour Item Component
+interface SortableTourItemProps {
+  tour: Tour;
+  onEdit: (tour: Tour) => void;
+  onDelete: (id: number) => void;
+}
+
+const SortableTourItem: React.FC<SortableTourItemProps> = ({ tour, onEdit, onDelete }) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: tour.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 bg-white"
+    >
+      <div className="flex items-center space-x-4">
+        <div
+          {...attributes}
+          {...listeners}
+          className="cursor-grab active:cursor-grabbing p-1 hover:bg-gray-200 rounded"
+        >
+          <GripVertical className="w-4 h-4 text-gray-400" />
+        </div>
+        {tour.image_url ? (
+          <img 
+            src={tour.image_url} 
+            alt={tour.title}
+            className="w-16 h-16 object-cover rounded-lg"
+            onError={(e) => {
+              // Hide the broken image and show fallback
+              e.currentTarget.style.display = 'none';
+              e.currentTarget.nextElementSibling?.classList.remove('hidden');
+            }}
+          />
+        ) : null}
+        <div className={`w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center ${tour.image_url ? 'hidden' : ''}`}>
+          <div className="text-center">
+            <Image className="w-6 h-6 text-gray-400 mx-auto mb-1" />
+            <span className="text-xs text-gray-500">No image</span>
+          </div>
+        </div>
+        <div>
+          <h3 className="font-medium text-gray-900">{tour.title}</h3>
+          <p className="text-sm text-gray-500">{tour.location || 'No location specified'}</p>
+          <div className="flex items-center space-x-2 mt-1">
+            <Badge variant="outline">{tour.category}</Badge>
+            <Badge variant="outline">{tour.difficulty}</Badge>
+            <Badge variant="outline">{tour.duration}</Badge>
+          </div>
+        </div>
+      </div>
+      <div className="flex items-center space-x-2">
+        <div className="text-right">
+          <div className="flex items-center gap-2">
+            <DollarSign className="w-4 h-4" />
+            ${tour.price}
+          </div>
+          <div className="flex items-center gap-2">
+            <Star className="w-4 h-4" />
+            {tour.reviews_count > 0 ? tour.rating : '0'} ({tour.reviews_count} reviews)
+          </div>
+        </div>
+        <div className="flex space-x-2">
+          <Button variant="outline" size="sm" onClick={() => onEdit(tour)}>
+            <Edit className="w-4 h-4" />
+          </Button>
+          <Button variant="outline" size="sm" onClick={() => onDelete(tour.id)}>
+            <Trash2 className="w-4 h-4" />
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const AdminTours: React.FC = () => {
   const [tours, setTours] = useState<Tour[]>([]);
@@ -122,6 +231,45 @@ const AdminTours: React.FC = () => {
     participantPricing: [] as {participants: number, price: number}[]
   });
   const navigate = useNavigate();
+
+  // Drag and drop sensors
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  // Handle drag end
+  const handleDragEnd = async (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (active.id !== over?.id) {
+      const oldIndex = tours.findIndex((tour) => tour.id === active.id);
+      const newIndex = tours.findIndex((tour) => tour.id === over?.id);
+
+      const newTours = arrayMove(tours, oldIndex, newIndex);
+      setTours(newTours);
+
+      // Update order in database
+      try {
+        await fetch('/api/tours/reorder', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+          },
+          body: JSON.stringify({
+            tourIds: newTours.map(tour => tour.id)
+          })
+        });
+      } catch (error) {
+        console.error('Failed to update tour order:', error);
+        // Revert on error
+        setTours(tours);
+      }
+    }
+  };
 
   // Helper functions for array fields
   const addArrayField = (fieldName: keyof typeof formData, value: string) => {
@@ -350,50 +498,27 @@ const AdminTours: React.FC = () => {
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  {filteredTours.map((tour) => (
-                    <div key={tour.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
-                      <div className="flex items-center space-x-4">
-                        {tour.image_url ? (
-                          <img 
-                            src={tour.image_url} 
-                            alt={tour.title}
-                            className="w-16 h-16 object-cover rounded-lg"
-                            onError={(e) => {
-                              // Hide the broken image and show fallback
-                              e.currentTarget.style.display = 'none';
-                              e.currentTarget.nextElementSibling?.classList.remove('hidden');
-                            }}
-                          />
-                        ) : null}
-                        <div className={`w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center ${tour.image_url ? 'hidden' : ''}`}>
-                          <div className="text-center">
-                            <Image className="w-6 h-6 text-gray-400 mx-auto mb-1" />
-                            <span className="text-xs text-gray-500">No image</span>
-                          </div>
-                        </div>
-                        <div>
-                          <h3 className="font-medium text-gray-900">{tour.title}</h3>
-                          <p className="text-sm text-gray-500">{tour.location || 'No location specified'}</p>
-                          <div className="flex items-center space-x-2 mt-1">
-                            <Badge variant="outline">{tour.category}</Badge>
-                            <Badge variant={tour.is_active ? 'default' : 'secondary'}>
-                              {tour.is_active ? 'Active' : 'Inactive'}
-                            </Badge>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Button variant="ghost" size="sm" onClick={() => handleEdit(tour)}>
-                          <Edit className="w-4 h-4" />
-                        </Button>
-                        <Button variant="ghost" size="sm" onClick={() => handleDelete(tour.id)}>
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      </div>
+                <DndContext
+                  sensors={sensors}
+                  collisionDetection={closestCenter}
+                  onDragEnd={handleDragEnd}
+                >
+                  <SortableContext
+                    items={filteredTours.map(tour => tour.id)}
+                    strategy={verticalListSortingStrategy}
+                  >
+                    <div className="space-y-4">
+                      {filteredTours.map((tour) => (
+                        <SortableTourItem
+                          key={tour.id}
+                          tour={tour}
+                          onEdit={handleEdit}
+                          onDelete={handleDelete}
+                        />
+                      ))}
                     </div>
-                  ))}
-                </div>
+                  </SortableContext>
+                </DndContext>
               </CardContent>
             </Card>
           </div>
