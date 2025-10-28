@@ -50,6 +50,15 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
   const { category } = req.query;
 
   try {
+    // Ensure display_order column exists
+    try {
+      await pool.query(`
+        ALTER TABLE tours 
+        ADD COLUMN IF NOT EXISTS display_order INTEGER DEFAULT 0
+      `);
+    } catch (columnError) {
+      console.log('Column might already exist or error adding:', columnError);
+    }
     let query = `
       SELECT 
         id, title, slug, description, price, duration, difficulty, rating, 
