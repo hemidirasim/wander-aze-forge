@@ -524,7 +524,19 @@ const TourDetail = () => {
         <div className="container mx-auto">
           <Button 
             variant="ghost" 
-            onClick={() => navigate(-1)} 
+            onClick={() => {
+              // Check if there's a previous page in history
+              if (window.history.length > 1) {
+                navigate(-1);
+              } else {
+                // Fallback to category page or tours page
+                if (category) {
+                  navigate(`/tours/${category}`);
+                } else {
+                  navigate('/tours');
+                }
+              }
+            }} 
             className="mb-6 flex items-center"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
