@@ -1128,19 +1128,28 @@ const TourDetail = () => {
                     )}
                   </div>
 
-                  {/* Write Review Button */}
-                  <div className="pt-4 border-t">
-                    <Button 
-                      size="sm" 
-                      className="w-auto"
-                      onClick={() => setShowReviewModal(true)}
-                    >
-                      Write a Review
-                    </Button>
-                  </div>
                 </CardContent>
               </Card>
             )}
+
+            {/* Write Review Button - Always visible */}
+            <Card>
+              <CardContent className="pt-6">
+                <div className="text-center">
+                  <Button 
+                    size="lg" 
+                    className="w-auto"
+                    onClick={() => setShowReviewModal(true)}
+                  >
+                    <Star className="w-4 h-4 mr-2" />
+                    Write a Review
+                  </Button>
+                  <p className="text-sm text-muted-foreground mt-2">
+                    Share your experience with other travelers
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
 
             </div>
 
