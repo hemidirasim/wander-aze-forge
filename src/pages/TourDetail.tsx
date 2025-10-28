@@ -121,6 +121,7 @@ const TourDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showReviewModal, setShowReviewModal] = useState(false);
+  const [showReviewsModal, setShowReviewsModal] = useState(false);
   
   // Review form state
   const [reviewerName, setReviewerName] = useState('');
@@ -1009,10 +1010,22 @@ const TourDetail = () => {
                 <CardContent className="space-y-6">
                   {/* Existing Reviews */}
                   <div className="space-y-4">
-                    <h3 className="text-lg font-semibold">What People Say</h3>
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-semibold">What People Say</h3>
+                      {reviews.length > 0 && (
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => setShowReviewsModal(true)}
+                          className="text-primary hover:text-primary"
+                        >
+                          View All ({reviews.length})
+                        </Button>
+                      )}
+                    </div>
                     <div className="space-y-4">
                       {reviews.length > 0 ? (
-                        reviews.map((review) => (
+                        reviews.slice(0, 3).map((review) => (
                           <div key={review.id} className="border-l-4 border-primary pl-4 py-2">
                             <div className="flex items-center gap-2 mb-2">
                               <div className="flex">
@@ -1050,6 +1063,11 @@ const TourDetail = () => {
                       ) : (
                         <p className="text-muted-foreground text-center py-4">
                           No reviews yet. Be the first to share your experience!
+                        </p>
+                      )}
+                      {reviews.length > 3 && (
+                        <p className="text-center text-sm text-muted-foreground">
+                          ... and {reviews.length - 3} more reviews
                         </p>
                       )}
                     </div>
@@ -1371,6 +1389,99 @@ const TourDetail = () => {
                   </Button>
                 </div>
               </form>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Reviews Modal */}
+      {showReviewsModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden">
+            <div className="p-6 border-b">
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-bold flex items-center gap-2">
+                  <Star className="w-6 h-6 text-primary" />
+                  All Reviews ({reviews.length})
+                </h2>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowReviewsModal(false)}
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+            
+            <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+              <div className="space-y-6">
+                {reviews.length > 0 ? (
+                  reviews.map((review) => (
+                    <div key={review.id} className="border-l-4 border-primary pl-4 py-4">
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="flex">
+                          {[...Array(5)].map((_, i) => (
+                            <Star 
+                              key={i} 
+                              className={`w-5 h-5 ${
+                                i < review.rating 
+                                  ? 'fill-yellow-400 text-yellow-400' 
+                                  : 'text-gray-300'
+                              }`} 
+                            />
+                          ))}
+                        </div>
+                        <span className="font-semibold text-lg">{review.reviewerName}</span>
+                        <span className="text-sm text-muted-foreground">
+                          {new Date(review.createdAt).toLocaleDateString()}
+                        </span>
+                      </div>
+                      <p className="text-muted-foreground mb-3">{review.comment}</p>
+                      {review.photos && review.photos.length > 0 && (
+                        <div className="flex gap-2 flex-wrap">
+                          {review.photos.map((photo: any, index: number) => (
+                            <img
+                              key={index}
+                              src={photo.url || photo.name}
+                              alt={`Review photo ${index + 1}`}
+                              className="w-20 h-20 object-cover rounded cursor-pointer hover:opacity-80 transition-opacity"
+                              onClick={() => window.open(photo.url || photo.name, '_blank')}
+                            />
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-center py-8">
+                    <Star className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+                    <p className="text-muted-foreground text-lg">No reviews yet</p>
+                    <p className="text-muted-foreground">Be the first to share your experience!</p>
+                  </div>
+                )}
+              </div>
+            </div>
+            
+            <div className="p-6 border-t bg-gray-50">
+              <div className="flex gap-4">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowReviewsModal(false)}
+                  className="flex-1"
+                >
+                  Close
+                </Button>
+                <Button
+                  onClick={() => {
+                    setShowReviewsModal(false);
+                    setShowReviewModal(true);
+                  }}
+                  className="flex-1"
+                >
+                  Write a Review
+                </Button>
+              </div>
             </div>
           </div>
         </div>
