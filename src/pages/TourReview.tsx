@@ -146,19 +146,51 @@ const TourReview = () => {
     setSubmitting(true);
     
     try {
-      // Prepare photo data (for now, just file names - in real app you'd upload to storage)
-      const photoData = photos.map(photo => ({
-        name: photo.name,
-        size: photo.size,
-        type: photo.type
-      }));
+      // Upload photos first and get URLs
+      const photoUrls = [];
+      
+      if (photos.length > 0) {
+        console.log('Uploading', photos.length, 'photos...');
+        
+        for (const photo of photos) {
+          try {
+            const formData = new FormData();
+            formData.append('file', photo);
+            
+            const uploadResponse = await fetch('https://outtour.az/api/upload-image', {
+              method: 'POST',
+              body: formData
+            });
+            
+            if (!uploadResponse.ok) {
+              throw new Error(`Upload failed: ${uploadResponse.statusText}`);
+            }
+            
+            const uploadResult = await uploadResponse.json();
+            
+            if (uploadResult.success) {
+              photoUrls.push({
+                url: uploadResult.data.url,
+                filename: uploadResult.data.filename,
+                originalName: uploadResult.data.originalName
+              });
+              console.log('Photo uploaded successfully:', uploadResult.data.url);
+            } else {
+              console.error('Upload failed:', uploadResult.error);
+            }
+          } catch (uploadError) {
+            console.error('Error uploading photo:', uploadError);
+            // Continue with other photos even if one fails
+          }
+        }
+      }
 
       const reviewData = {
         tourId: parseInt(id!),
         reviewerName,
         rating,
         comment,
-        photos: photoData
+        photos: photoUrls
       };
 
       console.log('Submitting review:', reviewData);
