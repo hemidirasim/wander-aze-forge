@@ -262,10 +262,12 @@ const AdminTourManage: React.FC = () => {
                 <DollarSign className="w-4 h-4" />
                 ${tour.price}
               </div>
-              <div className="flex items-center gap-2">
-                <Star className="w-4 h-4" />
-                {tour.reviews_count > 0 ? tour.rating : '0'} ({tour.reviews_count} reviews)
-              </div>
+              {tour.reviews_count > 0 && (
+                <div className="flex items-center gap-2">
+                  <Star className="w-4 h-4" />
+                  {tour.rating} ({tour.reviews_count} reviews)
+                </div>
+              )}
             </div>
           </div>
 
