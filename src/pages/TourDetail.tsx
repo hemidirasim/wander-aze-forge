@@ -1252,7 +1252,6 @@ const TourDetail = () => {
                         console.log('Showing validation toast');
                         toast({
                           title: "Please select the number of people first.",
-                          description: "Choose the number of participants before booking.",
                           variant: "destructive",
                         });
                         return;
