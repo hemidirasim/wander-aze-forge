@@ -49,8 +49,30 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ success: false, error: 'Invalid tour IDs' });
     }
 
-    // Update the order of tours
+    // Ensure display_order column exists
     const client = await pool.connect();
+    
+    try {
+      // Add display_order column if it doesn't exist
+      await client.query(`
+        ALTER TABLE tours 
+        ADD COLUMN IF NOT EXISTS display_order INTEGER DEFAULT 0
+      `);
+      
+      // Update existing tours with display_order based on created_at if they don't have it
+      await client.query(`
+        UPDATE tours 
+        SET display_order = subquery.row_number
+        FROM (
+          SELECT id, ROW_NUMBER() OVER (ORDER BY created_at DESC) as row_number
+          FROM tours
+          WHERE display_order = 0 OR display_order IS NULL
+        ) AS subquery
+        WHERE tours.id = subquery.id
+      `);
+    } catch (columnError) {
+      console.log('Column might already exist or error adding:', columnError);
+    }
     
     try {
       await client.query('BEGIN');
