@@ -234,7 +234,7 @@ const Index = () => {
                   fontSize: window.innerWidth >= 1024 ? `${heroData?.description_size || '20'}px` : window.innerWidth >= 768 ? `${Math.round((heroData?.description_size || 20) * 0.8)}px` : `${Math.round((heroData?.description_size || 20) * 0.7)}px`
                 }}
               >
-                {heroData?.description || 'Authentic mountain adventures • Sustainable tourism • Cultural immersion'}
+                {heroData?.description || 'Discover authentic hiking, trekking, birding and cultural tours across Azerbaijan. Local guides, sustainable travel and tailor-made experiences by Outtour Azerbaijan'}
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
