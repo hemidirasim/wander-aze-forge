@@ -355,7 +355,7 @@ const ToursByCategory = () => {
                       )}
                       <div className="absolute bottom-4 left-4 flex items-center space-x-1 text-white">
                         <Star className="w-4 h-4 fill-current text-autumn" />
-                        <span className="text-sm font-medium">{tour.reviews_count > 0 ? tour.rating : '5.0'}</span>
+                        <span className="text-sm font-medium">{tour.reviews_count > 0 ? tour.rating : '0'}</span>
                         <span className="text-xs text-white/80">({tour.reviews_count})</span>
                       </div>
                     </div>
