@@ -1247,7 +1247,7 @@ const TourDetail = () => {
                       console.log('tour.participant_pricing:', tour.participant_pricing);
                       console.log('tour.participant_pricing.length:', tour.participant_pricing?.length);
                       
-                      if (!selectedParticipants && tour.participant_pricing && tour.participant_pricing.length > 0) {
+                      if ((!selectedParticipants || selectedParticipants === '') && tour.participant_pricing && tour.participant_pricing.length > 0) {
                         console.log('Showing validation toast');
                         toast({
                           title: "Please select the number of people first.",
