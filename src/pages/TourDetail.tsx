@@ -122,7 +122,7 @@ const TourDetail = () => {
   const [error, setError] = useState<string | null>(null);
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [showReviewsModal, setShowReviewsModal] = useState(false);
-  const [reviewsToShow, setReviewsToShow] = useState(3);
+  const [reviewsToShow, setReviewsToShow] = useState(10);
   
   // Review form state
   const [reviewerName, setReviewerName] = useState('');
@@ -1047,16 +1047,6 @@ const TourDetail = () => {
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <h3 className="text-lg font-semibold">What People Say</h3>
-                      {reviews.length > reviewsToShow && (
-                        <Button 
-                          variant="outline" 
-                          size="sm"
-                          onClick={() => setReviewsToShow(prev => Math.min(prev + 3, reviews.length))}
-                          className="text-primary hover:text-primary"
-                        >
-                          Load More ({reviews.length - reviewsToShow} remaining)
-                        </Button>
-                      )}
                     </div>
                     <div className="space-y-4">
                       {reviews.length > 0 ? (
@@ -1107,6 +1097,20 @@ const TourDetail = () => {
                         </p>
                       )}
                     </div>
+                    
+                    {/* Load More Button */}
+                    {reviews.length > reviewsToShow && (
+                      <div className="text-center pt-4">
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => setReviewsToShow(prev => Math.min(prev + 10, reviews.length))}
+                          className="text-primary hover:text-primary"
+                        >
+                          Load More ({reviews.length - reviewsToShow} remaining)
+                        </Button>
+                      </div>
+                    )}
                   </div>
 
                   {/* Write Review Button */}
