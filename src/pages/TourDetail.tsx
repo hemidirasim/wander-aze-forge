@@ -508,7 +508,10 @@ const TourDetail = () => {
                   <Badge variant="secondary" className="bg-white/90 text-foreground">{tour.difficulty}</Badge>
                 )}
                 <Badge variant="secondary" className="bg-white/90 text-foreground">{tour.duration}</Badge>
-                <div className="flex items-center space-x-1">
+                <div 
+                  className="flex items-center space-x-1 cursor-pointer hover:opacity-80 transition-opacity"
+                  onClick={() => setShowReviewsModal(true)}
+                >
                   <Star className="w-5 h-5 fill-current text-autumn" />
                   <span className="font-semibold">{tour.reviews_count === 0 ? 5 : tour.rating}</span>
                   <span className="text-muted-foreground text-sm">({tour.reviews_count} reviews)</span>
