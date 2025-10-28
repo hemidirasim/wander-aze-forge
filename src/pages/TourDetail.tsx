@@ -145,6 +145,13 @@ const TourDetail = () => {
     setUploadedPhotos(prev => prev.filter((_, i) => i !== index));
   };
 
+  // Calculate average rating from reviews
+  const calculateAverageRating = () => {
+    if (reviews.length === 0) return 0;
+    const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+    return (totalRating / reviews.length).toFixed(1);
+  };
+
   const handleReviewSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -545,8 +552,8 @@ const TourDetail = () => {
                   onClick={() => setShowReviewsModal(true)}
                 >
                   <Star className="w-5 h-5 fill-current text-autumn" />
-                  <span className="font-semibold">{tour.reviews_count === 0 ? 5 : tour.rating}</span>
-                  <span className="text-muted-foreground text-sm">({tour.reviews_count} reviews)</span>
+                  <span className="font-semibold">{calculateAverageRating()}</span>
+                  <span className="text-muted-foreground text-sm">({reviews.length} reviews)</span>
                 </div>
               </div>
               
