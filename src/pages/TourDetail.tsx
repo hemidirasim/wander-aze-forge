@@ -508,11 +508,13 @@ const TourDetail = () => {
       {/* Back Button */}
       <section className="pt-40 px-4">
         <div className="container mx-auto">
-          <Button variant="ghost" asChild className="mb-6">
-            <Link to={category ? `/tours/${category}` : '/tours'} className="flex items-center">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to {category || 'Tours'}
-            </Link>
+          <Button 
+            variant="ghost" 
+            onClick={() => navigate(-1)} 
+            className="mb-6 flex items-center"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back
           </Button>
         </div>
       </section>
