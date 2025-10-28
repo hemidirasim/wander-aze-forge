@@ -62,7 +62,7 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
         early_bird_discount, contact_phone, booking_terms, itinerary,
         requirements, special_fields, max_participants, created_at, updated_at
       FROM tours 
-      ORDER BY created_at DESC
+      ORDER BY COALESCE(display_order, 0) ASC, created_at DESC
     `;
     let params: any[] = [];
 
@@ -80,7 +80,7 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
           requirements, special_fields, max_participants, created_at, updated_at
         FROM tours 
         WHERE category = $1 
-        ORDER BY created_at DESC
+        ORDER BY COALESCE(display_order, 0) ASC, created_at DESC
       `;
       params = [category];
     }
