@@ -56,26 +56,68 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     // Ensure contact_messages table exists with all required fields
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS contact_messages (
-        id SERIAL PRIMARY KEY,
-        first_name VARCHAR(255) NOT NULL,
-        last_name VARCHAR(255) NOT NULL,
-        name VARCHAR(255) GENERATED ALWAYS AS (first_name || ' ' || last_name) STORED,
-        email VARCHAR(255) NOT NULL,
-        phone VARCHAR(50),
-        country VARCHAR(100),
-        tour_category VARCHAR(100),
-        tour_type VARCHAR(255),
-        group_size INTEGER,
-        dates VARCHAR(255),
-        message TEXT NOT NULL,
-        newsletter BOOLEAN DEFAULT false,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
+    // First, add columns if they don't exist (one by one)
+    try {
+      await pool.query(`ALTER TABLE contact_messages ADD COLUMN IF NOT EXISTS first_name VARCHAR(255)`);
+      await pool.query(`ALTER TABLE contact_messages ADD COLUMN IF NOT EXISTS last_name VARCHAR(255)`);
+      await pool.query(`ALTER TABLE contact_messages ADD COLUMN IF NOT EXISTS country VARCHAR(100)`);
+      await pool.query(`ALTER TABLE contact_messages ADD COLUMN IF NOT EXISTS tour_category VARCHAR(100)`);
+      await pool.query(`ALTER TABLE contact_messages ADD COLUMN IF NOT EXISTS tour_type VARCHAR(255)`);
+      await pool.query(`ALTER TABLE contact_messages ADD COLUMN IF NOT EXISTS group_size INTEGER`);
+      await pool.query(`ALTER TABLE contact_messages ADD COLUMN IF NOT EXISTS dates VARCHAR(255)`);
+      await pool.query(`ALTER TABLE contact_messages ADD COLUMN IF NOT EXISTS newsletter BOOLEAN DEFAULT false`);
+    } catch (alterError) {
+      console.log('Error adding columns (may already exist):', alterError);
+      // Continue anyway, columns might already exist
+    }
 
-    // Insert contact message
+    // If name column exists but first_name/last_name don't, try to migrate
+    const checkResult = await pool.query(`
+      SELECT column_name 
+      FROM information_schema.columns 
+      WHERE table_name = 'contact_messages' 
+      AND column_name IN ('name', 'first_name', 'last_name')
+    `);
+    
+    const hasName = checkResult.rows.some(r => r.column_name === 'name');
+    const hasFirstName = checkResult.rows.some(r => r.column_name === 'first_name');
+    
+    // If old structure exists, we'll use name field temporarily
+    if (hasName && !hasFirstName) {
+      // Insert with name field (concatenating first and last name)
+      const result = await pool.query(`
+        INSERT INTO contact_messages (
+          name, email, phone, country, 
+          tour_category, tour_type, group_size, dates, 
+          message, newsletter
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+        RETURNING id, name, email, phone, country, 
+                  tour_category, tour_type, group_size, dates, message, 
+                  newsletter, created_at
+      `, [
+        `${firstName} ${lastName}`,
+        email,
+        phone || null,
+        country,
+        tourCategory,
+        tourType || null,
+        parseInt(groupSize),
+        dates,
+        message,
+        newsletter || false
+      ]);
+      
+      const contactMessage = result.rows[0];
+      console.log('Contact message created successfully:', { id: contactMessage.id, email });
+      
+      return res.status(201).json({
+        success: true,
+        data: contactMessage,
+        message: 'Thank you for contacting us! We will get back to you soon.'
+      });
+    }
+
+    // Use new structure with first_name and last_name
     const result = await pool.query(`
       INSERT INTO contact_messages (
         first_name, last_name, email, phone, country, 
