@@ -63,6 +63,161 @@ BEGIN
   END IF;
 END $$;
 
+-- Əlavə column-ları əlavə et (əgər yoxdursa)
+DO $$ 
+BEGIN
+  -- tour_title
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'bookings' AND column_name = 'tour_title'
+  ) THEN
+    ALTER TABLE bookings ADD COLUMN tour_title VARCHAR(255);
+  END IF;
+  
+  -- tour_category
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'bookings' AND column_name = 'tour_category'
+  ) THEN
+    ALTER TABLE bookings ADD COLUMN tour_category VARCHAR(100);
+  END IF;
+  
+  -- group_size
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'bookings' AND column_name = 'group_size'
+  ) THEN
+    ALTER TABLE bookings ADD COLUMN group_size INTEGER;
+  END IF;
+  
+  -- tour_price
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'bookings' AND column_name = 'tour_price'
+  ) THEN
+    ALTER TABLE bookings ADD COLUMN tour_price VARCHAR(100);
+  END IF;
+  
+  -- full_name
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'bookings' AND column_name = 'full_name'
+  ) THEN
+    ALTER TABLE bookings ADD COLUMN full_name VARCHAR(255);
+  END IF;
+  
+  -- email
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'bookings' AND column_name = 'email'
+  ) THEN
+    ALTER TABLE bookings ADD COLUMN email VARCHAR(255);
+  END IF;
+  
+  -- phone
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'bookings' AND column_name = 'phone'
+  ) THEN
+    ALTER TABLE bookings ADD COLUMN phone VARCHAR(50);
+  END IF;
+  
+  -- country
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'bookings' AND column_name = 'country'
+  ) THEN
+    ALTER TABLE bookings ADD COLUMN country VARCHAR(100);
+  END IF;
+  
+  -- preferred_date
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'bookings' AND column_name = 'preferred_date'
+  ) THEN
+    ALTER TABLE bookings ADD COLUMN preferred_date DATE;
+    -- If tour_date exists, copy data
+    IF EXISTS (
+      SELECT 1 FROM information_schema.columns 
+      WHERE table_name = 'bookings' AND column_name = 'tour_date'
+    ) THEN
+      UPDATE bookings SET preferred_date = tour_date WHERE preferred_date IS NULL;
+    END IF;
+  END IF;
+  
+  -- alternative_date
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'bookings' AND column_name = 'alternative_date'
+  ) THEN
+    ALTER TABLE bookings ADD COLUMN alternative_date DATE;
+  END IF;
+  
+  -- pickup_location
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'bookings' AND column_name = 'pickup_location'
+  ) THEN
+    ALTER TABLE bookings ADD COLUMN pickup_location TEXT;
+  END IF;
+  
+  -- inform_later
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'bookings' AND column_name = 'inform_later'
+  ) THEN
+    ALTER TABLE bookings ADD COLUMN inform_later BOOLEAN DEFAULT false;
+  END IF;
+  
+  -- booking_request
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'bookings' AND column_name = 'booking_request'
+  ) THEN
+    ALTER TABLE bookings ADD COLUMN booking_request BOOLEAN DEFAULT false;
+  END IF;
+  
+  -- terms_accepted
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'bookings' AND column_name = 'terms_accepted'
+  ) THEN
+    ALTER TABLE bookings ADD COLUMN terms_accepted BOOLEAN DEFAULT false;
+  END IF;
+  
+  -- status
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'bookings' AND column_name = 'status'
+  ) THEN
+    ALTER TABLE bookings ADD COLUMN status VARCHAR(50) DEFAULT 'pending';
+  END IF;
+  
+  -- total_price
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'bookings' AND column_name = 'total_price'
+  ) THEN
+    ALTER TABLE bookings ADD COLUMN total_price DECIMAL(10,2);
+  END IF;
+  
+  -- created_at
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'bookings' AND column_name = 'created_at'
+  ) THEN
+    ALTER TABLE bookings ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+  END IF;
+  
+  -- updated_at
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'bookings' AND column_name = 'updated_at'
+  ) THEN
+    ALTER TABLE bookings ADD COLUMN updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+  END IF;
+END $$;
+
 -- 2. Index-lər əlavə edirik (performance üçün)
 CREATE INDEX IF NOT EXISTS idx_bookings_tour_id ON bookings(tour_id);
 CREATE INDEX IF NOT EXISTS idx_bookings_email ON bookings(email);

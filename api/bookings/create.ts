@@ -201,50 +201,60 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         WHERE table_name = 'bookings'
       `);
       const existingColumns = columnCheck.rows.map(r => r.column_name);
+      console.log('Existing columns:', existingColumns);
       
-      if (!existingColumns.includes('group_size')) {
-        await pool.query(`ALTER TABLE bookings ADD COLUMN group_size INTEGER`);
-      }
-      if (!existingColumns.includes('tour_price')) {
-        await pool.query(`ALTER TABLE bookings ADD COLUMN tour_price VARCHAR(100)`);
-      }
-      if (!existingColumns.includes('full_name')) {
-        await pool.query(`ALTER TABLE bookings ADD COLUMN full_name VARCHAR(255)`);
-      }
-      if (!existingColumns.includes('email')) {
-        await pool.query(`ALTER TABLE bookings ADD COLUMN email VARCHAR(255)`);
-      }
-      if (!existingColumns.includes('phone')) {
-        await pool.query(`ALTER TABLE bookings ADD COLUMN phone VARCHAR(50)`);
-      }
-      if (!existingColumns.includes('country')) {
-        await pool.query(`ALTER TABLE bookings ADD COLUMN country VARCHAR(100)`);
-      }
-      if (!existingColumns.includes('preferred_date')) {
-        await pool.query(`ALTER TABLE bookings ADD COLUMN preferred_date DATE`);
-        // If tour_date exists, copy data to preferred_date
-        if (existingColumns.includes('tour_date')) {
-          await pool.query(`UPDATE bookings SET preferred_date = tour_date WHERE preferred_date IS NULL`);
+      // Add all required columns that don't exist
+      const columnsToAdd = [
+        { name: 'user_id', sql: 'ALTER TABLE bookings ADD COLUMN user_id INTEGER' },
+        { name: 'tour_id', sql: 'ALTER TABLE bookings ADD COLUMN tour_id INTEGER' },
+        { name: 'tour_title', sql: 'ALTER TABLE bookings ADD COLUMN tour_title VARCHAR(255)' },
+        { name: 'tour_category', sql: 'ALTER TABLE bookings ADD COLUMN tour_category VARCHAR(100)' },
+        { name: 'group_size', sql: 'ALTER TABLE bookings ADD COLUMN group_size INTEGER' },
+        { name: 'tour_price', sql: 'ALTER TABLE bookings ADD COLUMN tour_price VARCHAR(100)' },
+        { name: 'full_name', sql: 'ALTER TABLE bookings ADD COLUMN full_name VARCHAR(255)' },
+        { name: 'email', sql: 'ALTER TABLE bookings ADD COLUMN email VARCHAR(255)' },
+        { name: 'phone', sql: 'ALTER TABLE bookings ADD COLUMN phone VARCHAR(50)' },
+        { name: 'country', sql: 'ALTER TABLE bookings ADD COLUMN country VARCHAR(100)' },
+        { name: 'preferred_date', sql: 'ALTER TABLE bookings ADD COLUMN preferred_date DATE' },
+        { name: 'alternative_date', sql: 'ALTER TABLE bookings ADD COLUMN alternative_date DATE' },
+        { name: 'pickup_location', sql: 'ALTER TABLE bookings ADD COLUMN pickup_location TEXT' },
+        { name: 'inform_later', sql: 'ALTER TABLE bookings ADD COLUMN inform_later BOOLEAN DEFAULT false' },
+        { name: 'special_requests', sql: 'ALTER TABLE bookings ADD COLUMN special_requests TEXT' },
+        { name: 'booking_request', sql: 'ALTER TABLE bookings ADD COLUMN booking_request BOOLEAN DEFAULT false' },
+        { name: 'terms_accepted', sql: 'ALTER TABLE bookings ADD COLUMN terms_accepted BOOLEAN DEFAULT false' },
+        { name: 'status', sql: 'ALTER TABLE bookings ADD COLUMN status VARCHAR(50) DEFAULT \'pending\'' },
+        { name: 'total_price', sql: 'ALTER TABLE bookings ADD COLUMN total_price DECIMAL(10,2)' },
+        { name: 'created_at', sql: 'ALTER TABLE bookings ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP' },
+        { name: 'updated_at', sql: 'ALTER TABLE bookings ADD COLUMN updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP' }
+      ];
+
+      for (const column of columnsToAdd) {
+        if (!existingColumns.includes(column.name)) {
+          console.log(`Adding column ${column.name}...`);
+          try {
+            await pool.query(column.sql);
+            console.log(`Column ${column.name} added successfully`);
+          } catch (colError: any) {
+            console.error(`Error adding column ${column.name}:`, colError.message);
+          }
         }
       }
-      if (!existingColumns.includes('alternative_date')) {
-        await pool.query(`ALTER TABLE bookings ADD COLUMN alternative_date DATE`);
+
+      // If tour_date exists but preferred_date doesn't, copy data
+      if (existingColumns.includes('tour_date') && !existingColumns.includes('preferred_date')) {
+        await pool.query(`ALTER TABLE bookings ADD COLUMN preferred_date DATE`);
+        await pool.query(`UPDATE bookings SET preferred_date = tour_date WHERE preferred_date IS NULL`);
       }
-      if (!existingColumns.includes('pickup_location')) {
-        await pool.query(`ALTER TABLE bookings ADD COLUMN pickup_location TEXT`);
-      }
-      if (!existingColumns.includes('inform_later')) {
-        await pool.query(`ALTER TABLE bookings ADD COLUMN inform_later BOOLEAN DEFAULT false`);
-      }
-      if (!existingColumns.includes('booking_request')) {
-        await pool.query(`ALTER TABLE bookings ADD COLUMN booking_request BOOLEAN DEFAULT false`);
-      }
-      if (!existingColumns.includes('terms_accepted')) {
-        await pool.query(`ALTER TABLE bookings ADD COLUMN terms_accepted BOOLEAN DEFAULT false`);
-      }
-      if (!existingColumns.includes('user_id')) {
-        await pool.query(`ALTER TABLE bookings ADD COLUMN user_id INTEGER`);
-      }
+      
+      // Verify all required columns exist before insert
+      const updatedColumnCheck = await pool.query(`
+        SELECT column_name 
+        FROM information_schema.columns 
+        WHERE table_name = 'bookings'
+      `);
+      const finalColumns = updatedColumnCheck.rows.map(r => r.column_name);
+      console.log('Final columns after migration:', finalColumns);
+      
       // If user_id exists but has NOT NULL constraint, we need to make it nullable
       // This is handled by the CREATE TABLE IF NOT EXISTS above which has user_id as nullable
     } catch (alterError) {
@@ -304,10 +314,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     
     // Check if it's a database error
     if (error?.code === '42703') {
+      // Extract column name from error message
+      const columnMatch = error?.message?.match(/column "([^"]+)"/);
+      const columnName = columnMatch ? columnMatch[1] : 'unknown';
       return res.status(500).json({
         success: false,
         error: 'Database column does not exist',
-        message: `Column "${error?.column}" does not exist. Please run the migration SQL script.`,
+        message: `Column "${columnName}" does not exist. Please run the migration SQL script.`,
         details: error.message
       });
     }
