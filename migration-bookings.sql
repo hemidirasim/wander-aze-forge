@@ -114,6 +114,22 @@ BEGIN
     ALTER TABLE bookings ADD COLUMN customer_name VARCHAR(255);
   END IF;
   
+  -- customer_email
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'bookings' AND column_name = 'customer_email'
+  ) THEN
+    ALTER TABLE bookings ADD COLUMN customer_email VARCHAR(255);
+  END IF;
+  
+  -- customer_phone
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'bookings' AND column_name = 'customer_phone'
+  ) THEN
+    ALTER TABLE bookings ADD COLUMN customer_phone VARCHAR(50);
+  END IF;
+  
   -- email
   IF NOT EXISTS (
     SELECT 1 FROM information_schema.columns 

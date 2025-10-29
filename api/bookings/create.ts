@@ -213,6 +213,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         { name: 'tour_price', sql: 'ALTER TABLE bookings ADD COLUMN tour_price VARCHAR(100)' },
         { name: 'full_name', sql: 'ALTER TABLE bookings ADD COLUMN full_name VARCHAR(255)' },
         { name: 'customer_name', sql: 'ALTER TABLE bookings ADD COLUMN customer_name VARCHAR(255)' },
+        { name: 'customer_email', sql: 'ALTER TABLE bookings ADD COLUMN customer_email VARCHAR(255)' },
+        { name: 'customer_phone', sql: 'ALTER TABLE bookings ADD COLUMN customer_phone VARCHAR(50)' },
         { name: 'email', sql: 'ALTER TABLE bookings ADD COLUMN email VARCHAR(255)' },
         { name: 'phone', sql: 'ALTER TABLE bookings ADD COLUMN phone VARCHAR(50)' },
         { name: 'country', sql: 'ALTER TABLE bookings ADD COLUMN country VARCHAR(100)' },
@@ -267,12 +269,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const result = await pool.query(`
       INSERT INTO bookings (
         user_id, tour_id, tour_title, tour_category, group_size, tour_price,
-        customer_name, email, phone, country,
+        customer_name, customer_email, customer_phone, country,
         preferred_date, alternative_date, pickup_location, inform_later,
         special_requests, booking_request, terms_accepted, total_price
       ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
       RETURNING id, tour_id, tour_title, tour_category, group_size, tour_price,
-                customer_name, email, phone, country,
+                customer_name, customer_email, customer_phone, country,
                 preferred_date, alternative_date, pickup_location, inform_later,
                 special_requests, booking_request, terms_accepted, status, total_price, created_at
     `, [
@@ -283,8 +285,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       finalParticipants,
       formData?.tourPrice || null,
       fullName, // This maps to customer_name
-      email,
-      phone,
+      email, // This maps to customer_email
+      phone, // This maps to customer_phone
       country,
       finalTourDate || null,
       alternativeDate || null,
