@@ -32,6 +32,7 @@ const Contact = () => {
   const [showCountryList, setShowCountryList] = useState(false);
   const countryDropdownRef = useRef<HTMLDivElement>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -113,13 +114,15 @@ const Contact = () => {
       newsletter
     });
 
+    // Clear previous message
+    setSubmitMessage(null);
+
     // Validation
     if (!firstName || !lastName || !email || !country || !tourCategory || !groupSize || !dates || !message) {
       console.log('Validation failed - missing fields');
-      toast({
-        title: 'Error',
-        description: 'Please fill in all required fields',
-        variant: 'destructive',
+      setSubmitMessage({
+        type: 'error',
+        text: 'Please fill in all required fields'
       });
       return;
     }
@@ -161,27 +164,25 @@ const Contact = () => {
       console.log('Response data:', data);
 
       if (data.success) {
-        toast({
-          title: 'Success!',
-          description: 'Thank you for contacting us! We will get back to you soon.',
+        setSubmitMessage({
+          type: 'success',
+          text: data.message || 'Thank you for contacting us! We will get back to you soon.'
         });
         form.reset();
         setCountrySearch('');
         setSelectedCategory(null);
         setSelectedTour(null);
       } else {
-        toast({
-          title: 'Error',
-          description: data.error || 'Failed to send message. Please try again.',
-          variant: 'destructive',
+        setSubmitMessage({
+          type: 'error',
+          text: data.error || 'Failed to send message. Please try again.'
         });
       }
     } catch (error) {
       console.error('Error submitting contact form:', error);
-      toast({
-        title: 'Error',
-        description: error instanceof Error ? error.message : 'Failed to send message. Please try again.',
-        variant: 'destructive',
+      setSubmitMessage({
+        type: 'error',
+        text: error instanceof Error ? error.message : 'Failed to send message. Please try again.'
       });
     } finally {
       setSubmitting(false);
@@ -659,6 +660,17 @@ const Contact = () => {
                     >
                       {submitting ? 'Sending...' : 'Send Message'}
                     </Button>
+                    
+                    {/* Submit Message */}
+                    {submitMessage && (
+                      <p className={`mt-4 text-center text-sm ${
+                        submitMessage.type === 'success' 
+                          ? 'text-green-600' 
+                          : 'text-red-600'
+                      }`}>
+                        {submitMessage.text}
+                      </p>
+                    )}
                     
                     <p className="text-xs text-muted-foreground text-center">
                       We respect your privacy. Your information will only be used to respond to your inquiry.
