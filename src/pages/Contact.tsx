@@ -91,9 +91,9 @@ const Contact = () => {
     const lastName = formData.get('lastName') as string;
     const email = formData.get('email') as string;
     const phone = formData.get('phone') as string;
-    const country = countrySearch;
+    const country = countrySearch || formData.get('country') as string;
     const tourCategory = formData.get('tourCategory') as string;
-    const tourType = formData.get('tourType') as string;
+    const tourType = selectedTour ? selectedTour.title : (formData.get('tourType') as string);
     const groupSize = formData.get('groupSize') as string;
     const dates = formData.get('dates') as string;
     const message = formData.get('message') as string;
@@ -525,7 +525,7 @@ const Contact = () => {
                       autoCorrect="off"
                       autoCapitalize="off"
                       spellCheck="false"
-                      name="country-search"
+                      name="country"
                       id="country-search"
                       className="w-full pl-10 pr-3 py-3 border border-input rounded-md bg-background text-foreground h-12"
                       required
