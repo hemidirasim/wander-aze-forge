@@ -56,19 +56,71 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     // Ensure contact_messages table exists with all required fields
-    // First, add columns if they don't exist (one by one)
-    try {
-      await pool.query(`ALTER TABLE contact_messages ADD COLUMN IF NOT EXISTS first_name VARCHAR(255)`);
-      await pool.query(`ALTER TABLE contact_messages ADD COLUMN IF NOT EXISTS last_name VARCHAR(255)`);
-      await pool.query(`ALTER TABLE contact_messages ADD COLUMN IF NOT EXISTS country VARCHAR(100)`);
-      await pool.query(`ALTER TABLE contact_messages ADD COLUMN IF NOT EXISTS tour_category VARCHAR(100)`);
-      await pool.query(`ALTER TABLE contact_messages ADD COLUMN IF NOT EXISTS tour_type VARCHAR(255)`);
-      await pool.query(`ALTER TABLE contact_messages ADD COLUMN IF NOT EXISTS group_size INTEGER`);
-      await pool.query(`ALTER TABLE contact_messages ADD COLUMN IF NOT EXISTS dates VARCHAR(255)`);
-      await pool.query(`ALTER TABLE contact_messages ADD COLUMN IF NOT EXISTS newsletter BOOLEAN DEFAULT false`);
-    } catch (alterError) {
-      console.log('Error adding columns (may already exist):', alterError);
-      // Continue anyway, columns might already exist
+    // First, check if table exists
+    const tableCheck = await pool.query(`
+      SELECT EXISTS (
+        SELECT FROM information_schema.tables 
+        WHERE table_name = 'contact_messages'
+      );
+    `);
+
+    if (!tableCheck.rows[0].exists) {
+      // Create table if it doesn't exist
+      await pool.query(`
+        CREATE TABLE contact_messages (
+          id SERIAL PRIMARY KEY,
+          name VARCHAR(255),
+          first_name VARCHAR(255),
+          last_name VARCHAR(255),
+          email VARCHAR(255) NOT NULL,
+          phone VARCHAR(50),
+          country VARCHAR(100),
+          tour_category VARCHAR(100),
+          tour_type VARCHAR(255),
+          group_size INTEGER,
+          dates VARCHAR(255),
+          message TEXT NOT NULL,
+          newsletter BOOLEAN DEFAULT false,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+      `);
+      console.log('contact_messages table created successfully');
+    }
+
+    // Add columns if they don't exist (one by one with proper error handling)
+    const columnsToAdd = [
+      { name: 'first_name', type: 'VARCHAR(255)' },
+      { name: 'last_name', type: 'VARCHAR(255)' },
+      { name: 'country', type: 'VARCHAR(100)' },
+      { name: 'tour_category', type: 'VARCHAR(100)' },
+      { name: 'tour_type', type: 'VARCHAR(255)' },
+      { name: 'group_size', type: 'INTEGER' },
+      { name: 'dates', type: 'VARCHAR(255)' },
+      { name: 'newsletter', type: 'BOOLEAN DEFAULT false' },
+    ];
+
+    for (const column of columnsToAdd) {
+      try {
+        // Check if column exists
+        const columnCheck = await pool.query(`
+          SELECT EXISTS (
+            SELECT FROM information_schema.columns 
+            WHERE table_name = 'contact_messages' 
+            AND column_name = $1
+          );
+        `, [column.name]);
+
+        if (!columnCheck.rows[0].exists) {
+          await pool.query(`
+            ALTER TABLE contact_messages 
+            ADD COLUMN ${column.name} ${column.type}
+          `);
+          console.log(`Column ${column.name} added successfully`);
+        }
+      } catch (alterError: any) {
+        console.error(`Error adding column ${column.name}:`, alterError.message);
+        // Continue anyway, might already exist or have issues
+      }
     }
 
     // Check which columns exist in the table
