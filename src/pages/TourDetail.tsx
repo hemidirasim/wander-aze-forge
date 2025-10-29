@@ -282,6 +282,7 @@ const TourDetail = () => {
   const [selectedParticipants, setSelectedParticipants] = useState<string>('');
   const [selectedPrice, setSelectedPrice] = useState<string>('');
   const [isGroupSelected, setIsGroupSelected] = useState(false);
+  const [bookingMessage, setBookingMessage] = useState<{ type: 'error' | 'success', text: string } | null>(null);
   const [similarTours, setSimilarTours] = useState<TourData[]>([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const galleryRef = useRef<HTMLDivElement>(null);
@@ -1213,6 +1214,7 @@ const TourDetail = () => {
                         onValueChange={(value) => {
                           setSelectedParticipants(value);
                           setIsGroupSelected(true);
+                          setBookingMessage(null); // Clear message when group size is selected
                           const pricing = tour.participant_pricing.find(p => p.minParticipants.toString() === value);
                           if (pricing) {
                             const totalPrice = Math.round(pricing.pricePerPerson);
@@ -1246,11 +1248,14 @@ const TourDetail = () => {
                       console.log('tour.participant_pricing:', tour.participant_pricing);
                       console.log('tour.participant_pricing.length:', tour.participant_pricing?.length);
                       
+                      // Clear previous message
+                      setBookingMessage(null);
+                      
                       if ((!selectedParticipants || selectedParticipants === '') && tour.participant_pricing && tour.participant_pricing.length > 0) {
-                        console.log('Showing validation toast');
-                        toast({
-                          title: "Please select the number of people first.",
-                          variant: "destructive",
+                        console.log('Showing validation message');
+                        setBookingMessage({
+                          type: 'error',
+                          text: 'Please select the number of people first.'
                         });
                         return;
                       }
@@ -1261,6 +1266,17 @@ const TourDetail = () => {
                     <Calendar className="w-5 h-5 mr-2" />
                     Book This Tour
                   </Button>
+                  
+                  {/* Booking Message */}
+                  {bookingMessage && (
+                    <p className={`mt-2 text-center text-sm ${
+                      bookingMessage.type === 'error' 
+                        ? 'text-red-600' 
+                        : 'text-green-600'
+                    }`}>
+                      {bookingMessage.text}
+                    </p>
+                  )}
                   
                   <div className="text-center text-sm text-muted-foreground whitespace-pre-wrap">
                     {tour.booking_terms || 'Free cancellation up to 24 hours before'}
