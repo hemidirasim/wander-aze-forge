@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { useToast } from '@/components/ui/use-toast';
 import { useTourCategories, TourCategory, Tour } from '@/hooks/useTourCategories';
 import { Send, MapPin, Calendar, Users, Search } from 'lucide-react';
 
@@ -30,8 +29,8 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 
 const JourneyContactForm = () => {
-  const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
   const { categories, tours, loading, getToursByCategory } = useTourCategories();
   const [selectedCategory, setSelectedCategory] = useState<TourCategory | null>(null);
   const [selectedTour, setSelectedTour] = useState<Tour | null>(null);
@@ -425,26 +424,63 @@ const JourneyContactForm = () => {
 
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
+    setSubmitMessage(null); // Clear previous message
+    
     try {
-      // Here you would normally send the data to your backend
-      console.log('Journey planning form data:', data);
+      console.log('=== JOURNEY FORM SUBMIT ===');
+      console.log('Form data:', data);
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      toast({
-        title: "Request Sent Successfully!",
-        description: "We'll contact you within 24 hours to plan your perfect Azerbaijan adventure.",
+      const response = await fetch('/api/contact/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          firstName: data.firstName,
+          lastName: data.lastName,
+          email: data.email,
+          phone: data.phone || '',
+          country: countrySearch || data.country,
+          tourCategory: data.tourCategory,
+          tourType: selectedTour ? selectedTour.title : (data.tourType || ''),
+          groupSize: data.groupSize,
+          dates: data.dates,
+          message: data.message,
+          newsletter: data.newsletter || false,
+        }),
       });
-      
-      form.reset();
-      setSelectedCategory(null);
-      setSelectedTour(null);
+
+      console.log('Response status:', response.status);
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Response error:', errorData);
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log('Response data:', result);
+
+      if (result.success) {
+        setSubmitMessage({
+          type: 'success',
+          text: result.message || 'Thank you for contacting us! We will get back to you soon.'
+        });
+        form.reset();
+        setCountrySearch('');
+        setSelectedCategory(null);
+        setSelectedTour(null);
+      } else {
+        setSubmitMessage({
+          type: 'error',
+          text: result.error || 'Failed to send message. Please try again.'
+        });
+      }
     } catch (error) {
-      toast({
-        title: "Submission Failed",
-        description: "Please try again later or call us directly.",
-        variant: "destructive",
+      console.error('Error submitting journey form:', error);
+      setSubmitMessage({
+        type: 'error',
+        text: error instanceof Error ? error.message : 'Failed to send message. Please try again.'
       });
     } finally {
       setIsSubmitting(false);
@@ -567,7 +603,7 @@ const JourneyContactForm = () => {
                                       type="button"
                                       onClick={() => {
                                         setCountrySearch(country.name);
-                                        field.onChange(country.code);
+                                        field.onChange(country.name);
                                         setShowCountryList(false);
                                       }}
                                       className="w-full text-left px-4 py-3 hover:bg-gray-100 text-gray-900 transition-colors"
@@ -584,7 +620,7 @@ const JourneyContactForm = () => {
                                   type="button"
                                   onClick={() => {
                                     setCountrySearch('Other');
-                                    field.onChange('OTHER');
+                                    field.onChange('Other');
                                     setShowCountryList(false);
                                   }}
                                   className="w-full text-left px-4 py-3 hover:bg-gray-100 text-gray-900 transition-colors border-t border-gray-200"
@@ -748,8 +784,11 @@ const JourneyContactForm = () => {
                       <FormControl>
                         <input 
                           type="checkbox" 
-                          {...field}
                           checked={field.value}
+                          onChange={field.onChange}
+                          onBlur={field.onBlur}
+                          name={field.name}
+                          ref={field.ref}
                           className="rounded mt-1"
                         />
                       </FormControl>
@@ -778,6 +817,17 @@ const JourneyContactForm = () => {
                       </>
                     )}
                   </Button>
+                  
+                  {/* Submit Message */}
+                  {submitMessage && (
+                    <p className={`mt-4 text-center text-sm ${
+                      submitMessage.type === 'success'
+                        ? 'text-green-200'
+                        : 'text-red-200'
+                    }`}>
+                      {submitMessage.text}
+                    </p>
+                  )}
                   
                   <p className="text-xs text-white text-center mt-4">
                     We respect your privacy. Your information will only be used to respond to your inquiry.
