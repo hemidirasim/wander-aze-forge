@@ -13,9 +13,9 @@ import {
 
 interface ContactMessage {
   id: number;
-  first_name: string;
-  last_name: string;
-  name: string;
+  first_name?: string;
+  last_name?: string;
+  name?: string; // For old structure
   email: string;
   phone?: string;
   country?: string;
@@ -44,14 +44,20 @@ const AdminContactMessages = () => {
     try {
       setLoading(true);
       const response = await fetch('/api/contact/messages');
+      console.log('Fetch messages response status:', response.status);
+      
       if (response.ok) {
         const data = await response.json();
+        console.log('Fetched messages:', data);
         setMessages(data);
       } else {
-        console.error('Failed to fetch messages');
+        const errorData = await response.json();
+        console.error('Failed to fetch messages:', errorData);
+        alert('Failed to load messages: ' + (errorData.message || 'Unknown error'));
       }
     } catch (error) {
       console.error('Error fetching messages:', error);
+      alert('Error loading messages: ' + (error instanceof Error ? error.message : 'Unknown error'));
     } finally {
       setLoading(false);
     }
@@ -140,7 +146,9 @@ const AdminContactMessages = () => {
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <CardTitle className="text-xl mb-2">
-                      {message.first_name} {message.last_name}
+                      {message.first_name && message.last_name 
+                        ? `${message.first_name} ${message.last_name}`
+                        : message.name || 'Unknown'}
                     </CardTitle>
                     <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
                       <div className="flex items-center gap-2">
@@ -236,7 +244,9 @@ const AdminContactMessages = () => {
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
-              Message from {selectedMessage?.first_name} {selectedMessage?.last_name}
+              Message from {selectedMessage?.first_name && selectedMessage?.last_name
+                ? `${selectedMessage.first_name} ${selectedMessage.last_name}`
+                : selectedMessage?.name || 'Unknown'}
             </DialogTitle>
             <DialogDescription>
               Received on {selectedMessage && formatDate(selectedMessage.created_at)}
