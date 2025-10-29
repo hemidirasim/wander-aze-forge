@@ -27,14 +27,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    // Check authentication
+    // Check authentication (optional - user_id can be null)
+    let userId = null;
     const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({ success: false, error: 'Authorization token missing or invalid' });
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      try {
+        const token = authHeader.split(' ')[1];
+        const decoded: any = jwt.verify(token, JWT_SECRET);
+        userId = decoded.userId || null;
+      } catch (jwtError) {
+        console.log('JWT verification failed (optional):', jwtError);
+        // Continue without user_id - booking can be created without authentication
+      }
     }
-
-    const token = authHeader.split(' ')[1];
-    const decoded: any = jwt.verify(token, JWT_SECRET);
 
     console.log('=== BOOKING REQUEST RECEIVED ===');
     console.log('Request body:', JSON.stringify(req.body, null, 2));
@@ -237,6 +242,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       if (!existingColumns.includes('terms_accepted')) {
         await pool.query(`ALTER TABLE bookings ADD COLUMN terms_accepted BOOLEAN DEFAULT false`);
       }
+      if (!existingColumns.includes('user_id')) {
+        await pool.query(`ALTER TABLE bookings ADD COLUMN user_id INTEGER`);
+      }
+      // If user_id exists but has NOT NULL constraint, we need to make it nullable
+      // This is handled by the CREATE TABLE IF NOT EXISTS above which has user_id as nullable
     } catch (alterError) {
       console.log('Error adding columns (may already exist):', alterError);
     }
@@ -255,7 +265,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 preferred_date, alternative_date, pickup_location, inform_later,
                 special_requests, booking_request, terms_accepted, status, total_price, created_at
     `, [
-      decoded.userId || null,
+      userId, // Can be null
       finalTourId,
       finalTourTitle,
       finalTourCategory,
@@ -277,7 +287,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const booking = result.rows[0];
 
-    console.log('Booking created successfully:', { id: booking.id, userId: decoded.userId });
+    console.log('Booking created successfully:', { id: booking.id, userId: userId });
 
     return res.status(201).json({
       success: true,
@@ -285,21 +295,29 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       message: 'Tour booked successfully! You will receive a confirmation email shortly.'
     });
 
-  } catch (error) {
-    console.error('Booking creation error:', error);
+  } catch (error: any) {
+    console.error('=== BOOKING CREATION ERROR ===');
+    console.error('Error:', error);
+    console.error('Error message:', error?.message);
+    console.error('Error code:', error?.code);
+    console.error('Error detail:', error?.detail);
     
-    if (error instanceof Error && error.message.includes('jwt')) {
-      return res.status(401).json({
+    // Check if it's a database error
+    if (error?.code === '42703') {
+      return res.status(500).json({
         success: false,
-        error: 'Invalid or expired token',
-        message: 'Please log in again'
+        error: 'Database column does not exist',
+        message: `Column "${error?.column}" does not exist. Please run the migration SQL script.`,
+        details: error.message
       });
     }
     
     return res.status(500).json({
       success: false,
       error: 'Failed to create booking',
-      message: error instanceof Error ? error.message : 'Unknown error'
+      message: error instanceof Error ? error.message : 'Unknown error',
+      details: error?.detail || error?.message,
+      code: error?.code
     });
   }
 }

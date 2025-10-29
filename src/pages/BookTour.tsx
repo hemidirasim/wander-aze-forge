@@ -366,15 +366,6 @@ const BookTour = () => {
       return;
     }
 
-    if (!token) {
-      setSubmitMessage({
-        type: 'error',
-        text: 'Please log in to book a tour.'
-      });
-      setTimeout(() => navigate('/login'), 2000);
-      return;
-    }
-
     try {
       console.log('Submitting booking:', {
         tourId: tour?.id,
@@ -383,12 +374,17 @@ const BookTour = () => {
         formData: formData
       });
 
+      // Prepare headers - only include Authorization if token exists
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json',
+      };
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
       const response = await fetch('/api/bookings/create', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
+        headers: headers,
         body: JSON.stringify({
           tourId: tour?.id,
           tourTitle: tour?.title,
@@ -403,9 +399,29 @@ const BookTour = () => {
       if (data.success) {
         setSubmitMessage({
           type: 'success',
-          text: 'Your tour has been booked successfully. You will receive a confirmation email shortly.'
+          text: data.message || 'Your tour has been booked successfully. You will receive a confirmation email shortly.'
         });
-        setTimeout(() => navigate('/dashboard'), 2000);
+        // Reset form
+        setFormData({
+          tourName: formData.tourName,
+          groupSize: formData.groupSize,
+          tourPrice: formData.tourPrice,
+          fullName: '',
+          email: '',
+          phone: '',
+          country: '',
+          preferredDate: '',
+          alternativeDate: '',
+          pickupLocation: '',
+          informLater: false,
+          specialRequests: '',
+          bookingRequest: false,
+          terms: false
+        });
+        // Navigate only if user is logged in
+        if (token) {
+          setTimeout(() => navigate('/dashboard'), 3000);
+        }
       } else {
         setSubmitMessage({
           type: 'error',
