@@ -38,6 +38,7 @@ const BookTour = () => {
   const [booking, setBooking] = useState(false);
   const [pricingData, setPricingData] = useState<Array<{minParticipants: number, pricePerPerson: number}>>([]);
   const [availableDates, setAvailableDates] = useState<string[]>([]);
+  const [submitMessage, setSubmitMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
   
   const [formData, setFormData] = useState({
     // Tour Details
@@ -336,44 +337,41 @@ const BookTour = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setBooking(true);
+    setSubmitMessage(null); // Clear previous message
 
     if (!formData.preferredDate) {
-      toast({
-        title: "Date Required",
-        description: "Please select a preferred tour date.",
-        variant: "destructive"
+      setSubmitMessage({
+        type: 'error',
+        text: 'Please select a preferred tour date.'
       });
       setBooking(false);
       return;
     }
 
     if (!formData.fullName || !formData.email || !formData.phone) {
-      toast({
-        title: "Contact Information Required",
-        description: "Please fill in all required contact fields.",
-        variant: "destructive"
+      setSubmitMessage({
+        type: 'error',
+        text: 'Please fill in all required contact fields.'
       });
       setBooking(false);
       return;
     }
 
     if (!formData.bookingRequest || !formData.terms) {
-      toast({
-        title: "Agreement Required",
-        description: "Please accept the booking request and terms & conditions.",
-        variant: "destructive"
+      setSubmitMessage({
+        type: 'error',
+        text: 'Please accept the booking request and terms & conditions.'
       });
       setBooking(false);
       return;
     }
 
     if (!token) {
-      toast({
-        title: "Authentication Required",
-        description: "Please log in to book a tour.",
-        variant: "destructive"
+      setSubmitMessage({
+        type: 'error',
+        text: 'Please log in to book a tour.'
       });
-      navigate('/login');
+      setTimeout(() => navigate('/login'), 2000);
       return;
     }
 
@@ -403,24 +401,22 @@ const BookTour = () => {
       console.log('Booking response:', data);
 
       if (data.success) {
-        toast({
-          title: "Booking Successful!",
-          description: "Your tour has been booked successfully. You will receive a confirmation email shortly.",
+        setSubmitMessage({
+          type: 'success',
+          text: 'Your tour has been booked successfully. You will receive a confirmation email shortly.'
         });
-        navigate('/dashboard');
+        setTimeout(() => navigate('/dashboard'), 2000);
       } else {
-        toast({
-          title: "Booking Failed",
-          description: data.error || "Failed to book tour. Please try again.",
-          variant: "destructive"
+        setSubmitMessage({
+          type: 'error',
+          text: data.error || 'Failed to book tour. Please try again.'
         });
       }
     } catch (error) {
       console.error('Booking error:', error);
-      toast({
-        title: "Booking Failed",
-        description: "An error occurred. Please try again.",
-        variant: "destructive"
+      setSubmitMessage({
+        type: 'error',
+        text: 'An error occurred. Please try again.'
       });
     } finally {
       setBooking(false);
@@ -822,6 +818,17 @@ const BookTour = () => {
                           )}
                         {booking ? 'Sending...' : 'Send Booking Request'}
                         </Button>
+                        
+                        {/* Submit Message */}
+                        {submitMessage && (
+                          <p className={`mt-4 text-center text-sm ${
+                            submitMessage.type === 'success' 
+                              ? 'text-green-600' 
+                              : 'text-red-600'
+                          }`}>
+                            {submitMessage.text}
+                          </p>
+                        )}
                     </div>
                   </form>
                 </CardContent>
