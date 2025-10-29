@@ -212,6 +212,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         { name: 'group_size', sql: 'ALTER TABLE bookings ADD COLUMN group_size INTEGER' },
         { name: 'tour_price', sql: 'ALTER TABLE bookings ADD COLUMN tour_price VARCHAR(100)' },
         { name: 'full_name', sql: 'ALTER TABLE bookings ADD COLUMN full_name VARCHAR(255)' },
+        { name: 'customer_name', sql: 'ALTER TABLE bookings ADD COLUMN customer_name VARCHAR(255)' },
         { name: 'email', sql: 'ALTER TABLE bookings ADD COLUMN email VARCHAR(255)' },
         { name: 'phone', sql: 'ALTER TABLE bookings ADD COLUMN phone VARCHAR(50)' },
         { name: 'country', sql: 'ALTER TABLE bookings ADD COLUMN country VARCHAR(100)' },
@@ -266,12 +267,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const result = await pool.query(`
       INSERT INTO bookings (
         user_id, tour_id, tour_title, tour_category, group_size, tour_price,
-        full_name, email, phone, country,
+        customer_name, email, phone, country,
         preferred_date, alternative_date, pickup_location, inform_later,
         special_requests, booking_request, terms_accepted, total_price
       ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
       RETURNING id, tour_id, tour_title, tour_category, group_size, tour_price,
-                full_name, email, phone, country,
+                customer_name, email, phone, country,
                 preferred_date, alternative_date, pickup_location, inform_later,
                 special_requests, booking_request, terms_accepted, status, total_price, created_at
     `, [
@@ -281,7 +282,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       finalTourCategory,
       finalParticipants,
       formData?.tourPrice || null,
-      fullName,
+      fullName, // This maps to customer_name
       email,
       phone,
       country,
