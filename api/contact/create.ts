@@ -71,7 +71,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       // Continue anyway, columns might already exist
     }
 
-    // If name column exists but first_name/last_name don't, try to migrate
+    // Check which columns exist in the table
     const checkResult = await pool.query(`
       SELECT column_name 
       FROM information_schema.columns 
@@ -82,8 +82,70 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const hasName = checkResult.rows.some(r => r.column_name === 'name');
     const hasFirstName = checkResult.rows.some(r => r.column_name === 'first_name');
     
-    // If old structure exists, we'll use name field temporarily
-    if (hasName && !hasFirstName) {
+    // If first_name and last_name columns exist, use them
+    if (hasFirstName) {
+      // Use new structure with first_name and last_name
+      // Also include name field if it exists (to satisfy NOT NULL constraint)
+      const insertFields = hasName 
+        ? 'first_name, last_name, name, email, phone, country, tour_category, tour_type, group_size, dates, message, newsletter'
+        : 'first_name, last_name, email, phone, country, tour_category, tour_type, group_size, dates, message, newsletter';
+      
+      const insertValues = hasName
+        ? '$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12'
+        : '$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11';
+      
+      const returnFields = hasName
+        ? 'id, first_name, last_name, name, email, phone, country, tour_category, tour_type, group_size, dates, message, newsletter, created_at'
+        : 'id, first_name, last_name, email, phone, country, tour_category, tour_type, group_size, dates, message, newsletter, created_at';
+      
+      const params = hasName
+        ? [
+            firstName,
+            lastName,
+            `${firstName} ${lastName}`, // name field
+            email,
+            phone || null,
+            country,
+            tourCategory,
+            tourType || null,
+            parseInt(groupSize),
+            dates,
+            message,
+            newsletter || false
+          ]
+        : [
+            firstName,
+            lastName,
+            email,
+            phone || null,
+            country,
+            tourCategory,
+            tourType || null,
+            parseInt(groupSize),
+            dates,
+            message,
+            newsletter || false
+          ];
+      
+      const result = await pool.query(`
+        INSERT INTO contact_messages (
+          ${insertFields}
+        ) VALUES (${insertValues})
+        RETURNING ${returnFields}
+      `, params);
+      
+      const contactMessage = result.rows[0];
+      console.log('Contact message created successfully (new structure):', { id: contactMessage.id, email });
+      
+      return res.status(201).json({
+        success: true,
+        data: contactMessage,
+        message: 'Thank you for contacting us! We will get back to you soon.'
+      });
+    }
+    
+    // If only name column exists (old structure), use it
+    if (hasName) {
       // Insert with name field (concatenating first and last name)
       const result = await pool.query(`
         INSERT INTO contact_messages (
@@ -108,7 +170,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       ]);
       
       const contactMessage = result.rows[0];
-      console.log('Contact message created successfully:', { id: contactMessage.id, email });
+      console.log('Contact message created successfully (old structure):', { id: contactMessage.id, email });
       
       return res.status(201).json({
         success: true,
@@ -116,20 +178,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         message: 'Thank you for contacting us! We will get back to you soon.'
       });
     }
-
-    // Use new structure with first_name and last_name
+    
+    // Fallback: try to insert with name field (in case table was just created)
     const result = await pool.query(`
       INSERT INTO contact_messages (
-        first_name, last_name, email, phone, country, 
+        name, email, phone, country, 
         tour_category, tour_type, group_size, dates, 
         message, newsletter
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
-      RETURNING id, first_name, last_name, name, email, phone, country, 
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+      RETURNING id, name, email, phone, country, 
                 tour_category, tour_type, group_size, dates, message, 
                 newsletter, created_at
     `, [
-      firstName,
-      lastName,
+      `${firstName} ${lastName}`,
       email,
       phone || null,
       country,
