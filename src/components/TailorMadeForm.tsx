@@ -32,6 +32,7 @@ type FormData = z.infer<typeof formSchema>;
 const TailorMadeForm = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -54,6 +55,8 @@ const TailorMadeForm = () => {
 
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
+    setSubmitMessage(null); // Clear previous message
+    
     try {
       console.log('Submitting tailor-made request:', data);
       
@@ -76,18 +79,17 @@ const TailorMadeForm = () => {
       const result = await response.json();
       console.log('Response data:', result);
       
-      toast({
-        title: "Request Submitted Successfully!",
-        description: result.message || "We'll get back to you within 24 hours with a custom itinerary.",
+      setSubmitMessage({
+        type: 'success',
+        text: result.message || "We'll get back to you within 24 hours with a custom itinerary."
       });
       
       form.reset();
     } catch (error) {
       console.error('Error submitting tailor-made request:', error);
-      toast({
-        title: "Submission Failed",
-        description: error instanceof Error ? error.message : "Please try again later or contact us directly.",
-        variant: "destructive",
+      setSubmitMessage({
+        type: 'error',
+        text: error instanceof Error ? error.message : "Please try again later or contact us directly."
       });
     } finally {
       setIsSubmitting(false);
@@ -419,6 +421,33 @@ const TailorMadeForm = () => {
             >
               {isSubmitting ? 'Submitting...' : 'Submit'}
             </Button>
+            
+            {/* Submit Message */}
+            {submitMessage && (
+              <div className={`mt-4 p-4 rounded-lg text-center ${
+                submitMessage.type === 'success' 
+                  ? 'bg-green-50 text-green-700 border border-green-200' 
+                  : 'bg-red-50 text-red-700 border border-red-200'
+              }`}>
+                <div className="flex items-center justify-center gap-2">
+                  {submitMessage.type === 'success' ? (
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                  ) : (
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
+                  )}
+                  <span className="font-medium">
+                    {submitMessage.type === 'success' ? 'Success!' : 'Error:'}
+                  </span>
+                </div>
+                <p className="mt-1 text-sm">
+                  {submitMessage.text}
+                </p>
+              </div>
+            )}
           </div>
         </form>
       </Form>
