@@ -199,6 +199,27 @@ const AdminContactMessages = () => {
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
+                  {/* Name fields */}
+                  {message.first_name && (
+                    <div>
+                      <span className="font-semibold">First Name:</span>{' '}
+                      <span className="text-muted-foreground">{message.first_name}</span>
+                    </div>
+                  )}
+                  {message.last_name && (
+                    <div>
+                      <span className="font-semibold">Last Name:</span>{' '}
+                      <span className="text-muted-foreground">{message.last_name}</span>
+                    </div>
+                  )}
+                  {message.name && !message.first_name && !message.last_name && (
+                    <div>
+                      <span className="font-semibold">Name:</span>{' '}
+                      <span className="text-muted-foreground">{message.name}</span>
+                    </div>
+                  )}
+                  
+                  {/* Tour information */}
                   {message.tour_category && (
                     <div>
                       <span className="font-semibold">Tour Category:</span>{' '}
@@ -223,10 +244,14 @@ const AdminContactMessages = () => {
                       <span className="text-muted-foreground">{message.dates}</span>
                     </div>
                   )}
+                  
+                  {/* Message */}
                   <div>
                     <span className="font-semibold">Message:</span>
                     <p className="text-muted-foreground mt-1 line-clamp-2">{message.message}</p>
                   </div>
+                  
+                  {/* Newsletter */}
                   {message.newsletter && (
                     <div className="text-sm text-primary">
                       ✓ Subscribed to newsletter
@@ -255,6 +280,25 @@ const AdminContactMessages = () => {
           {selectedMessage && (
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
+                {/* Personal Information */}
+                {selectedMessage.first_name && (
+                  <div>
+                    <span className="font-semibold">First Name:</span>
+                    <p className="text-muted-foreground">{selectedMessage.first_name}</p>
+                  </div>
+                )}
+                {selectedMessage.last_name && (
+                  <div>
+                    <span className="font-semibold">Last Name:</span>
+                    <p className="text-muted-foreground">{selectedMessage.last_name}</p>
+                  </div>
+                )}
+                {selectedMessage.name && !selectedMessage.first_name && !selectedMessage.last_name && (
+                  <div className="col-span-2">
+                    <span className="font-semibold">Name:</span>
+                    <p className="text-muted-foreground">{selectedMessage.name}</p>
+                  </div>
+                )}
                 <div>
                   <span className="font-semibold">Email:</span>
                   <p className="text-muted-foreground">{selectedMessage.email}</p>
@@ -271,6 +315,8 @@ const AdminContactMessages = () => {
                     <p className="text-muted-foreground">{selectedMessage.country}</p>
                   </div>
                 )}
+                
+                {/* Tour Information */}
                 {selectedMessage.tour_category && (
                   <div>
                     <span className="font-semibold">Tour Category:</span>
@@ -296,16 +342,27 @@ const AdminContactMessages = () => {
                   </div>
                 )}
               </div>
+              
+              {/* Message */}
               <div>
                 <span className="font-semibold">Message:</span>
                 <p className="text-muted-foreground mt-2 whitespace-pre-wrap">
                   {selectedMessage.message}
                 </p>
               </div>
+              
+              {/* Newsletter */}
               {selectedMessage.newsletter && (
                 <div className="p-3 bg-primary/10 rounded-lg">
                   <span className="text-primary font-semibold">
                     ✓ Subscribed to newsletter
+                  </span>
+                </div>
+              )}
+              {!selectedMessage.newsletter && (
+                <div className="p-3 bg-muted rounded-lg">
+                  <span className="text-muted-foreground">
+                    Not subscribed to newsletter
                   </span>
                 </div>
               )}
