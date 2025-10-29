@@ -169,6 +169,28 @@ BEGIN
     END IF;
   END IF;
   
+  -- booking_date
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'bookings' AND column_name = 'booking_date'
+  ) THEN
+    ALTER TABLE bookings ADD COLUMN booking_date DATE;
+    -- If preferred_date exists, copy data to booking_date
+    IF EXISTS (
+      SELECT 1 FROM information_schema.columns 
+      WHERE table_name = 'bookings' AND column_name = 'preferred_date'
+    ) THEN
+      UPDATE bookings SET booking_date = preferred_date WHERE booking_date IS NULL;
+    END IF;
+    -- If tour_date exists but preferred_date doesn't, copy from tour_date
+    IF EXISTS (
+      SELECT 1 FROM information_schema.columns 
+      WHERE table_name = 'bookings' AND column_name = 'tour_date'
+    ) THEN
+      UPDATE bookings SET booking_date = tour_date WHERE booking_date IS NULL;
+    END IF;
+  END IF;
+  
   -- alternative_date
   IF NOT EXISTS (
     SELECT 1 FROM information_schema.columns 

@@ -219,6 +219,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         { name: 'phone', sql: 'ALTER TABLE bookings ADD COLUMN phone VARCHAR(50)' },
         { name: 'country', sql: 'ALTER TABLE bookings ADD COLUMN country VARCHAR(100)' },
         { name: 'preferred_date', sql: 'ALTER TABLE bookings ADD COLUMN preferred_date DATE' },
+        { name: 'booking_date', sql: 'ALTER TABLE bookings ADD COLUMN booking_date DATE' },
         { name: 'alternative_date', sql: 'ALTER TABLE bookings ADD COLUMN alternative_date DATE' },
         { name: 'pickup_location', sql: 'ALTER TABLE bookings ADD COLUMN pickup_location TEXT' },
         { name: 'inform_later', sql: 'ALTER TABLE bookings ADD COLUMN inform_later BOOLEAN DEFAULT false' },
@@ -249,6 +250,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         await pool.query(`UPDATE bookings SET preferred_date = tour_date WHERE preferred_date IS NULL`);
       }
       
+      // Ensure booking_date exists and copy from preferred_date if needed
+      if (!existingColumns.includes('booking_date')) {
+        await pool.query(`ALTER TABLE bookings ADD COLUMN booking_date DATE`);
+        if (existingColumns.includes('preferred_date')) {
+          await pool.query(`UPDATE bookings SET booking_date = preferred_date WHERE booking_date IS NULL`);
+        } else if (existingColumns.includes('tour_date')) {
+          await pool.query(`UPDATE bookings SET booking_date = tour_date WHERE booking_date IS NULL`);
+        }
+      }
+      
       // Verify all required columns exist before insert
       const updatedColumnCheck = await pool.query(`
         SELECT column_name 
@@ -270,12 +281,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       INSERT INTO bookings (
         user_id, tour_id, tour_title, tour_category, group_size, tour_price,
         customer_name, customer_email, customer_phone, country,
-        preferred_date, alternative_date, pickup_location, inform_later,
+        booking_date, preferred_date, alternative_date, pickup_location, inform_later,
         special_requests, booking_request, terms_accepted, total_price
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)
       RETURNING id, tour_id, tour_title, tour_category, group_size, tour_price,
                 customer_name, customer_email, customer_phone, country,
-                preferred_date, alternative_date, pickup_location, inform_later,
+                booking_date, preferred_date, alternative_date, pickup_location, inform_later,
                 special_requests, booking_request, terms_accepted, status, total_price, created_at
     `, [
       userId, // Can be null
@@ -288,7 +299,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       email, // This maps to customer_email
       phone, // This maps to customer_phone
       country,
-      finalTourDate || null,
+      finalTourDate || null, // This maps to booking_date
+      finalTourDate || null, // This maps to preferred_date
       alternativeDate || null,
       pickupLocation || null,
       informLater,
