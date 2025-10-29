@@ -418,10 +418,6 @@ const BookTour = () => {
           bookingRequest: false,
           terms: false
         });
-        // Navigate only if user is logged in
-        if (token) {
-          setTimeout(() => navigate('/dashboard'), 3000);
-        }
       } else {
         setSubmitMessage({
           type: 'error',
