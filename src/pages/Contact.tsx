@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { MapPin, Phone, Mail, Clock, Facebook, Instagram, Linkedin, Twitter, Youtube, Search } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useTourCategories, TourCategory, Tour } from '@/hooks/useTourCategories';
+import { useToast } from '@/hooks/use-toast';
 
 interface ContactSection {
   id: number;
@@ -30,6 +31,8 @@ const Contact = () => {
   const [countrySearch, setCountrySearch] = useState('');
   const [showCountryList, setShowCountryList] = useState(false);
   const countryDropdownRef = useRef<HTMLDivElement>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const { toast } = useToast();
 
   useEffect(() => {
     fetchContactData();
@@ -63,6 +66,116 @@ const Contact = () => {
   const handleTourChange = (tourId: string) => {
     const tour = tours.find(t => t.id.toString() === tourId);
     setSelectedTour(tour || null);
+  };
+
+  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log('Form submit handler called!');
+    
+    if (submitting) return;
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    
+    const firstName = formData.get('firstName') as string;
+    const lastName = formData.get('lastName') as string;
+    const email = formData.get('email') as string;
+    const phone = formData.get('phone') as string;
+    const country = countrySearch;
+    const tourCategory = formData.get('tourCategory') as string;
+    const tourType = formData.get('tourType') as string;
+    const groupSize = formData.get('groupSize') as string;
+    const dates = formData.get('dates') as string;
+    const message = formData.get('message') as string;
+    const newsletter = formData.get('newsletter') === 'on';
+
+    console.log('Form submission data:', {
+      firstName,
+      lastName,
+      email,
+      phone,
+      country,
+      tourCategory,
+      tourType,
+      groupSize,
+      dates,
+      message,
+      newsletter
+    });
+
+    // Validation
+    if (!firstName || !lastName || !email || !country || !tourCategory || !groupSize || !dates || !message) {
+      console.log('Validation failed - missing fields');
+      toast({
+        title: 'Error',
+        description: 'Please fill in all required fields',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    try {
+      setSubmitting(true);
+      console.log('Sending request to /api/contact/create');
+
+      const response = await fetch('/api/contact/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          firstName,
+          lastName,
+          email,
+          phone,
+          country,
+          tourCategory,
+          tourType: selectedTour ? selectedTour.title : tourType,
+          groupSize,
+          dates,
+          message,
+          newsletter,
+        }),
+      });
+
+      console.log('Response status:', response.status);
+      console.log('Response ok:', response.ok);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Response error:', errorText);
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log('Response data:', data);
+
+      if (data.success) {
+        toast({
+          title: 'Success!',
+          description: 'Thank you for contacting us! We will get back to you soon.',
+        });
+        form.reset();
+        setCountrySearch('');
+        setSelectedCategory(null);
+        setSelectedTour(null);
+      } else {
+        toast({
+          title: 'Error',
+          description: data.error || 'Failed to send message. Please try again.',
+          variant: 'destructive',
+        });
+      }
+    } catch (error) {
+      console.error('Error submitting contact form:', error);
+      toast({
+        title: 'Error',
+        description: error instanceof Error ? error.message : 'Failed to send message. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const heroData = getSectionData('hero');
@@ -362,26 +475,28 @@ const Contact = () => {
                 </p>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="firstName">First Name *</Label>
-                    <Input id="firstName" placeholder="Your first name" required />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="lastName">Last Name *</Label>
-                    <Input id="lastName" placeholder="Your last name" required />
-                  </div>
-                </div>
+                <form onSubmit={handleFormSubmit}>
+                  <div className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="firstName">First Name *</Label>
+                        <Input id="firstName" name="firstName" placeholder="Your first name" required />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="lastName">Last Name *</Label>
+                        <Input id="lastName" name="lastName" placeholder="Your last name" required />
+                      </div>
+                    </div>
                 
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email *</Label>
-                  <Input id="email" type="email" placeholder="your.email@example.com" required />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="phone">Phone Number</Label>
-                  <Input id="phone" type="tel" placeholder="+1 (555) 123-4567" />
-                </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="email">Email *</Label>
+                      <Input id="email" name="email" type="email" placeholder="your.email@example.com" required />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="phone">Phone Number</Label>
+                      <Input id="phone" name="phone" type="tel" placeholder="+1 (555) 123-4567" />
+                    </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="country">Country *</Label>
@@ -443,15 +558,16 @@ const Contact = () => {
                   </div>
                 </div>
                 
-                <div className="space-y-2">
-                  <Label htmlFor="tourCategory">Tour Category *</Label>
-                  <select 
-                    id="tourCategory" 
-                    className="w-full p-3 border border-input rounded-md bg-background text-foreground"
-                    onChange={(e) => handleCategoryChange(e.target.value)}
-                    disabled={dataLoading}
-                    required
-                  >
+                    <div className="space-y-2">
+                      <Label htmlFor="tourCategory">Tour Category *</Label>
+                      <select 
+                        id="tourCategory" 
+                        name="tourCategory"
+                        className="w-full p-3 border border-input rounded-md bg-background text-foreground"
+                        onChange={(e) => handleCategoryChange(e.target.value)}
+                        disabled={dataLoading}
+                        required
+                      >
                     <option value="">
                       {dataLoading ? 'Loading categories...' : 'Select a category'}
                     </option>
@@ -463,15 +579,16 @@ const Contact = () => {
                   </select>
                 </div>
 
-                {/* Tour Selection (appears when category is selected AND has tours) */}
-                {selectedCategory && getToursByCategory(selectedCategory.slug).length > 0 && (
-                  <div className="space-y-2">
-                    <Label htmlFor="tourType">Select Tour</Label>
-                    <select 
-                      id="tourType" 
-                      className="w-full p-3 border border-input rounded-md bg-background text-foreground"
-                      onChange={(e) => handleTourChange(e.target.value)}
-                    >
+                    {/* Tour Selection (appears when category is selected AND has tours) */}
+                    {selectedCategory && getToursByCategory(selectedCategory.slug).length > 0 && (
+                      <div className="space-y-2">
+                        <Label htmlFor="tourType">Select Tour</Label>
+                        <select 
+                          id="tourType" 
+                          name="tourType"
+                          className="w-full p-3 border border-input rounded-md bg-background text-foreground"
+                          onChange={(e) => handleTourChange(e.target.value)}
+                        >
                       <option value="">Select a tour</option>
                       {getToursByCategory(selectedCategory.slug).map((tour) => (
                         <option key={tour.id} value={tour.id.toString()}>
@@ -482,48 +599,58 @@ const Contact = () => {
                   </div>
                 )}
 
-                
-                <div className="space-y-2">
-                  <Label htmlFor="groupSize">Group Size *</Label>
-                  <Input id="groupSize" type="number" min="1" max="20" placeholder="Number of travelers" required />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="dates">Preferred Dates *</Label>
-                  <Input id="dates" placeholder="e.g., June 15-20, 2024" required />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="message">Message *</Label>
-                  <Textarea 
-                    id="message" 
-                    placeholder="Tell us about your interests, fitness level, special requirements, or any questions you have..."
-                    className="min-h-[120px]"
-                    required
-                  />
-                </div>
-                
-                <div className="flex items-center space-x-2">
-                  <input type="checkbox" id="newsletter" className="rounded" />
-                  <Label htmlFor="newsletter" className="text-sm text-muted-foreground cursor-pointer">
-                    Subscribe to our newsletter for adventure tips and tour updates
-                  </Label>
-                </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="groupSize">Group Size *</Label>
+                      <Input id="groupSize" name="groupSize" type="number" min="1" max="20" placeholder="Number of travelers" required />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="dates">Preferred Dates *</Label>
+                      <Input id="dates" name="dates" placeholder="e.g., June 15-20, 2024" required />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="message">Message *</Label>
+                      <Textarea 
+                        id="message" 
+                        name="message"
+                        placeholder="Tell us about your interests, fitness level, special requirements, or any questions you have..."
+                        className="min-h-[120px]"
+                        required
+                      />
+                    </div>
+                    
+                    <div className="flex items-center space-x-2">
+                      <input type="checkbox" id="newsletter" name="newsletter" className="rounded" />
+                      <Label htmlFor="newsletter" className="text-sm text-muted-foreground cursor-pointer">
+                        Subscribe to our newsletter for adventure tips and tour updates
+                      </Label>
+                    </div>
 
-                <div className="flex items-start space-x-2">
-                  <input type="checkbox" id="terms" className="rounded mt-1" required />
-                  <Label htmlFor="terms" className="text-sm text-muted-foreground cursor-pointer">
-                    I agree to the <a href="/terms" className="text-primary no-underline hover:underline">Terms & Conditions</a> and <a href="/privacy" className="text-primary no-underline hover:underline">Privacy Policy</a> *
-                  </Label>
-                </div>
-                
-                <Button size="lg" variant="adventure" className="w-full">
-                  Send Message
-                </Button>
-                
-                <p className="text-xs text-muted-foreground text-center">
-                  We respect your privacy. Your information will only be used to respond to your inquiry.
-                </p>
+                    <div className="flex items-start space-x-2">
+                      <input type="checkbox" id="terms" name="terms" className="rounded mt-1" required />
+                      <Label htmlFor="terms" className="text-sm text-muted-foreground cursor-pointer">
+                        I agree to the <a href="/terms" className="text-primary no-underline hover:underline">Terms & Conditions</a> and <a href="/privacy" className="text-primary no-underline hover:underline">Privacy Policy</a> *
+                      </Label>
+                    </div>
+                    
+                    <Button 
+                      type="submit" 
+                      size="lg" 
+                      variant="adventure" 
+                      className="w-full" 
+                      disabled={submitting}
+                      onClick={() => console.log('Button clicked!')}
+                    >
+                      {submitting ? 'Sending...' : 'Send Message'}
+                    </Button>
+                    
+                    <p className="text-xs text-muted-foreground text-center">
+                      We respect your privacy. Your information will only be used to respond to your inquiry.
+                    </p>
+                  </div>
+                </form>
               </CardContent>
             </Card>
 

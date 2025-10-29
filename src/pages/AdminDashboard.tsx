@@ -12,6 +12,7 @@ import {
   FileText,
   Calendar,
   MessageSquare,
+  Mail,
   LogOut,
   Home,
   Tags,
@@ -157,6 +158,17 @@ const AdminDashboard: React.FC = () => {
                 <Link to="/admin/contact">
                   <MessageSquare className="w-6 h-6" />
                   <span className="font-semibold">Contact Page</span>
+                </Link>
+              </Button>
+
+              <Button 
+                asChild
+                variant="outline"
+                className="h-20 flex flex-col items-center justify-center space-y-2 border-2 hover:bg-gray-50"
+              >
+                <Link to="/admin/contact-messages">
+                  <Mail className="w-6 h-6" />
+                  <span className="font-semibold">Contact Messages</span>
                 </Link>
               </Button>
 
