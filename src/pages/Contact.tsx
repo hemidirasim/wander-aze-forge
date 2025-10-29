@@ -70,9 +70,13 @@ const Contact = () => {
 
   const handleFormSubmit = async (e?: React.FormEvent<HTMLFormElement>) => {
     if (e) e.preventDefault();
-    console.log('Form submit handler called!');
+    console.log('=== FORM SUBMIT HANDLER CALLED ===');
+    console.log('submitting state:', submitting);
     
-    if (submitting) return;
+    if (submitting) {
+      console.log('Already submitting, returning...');
+      return;
+    }
 
     // Get form element by ID
     const form = document.getElementById('contact-form') as HTMLFormElement;
@@ -647,7 +651,11 @@ const Contact = () => {
                       variant="adventure" 
                       className="w-full" 
                       disabled={submitting}
-                      onClick={handleFormSubmit}
+                      onClick={() => {
+                        console.log('=== BUTTON CLICKED ===');
+                        console.log('submitting state:', submitting);
+                        handleFormSubmit();
+                      }}
                     >
                       {submitting ? 'Sending...' : 'Send Message'}
                     </Button>
