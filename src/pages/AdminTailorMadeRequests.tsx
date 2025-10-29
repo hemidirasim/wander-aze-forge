@@ -247,30 +247,91 @@ const AdminTailorMadeRequests = () => {
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
+                  {/* Adventure Types */}
+                  {request.adventure_types && request.adventure_types.length > 0 && (
+                    <div>
+                      <span className="font-semibold">Adventure Types:</span>{' '}
+                      <span className="text-muted-foreground">
+                        {Array.isArray(request.adventure_types) 
+                          ? request.adventure_types.join(', ') 
+                          : request.adventure_types}
+                      </span>
+                    </div>
+                  )}
+                  
+                  {/* Destinations */}
+                  {request.destinations && (
+                    <div>
+                      <span className="font-semibold">Destinations:</span>{' '}
+                      <span className="text-muted-foreground">
+                        {request.destinations.length > 100 
+                          ? `${request.destinations.substring(0, 100)}...` 
+                          : request.destinations}
+                      </span>
+                    </div>
+                  )}
+                  
+                  {/* Duration */}
+                  {request.duration && (
+                    <div>
+                      <span className="font-semibold">Duration:</span>{' '}
+                      <span className="text-muted-foreground">{request.duration}</span>
+                    </div>
+                  )}
+                  
+                  {/* Daily Distance */}
+                  {request.daily_kilometers && (
+                    <div>
+                      <span className="font-semibold">Daily Distance:</span>{' '}
+                      <span className="text-muted-foreground">{request.daily_kilometers}</span>
+                    </div>
+                  )}
+                  
+                  {/* Budget */}
+                  {request.budget && (
+                    <div>
+                      <span className="font-semibold">Budget:</span>{' '}
+                      <span className="text-muted-foreground">{request.budget}</span>
+                    </div>
+                  )}
+                  
+                  {/* Accommodation */}
+                  {request.accommodation_preferences && request.accommodation_preferences.length > 0 && (
+                    <div>
+                      <span className="font-semibold">Accommodation:</span>{' '}
+                      <span className="text-muted-foreground">
+                        {Array.isArray(request.accommodation_preferences)
+                          ? request.accommodation_preferences.join(', ')
+                          : request.accommodation_preferences}
+                      </span>
+                    </div>
+                  )}
+                  
+                  {/* Children Ages */}
+                  {request.children_ages && (
+                    <div>
+                      <span className="font-semibold">Children Ages:</span>{' '}
+                      <span className="text-muted-foreground">{request.children_ages}</span>
+                    </div>
+                  )}
+                  
+                  {/* Terms Agreement */}
                   <div>
-                    <span className="font-semibold">Adventure Types:</span>{' '}
-                    <span className="text-muted-foreground">
-                      {request.adventure_types.join(', ')}
+                    <span className="font-semibold">Terms Agreed:</span>{' '}
+                    <span className={request.agree_to_terms ? "text-green-600" : "text-red-600"}>
+                      {request.agree_to_terms ? '✓ Yes' : '✗ No'}
                     </span>
                   </div>
-                  <div>
-                    <span className="font-semibold">Duration:</span>{' '}
-                    <span className="text-muted-foreground">{request.duration}</span>
-                  </div>
-                  <div>
-                    <span className="font-semibold">Daily Distance:</span>{' '}
-                    <span className="text-muted-foreground">{request.daily_kilometers}</span>
-                  </div>
-                  <div>
-                    <span className="font-semibold">Budget:</span>{' '}
-                    <span className="text-muted-foreground">{request.budget}</span>
-                  </div>
-                  <div>
-                    <span className="font-semibold">Accommodation:</span>{' '}
-                    <span className="text-muted-foreground">
-                      {request.accommodation_preferences.join(', ')}
-                    </span>
-                  </div>
+                  
+                  {/* Additional Details Preview */}
+                  {request.additional_details && (
+                    <div>
+                      <span className="font-semibold">Additional Details:</span>
+                      <p className="text-muted-foreground mt-1 line-clamp-2">
+                        {request.additional_details}
+                      </p>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -367,9 +428,14 @@ const AdminTailorMadeRequests = () => {
               <div>
                 <span className="font-semibold">Adventure Types:</span>
                 <div className="flex flex-wrap gap-2 mt-2">
-                  {selectedRequest.adventure_types.map((type) => (
-                    <Badge key={type} variant="outline">
-                      {type.charAt(0).toUpperCase() + type.slice(1)}
+                  {(Array.isArray(selectedRequest.adventure_types) 
+                    ? selectedRequest.adventure_types 
+                    : [selectedRequest.adventure_types]
+                  ).map((type, index) => (
+                    <Badge key={index} variant="outline">
+                      {typeof type === 'string' 
+                        ? type.charAt(0).toUpperCase() + type.slice(1)
+                        : String(type)}
                     </Badge>
                   ))}
                 </div>
@@ -387,9 +453,14 @@ const AdminTailorMadeRequests = () => {
               <div>
                 <span className="font-semibold">Accommodation Preferences:</span>
                 <div className="flex flex-wrap gap-2 mt-2">
-                  {selectedRequest.accommodation_preferences.map((pref) => (
-                    <Badge key={pref} variant="secondary">
-                      {pref.charAt(0).toUpperCase() + pref.slice(1)}
+                  {(Array.isArray(selectedRequest.accommodation_preferences)
+                    ? selectedRequest.accommodation_preferences
+                    : [selectedRequest.accommodation_preferences]
+                  ).map((pref, index) => (
+                    <Badge key={index} variant="secondary">
+                      {typeof pref === 'string'
+                        ? pref.charAt(0).toUpperCase() + pref.slice(1)
+                        : String(pref)}
                     </Badge>
                   ))}
                 </div>
@@ -401,6 +472,33 @@ const AdminTailorMadeRequests = () => {
                 <p className="text-muted-foreground mt-2 whitespace-pre-wrap">
                   {selectedRequest.additional_details}
                 </p>
+              </div>
+
+              {/* Terms Agreement */}
+              <div className="p-4 rounded-lg border-2" style={{
+                borderColor: selectedRequest.agree_to_terms ? '#10b981' : '#ef4444',
+                backgroundColor: selectedRequest.agree_to_terms ? '#f0fdf4' : '#fef2f2'
+              }}>
+                <span className="font-semibold">Terms & Conditions:</span>
+                <p className={`mt-1 ${selectedRequest.agree_to_terms ? 'text-green-700' : 'text-red-700'}`}>
+                  {selectedRequest.agree_to_terms 
+                    ? '✓ Customer agreed to Terms & Conditions and Privacy Policy' 
+                    : '✗ Customer did not agree to Terms & Conditions'}
+                </p>
+              </div>
+
+              {/* Created/Updated dates */}
+              <div className="grid grid-cols-2 gap-4 text-sm text-muted-foreground pt-4 border-t">
+                <div>
+                  <span className="font-semibold">Created:</span>{' '}
+                  {formatDate(selectedRequest.created_at)}
+                </div>
+                {selectedRequest.updated_at && (
+                  <div>
+                    <span className="font-semibold">Updated:</span>{' '}
+                    {formatDate(selectedRequest.updated_at)}
+                  </div>
+                )}
               </div>
 
               <div className="flex justify-end gap-2 pt-4">
