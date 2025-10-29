@@ -4,50 +4,114 @@
 -- Bu SQL kodunu PostgreSQL database-də çalışdırın
 -- Bütün lazım olan column-ları əlavə edəcək
 
--- 1. Əgər table mövcud deyilsə, yaradırıq
+-- 1. Əgər table mövcud deyilsə, yaradırıq (bütün column-larla birlikdə)
 CREATE TABLE IF NOT EXISTS contact_messages (
   id SERIAL PRIMARY KEY,
   name VARCHAR(255),
+  first_name VARCHAR(255),
+  last_name VARCHAR(255),
   email VARCHAR(255) NOT NULL,
   phone VARCHAR(50),
+  country VARCHAR(100),
+  tour_category VARCHAR(100),
+  tour_type VARCHAR(255),
+  group_size INTEGER,
+  dates VARCHAR(255),
   message TEXT NOT NULL,
+  newsletter BOOLEAN DEFAULT false,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 2. Lazım olan column-ları əlavə edirik
--- Hər bir column əvvəlcə yoxlanılır, əgər yoxdursa əlavə olunur
+-- 2. Əgər table artıq mövcuddursa, lazım olan column-ları əlavə edirik
+-- Hər bir column üçün əvvəlcə yoxlanılır, əgər yoxdursa əlavə olunur
 
 -- Ad column-u
-ALTER TABLE contact_messages 
-ADD COLUMN IF NOT EXISTS first_name VARCHAR(255);
+DO $$ 
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'contact_messages' AND column_name = 'first_name'
+  ) THEN
+    ALTER TABLE contact_messages ADD COLUMN first_name VARCHAR(255);
+  END IF;
+END $$;
 
 -- Soyad column-u
-ALTER TABLE contact_messages 
-ADD COLUMN IF NOT EXISTS last_name VARCHAR(255);
+DO $$ 
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'contact_messages' AND column_name = 'last_name'
+  ) THEN
+    ALTER TABLE contact_messages ADD COLUMN last_name VARCHAR(255);
+  END IF;
+END $$;
 
 -- Ölkə column-u
-ALTER TABLE contact_messages 
-ADD COLUMN IF NOT EXISTS country VARCHAR(100);
+DO $$ 
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'contact_messages' AND column_name = 'country'
+  ) THEN
+    ALTER TABLE contact_messages ADD COLUMN country VARCHAR(100);
+  END IF;
+END $$;
 
 -- Tour Category column-u
-ALTER TABLE contact_messages 
-ADD COLUMN IF NOT EXISTS tour_category VARCHAR(100);
+DO $$ 
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'contact_messages' AND column_name = 'tour_category'
+  ) THEN
+    ALTER TABLE contact_messages ADD COLUMN tour_category VARCHAR(100);
+  END IF;
+END $$;
 
 -- Tour Type column-u
-ALTER TABLE contact_messages 
-ADD COLUMN IF NOT EXISTS tour_type VARCHAR(255);
+DO $$ 
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'contact_messages' AND column_name = 'tour_type'
+  ) THEN
+    ALTER TABLE contact_messages ADD COLUMN tour_type VARCHAR(255);
+  END IF;
+END $$;
 
 -- Group Size column-u
-ALTER TABLE contact_messages 
-ADD COLUMN IF NOT EXISTS group_size INTEGER;
+DO $$ 
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'contact_messages' AND column_name = 'group_size'
+  ) THEN
+    ALTER TABLE contact_messages ADD COLUMN group_size INTEGER;
+  END IF;
+END $$;
 
 -- Dates column-u
-ALTER TABLE contact_messages 
-ADD COLUMN IF NOT EXISTS dates VARCHAR(255);
+DO $$ 
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'contact_messages' AND column_name = 'dates'
+  ) THEN
+    ALTER TABLE contact_messages ADD COLUMN dates VARCHAR(255);
+  END IF;
+END $$;
 
 -- Newsletter column-u
-ALTER TABLE contact_messages 
-ADD COLUMN IF NOT EXISTS newsletter BOOLEAN DEFAULT false;
+DO $$ 
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'contact_messages' AND column_name = 'newsletter'
+  ) THEN
+    ALTER TABLE contact_messages ADD COLUMN newsletter BOOLEAN DEFAULT false;
+  END IF;
+END $$;
 
 -- ============================================
 -- Yoxlama: bütün column-ların siyahısı
