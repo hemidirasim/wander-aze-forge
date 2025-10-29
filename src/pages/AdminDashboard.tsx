@@ -17,7 +17,8 @@ import {
   Home,
   Tags,
   ExternalLink,
-  Star
+  Star,
+  Compass
 } from 'lucide-react';
 
 const AdminDashboard: React.FC = () => {
@@ -169,6 +170,17 @@ const AdminDashboard: React.FC = () => {
                 <Link to="/admin/contact-messages">
                   <Mail className="w-6 h-6" />
                   <span className="font-semibold">Contact Messages</span>
+                </Link>
+              </Button>
+
+              <Button 
+                asChild
+                variant="outline"
+                className="h-20 flex flex-col items-center justify-center space-y-2 border-2 hover:bg-gray-50"
+              >
+                <Link to="/admin/tailor-made-requests">
+                  <Compass className="w-6 h-6" />
+                  <span className="font-semibold">Tailor-Made Requests</span>
                 </Link>
               </Button>
 

@@ -48,6 +48,7 @@ import AdminPartnerForm from "./pages/AdminPartnerForm";
 import AdminAbout from "./pages/AdminAbout";
 import AdminContact from "./pages/AdminContact";
 import AdminContactMessages from "./pages/AdminContactMessages";
+import AdminTailorMadeRequests from "./pages/AdminTailorMadeRequests";
 import AdminTeamMembers from "./pages/AdminTeamMembers";
 import AdminReviews from "./pages/AdminReviews";
 import AdminHero from "./pages/AdminHero";
@@ -131,6 +132,7 @@ const App = () => (
             <Route path="about" element={<AdminAbout />} />
             <Route path="contact" element={<AdminContact />} />
             <Route path="contact-messages" element={<AdminContactMessages />} />
+            <Route path="tailor-made-requests" element={<AdminTailorMadeRequests />} />
             <Route path="team-members" element={<AdminTeamMembers />} />
             <Route path="reviews" element={<AdminReviews />} />
         <Route path="hero" element={<AdminHero />} />

@@ -55,22 +55,38 @@ const TailorMadeForm = () => {
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
     try {
-      // Here you would normally send the data to your backend
-      console.log('Form data:', data);
+      console.log('Submitting tailor-made request:', data);
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      const response = await fetch('/api/tailor-made/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      console.log('Response status:', response.status);
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Response error:', errorData);
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log('Response data:', result);
       
       toast({
         title: "Request Submitted Successfully!",
-        description: "We'll get back to you within 24 hours with a custom itinerary.",
+        description: result.message || "We'll get back to you within 24 hours with a custom itinerary.",
       });
       
       form.reset();
     } catch (error) {
+      console.error('Error submitting tailor-made request:', error);
       toast({
         title: "Submission Failed",
-        description: "Please try again later or contact us directly.",
+        description: error instanceof Error ? error.message : "Please try again later or contact us directly.",
         variant: "destructive",
       });
     } finally {
