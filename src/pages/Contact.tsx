@@ -68,13 +68,19 @@ const Contact = () => {
     setSelectedTour(tour || null);
   };
 
-  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleFormSubmit = async (e?: React.FormEvent<HTMLFormElement>) => {
+    if (e) e.preventDefault();
     console.log('Form submit handler called!');
     
     if (submitting) return;
 
-    const form = e.currentTarget;
+    // Get form element by ID
+    const form = document.getElementById('contact-form') as HTMLFormElement;
+    if (!form) {
+      console.error('Form not found!');
+      return;
+    }
+    
     const formData = new FormData(form);
     
     const firstName = formData.get('firstName') as string;
@@ -475,7 +481,7 @@ const Contact = () => {
                 </p>
               </CardHeader>
               <CardContent className="space-y-6">
-                <form onSubmit={handleFormSubmit}>
+                <form id="contact-form" onSubmit={handleFormSubmit}>
                   <div className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
@@ -636,12 +642,12 @@ const Contact = () => {
                     </div>
                     
                     <Button 
-                      type="submit" 
+                      type="button" 
                       size="lg" 
                       variant="adventure" 
                       className="w-full" 
                       disabled={submitting}
-                      onClick={() => console.log('Button clicked!')}
+                      onClick={handleFormSubmit}
                     >
                       {submitting ? 'Sending...' : 'Send Message'}
                     </Button>
