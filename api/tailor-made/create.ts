@@ -24,6 +24,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
+    console.log('=== TAILOR-MADE REQUEST RECEIVED ===');
+    console.log('Request body:', JSON.stringify(req.body, null, 2));
+
     const {
       email,
       fullName,
@@ -40,13 +43,44 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       agreeToTerms
     } = req.body;
 
+    console.log('Extracted fields:', {
+      email,
+      fullName,
+      adventureTypes,
+      destinations,
+      startDate,
+      duration,
+      dailyKilometers,
+      numberOfPeople,
+      childrenAges,
+      accommodationPreferences,
+      budget,
+      additionalDetails,
+      agreeToTerms
+    });
+
     // Validation
     if (!email || !fullName || !adventureTypes || !destinations || !startDate || 
         !duration || !dailyKilometers || !numberOfPeople || !accommodationPreferences || 
-        !budget || !additionalDetails || !agreeToTerms) {
+        !budget || !additionalDetails || agreeToTerms === undefined) {
+      console.error('Validation failed - missing fields');
       return res.status(400).json({
         success: false,
-        error: 'Missing required fields'
+        error: 'Missing required fields',
+        received: {
+          email: !!email,
+          fullName: !!fullName,
+          adventureTypes: !!adventureTypes,
+          destinations: !!destinations,
+          startDate: !!startDate,
+          duration: !!duration,
+          dailyKilometers: !!dailyKilometers,
+          numberOfPeople: !!numberOfPeople,
+          accommodationPreferences: !!accommodationPreferences,
+          budget: !!budget,
+          additionalDetails: !!additionalDetails,
+          agreeToTerms: agreeToTerms
+        }
       });
     }
 
@@ -68,6 +102,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     // Ensure tailor_made_requests table exists
+    console.log('Checking if tailor_made_requests table exists...');
     const tableCheck = await pool.query(`
       SELECT EXISTS (
         SELECT FROM information_schema.tables 
@@ -75,7 +110,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       );
     `);
 
+    console.log('Table exists:', tableCheck.rows[0].exists);
+
     if (!tableCheck.rows[0].exists) {
+      console.log('Creating tailor_made_requests table...');
       // Create table if it doesn't exist
       await pool.query(`
         CREATE TABLE tailor_made_requests (
@@ -101,7 +139,30 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       console.log('tailor_made_requests table created successfully');
     }
 
+    // Validate arrays are actually arrays
+    const adventureTypesArray = Array.isArray(adventureTypes) ? adventureTypes : [adventureTypes];
+    const accommodationPrefsArray = Array.isArray(accommodationPreferences) 
+      ? accommodationPreferences 
+      : [accommodationPreferences];
+
+    console.log('Prepared data for insert:', {
+      email,
+      fullName,
+      adventureTypesArray,
+      destinations,
+      startDate,
+      duration,
+      dailyKilometers,
+      numberOfPeople,
+      childrenAges: childrenAges || null,
+      accommodationPrefsArray,
+      budget,
+      additionalDetails,
+      agreeToTerms
+    });
+
     // Insert the tailor-made request
+    console.log('Inserting into database...');
     const result = await pool.query(`
       INSERT INTO tailor_made_requests (
         email, full_name, adventure_types, destinations, start_date,
@@ -115,14 +176,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     `, [
       email,
       fullName,
-      adventureTypes, // Array
+      adventureTypesArray, // Array
       destinations,
       startDate,
       duration,
       dailyKilometers,
       numberOfPeople,
       childrenAges || null,
-      accommodationPreferences, // Array
+      accommodationPrefsArray, // Array
       budget,
       additionalDetails,
       agreeToTerms
@@ -137,13 +198,39 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       message: 'Your tailor-made request has been submitted successfully! We will get back to you within 24 hours with a custom itinerary.'
     });
 
-  } catch (error) {
-    console.error('Tailor-made request submission error:', error);
+  } catch (error: any) {
+    console.error('=== TAILOR-MADE REQUEST ERROR ===');
+    console.error('Error:', error);
+    console.error('Error message:', error?.message);
+    console.error('Error code:', error?.code);
+    console.error('Error detail:', error?.detail);
+    console.error('Error stack:', error?.stack);
+    
+    // Check if it's a database error
+    if (error?.code === '42P01') {
+      return res.status(500).json({
+        success: false,
+        error: 'Database table does not exist',
+        message: 'The tailor_made_requests table does not exist. Please run the migration SQL script first.',
+        details: error.message
+      });
+    }
+    
+    if (error?.code === '23502') {
+      return res.status(400).json({
+        success: false,
+        error: 'Database constraint violation',
+        message: 'Some required fields are missing or null.',
+        details: error.message
+      });
+    }
     
     return res.status(500).json({
       success: false,
       error: 'Failed to submit tailor-made request',
-      message: error instanceof Error ? error.message : 'Unknown error'
+      message: error instanceof Error ? error.message : 'Unknown error',
+      details: error?.detail || error?.message,
+      code: error?.code
     });
   }
 }
