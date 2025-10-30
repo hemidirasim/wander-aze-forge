@@ -200,10 +200,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         cc: 'info@outtour.az',
         subject: 'We received your tailor-made request - Outtour Azerbaijan',
         html: tailorMadeConfirmationTemplate({
+          email,
           fullName,
-          startDate,
-          numberOfPeople,
+          adventureTypes: adventureTypesArray,
           destinations,
+          startDate,
+          duration,
+          dailyKilometers,
+          numberOfPeople,
+          childrenAges: childrenAges || null,
+          accommodationPreferences: accommodationPrefsArray,
+          budget,
+          additionalDetails,
+          agreeToTerms
         })
       });
     } catch (e) {

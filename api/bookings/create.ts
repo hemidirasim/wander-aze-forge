@@ -324,10 +324,22 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           subject: 'We received your booking - Outtour Azerbaijan',
           html: bookingConfirmationTemplate({
             fullName,
+            email,
+            phone,
+            country,
+            tourId: finalTourId,
             tourTitle: finalTourTitle,
+            tourCategory: finalTourCategory,
             tourDate: String(finalTourDate),
             participants: finalParticipants,
+            tourPrice: formData?.tourPrice || null,
             totalPrice: finalTotalPrice,
+            alternativeDate,
+            pickupLocation,
+            informLater,
+            specialRequests: finalSpecialRequests,
+            bookingRequest,
+            termsAccepted
           })
         });
       }

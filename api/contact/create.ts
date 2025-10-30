@@ -198,10 +198,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           html: contactConfirmationTemplate({
             firstName,
             lastName,
+            email,
+            phone: phone || null,
+            country,
             tourCategory,
+            tourType: tourType || null,
             groupSize,
             dates,
             message,
+            newsletter: newsletter || false,
           })
         });
       } catch (e) {
@@ -250,10 +255,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           html: contactConfirmationTemplate({
             firstName,
             lastName,
+            email,
+            phone: phone || null,
+            country,
             tourCategory,
+            tourType: tourType || null,
             groupSize,
             dates,
             message,
+            newsletter: newsletter || false,
           })
         });
       } catch (e) {
@@ -302,10 +312,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         html: contactConfirmationTemplate({
           firstName,
           lastName,
+          email,
+          phone: phone || null,
+          country,
           tourCategory,
+          tourType: tourType || null,
           groupSize,
           dates,
           message,
+          newsletter: newsletter || false,
         })
       });
     } catch (e) {
