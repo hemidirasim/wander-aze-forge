@@ -1,7 +1,7 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import { Pool } from 'pg';
 import jwt from 'jsonwebtoken';
-import { sendEmail, bookingConfirmationTemplate } from '../_lib/email';
+import { sendEmail, bookingConfirmationTemplate } from '../_lib/email.js';
 
 // Initialize PostgreSQL connection
 const pool = new Pool({

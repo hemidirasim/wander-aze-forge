@@ -1,6 +1,6 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import { Pool } from 'pg';
-import { sendEmail, contactConfirmationTemplate } from '../_lib/email';
+import { sendEmail, contactConfirmationTemplate } from '../_lib/email.js';
 
 // Initialize PostgreSQL connection
 const pool = new Pool({
