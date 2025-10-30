@@ -102,16 +102,8 @@ const Tours = () => {
       
       {/* Hero Section */}
       <section className="relative h-96 flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0">
-          <img 
-            src="https://e4sm2p9cqicdxjyg.public.blob.vercel-storage.com/tours/All%20tours%20cover%202.webp" 
-            alt="All Tours"
-            className="w-full h-full object-cover"
-            style={{ objectPosition: 'center 45%' }}
-          />
-        </div>
-        <div className="relative z-10 text-center text-white">
-        </div>
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-300 to-slate-200" />
+        <div className="relative z-10 text-center text-white" />
       </section>
 
       {/* All Tours */}

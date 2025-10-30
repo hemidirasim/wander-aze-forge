@@ -34,8 +34,6 @@ interface Review {
   updated_at: string;
 }
 
-// Using public folder image
-const heroImage = '/hero-mountain-custom.jpg';
 
 // Format price helper
 const formatPrice = (price: string | number) => {
@@ -191,10 +189,14 @@ const Index = () => {
       
       {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center">
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: `url(${heroData?.image_url || heroImage})` }}
-        />
+        {heroData?.image_url ? (
+          <div 
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            style={{ backgroundImage: `url(${heroData.image_url})` }}
+          />
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-300 to-slate-200" />
+        )}
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent" />
         
         {/* Hero Content */}
