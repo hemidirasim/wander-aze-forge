@@ -1,5 +1,6 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import { Pool } from 'pg';
+import { sendEmail, tailorMadeConfirmationTemplate } from '../_lib/email';
 
 // Initialize PostgreSQL connection
 const pool = new Pool({
@@ -191,6 +192,22 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const tailorMadeRequest = result.rows[0];
     console.log('Tailor-made request created successfully:', { id: tailorMadeRequest.id, email });
+
+    // Send confirmation email (non-blocking)
+    try {
+      await sendEmail({
+        to: email,
+        subject: 'We received your tailor-made request - Outtour Azerbaijan',
+        html: tailorMadeConfirmationTemplate({
+          fullName,
+          startDate,
+          numberOfPeople,
+          destinations,
+        })
+      });
+    } catch (e) {
+      console.error('Tailor-made confirmation email error:', e);
+    }
 
     return res.status(201).json({
       success: true,

@@ -1,5 +1,6 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import { Pool } from 'pg';
+import { sendEmail, contactConfirmationTemplate } from '../_lib/email';
 
 // Initialize PostgreSQL connection
 const pool = new Pool({
@@ -188,6 +189,23 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       
       const contactMessage = result.rows[0];
       console.log('Contact message created successfully (new structure):', { id: contactMessage.id, email });
+      // Send confirmation email (non-blocking)
+      try {
+        await sendEmail({
+          to: email,
+          subject: 'We received your message - Outtour Azerbaijan',
+          html: contactConfirmationTemplate({
+            firstName,
+            lastName,
+            tourCategory,
+            groupSize,
+            dates,
+            message,
+          })
+        });
+      } catch (e) {
+        console.error('Contact confirmation email error:', e);
+      }
       
       return res.status(201).json({
         success: true,
@@ -223,6 +241,22 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       
       const contactMessage = result.rows[0];
       console.log('Contact message created successfully (old structure):', { id: contactMessage.id, email });
+      try {
+        await sendEmail({
+          to: email,
+          subject: 'We received your message - Outtour Azerbaijan',
+          html: contactConfirmationTemplate({
+            firstName,
+            lastName,
+            tourCategory,
+            groupSize,
+            dates,
+            message,
+          })
+        });
+      } catch (e) {
+        console.error('Contact confirmation email error:', e);
+      }
       
       return res.status(201).json({
         success: true,
@@ -257,6 +291,23 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const contactMessage = result.rows[0];
 
     console.log('Contact message created successfully:', { id: contactMessage.id, email });
+
+    try {
+      await sendEmail({
+        to: email,
+        subject: 'We received your message - Outtour Azerbaijan',
+        html: contactConfirmationTemplate({
+          firstName,
+          lastName,
+          tourCategory,
+          groupSize,
+          dates,
+          message,
+        })
+      });
+    } catch (e) {
+      console.error('Contact confirmation email error:', e);
+    }
 
     return res.status(201).json({
       success: true,

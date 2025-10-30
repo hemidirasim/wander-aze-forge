@@ -1,6 +1,7 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import { Pool } from 'pg';
 import jwt from 'jsonwebtoken';
+import { sendEmail, bookingConfirmationTemplate } from '../_lib/email';
 
 // Initialize PostgreSQL connection
 const pool = new Pool({
@@ -313,6 +314,25 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const booking = result.rows[0];
 
     console.log('Booking created successfully:', { id: booking.id, userId: userId });
+
+    // Send confirmation email (non-blocking)
+    try {
+      if (email) {
+        await sendEmail({
+          to: email,
+          subject: 'We received your booking - Outtour Azerbaijan',
+          html: bookingConfirmationTemplate({
+            fullName,
+            tourTitle: finalTourTitle,
+            tourDate: String(finalTourDate),
+            participants: finalParticipants,
+            totalPrice: finalTotalPrice,
+          })
+        });
+      }
+    } catch (e) {
+      console.error('Booking confirmation email error:', e);
+    }
 
     return res.status(201).json({
       success: true,
