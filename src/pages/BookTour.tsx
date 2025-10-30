@@ -11,6 +11,8 @@ import {
   CheckCircle 
 } from 'lucide-react';
 import DatabaseNavigation from '@/components/DatabaseNavigation';
+import { DayPicker } from 'react-day-picker';
+import 'react-day-picker/dist/style.css';
 import Footer from '@/components/Footer';
 
 interface Tour {
@@ -78,6 +80,20 @@ const BookTour = () => {
   const clampDate = (value: string, min: string) => {
     if (!value) return value;
     return value < min ? min : value;
+  };
+
+  const toYMD = (d: Date) => {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+  };
+
+  const fromYMD = (s: string | undefined) => {
+    if (!s) return undefined;
+    const [y, m, d] = s.split('-').map(Number);
+    if (!y || !m || !d) return undefined;
+    return new Date(y, m - 1, d);
   };
 
   // Defensive clamp in effect (covers mobile date pickers that ignore min)
@@ -778,31 +794,39 @@ const BookTour = () => {
                           <>
                             <div>
                               <Label htmlFor="preferredDate">Preferred Tour Date *</Label>
-                              <Input
-                                id="preferredDate"
-                                name="preferredDate"
-                                type="date"
-                                value={formData.preferredDate}
-                                onChange={handleInputChange}
-                                min={getTodayLocalYMD()}
-                                className="mt-1 text-base"
-                                onKeyDown={(e) => e.preventDefault()}
-                                required
-                              />
+                              <div className="mt-2 border rounded-md p-2 bg-background">
+                                <DayPicker
+                                  mode="single"
+                                  selected={fromYMD(formData.preferredDate)}
+                                  onSelect={(date) => {
+                                    const today = new Date();
+                                    const min = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+                                    const chosen = date && date < min ? min : date;
+                                    const ymd = chosen ? toYMD(chosen) : '';
+                                    const alt = formData.alternativeDate && formData.alternativeDate < ymd ? ymd : formData.alternativeDate;
+                                    setFormData(prev => ({ ...prev, preferredDate: ymd, alternativeDate: alt }));
+                                  }}
+                                  disabled={{ before: new Date() }}
+                                />
+                              </div>
                             </div>
                             
                             <div>
                               <Label htmlFor="alternativeDate">Alternative Date (Optional)</Label>
-                              <Input
-                                id="alternativeDate"
-                                name="alternativeDate"
-                                type="date"
-                                value={formData.alternativeDate}
-                                onChange={handleInputChange}
-                                min={formData.preferredDate || getTodayLocalYMD()}
-                                className="mt-1 text-base"
-                                onKeyDown={(e) => e.preventDefault()}
-                              />
+                              <div className="mt-2 border rounded-md p-2 bg-background">
+                                <DayPicker
+                                  mode="single"
+                                  selected={fromYMD(formData.alternativeDate)}
+                                  onSelect={(date) => {
+                                    const base = fromYMD(formData.preferredDate) || new Date();
+                                    const baseMin = new Date(base.getFullYear(), base.getMonth(), base.getDate());
+                                    const chosen = date && date < baseMin ? baseMin : date;
+                                    const ymd = chosen ? toYMD(chosen) : '';
+                                    setFormData(prev => ({ ...prev, alternativeDate: ymd }));
+                                  }}
+                                  disabled={{ before: fromYMD(formData.preferredDate) || new Date() }}
+                                />
+                              </div>
                             </div>
                           </>
                         )}
