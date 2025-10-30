@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { MapPin, Phone, Mail, Facebook, Instagram, Linkedin, Youtube, Heart, Leaf } from 'lucide-react';
+import { MapPin, Phone, Mail, Facebook, Instagram, Linkedin, Youtube, Heart } from 'lucide-react';
 import Logo from '@/components/Logo';
 
 interface DatabaseTourCategory {
@@ -19,9 +19,11 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
   const [tourCategories, setTourCategories] = useState<DatabaseTourCategory[]>([]);
   const [loading, setLoading] = useState(true);
+  const [contactInfo, setContactInfo] = useState<any>(null);
 
   useEffect(() => {
     fetchTourCategories();
+    fetchContactInfo();
   }, []);
 
   const fetchTourCategories = async () => {
@@ -44,6 +46,32 @@ const Footer = () => {
     }
   };
 
+  const fetchContactInfo = async () => {
+    try {
+      const res = await fetch('/api/contact-page');
+      const data = await res.json();
+      if (data.success && Array.isArray(data.data)) {
+        const hero = data.data.find((s: any) => s.section === 'hero');
+        const social = data.data.find((s: any) => s.section === 'social_media');
+        // Prefer social section for links; fall back to hero.contact_info
+        const info = {
+          phone: hero?.contact_info?.phone || '',
+          email: hero?.contact_info?.email || '',
+          address: hero?.contact_info?.address || '',
+          facebook: social?.contact_info?.facebook || hero?.contact_info?.facebook || '',
+          instagram: social?.contact_info?.instagram || hero?.contact_info?.instagram || '',
+          linkedin: social?.contact_info?.linkedin || hero?.contact_info?.linkedin || '',
+          twitter: social?.contact_info?.twitter || hero?.contact_info?.twitter || '',
+          youtube: social?.contact_info?.youtube || hero?.contact_info?.youtube || '',
+          tripadvisor: social?.contact_info?.tripadvisor || hero?.contact_info?.tripadvisor || '',
+        };
+        setContactInfo(info);
+      }
+    } catch (e) {
+      console.error('Error fetching contact page info:', e);
+    }
+  };
+
   const quickLinks = [
     { name: 'Home', href: '/' },
     { name: 'Tours', href: '/tours' },
@@ -53,21 +81,34 @@ const Footer = () => {
     { name: 'Contact', href: '/contact' }
   ];
 
-  const socialLinks = [
-    { icon: Facebook, href: 'https://www.facebook.com/campingazerbaijan2014', name: 'Facebook' },
-    { icon: Instagram, href: 'https://www.instagram.com/camping_azerbaijan/', name: 'Instagram' },
-    { icon: Linkedin, href: 'https://www.linkedin.com/company/campingazerbaijan/', name: 'LinkedIn' },
-    { icon: Youtube, href: 'https://www.youtube.com/@campingazerbaijan', name: 'YouTube' },
-    { 
-      icon: () => (
-        <svg fill="currentColor" width="20px" height="20px" viewBox="0 0 14 14" role="img" focusable="false" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-gray-900 transition-colors" style={{ color: 'inherit' }}>
-          <path d="m 12.4125,5.7662386 c 0.1405,-0.6035 0.5875,-1.208 0.5875,-1.208 l -2.006,0 c -1.1255,-0.7275 -2.4905,-1.113 -4.0065,-1.113 -1.57,0 -2.989,0.39 -4.107,1.1255 l -1.8805,0 c 0,0 0.4425,0.593 0.585,1.193 -0.366,0.5035 -0.5835,1.111 -0.5835,1.7785 0,1.658 1.3485,3.0040004 3.006,3.0040004 0.9455,0 1.7855,-0.4425 2.3405,-1.1270004 L 6.9855,10.377239 7.631,9.4092386 c 0.285,0.368 0.66,0.6680004 1.1025,0.8700004 0.7275,0.33 1.546,0.368 2.296,0.09 1.553,-0.5770004 2.348,-2.3105004 1.778,-3.8630004 -0.1045,-0.278 -0.24,-0.5255 -0.405,-0.7425 l 0.01,0.0025 z m -1.5855,4.036 c -0.6,0.2225004 -1.2525,0.1975 -1.835,-0.0715 -0.412,-0.1915 -0.7515,-0.491 -0.994,-0.8635 -0.1005,-0.1495 -0.1875,-0.3115 -0.2515,-0.4855 -0.073,-0.1975 -0.11,-0.4015 -0.1295,-0.6075 -0.037,-0.416 0.0225,-0.8365 0.2025,-1.2265 0.27,-0.582 0.7505,-1.0255 1.3505,-1.248 1.245,-0.457 2.625,0.1805 3.083,1.4205 0.458,1.2405 -0.18,2.6225 -1.4175,3.0815 l -0.0085,0 z m -4.834,-0.917 c -0.4315,0.6355 -1.161,1.0565 -1.9865,1.0565 -1.323,0 -2.4005,-1.078 -2.4005,-2.3985 0,-1.3205 1.078,-2.401 2.4005,-2.401 1.3225,0 2.399,1.0805 2.399,2.401 0,0.082 -0.015,0.157 -0.024,0.2395 -0.0405,0.4055 -0.1705,0.788 -0.3885,1.1105 l 0,-0.008 z m -3.511,-1.3735 c 0,0.8205 0.668,1.4855 1.4855,1.4855 0.8175,0 1.484,-0.665 1.484,-1.4855 0,-0.8175 -0.6665,-1.482 -1.483,-1.482 -0.818,0 -1.4855,0.6645 -1.4855,1.482 l -10e-4,0 z m 6.024,0 c 0,0.8205 0.6645,1.4855 1.484,1.4855 0.818,0 1.4825,-0.665 1.4825,-1.4855 0,-0.8175 -0.6645,-1.482 -1.4825,-1.482 -0.8175,0 -1.4855,0.6645 -1.4855,1.482 l 0.0015,0 z m -5.511,0 c 0,-0.5355 0.4345,-0.9715 0.968,-0.9715 0.532,0 0.9745,0.4365 0.9745,0.9715 0,0.538 -0.4345,0.9755 -0.9745,0.9755 -0.5405,0 -0.9755,-0.4375 -0.9755,-0.9755 l 0.0075,0 z m 6.0165,0 c 0,-0.5355 0.4345,-0.9715 0.9745,-0.9715 0.533,0 0.9685,0.4365 0.9685,0.9715 0,0.538 -0.435,0.9755 -0.976,0.9755 -0.5395,0 -0.9745,-0.4375 -0.9745,-0.9755 l 0.0075,0 z m -2.0265,-3.5415 c 1.0805,0 2.0555,0.1945 2.911,0.581 -0.3225,0.009 -0.6375,0.0655 -0.953,0.18 -0.7575,0.2775 -1.3575,0.8325 -1.6875,1.5625 -0.1575,0.33 -0.24,0.6795 -0.2705,1.0325 -0.1125,-1.538 -1.38,-2.7575 -2.9405,-2.789 0.8555,-0.367 1.846,-0.567 2.9185,-0.567 l 0.022,0 z"/>
-        </svg>
-      ), 
-      href: 'https://www.tripadvisor.com/Profile/Campingaze', 
-      name: 'TripAdvisor' 
+  const socialLinks = (() => {
+    const links: Array<{ icon: any; href: string; name: string }> = [];
+    const t = contactInfo;
+    const add = (cond: string | undefined, icon: any, name: string) => {
+      if (cond && cond.trim()) links.push({ icon, href: cond, name });
+    };
+    add(t?.facebook, Facebook, 'Facebook');
+    add(t?.instagram, Instagram, 'Instagram');
+    add(t?.linkedin, Linkedin, 'LinkedIn');
+    add(t?.twitter, (props: any) => (
+      <svg fill="currentColor" width="20px" height="20px" viewBox="0 0 24 24" {...props}><path d="M22.46 6c-.77.35-1.6.58-2.46.69a4.25 4.25 0 0 0 1.87-2.35 8.48 8.48 0 0 1-2.69 1.03 4.24 4.24 0 0 0-7.23 3.87A12.04 12.04 0 0 1 3.15 4.6a4.23 4.23 0 0 0 1.31 5.66 4.2 4.2 0 0 1-1.92-.53v.05a4.24 4.24 0 0 0 3.4 4.16 4.26 4.26 0 0 1-1.91.07 4.25 4.25 0 0 0 3.96 2.94A8.5 8.5 0 0 1 2 19.54 12.01 12.01 0 0 0 8.29 21c7.55 0 11.68-6.26 11.68-11.69 0-.18 0-.36-.01-.54A8.35 8.35 0 0 0 22.46 6z"/></svg>
+    ), 'Twitter');
+    add(t?.youtube, Youtube, 'YouTube');
+    if (t?.tripadvisor && t.tripadvisor.trim()) {
+      links.push({
+        icon: () => (
+          <svg fill="currentColor" width="20px" height="20px" viewBox="0 0 14 14" role="img" focusable="false" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-gray-900 transition-colors" style={{ color: 'inherit' }}>
+            <path d="m 12.4125,5.7662386 c 0.1405,-0.6035 0.5875,-1.208 0.5875,-1.208 l -2.006,0 c -1.1255,-0.7275 -2.4905,-1.113 -4.0065,-1.113 -1.57,0 -2.989,0.39 -4.107,1.1255 l -1.8805,0 c 0,0 0.4425,0.593 0.585,1.193 -0.366,0.5035 -0.5835,1.111 -0.5835,1.7785 0,1.658 1.3485,3.0040004 3.006,3.0040004 0.9455,0 1.7855,-0.4425 2.3405,-1.1270004 L 6.9855,10.377239 7.631,9.4092386 c 0.285,0.368 0.66,0.6680004 1.1025,0.8700004 0.7275,0.33 1.546,0.368 2.296,0.09 1.553,-0.5770004 2.348,-2.3105004 1.778,-3.8630004 -0.1045,-0.278 -0.24,-0.5255 -0.405,-0.7425 l 0.01,0.0025 z m -1.5855,4.036 c -0.6,0.2225004 -1.2525,0.1975 -1.835,-0.0715 -0.412,-0.1915 -0.7515,-0.491 -0.994,-0.8635 -0.1005,-0.1495 -0.1875,-0.3115 -0.2515,-0.4855 -0.073,-0.1975 -0.11,-0.4015 -0.1295,-0.6075 -0.037,-0.416 0.0225,-0.8365 0.2025,-1.2265 0.27,-0.582 0.7505,-1.0255 1.3505,-1.248 1.245,-0.457 2.625,0.1805 3.083,1.4205 0.458,1.2405 -0.18,2.6225 -1.4175,3.0815 l -0.0085,0 z m -4.834,-0.917 c -0.4315,0.6355 -1.161,1.0565 -1.9865,1.0565 -1.323,0 -2.4005,-1.078 -2.4005,-2.3985 0,-1.3205 1.078,-2.401 2.4005,-2.401 1.3225,0 2.399,1.0805 2.399,2.401 0,0.082 -0.015,0.157 -0.024,0.2395 -0.0405,0.4055 -0.1705,0.788 -0.3885,1.1105 l 0,-0.008 z m -3.511,-1.3735 c 0,0.8205 0.668,1.4855 1.4855,1.4855 0.8175,0 1.484,-0.665 1.484,-1.4855 0,-0.8175 -0.6665,-1.482 -1.483,-1.482 -0.818,0 -1.4855,0.6645 -1.4855,1.482 l -10e-4,0 z m 6.024,0 c 0,0.8205 0.6645,1.4855 1.484,1.4855 0.818,0 1.4825,-0.665 1.4825,-1.4855 0,-0.8175 -0.6645,-1.482 -1.4825,-1.482 -0.8175,0 -1.4855,0.6645 -1.4855,1.482 l 0.0015,0 z m -5.511,0 c 0,-0.5355 0.4345,-0.9715 0.968,-0.9715 0.532,0 0.9745,0.4365 0.9745,0.9715 0,0.538 -0.4345,0.9755 -0.9745,0.9755 -0.5405,0 -0.9755,-0.4375 -0.9755,-0.9755 l 0.0075,0 z m 6.0165,0 c 0,-0.5355 0.4345,-0.9715 0.9745,-0.9715 0.533,0 0.9685,0.4365 0.9685,0.9715 0,0.538 -0.435,0.9755 -0.976,0.9755 -0.5395,0 -0.9745,-0.4375 -0.9745,-0.9755 l 0.0075,0 z m -2.0265,-3.5415 c 1.0805,0 2.0555,0.1945 2.911,0.581 -0.3225,0.009 -0.6375,0.0655 -0.953,0.18 -0.7575,0.2775 -1.3575,0.8325 -1.6875,1.5625 -0.1575,0.33 -0.24,0.6795 -0.2705,1.0325 -0.1125,-1.538 -1.38,-2.7575 -2.9405,-2.789 0.8555,-0.367 1.846,-0.567 2.9185,-0.567 l 0.022,0 z"/>
+          </svg>
+        ), href: t.tripadvisor, name: 'TripAdvisor' });
     }
-  ];
+    return links.length ? links : [
+      { icon: Facebook, href: 'https://www.facebook.com/campingazerbaijan2014', name: 'Facebook' },
+      { icon: Instagram, href: 'https://www.instagram.com/camping_azerbaijan/', name: 'Instagram' },
+      { icon: Linkedin, href: 'https://www.linkedin.com/company/campingazerbaijan/', name: 'LinkedIn' },
+      { icon: Youtube, href: 'https://www.youtube.com/@campingazerbaijan', name: 'YouTube' },
+    ];
+  })();
 
   return (
     <footer className="text-gray-900" style={{ background: 'rgb(209 211 213)' }}>
@@ -80,15 +121,15 @@ const Footer = () => {
             <div className="space-y-3">
               <div className="flex items-center justify-center lg:justify-start space-x-3 text-sm text-gray-900">
                 <Phone className="w-4 h-4 text-primary" />
-                <span>+994 51 400 90 91</span>
+                <span>{contactInfo?.phone || '+994 51 400 90 91'}</span>
               </div>
               <div className="flex items-center justify-center lg:justify-start space-x-3 text-sm text-gray-900">
                 <Mail className="w-4 h-4 text-primary" />
-                <span>info@outtour.az</span>
+                <span>{contactInfo?.email || 'info@outtour.az'}</span>
               </div>
               <div className="flex items-start justify-center lg:justify-start space-x-3 text-sm text-gray-900">
                 <MapPin className="w-4 h-4 text-primary mt-0.5" />
-                <span>Baku, Azerbaijan</span>
+                <span>{contactInfo?.address || 'Baku, Azerbaijan'}</span>
               </div>
             </div>
             
