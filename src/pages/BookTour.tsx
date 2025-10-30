@@ -327,10 +327,21 @@ const BookTour = () => {
         }
       }
     } else {
-    setFormData(prev => ({
-      ...prev,
-        [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value
-    }));
+      // Handle date dependencies
+      if (name === 'preferredDate') {
+        setFormData(prev => {
+          const updated = { ...prev, preferredDate: value } as typeof prev;
+          if (updated.alternativeDate && updated.alternativeDate < value) {
+            updated.alternativeDate = value; // keep alternative >= preferred
+          }
+          return updated;
+        });
+      } else {
+        setFormData(prev => ({
+          ...prev,
+          [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value
+        }));
+      }
     }
   };
 
@@ -339,6 +350,8 @@ const BookTour = () => {
     setBooking(true);
     setSubmitMessage(null); // Clear previous message
 
+    // Validate dates
+    const todayStr = new Date().toISOString().split('T')[0];
     if (!formData.preferredDate) {
       setSubmitMessage({
         type: 'error',
@@ -346,6 +359,20 @@ const BookTour = () => {
       });
       setBooking(false);
       return;
+    }
+
+    if (formData.preferredDate < todayStr) {
+      setSubmitMessage({ type: 'error', text: 'Preferred date cannot be in the past.' });
+      setBooking(false);
+      return;
+    }
+
+    if (formData.alternativeDate) {
+      if (formData.alternativeDate < formData.preferredDate) {
+        setSubmitMessage({ type: 'error', text: 'Alternative date cannot be earlier than preferred date.' });
+        setBooking(false);
+        return;
+      }
     }
 
     if (!formData.fullName || !formData.email || !formData.phone) {
@@ -721,7 +748,7 @@ const BookTour = () => {
                                 value={formData.preferredDate}
                                 onChange={handleInputChange}
                                 min={new Date().toISOString().split('T')[0]}
-                                className="mt-1"
+                                className="mt-1 text-base"
                                 required
                               />
                             </div>
@@ -734,8 +761,8 @@ const BookTour = () => {
                                 type="date"
                                 value={formData.alternativeDate}
                                 onChange={handleInputChange}
-                                min={new Date().toISOString().split('T')[0]}
-                                className="mt-1"
+                                min={formData.preferredDate || new Date().toISOString().split('T')[0]}
+                                className="mt-1 text-base"
                               />
                             </div>
                           </>
@@ -749,7 +776,7 @@ const BookTour = () => {
                             value={formData.pickupLocation}
                             onChange={handleInputChange}
                             placeholder="Hotel name or address"
-                            className="mt-1"
+                            className="mt-1 text-base"
                             required={!formData.informLater}
                             disabled={formData.informLater}
                           />
@@ -777,7 +804,7 @@ const BookTour = () => {
                           value={formData.specialRequests}
                           onChange={handleInputChange}
                           placeholder="Any dietary restrictions, accessibility needs, etc."
-                          className="mt-1"
+                          className="mt-1 text-base"
                           rows={3}
                         />
                       </div>
