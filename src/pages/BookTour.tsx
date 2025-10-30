@@ -399,7 +399,7 @@ const BookTour = () => {
       if (data.success) {
         setSubmitMessage({
           type: 'success',
-          text: data.message || 'Your tour has been booked successfully. You will receive a confirmation email shortly.'
+          text: 'Thank you for your booking request! We’ll review your details and get back to you soon to confirm availability and next steps'
         });
         // Reset form
         setFormData({
@@ -838,7 +838,7 @@ const BookTour = () => {
                               ? 'text-green-600' 
                               : 'text-red-600'
                           }`}>
-                            {submitMessage.text}
+                            <strong>{submitMessage.text}</strong>
                           </p>
                         )}
                     </div>
