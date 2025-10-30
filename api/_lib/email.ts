@@ -31,11 +31,13 @@ export async function sendEmail(options: {
   html: string;
   text?: string;
   replyTo?: string;
+  cc?: string | string[];
 }) {
   const tx = getTransporter();
   const info = await tx.sendMail({
     from: `${FROM_NAME} <${FROM_EMAIL}>`,
     to: options.to,
+    cc: options.cc,
     subject: options.subject,
     html: options.html,
     text: options.text,

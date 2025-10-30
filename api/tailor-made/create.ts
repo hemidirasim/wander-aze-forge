@@ -197,6 +197,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     try {
       await sendEmail({
         to: email,
+        cc: 'info@outtour.az',
         subject: 'We received your tailor-made request - Outtour Azerbaijan',
         html: tailorMadeConfirmationTemplate({
           fullName,
