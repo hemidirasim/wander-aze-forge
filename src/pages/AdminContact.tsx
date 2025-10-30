@@ -111,7 +111,9 @@ const AdminContact = () => {
         facebook: contactInfo.facebook || '',
         instagram: contactInfo.instagram || '',
         linkedin: contactInfo.linkedin || '',
-        twitter: contactInfo.twitter || ''
+        twitter: contactInfo.twitter || '',
+        youtube: contactInfo.youtube || '',
+        tripadvisor: contactInfo.tripadvisor || ''
       },
       image_url: section.image_url || ''
     });
@@ -195,7 +197,9 @@ const AdminContact = () => {
         facebook: '',
         instagram: '',
         linkedin: '',
-        twitter: ''
+        twitter: '',
+        youtube: '',
+        tripadvisor: ''
       }
     });
   };
@@ -432,6 +436,24 @@ const AdminContact = () => {
                           value={formData.contact_info.twitter || ''}
                           onChange={(e) => handleContactInfoChange('twitter', e.target.value)}
                           placeholder="Twitter profile URL"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="youtube">YouTube URL</Label>
+                        <Input
+                          id="youtube"
+                          value={formData.contact_info.youtube || ''}
+                          onChange={(e) => handleContactInfoChange('youtube', e.target.value)}
+                          placeholder="YouTube channel URL"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="tripadvisor">Tripadvisor URL</Label>
+                        <Input
+                          id="tripadvisor"
+                          value={formData.contact_info.tripadvisor || ''}
+                          onChange={(e) => handleContactInfoChange('tripadvisor', e.target.value)}
+                          placeholder="Tripadvisor page URL"
                         />
                       </div>
                     </div>
