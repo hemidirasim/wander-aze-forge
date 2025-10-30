@@ -75,6 +75,11 @@ const BookTour = () => {
     return `${y}-${m}-${day}`;
   };
 
+  const clampDate = (value: string, min: string) => {
+    if (!value) return value;
+    return value < min ? min : value;
+  };
+
   useEffect(() => {
     // Check if tour data is available in URL parameters (from TourDetail page)
     const title = searchParams.get('title');
@@ -339,11 +344,20 @@ const BookTour = () => {
       // Handle date dependencies
       if (name === 'preferredDate') {
         setFormData(prev => {
-          const updated = { ...prev, preferredDate: value } as typeof prev;
+          const today = getTodayLocalYMD();
+          const clampedPreferred = clampDate(value, today);
+          const updated = { ...prev, preferredDate: clampedPreferred } as typeof prev;
           if (updated.alternativeDate && updated.alternativeDate < value) {
-            updated.alternativeDate = value; // keep alternative >= preferred
+            updated.alternativeDate = clampedPreferred; // keep alternative >= preferred
           }
           return updated;
+        });
+      } else if (name === 'alternativeDate') {
+        setFormData(prev => {
+          const today = getTodayLocalYMD();
+          const minAlt = prev.preferredDate || today;
+          const clampedAlt = clampDate(value, minAlt);
+          return { ...prev, alternativeDate: clampedAlt };
         });
       } else {
         setFormData(prev => ({
