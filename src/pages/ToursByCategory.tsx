@@ -1,6 +1,7 @@
 import { useParams, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import DatabaseNavigation from '@/components/DatabaseNavigation';
+import SEO from '@/components/SEO';
 import Footer from '@/components/Footer';
 import TourCategoryDropdown from '@/components/TourCategoryDropdown';
 import TailorMadeForm from '@/components/TailorMadeForm';
@@ -259,6 +260,12 @@ const ToursByCategory = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title={`${category.name} Tours`}
+        description={category.description}
+        canonical={`https://outtour.az/tours/${category.slug}`}
+        image={category.image_url}
+      />
       <DatabaseNavigation />
       
       {/* Hero Section */}

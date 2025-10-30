@@ -1,4 +1,5 @@
 import DatabaseNavigation from '@/components/DatabaseNavigation';
+import SEO from '@/components/SEO';
 import DatabaseTourCategoryGallery from '@/components/DatabaseTourCategoryGallery';
 import JourneyContactForm from '@/components/JourneyContactForm';
 import DatabasePartners from '@/components/DatabasePartners';
@@ -180,6 +181,12 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title="Private Hiking, Birding & Cultural Tours in Azerbaijan"
+        description="Discover authentic hiking, trekking, birding and cultural tours across Azerbaijan with local guides. Sustainable, tailor-made adventures by Outtour Azerbaijan."
+        canonical="https://outtour.az/"
+        image={heroData?.image_url || '/hero-mountain-custom.jpg'}
+      />
       <DatabaseNavigation />
       
       {/* Hero Section */}

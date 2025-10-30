@@ -1,4 +1,5 @@
 import { useParams, useNavigate } from 'react-router-dom';
+import SEO from '@/components/SEO';
 import { useState, useEffect, useRef } from 'react';
 import DatabaseNavigation from '@/components/DatabaseNavigation';
 import Footer from '@/components/Footer';
@@ -534,6 +535,12 @@ const TourDetail = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title={tour.title}
+        description={tour.overview || tour.description?.replace(/<[^>]+>/g, '').slice(0, 160)}
+        canonical={`https://outtour.az/tours/${category}/${tour.slug || (tour.title?.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').trim())}?id=${tour.id}`}
+        image={mainImage}
+      />
       <DatabaseNavigation />
       
       {/* Back Button */}
