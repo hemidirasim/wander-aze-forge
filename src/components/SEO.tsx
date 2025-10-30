@@ -1,4 +1,5 @@
 import { Helmet } from 'react-helmet-async';
+import { useEffect } from 'react';
 
 type SEOProps = {
   title?: string;
@@ -11,6 +12,18 @@ type SEOProps = {
 export default function SEO({ title, description, canonical, image, noindex }: SEOProps) {
   const siteName = 'Outtour Azerbaijan';
   const fullTitle = title ? `${title} | ${siteName}` : siteName;
+  
+  // Remove any static OG/Twitter tags that may exist in index.html so Helmet tags take effect on SPA navigation
+  useEffect(() => {
+    const staleOg = Array.from(document.querySelectorAll('meta[property^="og:"]'));
+    const staleTw = Array.from(document.querySelectorAll('meta[name^="twitter:"]'));
+    [...staleOg, ...staleTw].forEach((el) => {
+      if (!(el as HTMLElement).getAttribute('data-rh')) {
+        el.parentElement?.removeChild(el);
+      }
+    });
+  }, []);
+
   return (
     <Helmet>
       {title && <title>{fullTitle}</title>}
