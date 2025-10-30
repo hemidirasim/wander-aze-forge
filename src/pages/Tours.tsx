@@ -102,7 +102,12 @@ const Tours = () => {
       
       {/* Hero Section */}
       <section className="relative h-96 flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-300 to-slate-200" />
+        <img
+          src={toursHero}
+          alt="All Tours cover"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-black/20 to-transparent" />
         <div className="relative z-10 text-center text-white" />
       </section>
 
