@@ -66,6 +66,9 @@ const BookTour = () => {
     terms: false
   });
 
+  const [showPreferredPicker, setShowPreferredPicker] = useState(false);
+  const [showAlternativePicker, setShowAlternativePicker] = useState(false);
+
   const token = localStorage.getItem('authToken');
 
   // Get today's date in local timezone as YYYY-MM-DD
@@ -792,41 +795,74 @@ const BookTour = () => {
                         ) : (
                           // For private tours: show date input fields
                           <>
-                            <div>
+                            <div className="relative">
                               <Label htmlFor="preferredDate">Preferred Tour Date *</Label>
-                              <div className="mt-2 border rounded-md p-2 bg-background">
-                                <DayPicker
-                                  mode="single"
-                                  selected={fromYMD(formData.preferredDate)}
-                                  onSelect={(date) => {
-                                    const today = new Date();
-                                    const min = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-                                    const chosen = date && date < min ? min : date;
-                                    const ymd = chosen ? toYMD(chosen) : '';
-                                    const alt = formData.alternativeDate && formData.alternativeDate < ymd ? ymd : formData.alternativeDate;
-                                    setFormData(prev => ({ ...prev, preferredDate: ymd, alternativeDate: alt }));
-                                  }}
-                                  disabled={{ before: new Date() }}
-                                />
-                              </div>
+                              <Input
+                                id="preferredDate"
+                                name="preferredDate"
+                                type="text"
+                                readOnly
+                                value={formData.preferredDate || ''}
+                                onClick={() => {
+                                  setShowPreferredPicker((v) => !v);
+                                  setShowAlternativePicker(false);
+                                }}
+                                placeholder="Select date"
+                                className="mt-1 text-base cursor-pointer"
+                                required
+                              />
+                              {showPreferredPicker && (
+                                <div className="absolute z-50 mt-2 border rounded-md p-2 bg-background shadow-lg">
+                                  <DayPicker
+                                    mode="single"
+                                    selected={fromYMD(formData.preferredDate)}
+                                    onSelect={(date) => {
+                                      const today = new Date();
+                                      const min = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+                                      const chosen = date && date < min ? min : date;
+                                      const ymd = chosen ? toYMD(chosen) : '';
+                                      const alt = formData.alternativeDate && formData.alternativeDate < ymd ? ymd : formData.alternativeDate;
+                                      setFormData(prev => ({ ...prev, preferredDate: ymd, alternativeDate: alt }));
+                                      setShowPreferredPicker(false);
+                                    }}
+                                    disabled={{ before: new Date() }}
+                                  />
+                                </div>
+                              )}
                             </div>
                             
-                            <div>
+                            <div className="relative">
                               <Label htmlFor="alternativeDate">Alternative Date (Optional)</Label>
-                              <div className="mt-2 border rounded-md p-2 bg-background">
-                                <DayPicker
-                                  mode="single"
-                                  selected={fromYMD(formData.alternativeDate)}
-                                  onSelect={(date) => {
-                                    const base = fromYMD(formData.preferredDate) || new Date();
-                                    const baseMin = new Date(base.getFullYear(), base.getMonth(), base.getDate());
-                                    const chosen = date && date < baseMin ? baseMin : date;
-                                    const ymd = chosen ? toYMD(chosen) : '';
-                                    setFormData(prev => ({ ...prev, alternativeDate: ymd }));
-                                  }}
-                                  disabled={{ before: fromYMD(formData.preferredDate) || new Date() }}
-                                />
-                              </div>
+                              <Input
+                                id="alternativeDate"
+                                name="alternativeDate"
+                                type="text"
+                                readOnly
+                                value={formData.alternativeDate || ''}
+                                onClick={() => {
+                                  setShowAlternativePicker((v) => !v);
+                                  setShowPreferredPicker(false);
+                                }}
+                                placeholder="Select date"
+                                className="mt-1 text-base cursor-pointer"
+                              />
+                              {showAlternativePicker && (
+                                <div className="absolute z-50 mt-2 border rounded-md p-2 bg-background shadow-lg">
+                                  <DayPicker
+                                    mode="single"
+                                    selected={fromYMD(formData.alternativeDate)}
+                                    onSelect={(date) => {
+                                      const base = fromYMD(formData.preferredDate) || new Date();
+                                      const baseMin = new Date(base.getFullYear(), base.getMonth(), base.getDate());
+                                      const chosen = date && date < baseMin ? baseMin : date;
+                                      const ymd = chosen ? toYMD(chosen) : '';
+                                      setFormData(prev => ({ ...prev, alternativeDate: ymd }));
+                                      setShowAlternativePicker(false);
+                                    }}
+                                    disabled={{ before: fromYMD(formData.preferredDate) || new Date() }}
+                                  />
+                                </div>
+                              )}
                             </div>
                           </>
                         )}
