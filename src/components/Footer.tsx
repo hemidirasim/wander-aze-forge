@@ -91,8 +91,10 @@ const Footer = () => {
     add(t?.instagram, Instagram, 'Instagram');
     add(t?.linkedin, Linkedin, 'LinkedIn');
     add(t?.twitter, (props: any) => (
-      <svg fill="currentColor" width="20px" height="20px" viewBox="0 0 24 24" {...props}><path d="M22.46 6c-.77.35-1.6.58-2.46.69a4.25 4.25 0 0 0 1.87-2.35 8.48 8.48 0 0 1-2.69 1.03 4.24 4.24 0 0 0-7.23 3.87A12.04 12.04 0 0 1 3.15 4.6a4.23 4.23 0 0 0 1.31 5.66 4.2 4.2 0 0 1-1.92-.53v.05a4.24 4.24 0 0 0 3.4 4.16 4.26 4.26 0 0 1-1.91.07 4.25 4.25 0 0 0 3.96 2.94A8.5 8.5 0 0 1 2 19.54 12.01 12.01 0 0 0 8.29 21c7.55 0 11.68-6.26 11.68-11.69 0-.18 0-.36-.01-.54A8.35 8.35 0 0 0 22.46 6z"/></svg>
-    ), 'Twitter');
+      <svg width="20" height="20" viewBox="0 0 24 24" {...props}>
+        <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
+    ), 'X');
     add(t?.youtube, Youtube, 'YouTube');
     if (t?.tripadvisor && t.tripadvisor.trim()) {
       links.push({
