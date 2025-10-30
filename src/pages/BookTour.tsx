@@ -80,6 +80,20 @@ const BookTour = () => {
     return value < min ? min : value;
   };
 
+  // Defensive clamp in effect (covers mobile date pickers that ignore min)
+  useEffect(() => {
+    const today = getTodayLocalYMD();
+    setFormData(prev => {
+      let preferred = prev.preferredDate ? clampDate(prev.preferredDate, today) : prev.preferredDate;
+      let alternativeMin = preferred || today;
+      let alternative = prev.alternativeDate ? clampDate(prev.alternativeDate, alternativeMin) : prev.alternativeDate;
+      if (preferred !== prev.preferredDate || alternative !== prev.alternativeDate) {
+        return { ...prev, preferredDate: preferred, alternativeDate: alternative };
+      }
+      return prev;
+    });
+  }, [formData.preferredDate, formData.alternativeDate]);
+
   useEffect(() => {
     // Check if tour data is available in URL parameters (from TourDetail page)
     const title = searchParams.get('title');
@@ -772,6 +786,7 @@ const BookTour = () => {
                                 onChange={handleInputChange}
                                 min={getTodayLocalYMD()}
                                 className="mt-1 text-base"
+                                onKeyDown={(e) => e.preventDefault()}
                                 required
                               />
                             </div>
@@ -786,6 +801,7 @@ const BookTour = () => {
                                 onChange={handleInputChange}
                                 min={formData.preferredDate || getTodayLocalYMD()}
                                 className="mt-1 text-base"
+                                onKeyDown={(e) => e.preventDefault()}
                               />
                             </div>
                           </>
