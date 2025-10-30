@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import AdminDashboard from '../pages/AdminDashboard';
 
@@ -6,6 +6,17 @@ const SimpleAdminLayout: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [expandedMenus, setExpandedMenus] = useState<string[]>([]);
   const location = useLocation();
+  const [checkingAuth, setCheckingAuth] = useState(true);
+
+  useEffect(() => {
+    const token = localStorage.getItem('adminToken');
+    const user = localStorage.getItem('adminUser');
+    if (!token || !user) {
+      window.location.href = '/admin/login';
+      return;
+    }
+    setCheckingAuth(false);
+  }, []);
 
   const menuItems = [
     {
@@ -74,6 +85,10 @@ const SimpleAdminLayout: React.FC = () => {
     localStorage.removeItem('adminUser');
     window.location.href = '/admin/login';
   };
+
+  if (checkingAuth) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 flex">

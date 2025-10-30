@@ -1,4 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+import jwt from 'jsonwebtoken';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Enable CORS
@@ -23,25 +24,26 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ success: false, message: 'Username and password are required' });
     }
 
-    // Simple authentication
-    const validUsers = [
-      { username: 'admin', password: 'admin123' },
-      { username: 'manager', password: 'manager123' },
-      { username: 'moderator', password: 'moderator123' },
-      { username: 'newuser', password: 'newuser123' }
-    ];
+    // Secure credentials via environment variables
+    const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'admin';
+    const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'change-this-password';
 
-    const user = validUsers.find(u => u.username === username && u.password === password);
+    const userMatch = username === ADMIN_USERNAME && password === ADMIN_PASSWORD;
     
-    if (user) {
-      const token = Math.random().toString(36).substring(2) + Date.now().toString(36);
+    if (userMatch) {
+      const secret = process.env.ADMIN_JWT_SECRET || 'replace-this-secret';
+      const token = jwt.sign(
+        { sub: username, role: 'admin' },
+        secret,
+        { expiresIn: '12h' }
+      );
       console.log('Authentication successful for:', username);
       
       return res.status(200).json({ 
         success: true, 
         token, 
         user: { 
-          username: user.username, 
+          username, 
           id: 1,
           permissions: ['manage_tours', 'manage_projects', 'manage_programs', 'manage_partners', 'manage_blog', 'view_analytics']
         } 
