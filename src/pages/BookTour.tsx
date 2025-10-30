@@ -66,6 +66,15 @@ const BookTour = () => {
 
   const token = localStorage.getItem('authToken');
 
+  // Get today's date in local timezone as YYYY-MM-DD
+  const getTodayLocalYMD = () => {
+    const d = new Date();
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+  };
+
   useEffect(() => {
     // Check if tour data is available in URL parameters (from TourDetail page)
     const title = searchParams.get('title');
@@ -351,7 +360,7 @@ const BookTour = () => {
     setSubmitMessage(null); // Clear previous message
 
     // Validate dates
-    const todayStr = new Date().toISOString().split('T')[0];
+    const todayStr = getTodayLocalYMD();
     if (!formData.preferredDate) {
       setSubmitMessage({
         type: 'error',
@@ -747,7 +756,7 @@ const BookTour = () => {
                                 type="date"
                                 value={formData.preferredDate}
                                 onChange={handleInputChange}
-                                min={new Date().toISOString().split('T')[0]}
+                                min={getTodayLocalYMD()}
                                 className="mt-1 text-base"
                                 required
                               />
@@ -761,7 +770,7 @@ const BookTour = () => {
                                 type="date"
                                 value={formData.alternativeDate}
                                 onChange={handleInputChange}
-                                min={formData.preferredDate || new Date().toISOString().split('T')[0]}
+                                min={formData.preferredDate || getTodayLocalYMD()}
                                 className="mt-1 text-base"
                               />
                             </div>
