@@ -16,6 +16,21 @@ import {
   Upload,
   Trash2
 } from 'lucide-react';
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  SortableContext,
+  rectSortingStrategy,
+  useSortable,
+  arraySwap,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 interface Tour {
   id: number;
@@ -41,6 +56,10 @@ const AdminTourEditMedia: React.FC = () => {
 
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
+  );
 
   useEffect(() => {
     if (id) {
@@ -111,6 +130,73 @@ const AdminTourEditMedia: React.FC = () => {
     setFormData(prev => ({
       ...prev,
       galleryImages: prev.galleryImages.map((item, i) => i === index ? value : item)
+    }));
+  };
+
+  // Sortable item component
+  const SortableImage: React.FC<{ id: string; index: number; url: string }> = ({ id, index, url }) => {
+    const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
+    const style: React.CSSProperties = {
+      transform: CSS.Transform.toString(transform),
+      transition,
+      opacity: isDragging ? 0.8 : 1,
+      cursor: 'grab'
+    };
+    return (
+      <div ref={setNodeRef} style={style} className="border rounded-lg p-3 space-y-2 bg-white">
+        <div className="relative">
+          <img 
+            src={url} 
+            alt={`Gallery ${index + 1}`}
+            className="w-full h-32 object-cover rounded"
+            onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
+          />
+          <button
+            type="button"
+            className="absolute top-2 left-2 bg-gray-800/70 text-white rounded px-2 py-1 text-xs"
+            {...attributes}
+            {...listeners}
+          >
+            Drag
+          </button>
+          {formData.mainImage === url && (
+            <div className="absolute top-2 right-2 bg-green-500 text-white rounded-full p-1">
+              <Camera className="w-3 h-3" />
+            </div>
+          )}
+        </div>
+        <div className="flex gap-2">
+          <Button
+            type="button"
+            variant={formData.mainImage === url ? "default" : "outline"}
+            size="sm"
+            onClick={() => setFormData(prev => ({ ...prev, mainImage: url }))}
+            className="flex-1"
+          >
+            {formData.mainImage === url ? 'Main Foto' : 'Main Foto Et'}
+          </Button>
+          <Button
+            type="button"
+            variant="destructive"
+            size="sm"
+            onClick={() => removeGalleryImage(index)}
+          >
+            <Trash2 className="w-4 h-4" />
+          </Button>
+        </div>
+      </div>
+    );
+  };
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+    const oldIndex = formData.galleryImages.findIndex((i) => i === active.id);
+    const newIndex = formData.galleryImages.findIndex((i) => i === over.id);
+    if (oldIndex === -1 || newIndex === -1) return;
+    setFormData(prev => ({
+      ...prev,
+      galleryImages: arraySwap(prev.galleryImages, oldIndex, newIndex)
     }));
   };
 
@@ -374,57 +460,15 @@ const AdminTourEditMedia: React.FC = () => {
                 {formData.galleryImages.length > 0 && (
                   <div className="space-y-4">
                     <Label>Gallery Images ({formData.galleryImages.length})</Label>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {formData.galleryImages.map((image, index) => (
-                        <div key={index} className="border rounded-lg p-3 space-y-2">
-                          <div className="relative">
-                            <img 
-                              src={image} 
-                              alt={`Gallery ${index + 1}`}
-                              className="w-full h-32 object-cover rounded"
-                              onError={(e) => {
-                                e.currentTarget.style.display = 'none';
-                              }}
-                            />
-                            {formData.mainImage === image && (
-                              <div className="absolute top-2 right-2 bg-green-500 text-white rounded-full p-1">
-                                <Camera className="w-3 h-3" />
-                              </div>
-                            )}
-                            {isBase64Image(image) && (
-                              <div className="absolute top-2 left-2 bg-red-500 text-white rounded-full p-1">
-                                <Upload className="w-3 h-3" />
-                              </div>
-                            )}
-                          </div>
-                          
-                          <div className="flex gap-2">
-                            <Button
-                              type="button"
-                              variant={formData.mainImage === image ? "default" : "outline"}
-                              size="sm"
-                              onClick={() => setFormData(prev => ({ ...prev, mainImage: image }))}
-                              className="flex-1"
-                            >
-                              {formData.mainImage === image ? 'Main Foto' : 'Main Foto Et'}
-                            </Button>
-                            <Button
-                              type="button"
-                              variant="destructive"
-                              size="sm"
-                              onClick={() => removeGalleryImage(index)}
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </Button>
-                          </div>
-                          {isBase64Image(image) && (
-                            <p className="text-xs text-red-500 text-center">
-                              Not uploaded - Please upload first
-                            </p>
-                          )}
+                    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                      <SortableContext items={formData.galleryImages} strategy={rectSortingStrategy}>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                          {formData.galleryImages.map((image, index) => (
+                            <SortableImage key={image} id={image} index={index} url={image} />
+                          ))}
                         </div>
-                      ))}
-                    </div>
+                      </SortableContext>
+                    </DndContext>
                   </div>
                 )}
               </CardContent>
