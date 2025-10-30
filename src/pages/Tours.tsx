@@ -32,24 +32,45 @@ const Tours = () => {
   const [tours, setTours] = useState<Tour[]>([]);
   const [filteredTours, setFilteredTours] = useState<Tour[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refetching, setRefetching] = useState(false);
+  const [dataFetched, setDataFetched] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [categories, setCategories] = useState<string[]>([]);
 
   useEffect(() => {
+    // Try cache first for instant render
+    try {
+      const cached = localStorage.getItem('outtour_all_tours');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setTours(parsed);
+          setFilteredTours(parsed);
+          const uniqueCategories = [...new Set(parsed.map((tour: Tour) => tour.category))];
+          setCategories(uniqueCategories);
+          setLoading(false);
+        }
+      }
+    } catch (e) {
+      // ignore cache errors
+    }
+
     const fetchTours = async () => {
       try {
-        setLoading(true);
+        if (!dataFetched) setLoading(true); else setRefetching(true);
         const response = await fetch('/api/tours');
         const data = await response.json();
         
         if (data.success) {
           setTours(data.data);
           setFilteredTours(data.data);
+          try { localStorage.setItem('outtour_all_tours', JSON.stringify(data.data)); } catch {}
           
           // Extract unique categories
           const uniqueCategories = [...new Set(data.data.map((tour: Tour) => tour.category))];
           setCategories(uniqueCategories);
+          setDataFetched(true);
         } else {
           setError('Failed to fetch tours');
         }
@@ -58,6 +79,7 @@ const Tours = () => {
         setError('Failed to fetch tours');
       } finally {
         setLoading(false);
+        setRefetching(false);
       }
     };
 
@@ -128,9 +150,11 @@ const Tours = () => {
             </div>
             
             {/* Results count */}
-            <p className="text-sm text-muted-foreground">
-              {filteredTours.length} tour{filteredTours.length !== 1 ? 's' : ''} found
-            </p>
+            {!loading && (
+              <p className="text-sm text-muted-foreground">
+                {filteredTours.length} tour{filteredTours.length !== 1 ? 's' : ''} found {refetching && <span className="opacity-60">(updating...)</span>}
+              </p>
+            )}
           </div>
 
           {loading ? (
