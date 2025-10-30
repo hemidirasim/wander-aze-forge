@@ -59,7 +59,7 @@ const UserDashboard = () => {
   const [reviews, setReviews] = useState<UserReview[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'bookings' | 'reviews' | 'profile'>('bookings');
+  const [activeTab, setActiveTab] = useState<'bookings' | 'profile'>('bookings');
 
   useEffect(() => {
     fetchUserData();
@@ -250,14 +250,7 @@ const UserDashboard = () => {
                 <Calendar className="w-4 h-4" />
                 My Bookings ({bookings.length})
               </Button>
-              <Button
-                variant={activeTab === 'reviews' ? 'default' : 'outline'}
-                onClick={() => setActiveTab('reviews')}
-                className="flex items-center gap-2"
-              >
-                <Star className="w-4 h-4" />
-                My Reviews ({reviews.length})
-              </Button>
+              {/* Reviews tab hidden globally */}
               <Button
                 variant={activeTab === 'profile' ? 'default' : 'outline'}
                 onClick={() => setActiveTab('profile')}
@@ -332,53 +325,7 @@ const UserDashboard = () => {
               </div>
             )}
 
-            {/* Reviews Tab */}
-            {activeTab === 'reviews' && (
-              <div className="space-y-4">
-                {reviews.length === 0 ? (
-                  <Card>
-                    <CardContent className="p-8 text-center">
-                      <Star className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                      <h3 className="text-lg font-semibold text-foreground mb-2">No Reviews Yet</h3>
-                      <p className="text-muted-foreground mb-4">
-                        Share your experience by reviewing completed tours!
-                      </p>
-                    </CardContent>
-                  </Card>
-                ) : (
-                  reviews.map((review) => (
-                    <Card key={review.id} className="hover:shadow-lg transition-shadow">
-                      <CardContent className="p-6">
-                        <div className="flex justify-between items-start mb-3">
-                          <h3 className="text-lg font-semibold text-foreground">
-                            {review.tourTitle}
-                          </h3>
-                          <div className="flex items-center gap-1">
-                            {[...Array(5)].map((_, i) => (
-                              <Star
-                                key={i}
-                                className={`w-4 h-4 ${
-                                  i < review.rating 
-                                    ? 'text-yellow-400 fill-current' 
-                                    : 'text-gray-300'
-                                }`}
-                              />
-                            ))}
-                          </div>
-                        </div>
-                        
-                        <p className="text-muted-foreground mb-3">{review.reviewText}</p>
-                        
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                          <Clock className="w-4 h-4" />
-                          <span>Reviewed on {formatDate(review.createdAt)}</span>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))
-                )}
-              </div>
-            )}
+            {/* Reviews Tab hidden globally */}
 
             {/* Profile Tab */}
             {activeTab === 'profile' && (

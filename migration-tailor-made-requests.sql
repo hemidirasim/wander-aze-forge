@@ -39,3 +39,4 @@ SELECT
 FROM information_schema.columns
 WHERE table_name = 'tailor_made_requests'
 ORDER BY ordinal_position;
+

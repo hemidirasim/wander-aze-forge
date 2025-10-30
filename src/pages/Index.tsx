@@ -43,6 +43,7 @@ const formatPrice = (price: string | number) => {
 };
 
 const Index = () => {
+  const SHOW_REVIEWS = false;
   const [featuredTours, setFeaturedTours] = useState([]);
   const [loading, setLoading] = useState(true);
   const [heroData, setHeroData] = useState(null);
@@ -406,7 +407,8 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Customer Reviews - Carousel */}
+      {/* Customer Reviews - Carousel (hidden globally) */}
+      {SHOW_REVIEWS && (
       <section className="py-24 px-4 bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
         <div className="container mx-auto">
           {/* Modern Header */}
@@ -573,6 +575,7 @@ const Index = () => {
           )}
         </div>
       </section>
+      )}
 
       {/* Tour Category Gallery - Database Categories */}
       <DatabaseTourCategoryGallery />

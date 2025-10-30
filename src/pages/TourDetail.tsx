@@ -94,6 +94,7 @@ const formatPrice = (price: string | number) => {
 };
 
 const TourDetail = () => {
+  const SHOW_REVIEWS = false;
   const { id, category } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -576,7 +577,7 @@ const TourDetail = () => {
                   <Badge variant="secondary" className="bg-white/90 text-foreground">{tour.difficulty}</Badge>
                 )}
                 <Badge variant="secondary" className="bg-white/90 text-foreground">{tour.duration}</Badge>
-                {reviews.length > 0 ? (
+                {SHOW_REVIEWS && reviews.length > 0 ? (
                   <div 
                     className="flex items-center space-x-1 cursor-pointer hover:opacity-80 transition-opacity"
                     onClick={() => setShowReviewsModal(true)}
@@ -1070,8 +1071,8 @@ const TourDetail = () => {
                 </CardContent>
               </Card>
 
-            {/* Reviews Section - Only show if there are reviews */}
-            {reviews.length > 0 && (
+            {/* Reviews Section - hidden globally */}
+            {SHOW_REVIEWS && reviews.length > 0 && (
               <Card>
                 <CardHeader>
                   <CardTitle className="text-2xl flex items-center gap-2">
@@ -1154,24 +1155,26 @@ const TourDetail = () => {
               </Card>
             )}
 
-            {/* Write Review Button - Always visible */}
-            <Card>
-              <CardContent className="pt-6">
-                <div className="text-center">
-                  <Button 
-                    size="lg" 
-                    className="w-auto"
-                    onClick={() => setShowReviewModal(true)}
-                  >
-                    <Star className="w-4 h-4 mr-2" />
-                    Write a Review
-                  </Button>
-                  <p className="text-sm text-muted-foreground mt-2">
-                    Share your experience with other travelers
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
+            {/* Write Review Button - hidden globally */}
+            {SHOW_REVIEWS && (
+              <Card>
+                <CardContent className="pt-6">
+                  <div className="text-center">
+                    <Button 
+                      size="lg" 
+                      className="w-auto"
+                      onClick={() => setShowReviewModal(true)}
+                    >
+                      <Star className="w-4 h-4 mr-2" />
+                      Write a Review
+                    </Button>
+                    <p className="text-sm text-muted-foreground mt-2">
+                      Share your experience with other travelers
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
 
             </div>
 
@@ -1397,8 +1400,8 @@ const TourDetail = () => {
         </section>
       )}
       
-      {/* Review Modal */}
-      {showReviewModal && (
+      {/* Review Modal - hidden globally */}
+      {SHOW_REVIEWS && showReviewModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-background rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6">
@@ -1515,8 +1518,8 @@ const TourDetail = () => {
         </div>
       )}
 
-      {/* Reviews Modal */}
-      {showReviewsModal && (
+      {/* Reviews Modal - hidden globally */}
+      {SHOW_REVIEWS && showReviewsModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg max-w-4xl w-full h-[90vh] flex flex-col">
             <div className="p-6 border-b flex-shrink-0">

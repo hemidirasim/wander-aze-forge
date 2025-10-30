@@ -27,6 +27,8 @@ interface Review {
 }
 
 const DatabaseReviews = () => {
+  const SHOW_REVIEWS = false;
+  if (!SHOW_REVIEWS) return null;
   const { data: reviews, loading, error } = useApi<Review[]>('/reviews?featured=true');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [itemsPerView, setItemsPerView] = useState(3);

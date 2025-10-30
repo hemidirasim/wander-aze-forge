@@ -2,6 +2,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Star, Quote } from 'lucide-react';
 
 const RecommendationsSection = () => {
+  const SHOW_REVIEWS = false;
+  if (!SHOW_REVIEWS) return null;
   const recommendations = [
     {
       name: 'Sarah Johnson',
