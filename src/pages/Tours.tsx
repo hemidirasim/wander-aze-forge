@@ -7,7 +7,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Link } from 'react-router-dom';
 import { Clock, Users, MapPin, Star, ArrowRight, Filter } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import toursHero from '@/assets/tours-hero.jpg';
+// Use provided WebP cover for All Tours hero
+const TOURS_HERO_COVER = 'https://e4sm2p9cqicdxjyg.public.blob.vercel-storage.com/gallery/1761823596427-ebdo22.webp';
 
 interface Tour {
   id: number;
@@ -103,7 +104,7 @@ const Tours = () => {
       {/* Hero Section */}
       <section className="relative h-96 flex items-center justify-center overflow-hidden">
         <img
-          src={toursHero}
+          src={TOURS_HERO_COVER}
           alt="All Tours cover"
           className="absolute inset-0 w-full h-full object-cover"
         />
