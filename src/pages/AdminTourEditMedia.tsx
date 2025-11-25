@@ -120,12 +120,23 @@ const AdminTourEditMedia: React.FC = () => {
           mainImage: tourData.image_url || ''
         });
         
-        console.log('Loaded media data:', {
-          raw: tourData.gallery_images,
-          parsed: galleryImagesRaw,
-          processed: galleryImages,
-          photographyService: tourData.photography_service
+        console.log('=== LOADED MEDIA DATA ===');
+        console.log('Raw gallery_images:', tourData.gallery_images);
+        console.log('Type of gallery_images:', typeof tourData.gallery_images);
+        console.log('Is array?', Array.isArray(tourData.gallery_images));
+        console.log('Parsed gallery_images:', galleryImagesRaw);
+        console.log('Processed gallery_images:', galleryImages);
+        console.log('Gallery images count:', galleryImages.length);
+        galleryImages.forEach((img, idx) => {
+          console.log(`Image ${idx}:`, {
+            url: img.url,
+            caption: img.caption,
+            alt_text: img.alt_text,
+            type: typeof img,
+            isObject: typeof img === 'object'
+          });
         });
+        console.log('Photography service:', tourData.photography_service);
       } else {
         toast({
           title: "Error",
@@ -184,14 +195,38 @@ const AdminTourEditMedia: React.FC = () => {
       opacity: isDragging ? 0.8 : 1,
       cursor: 'grab'
     };
+    
+    // Ensure image is an object with url property
+    const imageUrl = typeof image === 'object' && image !== null && 'url' in image 
+      ? image.url 
+      : typeof image === 'string' 
+        ? image 
+        : '';
+    
+    const imageCaption = typeof image === 'object' && image !== null && 'caption' in image 
+      ? image.caption || '' 
+      : '';
+    
+    const imageAltText = typeof image === 'object' && image !== null && 'alt_text' in image 
+      ? image.alt_text || '' 
+      : '';
+    
+    if (!imageUrl) {
+      console.warn('Invalid image object at index', index, ':', image);
+      return null;
+    }
+    
     return (
       <div ref={setNodeRef} style={style} className="border rounded-lg p-3 space-y-2 bg-white">
         <div className="relative">
           <img 
-            src={image.url} 
-            alt={image.alt_text || `Gallery ${index + 1}`}
+            src={imageUrl} 
+            alt={imageAltText || `Gallery ${index + 1}`}
             className="w-full h-32 object-cover rounded"
-            onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
+            onError={(e) => { 
+              console.error('Image load error:', imageUrl);
+              (e.currentTarget as HTMLImageElement).style.display = 'none'; 
+            }}
           />
           <button
             type="button"
@@ -213,7 +248,7 @@ const AdminTourEditMedia: React.FC = () => {
             <Input
               id={`caption-${index}`}
               type="text"
-              value={image.caption || ''}
+              value={imageCaption}
               onChange={(e) => updateGalleryImage(index, 'caption', e.target.value)}
               placeholder="Foto başlığı..."
               className="text-sm"
@@ -224,7 +259,7 @@ const AdminTourEditMedia: React.FC = () => {
             <Input
               id={`alt-${index}`}
               type="text"
-              value={image.alt_text || ''}
+              value={imageAltText}
               onChange={(e) => updateGalleryImage(index, 'alt_text', e.target.value)}
               placeholder="Alt text (SEO üçün)..."
               className="text-sm"
@@ -234,12 +269,12 @@ const AdminTourEditMedia: React.FC = () => {
         <div className="flex gap-2">
           <Button
             type="button"
-            variant={formData.mainImage === image.url ? "default" : "outline"}
+            variant={formData.mainImage === imageUrl ? "default" : "outline"}
             size="sm"
-            onClick={() => setFormData(prev => ({ ...prev, mainImage: image.url }))}
+            onClick={() => setFormData(prev => ({ ...prev, mainImage: imageUrl }))}
             className="flex-1"
           >
-            {formData.mainImage === image.url ? 'Main Foto' : 'Main Foto Et'}
+            {formData.mainImage === imageUrl ? 'Main Foto' : 'Main Foto Et'}
           </Button>
           <Button
             type="button"
@@ -531,11 +566,39 @@ const AdminTourEditMedia: React.FC = () => {
                   <div className="space-y-4">
                     <Label>Gallery Images ({formData.galleryImages.length})</Label>
                     <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-                      <SortableContext items={formData.galleryImages.map(img => img.url)} strategy={rectSortingStrategy}>
+                      <SortableContext 
+                        items={formData.galleryImages
+                          .filter(img => img && (typeof img === 'object' ? img.url : typeof img === 'string' ? img : ''))
+                          .map(img => typeof img === 'object' && img !== null && 'url' in img ? img.url : typeof img === 'string' ? img : '')
+                        } 
+                        strategy={rectSortingStrategy}
+                      >
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                          {formData.galleryImages.map((image, index) => (
-                            <SortableImage key={image.url} id={image.url} index={index} image={image} />
-                          ))}
+                          {formData.galleryImages
+                            .map((image, index) => {
+                              // Ensure image is in correct format
+                              const normalizedImage: GalleryImage = typeof image === 'object' && image !== null && 'url' in image
+                                ? { url: image.url || '', caption: image.caption || '', alt_text: image.alt_text || '' }
+                                : typeof image === 'string'
+                                  ? { url: image, caption: '', alt_text: '' }
+                                  : { url: '', caption: '', alt_text: '' };
+                              
+                              if (!normalizedImage.url) {
+                                console.warn('Skipping image with empty URL at index', index);
+                                return null;
+                              }
+                              
+                              return (
+                                <SortableImage 
+                                  key={normalizedImage.url} 
+                                  id={normalizedImage.url} 
+                                  index={index} 
+                                  image={normalizedImage} 
+                                />
+                              );
+                            })
+                            .filter(Boolean)
+                          }
                         </div>
                       </SortableContext>
                     </DndContext>
