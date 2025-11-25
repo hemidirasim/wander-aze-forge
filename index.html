@@ -8,6 +8,46 @@
     <meta name="author" content="Outtour Azerbaijan" />
     
     <!-- Favicon will be dynamically set by SiteBrandingProvider -->
+    <script>
+      // Load favicon immediately, before React loads
+      (function() {
+        function updateFavicon(url) {
+          if (!url) return;
+          
+          // Remove existing favicon links
+          const existingLinks = document.querySelectorAll('link[rel="icon"], link[rel="shortcut icon"], link[rel="apple-touch-icon"]');
+          existingLinks.forEach(link => link.remove());
+          
+          // Create new favicon links
+          const link1 = document.createElement('link');
+          link1.rel = 'icon';
+          link1.href = url + '?_t=' + Date.now();
+          document.head.appendChild(link1);
+          
+          const link2 = document.createElement('link');
+          link2.rel = 'shortcut icon';
+          link2.href = url + '?_t=' + Date.now();
+          document.head.appendChild(link2);
+          
+          const link3 = document.createElement('link');
+          link3.rel = 'apple-touch-icon';
+          link3.href = url + '?_t=' + Date.now();
+          document.head.appendChild(link3);
+          
+          console.log('Favicon updated via inline script:', url);
+        }
+        
+        // Fetch favicon from API immediately
+        fetch('/api/site-branding', { cache: 'no-cache' })
+          .then(res => res.json())
+          .then(data => {
+            if (data?.success && data?.data?.favicon_url) {
+              updateFavicon(data.data.favicon_url);
+            }
+          })
+          .catch(err => console.warn('Failed to load favicon inline:', err));
+      })();
+    </script>
 
     <!-- Index page default OG/Twitter (ensures social previews without JS) -->
     <meta property="og:title" content="Private Hiking, Birding & Cultural Tours in Azerbaijan | Outtour Azerbaijan" />
