@@ -14,7 +14,17 @@ const updateLinkTag = (rel: string, href: string) => {
     document.head.appendChild(link);
   }
 
-  link.href = href;
+  // Add timestamp to bypass browser cache
+  const separator = href.includes('?') ? '&' : '?';
+  const cacheBuster = `_t=${Date.now()}`;
+  link.href = `${href}${separator}${cacheBuster}`;
+  
+  // Force reload by removing and re-adding
+  const parent = link.parentNode;
+  if (parent) {
+    parent.removeChild(link);
+    parent.appendChild(link);
+  }
 };
 
 const SiteBrandingProvider: React.FC<PropsWithChildren> = ({ children }) => {
