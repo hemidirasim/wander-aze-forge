@@ -118,30 +118,41 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     console.log('Final arrays:', {
       galleryImagesArray,
-      photographyService
+      galleryImagesArrayLength: galleryImagesArray.length,
+      photographyService,
+      mainImage
     });
 
-    // Update tour media in database using direct array format
+    // Update tour media in database using JSONB format
+    // PostgreSQL JSONB requires JSON string or proper JSONB casting
     const query = `
       UPDATE tours SET
-        gallery_images = $1,
+        gallery_images = $1::jsonb,
         photography_service = $2,
         image_url = $3,
         updated_at = NOW()
       WHERE id = $4
-      RETURNING *
+      RETURNING id, gallery_images, photography_service, image_url, updated_at
     `;
 
-    // Use arrays directly instead of JSON strings
+    // Convert array to JSON string for JSONB column
+    const galleryImagesJson = JSON.stringify(galleryImagesArray);
+    
     const values = [
-      galleryImagesArray,
+      galleryImagesJson, // JSON string for JSONB
       photographyService,
       mainImage,
       id
     ];
 
     console.log('Executing database query with', values.length, 'parameters');
-    console.log('Query values:', values);
+    console.log('Gallery images JSON:', galleryImagesJson);
+    console.log('Query values:', {
+      galleryImages: galleryImagesJson.substring(0, 200) + '...',
+      photographyService,
+      mainImage,
+      id
+    });
 
     const result = await pool.query(query, values);
     
@@ -152,11 +163,32 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       });
     }
 
-    console.log('Media updated successfully:', result.rows[0]);
+    const updatedTour = result.rows[0];
+    
+    // Parse gallery_images if it's a JSON string
+    let parsedGalleryImages = updatedTour.gallery_images;
+    if (typeof parsedGalleryImages === 'string') {
+      try {
+        parsedGalleryImages = JSON.parse(parsedGalleryImages);
+      } catch (e) {
+        console.warn('Failed to parse gallery_images in response:', e);
+      }
+    }
+    
+    console.log('Media updated successfully:', {
+      id: updatedTour.id,
+      gallery_images_count: Array.isArray(parsedGalleryImages) ? parsedGalleryImages.length : 0,
+      gallery_images: parsedGalleryImages,
+      photography_service: updatedTour.photography_service,
+      image_url: updatedTour.image_url
+    });
 
     return res.status(200).json({
       success: true,
-      data: result.rows[0],
+      data: {
+        ...updatedTour,
+        gallery_images: parsedGalleryImages
+      },
       message: 'Media information updated successfully'
     });
 

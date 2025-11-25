@@ -428,17 +428,32 @@ const AdminTourEditMedia: React.FC = () => {
 
       const data = await response.json();
 
+      console.log('=== UPDATE MEDIA RESPONSE ===');
+      console.log('Response status:', response.status);
+      console.log('Response data:', data);
+      console.log('Gallery images in response:', data.data?.gallery_images);
+
       if (data.success) {
+        console.log('✅ Media updated successfully!');
+        console.log('Updated gallery images:', data.data?.gallery_images);
+        
         toast({
           title: "Media Updated Successfully!",
           description: "Tour media information has been updated.",
         });
         
-        navigate(`/admin/tours/${id}/manage`);
+        // Refresh the page data to show updated images
+        await fetchTour();
+        
+        // Small delay before navigation to ensure data is refreshed
+        setTimeout(() => {
+          navigate(`/admin/tours/${id}/manage`);
+        }, 500);
       } else {
+        console.error('❌ Update failed:', data);
         toast({
           title: "Error",
-          description: data.message || "Failed to update media",
+          description: data.message || data.error || "Failed to update media",
           variant: "destructive"
         });
       }
