@@ -12,8 +12,6 @@ Disallow: /login
 Disallow: /register
 Disallow: /dashboard
 
-# Content-signal: search=yes,ai-train=no
-
 Sitemap: ${baseUrl}/sitemap.xml
 `;
 
