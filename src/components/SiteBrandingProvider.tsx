@@ -33,11 +33,14 @@ const SiteBrandingProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
     const applyBranding = (faviconUrl?: string, appleUrl?: string) => {
       if (!isMounted) return;
-      const fallback = faviconUrl || DEFAULT_FAVICON;
+      
+      // Use admin-set favicon if available, otherwise fallback to default
+      const favicon = faviconUrl && faviconUrl.trim() ? faviconUrl.trim() : DEFAULT_FAVICON;
+      const appleIcon = appleUrl && appleUrl.trim() ? appleUrl.trim() : favicon;
 
-      updateLinkTag('icon', fallback);
-      updateLinkTag('shortcut icon', fallback);
-      updateLinkTag('apple-touch-icon', appleUrl || fallback);
+      updateLinkTag('icon', favicon);
+      updateLinkTag('shortcut icon', favicon);
+      updateLinkTag('apple-touch-icon', appleIcon);
     };
 
     const fetchBranding = async () => {
