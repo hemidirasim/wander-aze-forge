@@ -83,13 +83,36 @@ const AdminTourEditMedia: React.FC = () => {
         const tourData = data.data;
         setTour(tourData);
         
+        // Parse gallery_images - handle both JSON string and array formats
+        let galleryImagesRaw = tourData.gallery_images || [];
+        
+        // If it's a JSON string, parse it
+        if (typeof galleryImagesRaw === 'string') {
+          try {
+            galleryImagesRaw = JSON.parse(galleryImagesRaw);
+          } catch (e) {
+            console.warn('Failed to parse gallery_images JSON:', e);
+            galleryImagesRaw = [];
+          }
+        }
+        
         // Convert gallery_images to object array format
-        const galleryImages = (tourData.gallery_images || []).map((img: string | GalleryImage) => {
+        const galleryImages = (Array.isArray(galleryImagesRaw) ? galleryImagesRaw : []).map((img: string | GalleryImage | any) => {
+          // If it's already an object with url property
+          if (typeof img === 'object' && img !== null && 'url' in img) {
+            return { 
+              url: img.url || '', 
+              caption: img.caption || '', 
+              alt_text: img.alt_text || '' 
+            };
+          }
+          // If it's a string URL
           if (typeof img === 'string') {
             return { url: img, caption: '', alt_text: '' };
           }
-          return { url: img.url || '', caption: img.caption || '', alt_text: img.alt_text || '' };
-        });
+          // Fallback
+          return { url: '', caption: '', alt_text: '' };
+        }).filter(img => img.url.trim() !== ''); // Filter out empty URLs
         
         setFormData({
           galleryImages,
@@ -98,7 +121,9 @@ const AdminTourEditMedia: React.FC = () => {
         });
         
         console.log('Loaded media data:', {
-          galleryImages,
+          raw: tourData.gallery_images,
+          parsed: galleryImagesRaw,
+          processed: galleryImages,
           photographyService: tourData.photography_service
         });
       } else {
@@ -281,7 +306,7 @@ const AdminTourEditMedia: React.FC = () => {
 
         toast({
           title: "Upload Successful!",
-          description: `${uploadedUrls.length} image(s) uploaded successfully.`,
+          description: `${uploadedImages.length} image(s) uploaded successfully.`,
         });
       }
 

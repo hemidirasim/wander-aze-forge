@@ -99,7 +99,20 @@ async function handleGet(req: VercelRequest, res: VercelResponse) {
       tour_programs: result.rows[0].tour_programs ? (typeof result.rows[0].tour_programs === 'string' ? JSON.parse(result.rows[0].tour_programs) : result.rows[0].tour_programs) : [],
       provided_equipment: result.rows[0].provided_equipment ? (typeof result.rows[0].provided_equipment === 'string' ? JSON.parse(result.rows[0].provided_equipment) : result.rows[0].provided_equipment) : [],
       what_to_bring: result.rows[0].what_to_bring ? (typeof result.rows[0].what_to_bring === 'string' ? JSON.parse(result.rows[0].what_to_bring) : result.rows[0].what_to_bring) : [],
-      gallery_images: result.rows[0].gallery_images ? (typeof result.rows[0].gallery_images === 'string' ? JSON.parse(result.rows[0].gallery_images) : result.rows[0].gallery_images) : [],
+      gallery_images: (() => {
+        const galleryImages = result.rows[0].gallery_images;
+        if (!galleryImages) return [];
+        if (typeof galleryImages === 'string') {
+          try {
+            return JSON.parse(galleryImages);
+          } catch (e) {
+            console.warn('Failed to parse gallery_images:', e);
+            return [];
+          }
+        }
+        // If it's already an array, return as is
+        return Array.isArray(galleryImages) ? galleryImages : [];
+      })(),
       price_includes: result.rows[0].price_includes ? (typeof result.rows[0].price_includes === 'string' ? JSON.parse(result.rows[0].price_includes) : result.rows[0].price_includes) : [],
       participant_pricing: result.rows[0].participant_pricing ? (typeof result.rows[0].participant_pricing === 'string' ? JSON.parse(result.rows[0].participant_pricing) : result.rows[0].participant_pricing) : [],
       max_participants: result.rows[0].max_participants || null,
