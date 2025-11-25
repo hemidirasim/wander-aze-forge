@@ -18,7 +18,8 @@ import {
   Tags,
   ExternalLink,
   Star,
-  Compass
+  Compass,
+  Wand2
 } from 'lucide-react';
 
 const AdminDashboard: React.FC = () => {
@@ -236,6 +237,17 @@ const AdminDashboard: React.FC = () => {
                 <Link to="/admin/hero">
                   <Home className="w-6 h-6" />
                   <span className="font-semibold">Hero Section</span>
+                </Link>
+              </Button>
+
+              <Button 
+                asChild
+                variant="outline"
+                className="h-20 flex flex-col items-center justify-center space-y-2 border-2 hover:bg-gray-50"
+              >
+                <Link to="/admin/branding">
+                  <Wand2 className="w-6 h-6" />
+                  <span className="font-semibold">Favicon & Branding</span>
                 </Link>
               </Button>
             </div>

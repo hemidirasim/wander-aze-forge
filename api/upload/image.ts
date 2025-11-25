@@ -95,7 +95,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     // Validate file type
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+    const allowedTypes = [
+      'image/jpeg',
+      'image/png',
+      'image/webp',
+      'image/gif',
+      'image/x-icon',
+      'image/vnd.microsoft.icon',
+      'image/svg+xml'
+    ];
     if (fileType && !allowedTypes.includes(fileType)) {
       return res.status(400).json({ 
         error: `File type ${fileType} not allowed. Allowed types: ${allowedTypes.join(', ')}` 

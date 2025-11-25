@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ScrollToTop from "@/components/ScrollToTop";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 import CookieConsent from "@/components/CookieConsent";
+import SiteBrandingProvider from "./components/SiteBrandingProvider";
 import Index from "./pages/Index";
 import Tours from "./pages/Tours";
 import ToursByCategory from "./pages/ToursByCategory";
@@ -53,6 +54,7 @@ import AdminBookingRequests from "./pages/AdminBookingRequests";
 import AdminTeamMembers from "./pages/AdminTeamMembers";
 import AdminReviews from "./pages/AdminReviews";
 import AdminHero from "./pages/AdminHero";
+import AdminBranding from "./pages/AdminBranding";
 import SimpleAdminLayout from "./components/SimpleAdminLayout";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -74,6 +76,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <SiteBrandingProvider>
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/tours" element={<Tours />} />
@@ -137,7 +140,8 @@ const App = () => (
             <Route path="booking-requests" element={<AdminBookingRequests />} />
             <Route path="team-members" element={<AdminTeamMembers />} />
             <Route path="reviews" element={<AdminReviews />} />
-        <Route path="hero" element={<AdminHero />} />
+            <Route path="hero" element={<AdminHero />} />
+            <Route path="branding" element={<AdminBranding />} />
       </Route>
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
@@ -145,6 +149,7 @@ const App = () => (
         <ScrollToTop />
         <ScrollToTopButton />
         <CookieConsent />
+        </SiteBrandingProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
