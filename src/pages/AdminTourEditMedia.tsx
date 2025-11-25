@@ -32,10 +32,16 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
+interface GalleryImage {
+  url: string;
+  caption?: string;
+  alt_text?: string;
+}
+
 interface Tour {
   id: number;
   title: string;
-  gallery_images?: string[];
+  gallery_images?: GalleryImage[] | string[];
   photography_service?: string;
 }
 
@@ -49,7 +55,7 @@ const AdminTourEditMedia: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [formData, setFormData] = useState({
-    galleryImages: [] as string[],
+    galleryImages: [] as GalleryImage[],
     photographyService: '',
     mainImage: ''
   });
@@ -76,14 +82,23 @@ const AdminTourEditMedia: React.FC = () => {
       if (data.success) {
         const tourData = data.data;
         setTour(tourData);
+        
+        // Convert gallery_images to object array format
+        const galleryImages = (tourData.gallery_images || []).map((img: string | GalleryImage) => {
+          if (typeof img === 'string') {
+            return { url: img, caption: '', alt_text: '' };
+          }
+          return { url: img.url || '', caption: img.caption || '', alt_text: img.alt_text || '' };
+        });
+        
         setFormData({
-          galleryImages: tourData.gallery_images || [],
+          galleryImages,
           photographyService: tourData.photography_service || '',
           mainImage: tourData.image_url || ''
         });
         
         console.log('Loaded media data:', {
-          galleryImages: tourData.gallery_images,
+          galleryImages,
           photographyService: tourData.photography_service
         });
       } else {
@@ -110,7 +125,7 @@ const AdminTourEditMedia: React.FC = () => {
   const addGalleryImage = () => {
     setFormData(prev => ({
       ...prev,
-      galleryImages: [...prev.galleryImages, '']
+      galleryImages: [...prev.galleryImages, { url: '', caption: '', alt_text: '' }]
     }));
   };
 
@@ -126,15 +141,17 @@ const AdminTourEditMedia: React.FC = () => {
     }));
   };
 
-  const updateGalleryImage = (index: number, value: string) => {
+  const updateGalleryImage = (index: number, field: 'url' | 'caption' | 'alt_text', value: string) => {
     setFormData(prev => ({
       ...prev,
-      galleryImages: prev.galleryImages.map((item, i) => i === index ? value : item)
+      galleryImages: prev.galleryImages.map((item, i) => 
+        i === index ? { ...item, [field]: value } : item
+      )
     }));
   };
 
   // Sortable item component
-  const SortableImage: React.FC<{ id: string; index: number; url: string }> = ({ id, index, url }) => {
+  const SortableImage: React.FC<{ id: string; index: number; image: GalleryImage }> = ({ id, index, image }) => {
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
     const style: React.CSSProperties = {
       transform: CSS.Transform.toString(transform),
@@ -146,8 +163,8 @@ const AdminTourEditMedia: React.FC = () => {
       <div ref={setNodeRef} style={style} className="border rounded-lg p-3 space-y-2 bg-white">
         <div className="relative">
           <img 
-            src={url} 
-            alt={`Gallery ${index + 1}`}
+            src={image.url} 
+            alt={image.alt_text || `Gallery ${index + 1}`}
             className="w-full h-32 object-cover rounded"
             onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
           />
@@ -159,21 +176,45 @@ const AdminTourEditMedia: React.FC = () => {
           >
             Drag
           </button>
-          {formData.mainImage === url && (
+          {formData.mainImage === image.url && (
             <div className="absolute top-2 right-2 bg-green-500 text-white rounded-full p-1">
               <Camera className="w-3 h-3" />
             </div>
           )}
         </div>
+        <div className="space-y-2">
+          <div className="space-y-1">
+            <Label htmlFor={`caption-${index}`} className="text-xs">Caption</Label>
+            <Input
+              id={`caption-${index}`}
+              type="text"
+              value={image.caption || ''}
+              onChange={(e) => updateGalleryImage(index, 'caption', e.target.value)}
+              placeholder="Foto başlığı..."
+              className="text-sm"
+            />
+          </div>
+          <div className="space-y-1">
+            <Label htmlFor={`alt-${index}`} className="text-xs">Alt Text</Label>
+            <Input
+              id={`alt-${index}`}
+              type="text"
+              value={image.alt_text || ''}
+              onChange={(e) => updateGalleryImage(index, 'alt_text', e.target.value)}
+              placeholder="Alt text (SEO üçün)..."
+              className="text-sm"
+            />
+          </div>
+        </div>
         <div className="flex gap-2">
           <Button
             type="button"
-            variant={formData.mainImage === url ? "default" : "outline"}
+            variant={formData.mainImage === image.url ? "default" : "outline"}
             size="sm"
-            onClick={() => setFormData(prev => ({ ...prev, mainImage: url }))}
+            onClick={() => setFormData(prev => ({ ...prev, mainImage: image.url }))}
             className="flex-1"
           >
-            {formData.mainImage === url ? 'Main Foto' : 'Main Foto Et'}
+            {formData.mainImage === image.url ? 'Main Foto' : 'Main Foto Et'}
           </Button>
           <Button
             type="button"
@@ -191,8 +232,8 @@ const AdminTourEditMedia: React.FC = () => {
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (!over || active.id === over.id) return;
-    const oldIndex = formData.galleryImages.findIndex((i) => i === active.id);
-    const newIndex = formData.galleryImages.findIndex((i) => i === over.id);
+    const oldIndex = formData.galleryImages.findIndex((img) => img.url === active.id);
+    const newIndex = formData.galleryImages.findIndex((img) => img.url === over.id);
     if (oldIndex === -1 || newIndex === -1) return;
     setFormData(prev => ({
       ...prev,
@@ -227,11 +268,15 @@ const AdminTourEditMedia: React.FC = () => {
       const result = await response.json();
       
       if (result.success && result.blobs) {
-        const uploadedUrls = result.blobs.map((blob: any) => blob.url);
+        const uploadedImages = result.blobs.map((blob: any) => ({
+          url: blob.url,
+          caption: '',
+          alt_text: ''
+        }));
         
         setFormData(prev => ({
           ...prev,
-          galleryImages: [...prev.galleryImages, ...uploadedUrls]
+          galleryImages: [...prev.galleryImages, ...uploadedImages]
         }));
 
         toast({
@@ -264,9 +309,9 @@ const AdminTourEditMedia: React.FC = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Filter out empty strings from gallery images
+    // Filter out empty URLs from gallery images
     const cleanedFormData = {
-      galleryImages: formData.galleryImages.filter(item => item.trim() !== ''),
+      galleryImages: formData.galleryImages.filter(item => item.url.trim() !== ''),
       photographyService: formData.photographyService,
       mainImage: formData.mainImage
     };
@@ -280,7 +325,7 @@ const AdminTourEditMedia: React.FC = () => {
       
       // Check if any images are still base64 (not uploaded)
       const base64Images = cleanedFormData.galleryImages.filter(img => 
-        img.trim() !== '' && isBase64Image(img)
+        img.url.trim() !== '' && isBase64Image(img.url)
       );
       
       if (base64Images.length > 0) {
@@ -461,10 +506,10 @@ const AdminTourEditMedia: React.FC = () => {
                   <div className="space-y-4">
                     <Label>Gallery Images ({formData.galleryImages.length})</Label>
                     <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-                      <SortableContext items={formData.galleryImages} strategy={rectSortingStrategy}>
+                      <SortableContext items={formData.galleryImages.map(img => img.url)} strategy={rectSortingStrategy}>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                           {formData.galleryImages.map((image, index) => (
-                            <SortableImage key={image} id={image} index={index} url={image} />
+                            <SortableImage key={image.url} id={image.url} index={index} image={image} />
                           ))}
                         </div>
                       </SortableContext>

@@ -98,8 +98,23 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       mainImage
     });
 
-    // Ensure arrays are properly formatted
-    const galleryImagesArray = Array.isArray(galleryImages) ? galleryImages : [];
+    // Ensure arrays are properly formatted and convert to object array if needed
+    let galleryImagesArray: Array<{ url: string; caption?: string; alt_text?: string }> = [];
+    
+    if (Array.isArray(galleryImages)) {
+      galleryImagesArray = galleryImages.map((img: string | { url: string; caption?: string; alt_text?: string }) => {
+        if (typeof img === 'string') {
+          // Legacy format: convert string to object
+          return { url: img, caption: '', alt_text: '' };
+        }
+        // New format: ensure all fields exist
+        return {
+          url: img.url || '',
+          caption: img.caption || '',
+          alt_text: img.alt_text || ''
+        };
+      }).filter(img => img.url.trim() !== ''); // Filter out empty URLs
+    }
 
     console.log('Final arrays:', {
       galleryImagesArray,
