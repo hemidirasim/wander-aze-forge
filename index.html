@@ -7,78 +7,12 @@
     <meta name="description" content="Discover authentic hiking, trekking, birding and cultural tours across Azerbaijan. Local guides, sustainable travel and tailor-made experiences by Outtour Azerbaijan" />
     <meta name="author" content="Outtour Azerbaijan" />
     
-    <!-- Favicon will be dynamically set by SiteBrandingProvider -->
-    <script>
-      // Load favicon immediately, before React loads
-      (function() {
-        function updateFavicon(url) {
-          if (!url || !url.trim()) {
-            console.warn('⚠️ Empty favicon URL provided');
-            return;
-          }
-          
-          console.log('🔄 Updating favicon to:', url);
-          
-          // Remove existing favicon links
-          const existingLinks = document.querySelectorAll('link[rel="icon"], link[rel="shortcut icon"], link[rel="apple-touch-icon"]');
-          existingLinks.forEach(link => {
-            console.log('🗑️ Removing old favicon link:', link.href);
-            link.remove();
-          });
-          
-          const timestamp = '?_t=' + Date.now();
-          
-          // Create new favicon links
-          const link1 = document.createElement('link');
-          link1.rel = 'icon';
-          link1.href = url + timestamp;
-          document.head.appendChild(link1);
-          console.log('✅ Created icon link:', link1.href);
-          
-          const link2 = document.createElement('link');
-          link2.rel = 'shortcut icon';
-          link2.href = url + timestamp;
-          document.head.appendChild(link2);
-          console.log('✅ Created shortcut icon link:', link2.href);
-          
-          const link3 = document.createElement('link');
-          link3.rel = 'apple-touch-icon';
-          link3.href = url + timestamp;
-          document.head.appendChild(link3);
-          console.log('✅ Created apple-touch-icon link:', link3.href);
-          
-          console.log('✅ Favicon updated successfully via inline script');
-        }
-        
-        // Fetch favicon from API immediately
-        console.log('🔍 Fetching favicon from /api/site-branding...');
-        fetch('/api/site-branding', { 
-          cache: 'no-cache',
-          headers: {
-            'Cache-Control': 'no-cache'
-          }
-        })
-          .then(res => {
-            console.log('📡 API response status:', res.status);
-            if (!res.ok) {
-              throw new Error('API returned ' + res.status);
-            }
-            return res.json();
-          })
-          .then(data => {
-            console.log('📦 API response data:', data);
-            if (data?.success && data?.data?.favicon_url) {
-              console.log('✅ Found favicon URL in database:', data.data.favicon_url);
-              updateFavicon(data.data.favicon_url);
-            } else {
-              console.warn('⚠️ No favicon URL found in API response. Data:', data);
-            }
-          })
-          .catch(err => {
-            console.error('❌ Failed to load favicon inline:', err);
-          });
-      })();
-    </script>
+    <!-- Favicon & App Icons -->
+    <link rel="icon" href="https://e4sm2p9cqicdxjyg.public.blob.vercel-storage.com/favicon/favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://e4sm2p9cqicdxjyg.public.blob.vercel-storage.com/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://e4sm2p9cqicdxjyg.public.blob.vercel-storage.com/favicon/favicon-16x16.png">
+    <link rel="apple-touch-icon" href="https://e4sm2p9cqicdxjyg.public.blob.vercel-storage.com/favicon/apple-touch-icon.png">
+    <link rel="manifest" href="https://e4sm2p9cqicdxjyg.public.blob.vercel-storage.com/favicon/site.webmanifest">
 
     <!-- Index page default OG/Twitter (ensures social previews without JS) -->
     <meta property="og:title" content="Private Hiking, Birding & Cultural Tours in Azerbaijan | Outtour Azerbaijan" />

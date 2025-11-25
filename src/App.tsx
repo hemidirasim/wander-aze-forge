@@ -6,7 +6,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ScrollToTop from "@/components/ScrollToTop";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 import CookieConsent from "@/components/CookieConsent";
-import SiteBrandingProvider from "./components/SiteBrandingProvider";
 import Index from "./pages/Index";
 import Tours from "./pages/Tours";
 import ToursByCategory from "./pages/ToursByCategory";
@@ -76,7 +75,6 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <SiteBrandingProvider>
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/tours" element={<Tours />} />
@@ -149,7 +147,6 @@ const App = () => (
         <ScrollToTop />
         <ScrollToTopButton />
         <CookieConsent />
-        </SiteBrandingProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
