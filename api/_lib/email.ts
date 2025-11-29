@@ -1,26 +1,40 @@
 import nodemailer from 'nodemailer';
 
-const SMTP_HOST = process.env.SMTP_HOST || 'heracles.mxrouting.net';
-const SMTP_PORT = parseInt(process.env.SMTP_PORT || '465', 10);
-const SMTP_SECURE = process.env.SMTP_SECURE ? process.env.SMTP_SECURE === 'true' : true; // 465 true, 587 false
-const SMTP_USER = process.env.SMTP_USER || 'support@midiya.az';
-const SMTP_PASS = process.env.SMTP_PASS || 'qw2e3Q!W@E';
+const SMTP_HOST = process.env.SMTP_HOST || 'smtp.gmail.com';
+const SMTP_PORT = parseInt(process.env.SMTP_PORT || '587', 10);
+const SMTP_SECURE = process.env.SMTP_SECURE ? process.env.SMTP_SECURE === 'true' : false; // 587 uses STARTTLS (false), 465 uses SSL (true)
+const SMTP_USER = process.env.SMTP_USER || 'info@outtour.az';
+const SMTP_PASS = process.env.SMTP_PASS || 'vtlz kfpz gyqp pbnv';
 const FROM_NAME = process.env.MAIL_FROM_NAME || 'Outtour Azerbaijan';
-const FROM_EMAIL = process.env.MAIL_FROM || 'support@midiya.az';
+const FROM_EMAIL = process.env.MAIL_FROM || 'info@outtour.az';
 
 let transporter: nodemailer.Transporter | null = null;
 
 function getTransporter() {
   if (!transporter) {
-    transporter = nodemailer.createTransport({
-      host: SMTP_HOST,
-      port: SMTP_PORT,
-      secure: SMTP_SECURE,
-      auth: {
-        user: SMTP_USER,
-        pass: SMTP_PASS,
-      },
-    });
+    // Gmail SMTP configuration
+    if (SMTP_HOST === 'smtp.gmail.com') {
+      transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: SMTP_USER,
+          pass: SMTP_PASS,
+        },
+      });
+    } else {
+      // Generic SMTP configuration
+      transporter = nodemailer.createTransport({
+        host: SMTP_HOST,
+        port: SMTP_PORT,
+        secure: SMTP_SECURE, // true for 465, false for other ports
+        auth: {
+          user: SMTP_USER,
+          pass: SMTP_PASS,
+        },
+        // For port 587, use STARTTLS
+        ...(SMTP_PORT === 587 && !SMTP_SECURE ? { requireTLS: true } : {}),
+      });
+    }
   }
   return transporter;
 }
